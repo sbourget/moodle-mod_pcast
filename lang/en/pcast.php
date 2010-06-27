@@ -33,3 +33,11 @@ $string['modulenameplural'] = 'pcasts';
 $string['pcastfieldset'] = 'Custom example fieldset';
 $string['pcastname'] = 'pcast name';
 $string['pcast'] = 'pcast';
+
+//Settings.php
+$string['configenablerssfeeds'] = 'This switch will enable the possibility of RSS feeds for all podcasts.  You will still need to turn feeds on manually in the settings for each podcast.';
+$string['configenablerssitunes'] = 'This switch will enable the possibility of itunes compatible RSS feeds for all podcasts.  You will still need to set Enable iTunes RSS Tags to yes podcast course settings.';
+$string['configusemediafilter'] = 'Use moodle media filters';
+$string['configenablerssfeeds2'] = 'Enable RSS Feeds:';
+$string['configenablerssitunes2'] = 'Enable iTunes RSS:';
+$string['configusemediafilter2'] = 'Use Media Filter:';
