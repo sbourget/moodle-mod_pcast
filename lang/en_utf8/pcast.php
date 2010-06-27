@@ -28,7 +28,6 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
 $string['modulename'] = 'pcast';
 $string['modulenameplural'] = 'pcasts';
 $string['pcastfieldset'] = 'Custom example fieldset';
