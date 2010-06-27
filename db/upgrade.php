@@ -17,7 +17,7 @@
 
 
 /**
- * This file keeps track of upgrades to the newmodule module
+ * This file keeps track of upgrades to the pcast module
  *
  * Sometimes, changes between versions involve alterations to database
  * structures and other major things that may break installations. The upgrade
@@ -27,20 +27,20 @@
  * here will all be database-neutral, using the functions defined in
  * lib/ddllib.php
  *
- * @package   mod_newmodule
- * @copyright 2010 Your Name
+ * @package   mod_pcast
+ * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * xmldb_newmodule_upgrade
+ * xmldb_pcast_upgrade
  *
  * @param int $oldversion
  * @return bool
  */
-function xmldb_newmodule_upgrade($oldversion=0) {
+function xmldb_pcast_upgrade($oldversion=0) {
 
     global $CFG, $THEME, $db;
 
@@ -57,10 +57,10 @@ function xmldb_newmodule_upgrade($oldversion=0) {
 
 /// Lines below (this included)  MUST BE DELETED once you get the first version
 /// of your module ready to be installed. They are here only
-/// for demonstrative purposes and to show how the newmodule
+/// for demonstrative purposes and to show how the pcast
 /// iself has been upgraded.
 
-/// For each upgrade block, the file newmodule/version.php
+/// For each upgrade block, the file pcast/version.php
 /// needs to be updated . Such change allows Moodle to know
 /// that this file has to be processed.
 
@@ -73,22 +73,22 @@ function xmldb_newmodule_upgrade($oldversion=0) {
 /// First example, some fields were added to the module on 20070400
     if ($result && $oldversion < 2007040100) {
 
-    /// Define field course to be added to newmodule
-        $table = new XMLDBTable('newmodule');
+    /// Define field course to be added to pcast
+        $table = new XMLDBTable('pcast');
         $field = new XMLDBField('course');
         $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0', 'id');
     /// Launch add field course
         $result = $result && add_field($table, $field);
 
-    /// Define field intro to be added to newmodule
-        $table = new XMLDBTable('newmodule');
+    /// Define field intro to be added to pcast
+        $table = new XMLDBTable('pcast');
         $field = new XMLDBField('intro');
         $field->setAttributes(XMLDB_TYPE_TEXT, 'medium', null, null, null, null, null, null, 'name');
     /// Launch add field intro
         $result = $result && add_field($table, $field);
 
-    /// Define field introformat to be added to newmodule
-        $table = new XMLDBTable('newmodule');
+    /// Define field introformat to be added to pcast
+        $table = new XMLDBTable('pcast');
         $field = new XMLDBField('introformat');
         $field->setAttributes(XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0', 'intro');
     /// Launch add field introformat
@@ -100,22 +100,22 @@ function xmldb_newmodule_upgrade($oldversion=0) {
 /// "01" in the last two digits of the version
     if ($result && $oldversion < 2007040101) {
 
-    /// Define field timecreated to be added to newmodule
-        $table = new XMLDBTable('newmodule');
+    /// Define field timecreated to be added to pcast
+        $table = new XMLDBTable('pcast');
         $field = new XMLDBField('timecreated');
         $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0', 'introformat');
     /// Launch add field timecreated
         $result = $result && add_field($table, $field);
 
-    /// Define field timemodified to be added to newmodule
-        $table = new XMLDBTable('newmodule');
+    /// Define field timemodified to be added to pcast
+        $table = new XMLDBTable('pcast');
         $field = new XMLDBField('timemodified');
         $field->setAttributes(XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null, null, '0', 'timecreated');
     /// Launch add field timemodified
         $result = $result && add_field($table, $field);
 
-    /// Define index course (not unique) to be added to newmodule
-        $table = new XMLDBTable('newmodule');
+    /// Define index course (not unique) to be added to pcast
+        $table = new XMLDBTable('pcast');
         $index = new XMLDBIndex('course');
         $index->setAttributes(XMLDB_INDEX_NOTUNIQUE, array('course'));
     /// Launch add index course
@@ -126,9 +126,9 @@ function xmldb_newmodule_upgrade($oldversion=0) {
     if ($result && $oldversion < 2007040200) {
     /// Add some actions to get them properly displayed in the logs
         $rec = new stdClass;
-        $rec->module = 'newmodule';
+        $rec->module = 'pcast';
         $rec->action = 'add';
-        $rec->mtable = 'newmodule';
+        $rec->mtable = 'pcast';
         $rec->filed  = 'name';
     /// Insert the add action in log_display
         $result = insert_record('log_display', $rec);

@@ -22,12 +22,12 @@
  * You can have a rather longer description of the file as well,
  * if you like, and it can span multiple lines.
  *
- * @package   mod_newmodule
- * @copyright 2010 Your Name
+ * @package   mod_pcast
+ * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-/// Replace newmodule with the name of your module and remove this line
+/// Replace pcast with the name of your module and remove this line
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
@@ -40,11 +40,11 @@ if (! $course = $DB->get_record('course', array('id' => $id))) {
 
 require_course_login($course);
 
-add_to_log($course->id, 'newmodule', 'view all', "index.php?id=$course->id", '');
+add_to_log($course->id, 'pcast', 'view all', "index.php?id=$course->id", '');
 
 /// Print the header
 
-$PAGE->set_url('mod/newmodule/view.php', array('id' => $id));
+$PAGE->set_url('mod/pcast/view.php', array('id' => $id));
 $PAGE->set_title($course->fullname);
 $PAGE->set_heading($course->shortname);
 
@@ -52,8 +52,8 @@ echo $OUTPUT->header();
 
 /// Get all the appropriate data
 
-if (! $newmodules = get_all_instances_in_course('newmodule', $course)) {
-    echo $OUTPUT->heading(get_string('nonewmodules', 'newmodule'), 2);
+if (! $pcasts = get_all_instances_in_course('pcast', $course)) {
+    echo $OUTPUT->heading(get_string('nopcasts', 'pcast'), 2);
     echo $OUTPUT->continue_button("view.php?id=$course->id");
     echo $OUTPUT->footer();
     die();
@@ -77,23 +77,23 @@ if ($course->format == 'weeks') {
     $table->align = array ('left', 'left', 'left');
 }
 
-foreach ($newmodules as $newmodule) {
-    if (!$newmodule->visible) {
+foreach ($pcasts as $pcast) {
+    if (!$pcast->visible) {
         //Show dimmed if the mod is hidden
-        $link = '<a class="dimmed" href="view.php?id='.$newmodule->coursemodule.'">'.format_string($newmodule->name).'</a>';
+        $link = '<a class="dimmed" href="view.php?id='.$pcast->coursemodule.'">'.format_string($pcast->name).'</a>';
     } else {
         //Show normal if the mod is visible
-        $link = '<a href="view.php?id='.$newmodule->coursemodule.'">'.format_string($newmodule->name).'</a>';
+        $link = '<a href="view.php?id='.$pcast->coursemodule.'">'.format_string($pcast->name).'</a>';
     }
 
     if ($course->format == 'weeks' or $course->format == 'topics') {
-        $table->data[] = array ($newmodule->section, $link);
+        $table->data[] = array ($pcast->section, $link);
     } else {
         $table->data[] = array ($link);
     }
 }
 
-echo $OUTPUT->heading(get_string('modulenameplural', 'newmodule'), 2);
+echo $OUTPUT->heading(get_string('modulenameplural', 'pcast'), 2);
 print_table($table);
 
 /// Finish the page

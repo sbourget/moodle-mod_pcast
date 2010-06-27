@@ -17,13 +17,13 @@
 
 
 /**
- * Defines the version of newmodule
+ * Defines the version of pcast
  *
  * This code fragment is called by moodle_needs_upgrading() and
  * /admin/index.php
  *
- * @package   mod_newmodule
- * @copyright 2010 Your Name
+ * @package   mod_pcast
+ * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

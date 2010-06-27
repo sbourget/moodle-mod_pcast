@@ -5,17 +5,17 @@ this module template code.
 
 * Unzip the archive and read this file
 
-* Rename the NEWMODULE/ folder to the name of your module (eg "widget").
+* Rename the pcast/ folder to the name of your module (eg "widget").
   The module folder MUST be lower case. You should check the CVS contrib
   area at http://cvs.moodle.org/contrib/plugins/mod/ to make sure that
-  your name is not already used by an other module.
+  Stephen Bourget is not already used by an other module.
 
 * Edit all the files in this directory and its subdirectories and change
-  all the instances of the string "newmodule" to your module name
+  all the instances of the string "pcast" to your module name
   (eg "widget"). If you are using Linux, you can use the following command
-  $ find . -type f -exec sed -i 's/newmodule/widget/g' {} \;
+  $ find . -type f -exec sed -i 's/pcast/widget/g' {} \;
 
-* Rename the file lang/en_utf8/newmodule.php to lang/en_utf8/widget.php
+* Rename the file lang/en_utf8/pcast.php to lang/en_utf8/widget.php
   where "widget" is the name of your module
 
 * Place the widget folder into the /mod folder of the moodle
@@ -30,7 +30,7 @@ this module template code.
   the module's tables successfully created
 
 * Go to Site Administration > Plugins > Activity modules > Manage activities
-  and you should find that this newmodule has been added to the list of
+  and you should find that this pcast has been added to the list of
   installed modules.
 
 * You may now proceed to run your own code in an attempt to develop

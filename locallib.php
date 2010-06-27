@@ -17,13 +17,13 @@
 
 
 /**
- * Internal library of functions for module newmodule
+ * Internal library of functions for module pcast
  *
- * All the newmodule specific functions, needed to implement the module
+ * All the pcast specific functions, needed to implement the module
  * logic, should go here. Never include this file from your lib.php!
  *
- * @package   mod_newmodule
- * @copyright 2010 Your Name
+ * @package   mod_pcast
+ * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -35,6 +35,6 @@ defined('MOODLE_INTERNAL') || die();
  * @param array $things
  * @return object
  */
-//function newmodule_do_something_useful(array $things) {
+//function pcast_do_something_useful(array $things) {
 //    return new stdClass();
 //}

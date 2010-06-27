@@ -17,20 +17,20 @@
 
 
 /**
- * English strings for newmodule
+ * English strings for pcast
  *
  * You can have a rather longer description of the file as well,
  * if you like, and it can span multiple lines.
  *
- * @package   mod_newmodule
- * @copyright 2010 Your Name
+ * @package   mod_pcast
+ * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['modulename'] = 'newmodule';
-$string['modulenameplural'] = 'newmodules';
-$string['newmodulefieldset'] = 'Custom example fieldset';
-$string['newmodulename'] = 'newmodule name';
-$string['newmodule'] = 'newmodule';
+$string['modulename'] = 'pcast';
+$string['modulenameplural'] = 'pcasts';
+$string['pcastfieldset'] = 'Custom example fieldset';
+$string['pcastname'] = 'pcast name';
+$string['pcast'] = 'pcast';

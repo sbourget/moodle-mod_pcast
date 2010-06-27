@@ -17,31 +17,31 @@
 
 
 /**
- * Library of interface functions and constants for module newmodule
+ * Library of interface functions and constants for module pcast
  *
  * All the core Moodle functions, neeeded to allow the module to work
  * integrated in Moodle should be placed here.
- * All the newmodule specific functions, needed to implement all the module
+ * All the pcast specific functions, needed to implement all the module
  * logic, should go to locallib.php. This will help to save some memory when
  * Moodle is performing actions across all modules.
  *
- * @package   mod_newmodule
- * @copyright 2010 Your Name
+ * @package   mod_pcast
+ * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 /** example constant */
-//define('NEWMODULE_ULTIMATE_ANSWER', 42);
+//define('pcast_ULTIMATE_ANSWER', 42);
 
 /**
  * If you for some reason need to use global variables instead of constants, do not forget to make them
  * global as this file can be included inside a function scope. However, using the global variables
  * at the module level is not a recommended.
  */
-//global $NEWMODULE_GLOBAL_VARIABLE;
-//$NEWMODULE_QUESTION_OF = array('Life', 'Universe', 'Everything');
+//global $pcast_GLOBAL_VARIABLE;
+//$pcast_QUESTION_OF = array('Life', 'Universe', 'Everything');
 
 /**
  * Given an object containing all the necessary data,
@@ -49,17 +49,17 @@ defined('MOODLE_INTERNAL') || die();
  * will create a new instance and return the id number
  * of the new instance.
  *
- * @param object $newmodule An object from the form in mod_form.php
- * @return int The id of the newly inserted newmodule record
+ * @param object $pcast An object from the form in mod_form.php
+ * @return int The id of the newly inserted pcast record
  */
-function newmodule_add_instance($newmodule) {
+function pcast_add_instance($pcast) {
     global $DB;
 
-    $newmodule->timecreated = time();
+    $pcast->timecreated = time();
 
     # You may have to add extra stuff in here #
 
-    return $DB->insert_record('newmodule', $newmodule);
+    return $DB->insert_record('pcast', $pcast);
 }
 
 /**
@@ -67,18 +67,18 @@ function newmodule_add_instance($newmodule) {
  * (defined by the form in mod_form.php) this function
  * will update an existing instance with new data.
  *
- * @param object $newmodule An object from the form in mod_form.php
+ * @param object $pcast An object from the form in mod_form.php
  * @return boolean Success/Fail
  */
-function newmodule_update_instance($newmodule) {
+function pcast_update_instance($pcast) {
     global $DB;
 
-    $newmodule->timemodified = time();
-    $newmodule->id = $newmodule->instance;
+    $pcast->timemodified = time();
+    $pcast->id = $pcast->instance;
 
     # You may have to add extra stuff in here #
 
-    return $DB->update_record('newmodule', $newmodule);
+    return $DB->update_record('pcast', $pcast);
 }
 
 /**
@@ -89,16 +89,16 @@ function newmodule_update_instance($newmodule) {
  * @param int $id Id of the module instance
  * @return boolean Success/Failure
  */
-function newmodule_delete_instance($id) {
+function pcast_delete_instance($id) {
     global $DB;
 
-    if (! $newmodule = $DB->get_record('newmodule', array('id' => $id))) {
+    if (! $pcast = $DB->get_record('pcast', array('id' => $id))) {
         return false;
     }
 
     # Delete any dependent records here #
 
-    $DB->delete_records('newmodule', array('id' => $newmodule->id));
+    $DB->delete_records('pcast', array('id' => $pcast->id));
 
     return true;
 }
@@ -113,7 +113,7 @@ function newmodule_delete_instance($id) {
  * @return null
  * @todo Finish documenting this function
  */
-function newmodule_user_outline($course, $user, $mod, $newmodule) {
+function pcast_user_outline($course, $user, $mod, $pcast) {
     $return = new stdClass;
     $return->time = 0;
     $return->info = '';
@@ -127,19 +127,19 @@ function newmodule_user_outline($course, $user, $mod, $newmodule) {
  * @return boolean
  * @todo Finish documenting this function
  */
-function newmodule_user_complete($course, $user, $mod, $newmodule) {
+function pcast_user_complete($course, $user, $mod, $pcast) {
     return true;
 }
 
 /**
  * Given a course and a time, this module should find recent activity
- * that has occurred in newmodule activities and print it out.
+ * that has occurred in pcast activities and print it out.
  * Return true if there was output, or false is there was none.
  *
  * @return boolean
  * @todo Finish documenting this function
  */
-function newmodule_print_recent_activity($course, $isteacher, $timestart) {
+function pcast_print_recent_activity($course, $isteacher, $timestart) {
     return false;  //  True if anything was printed, otherwise false
 }
 
@@ -151,39 +151,39 @@ function newmodule_print_recent_activity($course, $isteacher, $timestart) {
  * @return boolean
  * @todo Finish documenting this function
  **/
-function newmodule_cron () {
+function pcast_cron () {
     return true;
 }
 
 /**
  * Must return an array of user records (all data) who are participants
- * for a given instance of newmodule. Must include every user involved
+ * for a given instance of pcast. Must include every user involved
  * in the instance, independient of his role (student, teacher, admin...)
  * See other modules as example.
  *
- * @param int $newmoduleid ID of an instance of this module
+ * @param int $pcastid ID of an instance of this module
  * @return mixed boolean/array of students
  */
-function newmodule_get_participants($newmoduleid) {
+function pcast_get_participants($pcastid) {
     return false;
 }
 
 /**
- * This function returns if a scale is being used by one newmodule
+ * This function returns if a scale is being used by one pcast
  * if it has support for grading and scales. Commented code should be
  * modified if necessary. See forum, glossary or journal modules
  * as reference.
  *
- * @param int $newmoduleid ID of an instance of this module
+ * @param int $pcastid ID of an instance of this module
  * @return mixed
  * @todo Finish documenting this function
  */
-function newmodule_scale_used($newmoduleid, $scaleid) {
+function pcast_scale_used($pcastid, $scaleid) {
     global $DB;
 
     $return = false;
 
-    //$rec = $DB->get_record("newmodule", array("id" => "$newmoduleid", "scale" => "-$scaleid"));
+    //$rec = $DB->get_record("pcast", array("id" => "$pcastid", "scale" => "-$scaleid"));
     //
     //if (!empty($rec) && !empty($scaleid)) {
     //    $return = true;
@@ -193,17 +193,17 @@ function newmodule_scale_used($newmoduleid, $scaleid) {
 }
 
 /**
- * Checks if scale is being used by any instance of newmodule.
+ * Checks if scale is being used by any instance of pcast.
  * This function was added in 1.9
  *
  * This is used to find out if scale used anywhere
  * @param $scaleid int
- * @return boolean True if the scale is used by any newmodule
+ * @return boolean True if the scale is used by any pcast
  */
-function newmodule_scale_used_anywhere($scaleid) {
+function pcast_scale_used_anywhere($scaleid) {
     global $DB;
 
-    if ($scaleid and $DB->record_exists('newmodule', 'grade', -$scaleid)) {
+    if ($scaleid and $DB->record_exists('pcast', 'grade', -$scaleid)) {
         return true;
     } else {
         return false;
@@ -216,6 +216,6 @@ function newmodule_scale_used_anywhere($scaleid) {
  *
  * @return boolean true if success, false on error
  */
-function newmodule_uninstall() {
+function pcast_uninstall() {
     return true;
 }

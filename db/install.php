@@ -19,20 +19,20 @@
  * This file replaces the legacy STATEMENTS section in db/install.xml,
  * lib.php/modulename_install() post installation hook and partially defaults.php
  *
- * @package   mod_newmodule
- * @copyright 2010 Your Name <your@email.adress>
+ * @package   mod_pcast
+ * @copyright 2010 Stephen Bourget <your@email.adress>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
  * Post installation procedure
  */
-function xmldb_newmodule_install() {
+function xmldb_pcast_install() {
     global $DB;
 
     // Install default common logging actions
-    update_log_display_entry('newmodule', 'add', 'newmodule', 'name');
-    update_log_display_entry('newmodule', 'update', 'newmodule', 'name');
-    update_log_display_entry('newmodule', 'view', 'newmodule', 'name');
-    update_log_display_entry('newmodule', 'view all', 'newmodule', 'name');
+    update_log_display_entry('pcast', 'add', 'pcast', 'name');
+    update_log_display_entry('pcast', 'update', 'pcast', 'name');
+    update_log_display_entry('pcast', 'view', 'pcast', 'name');
+    update_log_display_entry('pcast', 'view all', 'pcast', 'name');
 }
