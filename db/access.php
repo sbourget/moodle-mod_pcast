@@ -61,7 +61,7 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
-    'mod/pcast:add' => array(
+    'mod/pcast:write' => array(
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
@@ -83,5 +83,17 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
+    'mod/pcast:approve' => array(
+
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        )
+    ),
+
 );
 
