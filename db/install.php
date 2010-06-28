@@ -38,7 +38,6 @@ function xmldb_pcast_install() {
 
 
     $dataobject->id = 1;
-    $dataobject->previousid = 0;
     $dataobject->name = 'Arts';
     $DB->insert_record('pcast_itunes_categories', $dataobject, $returnid=false, $bulk=false);
 

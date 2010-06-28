@@ -12,8 +12,9 @@
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="userid" NEXT="intro"/>
         <FIELD NAME="intro" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="introformat"/>
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="intro" NEXT="userscancomment"/>
-        <FIELD NAME="userscancomment" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="introformat" NEXT="userscanpost"/>
-        <FIELD NAME="userscanpost" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userscancomment" NEXT="requireapproval"/>
+        <FIELD NAME="userscancomment" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="introformat" NEXT="userscancategorize"/>
+        <FIELD NAME="userscancategorize" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="allow uses to set the category for their episodes" PREVIOUS="userscancomment" NEXT="userscanpost"/>
+        <FIELD NAME="userscanpost" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userscancategorize" NEXT="requireapproval"/>
         <FIELD NAME="requireapproval" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userscanpost" NEXT="image"/>
         <FIELD NAME="image" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="requireapproval" NEXT="imageheight"/>
         <FIELD NAME="imageheight" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="144" SEQUENCE="false" PREVIOUS="image" NEXT="imagewidth"/>
@@ -57,7 +58,8 @@
         <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="teacherentry" NEXT="timefinish"/>
         <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timestart" NEXT="approved"/>
         <FIELD NAME="approved" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timefinish" NEXT="allowcomments"/>
-        <FIELD NAME="allowcomments" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="allow comments" PREVIOUS="approved"/>
+        <FIELD NAME="allowcomments" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="allow comments" PREVIOUS="approved" NEXT="sequencenumber"/>
+        <FIELD NAME="sequencenumber" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Used for manual sorting" PREVIOUS="allowcomments"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
