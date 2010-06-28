@@ -108,8 +108,6 @@ class mod_pcast_mod_form extends moodleform_mod {
             $sortorder = array();
             $sortorder[0] = get_string('createasc','pcast');
             $sortorder[1] = get_string('createdesc','pcast');
-            $sortorder[2] = get_string('timeasc','pcast');;
-            $sortorder[3] = get_string('timedesc','pcast');;
             $mform->addElement('select', 'rsssorting', get_string('rsssorting','pcast'), $sortorder);
             $mform->addHelpButton('rsssorting', 'rsssorting', 'pcast');
             $mform->setDefault('rsssorting', 2);
@@ -135,18 +133,17 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->disabledIf('subtitle', 'enablerssitunes', 'eq', 0);
 
 
-            /// Owner
-            ///TODO: Figure this out
-//            $ownerlist = array();
-//            $context = get_context_instance(CONTEXT_COURSE, $id);
-//            if($owners = get_users_by_capability($context, 'mod/ipodcast:owner', 'u.*', 'u.lastaccess')) {
-//                foreach ($owners as $owner) {
-//                    $ownerlist[$owner->id] = $owner->firstname . ' ' . $owner->lastname;
-//                }
-//            }
-//            $mform->addElement('select', 'userid', get_string('owner', 'ipodcast'), $ownerlist);
-//            $mform->addHelpButton('userid', 'courseowner', 'ipodcast');
-//            $mform->disabledIf('userid', 'enablerssitunes', 'eq', 0);
+            // Owner
+            $ownerlist = array();
+            $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
+            if($owners = get_users_by_capability($context, 'mod/pcast:manage', 'u.*', 'u.lastaccess')) {
+                foreach ($owners as $owner) {
+                    $ownerlist[$owner->id] = $owner->firstname . ' ' . $owner->lastname;
+                }
+            }
+            $mform->addElement('select', 'userid', get_string('author', 'pcast'), $ownerlist);
+            $mform->addHelpButton('userid', 'author', 'pcast');
+            $mform->disabledIf('userid', 'enablerssitunes', 'eq', 0);
 
 
             /// Keywords
@@ -156,9 +153,8 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->disabledIf('keywords', 'enablerssitunes', 'eq', 0);
 
 
-            // Top Category
+            // Generate Top Categorys
             $options=array();
-            //TODO: convert to use MUST EXIST
             $topcatcount=0;
             if($topcategories = $DB->get_records("pcast_itunes_categories")) {
                 foreach ($topcategories as $topcategory) {
@@ -167,35 +163,30 @@ class mod_pcast_mod_form extends moodleform_mod {
                 }
             }
 
-            // Secondary Category
-            $options2=array();
-            $options3=array();
-            $options4=array();
+            // Generate Secondary Category
+            $nestedoptions=array();
+            $nestedcount=array();
 
             for($i=0; $i< $topcatcount; $i++) {
-                $options4[$i] = 0;
+                $nestedcount[$i] = 0;
             }
 
-            //TODO: convert to use MUST EXIST
             if($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
                 foreach ($nestedcategories as $nestedcategory) {
 
-                    // Array format $options2[id] = name
-                    $options2[(int)$nestedcategory->id]= $nestedcategory->name;
-                    // Array format $options3[parentindex][id] = name
-                    if(($prevnestedcategoryid != (int)$nestedcategory->topcategoryid) or !isset($prevnestedcategoryid)) {
+                    // Array format $nestedoptions[parentindex][id] = name
+                    if(!isset($prevnestedcategoryid) or ($prevnestedcategoryid != (int)$nestedcategory->topcategoryid)) {
                         $i =1;
                     }
-                    // $options3[(int)$nestedcategory->topcategoryid][(int)$nestedcategory->id] = $nestedcategory->name;
-                    $options3[(int)$nestedcategory->topcategoryid][$i++] = $nestedcategory->name;
-                    // Array format $options4[id] = parentindexcount
-                    $options4[(int)$nestedcategory->topcategoryid]++;
+                    $nestedoptions[(int)$nestedcategory->topcategoryid][$i++] = $nestedcategory->name;
+                    // Array format $nestedcount[id] = parentindexcount
+                    $nestedcount[(int)$nestedcategory->topcategoryid]++;
                     $prevnestedcategoryid =(int)$nestedcategory->topcategoryid;
                 }
             }
 
 
-            //Generate the select list options
+            //Generate the select list options by combining both lists
             $k =0;
             $newoptions = array();
             for($i = 0; $i < $topcatcount; $i++) {
@@ -204,74 +195,72 @@ class mod_pcast_mod_form extends moodleform_mod {
                     $k++;
                 }
                 // Sub categories
-                for( $j=0; $j <= $options4[$i]; $j++) {
-                    if(isset($options3[$i][$j])) {
-                        $newoptions[$k] = '&nbsp;&nbsp;' . $options3[$i][$j];
+                for( $j=0; $j <= $nestedcount[$i]; $j++) {
+                    if(isset($nestedoptions[$i][$j])) {
+                        $newoptions[$k] = '&nbsp;&nbsp;' . $nestedoptions[$i][$j];
                         $k++;
                     }
                 }
             }
 
 
-            //$options = array_merge(array('all' => get_string('any')), $options);
+            unset($nestedcount);
+            unset($nestedoptions);
+
+            // Category form element
             $mform->addElement('select', 'category', get_string('category', 'pcast'),
                     $newoptions, array('size' => '1'));
-            //$mform->setDefault('subject', 'all');
             $mform->addHelpButton('category', 'category', 'pcast');
-            $this->init_javascript_enhancement('category', 'smartselect',
-                    array('selectablecategories' => true, 'mode' => 'compact'));
-
-
-
-            // Merge Arrays 1, 2, and 4 into 1 array
-
-
-            // Category List
-//            $attribs = array('size' => '4');
-//
-//            //Category Selection -> STANDARD FORMS, NEEDS some sort of JS,
-//            $categorylist=array();
-//            $categorylist[] = &$mform->createElement('select', 'topcategory', get_string('category', 'pcast'), $options, $attribs);
-//            $categorylist[] = &$mform->createElement('select', 'nestedcategory', '', $options2, $attribs);
-//            $mform->addGroup($categorylist, 'categorylist', get_string('category', 'pcast'), array(' '), false);
-//            $mform->setHelpButton('categorylist', array('coursecategory', 'topcategory', 'pcast'));
-//            $mform->setDefault('topcategory', '1');
-//            $mform->setDefault('nestedcategory', '1');
-//            $mform->disabledIf('topcategory', 'enablerssitunes', 'eq', 0);
-//            $mform->disabledIf('nestedcategory', 'enablerssitunes', 'eq', 0);
-
-            // TODO: REMOVE THIS CODE ONCE THE ABOVE CODE WORKS:
-/*
-            //Uses HierSelect QFORM object (Make sure that the hierselect.php file is added to moodle/lib/form/
-            //TODO: Fix Help File Icon for this mform object see MDL-20589
-            $hier = &$mform->addElement('hierselect', 'category', get_string('category', 'ipodcast'), $attribs);
-            $hier->setOptions(array($options,  $options3));
-            $mform->addHelpButton('category', 'coursecategory', 'ipodcast');
-            $mform->setDefaults(array('category'=>array(4,14)));
             $mform->disabledIf('category', 'enablerssitunes', 'eq', 0);
-*/
 
+            $this->init_javascript_enhancement('category', 'smartselect',
+                    array('selectablecategories' => false, 'mode' => 'compact'));
+
+            
             // Content
             $explicit=array();
             $explicit[0]  = get_string('yes');
             $explicit[1]  = get_string('no');
             $explicit[2]  = get_string('clean','pcast');
             $mform->addElement('select', 'explicit', get_string('explicit', 'pcast'),$explicit);
-            $mform->addHelpButton('explicit', 'courseexplicit', 'pcast');
+            $mform->addHelpButton('explicit', 'explicit', 'pcast');
             $mform->disabledIf('explicit', 'enablerssitunes', 'eq', 0);
             $mform->setDefault('explicit', 2);
         }
 
 
 //-------------------------------------------------------------------------------
-    /// Adding the rest of pcast settings, spreading all them into this fieldset
-    /// or adding more fieldsets ('header' elements) if needed for better logic
-        $mform->addElement('static', 'label1', 'pcastsetting1', 'Your pcast fields go here. Replace me!');
 
-        $mform->addElement('header', 'pcastfieldset', get_string('pcastfieldset', 'pcast'));
-        $mform->addElement('static', 'label2', 'pcastsetting2', 'Your pcast fields go here. Replace me!');
-        // Here is how you can add help (?) icons to your field labels
-        $mform->setHelpButton('label2', array('helpfilename', 'pcastsetting2', 'pcast'));
+        /// Images
+        $mform->addElement('header', 'images', get_string('image', 'pcast'));
+        $mform->setAdvanced('images');
+
+        $mform->addElement('filemanager', 'image', get_string('imagefile', 'pcast'), null,
+            array('subdirs'=>0,
+                'maxfiles'=>1,
+                'filetypes' => array('jpeg','png'),
+                'returnvalue'=>'ref_id'
+            ));
+
+        // Image Size
+        $size=array();
+        $size[0]  = get_string('noresize','pcast');
+        $size[16] = "16";
+        $size[32] = "32";
+        $size[48] = "48";
+        $size[64] = "64";
+        $size[128] = "128";
+        $size[144] = "144";
+        $size[200] = "200";
+        $size[400] = "400";
+
+        $mform->addElement('select', 'imageheight', get_string('imageheight', 'pcast'),$size);
+        $mform->setHelpButton('imageheight', array('imageheight', 'imageheight', 'pcast'));
+        $mform->setDefault('imageheight', 144);
+
+        $mform->addElement('select', 'imagewidth', get_string('imagewidth', 'pcast'),$size);
+        $mform->setHelpButton('imagewidth', array('imagewidth', 'imagewidth', 'pcast'));
+        $mform->setDefault('imagewidth', 144);
 
 //-------------------------------------------------------------------------------
         // add standard elements, common to all modules
@@ -280,5 +269,14 @@ class mod_pcast_mod_form extends moodleform_mod {
         // add standard buttons, common to all modules
         $this->add_action_buttons();
 
+    }
+
+    function data_preprocessing(&$default_values) {
+        if ($this->current->instance) {
+            // editing existing instance - copy existing files into draft area
+            $draftitemid = file_get_submitted_draft_itemid('image');
+            file_prepare_draft_area($draftitemid, $this->context->id, 'pcast_image', $this->current->image, array('subdirs'=>false));
+            $default_values['image'] = $draftitemid;
+        }
     }
 }

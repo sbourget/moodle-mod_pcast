@@ -51,6 +51,36 @@ $string['enablerssfeed']='Enable RSS';
 $string['rssepisodes']='Number of episodes';
 $string['rsssorting']='RSS sort order';
 $string['itunes']='iTunes';
-$string['']='';
+$string['createasc']='Newest episode first';
+$string['createdesc']='Oldest episode first';
+$string['enablerssitunes']='Enable RSS for iTunes';
+$string['subtitle']='Subtitle';
+$string['keywords']='Keywords';
+$string['category']='Category';
+$string['clean']='Clean';
+$string['explicit']='Explicit content';
+$string['author']='Author';
+$string['image']='Podcast image';
+$string['imagefile']='Image';
+$string['imageheight']='Height';
+$string['imagewidth']='Width';
+$string['noresize']='Do not resize';
+
+
+
+
+//mod_form.php help
+$string['userscanpost_help']='Allow users to post episodes.';
+$string['userscancomment_help']='Allow users to post comments';
+$string['requireapproval_help']='Require episodes to be approved before posting';
+$string['enablerssfeed_help']='Enable RSS for this podcast';
+$string['rssepisodes_help']='This option limits the number of episodes displayed on the RSS feed';
+$string['rsssorting_help']='This is the sort order for the episodes.  They can be sorted by date';
+$string['enablerssitunes_help']='This enables iTunes specific tags in the RSS file';
+$string['subtitle_help']='Subtitle for podcast';
+$string['keywords_help']='Keywords describing this podcast';
+$string['category_help']='iTunes category';
+$string['explicit_help']='This specifies if the podcast contains explicit content.';
+$string['author_help']='Author of the podcast';
 $string['']='';
 
