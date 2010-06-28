@@ -335,3 +335,42 @@ function pcast_scale_used_anywhere($scaleid) {
 function pcast_uninstall() {
     return true;
 }
+
+/**
+ * Lists all browsable file areas
+ *
+ * @param object $course
+ * @param object $cm
+ * @param object $context
+ * @return array
+ */
+function pcast_get_file_areas($course, $cm, $context) {
+    $areas = array('pcast_episode','pcast_logo');
+    return $areas;
+}
+
+/**
+ * Support for the Reports (Participants)
+ * @return array()
+ */
+ function pcast_get_view_actions() {
+     return array('view', 'view all', 'get attachment');
+ }
+/**
+ * Support for the Reports (Participants)
+ * @return array()
+ */
+ function pcast_get_post_actions() {
+     return array('add', 'update');
+ }
+
+ /**
+  * Tells if files in moddata are trusted and can be served without XSS protection.
+  *
+  * @return bool (true if file can be submitted by teacher only, otherwise false)
+  */
+
+function pcast_is_moddata_trusted() {
+    return false;
+}
+
