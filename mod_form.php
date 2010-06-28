@@ -108,10 +108,10 @@ class mod_pcast_mod_form extends moodleform_mod {
             $sortorder = array();
             $sortorder[0] = get_string('createasc','pcast');
             $sortorder[1] = get_string('createdesc','pcast');
-            $mform->addElement('select', 'rsssorting', get_string('rsssorting','pcast'), $sortorder);
-            $mform->addHelpButton('rsssorting', 'rsssorting', 'pcast');
-            $mform->setDefault('rsssorting', 2);
-            $mform->disabledIf('rsssorting', 'enablerssfeed', 'eq', 0);
+            $mform->addElement('select', 'rsssortorder', get_string('rsssortorder','pcast'), $sortorder);
+            $mform->addHelpButton('rsssortorder', 'rsssortorder', 'pcast');
+            $mform->setDefault('rsssortorder', 2);
+            $mform->disabledIf('rsssortorder', 'enablerssfeed', 'eq', 0);
 
         }
 

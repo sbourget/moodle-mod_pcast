@@ -53,10 +53,10 @@ add_to_log($course->id, 'pcast', 'view', "view.php?id=$cm->id", $pcast->name, $c
 
 /// Print the page header
 
-$PAGE->set_url('mod/pcast/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id));
 $PAGE->set_title($pcast->name);
 $PAGE->set_heading($course->shortname);
-$PAGE->set_button(update_module_button($cm->id, $course->id, get_string('modulename', 'pcast')));
+// $PAGE->set_button(update_module_button($cm->id, $course->id, get_string('modulename', 'pcast')));
 
 // other things you may want to set - remove if not needed
 //$PAGE->set_cacheable(false);

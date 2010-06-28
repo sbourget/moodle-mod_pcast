@@ -49,7 +49,7 @@ $string['userscanpost']='Allow users to post episodes';
 $string['requireapproval']='Require user posts to be approved';
 $string['enablerssfeed']='Enable RSS';
 $string['rssepisodes']='Number of episodes';
-$string['rsssorting']='RSS sort order';
+$string['rsssortorder']='RSS sort order';
 $string['itunes']='iTunes';
 $string['createasc']='Newest episode first';
 $string['createdesc']='Oldest episode first';
@@ -75,7 +75,7 @@ $string['userscancomment_help']='Allow users to post comments';
 $string['requireapproval_help']='Require episodes to be approved before posting';
 $string['enablerssfeed_help']='Enable RSS for this podcast';
 $string['rssepisodes_help']='This option limits the number of episodes displayed on the RSS feed';
-$string['rsssorting_help']='This is the sort order for the episodes.  They can be sorted by date';
+$string['rsssortorder_help']='This is the sort order for the episodes.  They can be sorted by date';
 $string['enablerssitunes_help']='This enables iTunes specific tags in the RSS file';
 $string['subtitle_help']='Subtitle for podcast';
 $string['keywords_help']='Keywords describing this podcast';
@@ -84,3 +84,5 @@ $string['explicit_help']='This specifies if the podcast contains explicit conten
 $string['author_help']='Author of the podcast';
 $string['']='';
 
+// Navigation Block
+$string['pcastadministration']='Podcast administration';

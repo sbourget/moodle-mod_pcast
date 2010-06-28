@@ -85,11 +85,25 @@ function pcast_supports($feature) {
 function pcast_add_instance($pcast) {
     global $DB;
 
+
     $pcast->timecreated = time();
 
+    // If it is a new instance time created is the same as modified
+    $pcast->timemodified = $pcast->timecreated;
+
+    // Split the category info into the top category and nested category
+    //TODO: For now use 1,1
+    $pcast->topcategory = 1;
+    $pcast->nestedcategory = 1;
+
+
+
+//    echo'<pre>';
+//    print_r($pcast);
+//    echo'</pre>';
     # You may have to add extra stuff in here #
 
-    return $DB->insert_record('pcast', $pcast);
+     return $DB->insert_record('pcast', $pcast);
 }
 
 /**
