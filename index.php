@@ -44,7 +44,7 @@ add_to_log($course->id, 'pcast', 'view all', "index.php?id=$course->id", '');
 
 /// Print the header
 
-$PAGE->set_url('mod/pcast/view.php', array('id' => $id));
+$PAGE->set_url('/mod/pcast/view.php', array('id' => $id));
 $PAGE->set_title($course->fullname);
 $PAGE->set_heading($course->shortname);
 
@@ -65,6 +65,8 @@ $timenow  = time();
 $strname  = get_string('name');
 $strweek  = get_string('week');
 $strtopic = get_string('topic');
+
+$table = new html_table();
 
 if ($course->format == 'weeks') {
     $table->head  = array ($strweek, $strname);
@@ -94,7 +96,8 @@ foreach ($pcasts as $pcast) {
 }
 
 echo $OUTPUT->heading(get_string('modulenameplural', 'pcast'), 2);
-print_table($table);
+echo html_writer::table($table);
+
 
 /// Finish the page
 
