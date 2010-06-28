@@ -106,7 +106,6 @@ function xmldb_pcast_install() {
     // Itunes Nested Categories
 
     $dataobject->id =1;
-    $dataobject->previousid = 0;
     $dataobject->topcategoryid = 1;
     $dataobject->name = 'Design';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
