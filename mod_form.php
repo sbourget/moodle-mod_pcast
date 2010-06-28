@@ -275,7 +275,7 @@ class mod_pcast_mod_form extends moodleform_mod {
         if ($this->current->instance) {
             // editing existing instance - copy existing files into draft area
             $draftitemid = file_get_submitted_draft_itemid('image');
-            file_prepare_draft_area($draftitemid, $this->context->id, 'pcast_image', $this->current->image, array('subdirs'=>false));
+            file_prepare_draft_area($draftitemid, $this->context->id, 'pcast_logo', $this->current->image, array('subdirs'=>false));
             $default_values['image'] = $draftitemid;
         }
     }

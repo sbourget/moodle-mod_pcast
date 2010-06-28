@@ -86,3 +86,6 @@ $string['']='';
 
 // Navigation Block
 $string['pcastadministration']='Podcast administration';
+
+//lib.php
+$string['noviews']='No views';

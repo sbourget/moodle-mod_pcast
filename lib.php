@@ -83,13 +83,23 @@ function pcast_supports($feature) {
  * @return int The id of the newly inserted pcast record
  */
 function pcast_add_instance($pcast) {
-    global $DB;
+    global $DB, $USER;
 
 
     $pcast->timecreated = time();
 
     // If it is a new instance time created is the same as modified
     $pcast->timemodified = $pcast->timecreated;
+
+
+    // If no owner then set it to the instance creator.
+    // TODO: THIS COULD BE A POTENTIAL BUG!!!
+    if(isset($pcast->enablerssitunes) and ($pcast->enablerssitunes == 1)) {
+        if(!isset($pcast->userid)) {
+            $pcast->userid = $USER->id;
+        }
+    }
+
 
     // Split the category info into the top category and nested category
     //TODO: For now use 1,1
@@ -103,7 +113,20 @@ function pcast_add_instance($pcast) {
 //    echo'</pre>';
     # You may have to add extra stuff in here #
 
-     return $DB->insert_record('pcast', $pcast);
+    $result = $DB->insert_record('pcast', $pcast);
+
+    $cmid = $pcast->coursemodule;
+    $draftitemid = $pcast->image;
+    // we need to use context now, so we need to make sure all needed info is already in db
+    $context = get_context_instance(CONTEXT_MODULE, $cmid);
+
+    if ($draftitemid) {
+        file_save_draft_area_files($draftitemid, $context->id, 'pcast_logo', $pcast->image, array('subdirs'=>false));
+    }
+
+
+    return $result;
+
 }
 
 /**
@@ -122,7 +145,19 @@ function pcast_update_instance($pcast) {
 
     # You may have to add extra stuff in here #
 
-    return $DB->update_record('pcast', $pcast);
+    $result = $DB->update_record('pcast', $pcast);
+
+    $cmid = $pcast->coursemodule;
+    $draftitemid = $pcast->image;
+    // we need to use context now, so we need to make sure all needed info is already in db
+    $context = get_context_instance(CONTEXT_MODULE, $cmid);
+
+    if ($draftitemid) {
+        file_save_draft_area_files($draftitemid, $context->id, 'pcast_logo', $pcast->image, array('subdirs'=>false));
+    }
+
+
+    return $result;
 }
 
 /**
@@ -154,14 +189,31 @@ function pcast_delete_instance($id) {
  * $return->time = the time they did it
  * $return->info = a short text description
  *
- * @return null
- * @todo Finish documenting this function
+ * @param object $course
+ * @param object $user
+ * @param object $mod
+ * @param object $pcast
+ * @return object $result
+
  */
 function pcast_user_outline($course, $user, $mod, $pcast) {
-    $return = new stdClass;
-    $return->time = 0;
-    $return->info = '';
-    return $return;
+
+    global $DB;
+
+    if ($logs = $DB->get_records("log", array('userid'=>$user->id, 'module'=>'pcast',
+                                              'action'=>'view', 'info'=>$pcast->id), "time ASC")) {
+
+        $numviews = count($logs);
+        $lastlog = array_pop($logs);
+
+        $result = new object();
+        $result->info = get_string("numviews", "", $numviews);
+        $result->time = $lastlog->time;
+
+        return $result;
+    }
+    return NULL;
+
 }
 
 /**
@@ -169,10 +221,30 @@ function pcast_user_outline($course, $user, $mod, $pcast) {
  * a given particular instance of this module, for user activity reports.
  *
  * @return boolean
- * @todo Finish documenting this function
+ * @param object $course
+ * @param object $user
+ * @param object $mod
+ * @param object $ipodcast
+ * @return object $result
+
  */
 function pcast_user_complete($course, $user, $mod, $pcast) {
-    return true;
+    global $CFG, $DB;
+
+    if ($logs = $DB->get_records("log", array('userid'=>$user->id, 'module'=>'pcast',
+                                              'action'=>'view', 'info'=>$pcast->id), "time ASC")) {
+        $numviews = count($logs);
+        $lastlog = array_pop($logs);
+
+        $strmostrecently = get_string("mostrecently");
+        $strnumviews = get_string("numviews", "", $numviews);
+
+        echo "$strnumviews - $strmostrecently ".userdate($lastlog->time);
+
+    } else {
+        print_string("noviews", "pcast");
+    }
+
 }
 
 /**
