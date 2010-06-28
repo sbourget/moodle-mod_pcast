@@ -41,3 +41,16 @@ $string['configusemediafilter'] = 'Use moodle media filters';
 $string['configenablerssfeeds2'] = 'Enable RSS Feeds:';
 $string['configenablerssitunes2'] = 'Enable iTunes RSS:';
 $string['configusemediafilter2'] = 'Use Media Filter:';
+
+//mod_form.php
+$string['setupposting']='Posting options';
+$string['userscancomment']='Allow user comments';
+$string['userscanpost']='Allow users to post episodes';
+$string['requireapproval']='Require user posts to be approved';
+$string['enablerssfeed']='Enable RSS';
+$string['rssepisodes']='Number of episodes';
+$string['rsssorting']='RSS sort order';
+$string['itunes']='iTunes';
+$string['']='';
+$string['']='';
+
