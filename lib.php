@@ -102,15 +102,30 @@ function pcast_add_instance($pcast) {
 
 
     // Split the category info into the top category and nested category
-    //TODO: For now use 1,1
-    $pcast->topcategory = 1;
-    $pcast->nestedcategory = 1;
+    if(isset($pcast->category)) {
+        $length = strlen($pcast->category);
+        switch ($length) {
+            case 4:
+                $pcast->topcategory = substr($pcast->category,0,1);
+                $pcast->nestedcategory = (int)substr($pcast->category,1,3);
+                break;
+            case 5:
+                $pcast->topcategory = substr($pcast->category,0,2);
+                $pcast->nestedcategory = (int)substr($pcast->category,2,3);
+                break;
+            case 6:
+                $pcast->topcategory = substr($pcast->category,0,3);
+                $pcast->nestedcategory = (int)substr($pcast->category,3,3);
+                break;
 
+            default:
+                // SHOULD NEVER HAPPEN
+                $pcast->topcategory = 1;
+                $pcast->nestedcategory = 1;
+                break;
+        }
+    }
 
-
-//    echo'<pre>';
-//    print_r($pcast);
-//    echo'</pre>';
     # You may have to add extra stuff in here #
 
     $result = $DB->insert_record('pcast', $pcast);
@@ -142,6 +157,40 @@ function pcast_update_instance($pcast) {
 
     $pcast->timemodified = time();
     $pcast->id = $pcast->instance;
+
+    // If no owner then set it to the instance creator.
+    // TODO: THIS COULD BE A POTENTIAL BUG!!!
+    if(isset($pcast->enablerssitunes) and ($pcast->enablerssitunes == 1)) {
+        if(!isset($pcast->userid)) {
+            $pcast->userid = $USER->id;
+        }
+    }
+
+    // Split the category info into the top category and nested category
+    if(isset($pcast->category)) {
+        $length = strlen($pcast->category);
+        switch ($length) {
+            case 4:
+                $pcast->topcategory = substr($pcast->category,0,1);
+                $pcast->nestedcategory = (int)substr($pcast->category,1,3);
+                break;
+            case 5:
+                $pcast->topcategory = substr($pcast->category,0,2);
+                $pcast->nestedcategory = (int)substr($pcast->category,2,3);
+                break;
+            case 6:
+                $pcast->topcategory = substr($pcast->category,0,3);
+                $pcast->nestedcategory = (int)substr($pcast->category,3,3);
+                break;
+
+            default:
+                // SHOULD NEVER HAPPEN
+                $pcast->topcategory = 1;
+                $pcast->nestedcategory = 1;
+                break;
+        }
+    }
+
 
     # You may have to add extra stuff in here #
 

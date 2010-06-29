@@ -30,6 +30,8 @@
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
+require_once($CFG->libdir . '/completionlib.php');
+
 
 $id = optional_param('id', 0, PARAM_INT); // course_module ID, or
 $n  = optional_param('n', 0, PARAM_INT);  // pcast instance ID - it should be named as the first character of the module
@@ -67,5 +69,17 @@ echo $OUTPUT->header();
 // Replace the following lines with you own code
 echo $OUTPUT->heading('Yay! It works!');
 
+/// Print the Add/edit episode button
+/// Need capability manage OR add with allow users to post option set
+echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">edit</a>';
+
+/// Next print the list of episodes
+/// These need to be able to be sorted???
+
 // Finish the page
 echo $OUTPUT->footer();
+
+/// Mark as viewed
+$completion=new completion_info($course);
+$completion->set_module_viewed($cm);
+

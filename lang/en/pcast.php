@@ -81,7 +81,7 @@ $string['subtitle_help']='Subtitle for podcast';
 $string['keywords_help']='Keywords describing this podcast';
 $string['category_help']='iTunes category';
 $string['explicit_help']='This specifies if the podcast contains explicit content.';
-$string['author_help']='Author of the podcast';
+$string['author_help']='Author of this podcast';
 $string['']='';
 
 // Navigation Block
@@ -89,3 +89,22 @@ $string['pcastadministration']='Podcast administration';
 
 //lib.php
 $string['noviews']='No views';
+
+// Errors
+$string['invalidcmorid']='Error: You must specify a course_module ID or an instance ID';
+$string['noeditprivlidges']='Error: You do not have editing rights.';
+$string['errcannoteditothers']='Error: you cannot edit other users episodes';
+$string['erredittimeexpired']='Error: Editing time has expired';
+$string['']='';
+$string['']='';
+$string['']='';
+$string['']='';
+$string['']='';
+
+//edit_form.php
+$string['name']='Name';
+$string['summary']='Summary';
+$string['attachment']='Attachment';
+$string['pcastmediafile']='Media file';
+$string['']='';
+$string['']='';

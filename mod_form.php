@@ -153,59 +153,24 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->disabledIf('keywords', 'enablerssitunes', 'eq', 0);
 
 
-            // Generate Top Categorys
-            $options=array();
-            $topcatcount=0;
+            // Generate Top Categorys;
+            $newoptions = array();
             if($topcategories = $DB->get_records("pcast_itunes_categories")) {
                 foreach ($topcategories as $topcategory) {
-                    $options[(int)$topcategory->id]= $topcategory->name;
-                    $topcatcount = (int)$topcategory->id;
+                    $value = (int)$topcategory->id * 1000;
+                    $newoptions[(int)$value] = $topcategory->name;
                 }
             }
 
             // Generate Secondary Category
-            $nestedoptions=array();
-            $nestedcount=array();
-
-            for($i=0; $i< $topcatcount; $i++) {
-                $nestedcount[$i] = 0;
-            }
-
             if($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
                 foreach ($nestedcategories as $nestedcategory) {
-
-                    // Array format $nestedoptions[parentindex][id] = name
-                    if(!isset($prevnestedcategoryid) or ($prevnestedcategoryid != (int)$nestedcategory->topcategoryid)) {
-                        $i =1;
-                    }
-                    $nestedoptions[(int)$nestedcategory->topcategoryid][$i++] = $nestedcategory->name;
-                    // Array format $nestedcount[id] = parentindexcount
-                    $nestedcount[(int)$nestedcategory->topcategoryid]++;
-                    $prevnestedcategoryid =(int)$nestedcategory->topcategoryid;
+                    $value = (int)$nestedcategory->topcategoryid * 1000;
+                    $value = $value + (int)$nestedcategory->id;
+                    $newoptions[(int)$value] = '&nbsp;&nbsp;' .$nestedcategory->name;
                 }
             }
-
-
-            //Generate the select list options by combining both lists
-            $k =0;
-            $newoptions = array();
-            for($i = 0; $i < $topcatcount; $i++) {
-                if(isset($options[$i])) {
-                    $newoptions[$k] = $options[$i];
-                    $k++;
-                }
-                // Sub categories
-                for( $j=0; $j <= $nestedcount[$i]; $j++) {
-                    if(isset($nestedoptions[$i][$j])) {
-                        $newoptions[$k] = '&nbsp;&nbsp;' . $nestedoptions[$i][$j];
-                        $k++;
-                    }
-                }
-            }
-
-
-            unset($nestedcount);
-            unset($nestedoptions);
+            ksort($newoptions);
 
             // Category form element
             $mform->addElement('select', 'category', get_string('category', 'pcast'),
@@ -277,6 +242,10 @@ class mod_pcast_mod_form extends moodleform_mod {
             $draftitemid = file_get_submitted_draft_itemid('image');
             file_prepare_draft_area($draftitemid, $this->context->id, 'pcast_logo', $this->current->image, array('subdirs'=>false));
             $default_values['image'] = $draftitemid;
+
+            // convert topcategory and nested to a single category
+            $default_values['category'] = (int)$default_values['topcategory'] *1000 + (int)$default_values['nestedcategory'];
+            
         }
     }
 }
