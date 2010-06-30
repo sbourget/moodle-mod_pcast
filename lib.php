@@ -32,8 +32,24 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/rating/lib.php');
+
+define("PCAST_SHOW_ALL_CATEGORIES", 0);
+define("PCAST_SHOW_NOT_CATEGORISED", -1);
+
+define("PCAST_NO_VIEW", -1);
+define("PCAST_STANDARD_VIEW", 0);
+define("PCAST_CATEGORY_VIEW", 1);
+define("PCAST_DATE_VIEW", 2);
+define("PCAST_AUTHOR_VIEW", 3);
+define("PCAST_ADDENTRY_VIEW", 4);
+define("PCAST_APPROVAL_VIEW", 5);
+define("PCAST_ENTRIES_PER_PAGE", 20);
+
+
+
 /** example constant */
-//define('pcast_ULTIMATE_ANSWER', 42);
+//define('PCAST_ULTIMATE_ANSWER', 42);
 
 /**
  * If you for some reason need to use global variables instead of constants, do not forget to make them
@@ -100,31 +116,8 @@ function pcast_add_instance($pcast) {
         }
     }
 
-
-    // Split the category info into the top category and nested category
-    if(isset($pcast->category)) {
-        $length = strlen($pcast->category);
-        switch ($length) {
-            case 4:
-                $pcast->topcategory = substr($pcast->category,0,1);
-                $pcast->nestedcategory = (int)substr($pcast->category,1,3);
-                break;
-            case 5:
-                $pcast->topcategory = substr($pcast->category,0,2);
-                $pcast->nestedcategory = (int)substr($pcast->category,2,3);
-                break;
-            case 6:
-                $pcast->topcategory = substr($pcast->category,0,3);
-                $pcast->nestedcategory = (int)substr($pcast->category,3,3);
-                break;
-
-            default:
-                // SHOULD NEVER HAPPEN
-                $pcast->topcategory = 1;
-                $pcast->nestedcategory = 1;
-                break;
-        }
-    }
+    // Get the episode category information
+    $pcast = pcast_get_itunes_categories($pcast);
 
     # You may have to add extra stuff in here #
 
@@ -166,31 +159,8 @@ function pcast_update_instance($pcast) {
         }
     }
 
-    // Split the category info into the top category and nested category
-    if(isset($pcast->category)) {
-        $length = strlen($pcast->category);
-        switch ($length) {
-            case 4:
-                $pcast->topcategory = substr($pcast->category,0,1);
-                $pcast->nestedcategory = (int)substr($pcast->category,1,3);
-                break;
-            case 5:
-                $pcast->topcategory = substr($pcast->category,0,2);
-                $pcast->nestedcategory = (int)substr($pcast->category,2,3);
-                break;
-            case 6:
-                $pcast->topcategory = substr($pcast->category,0,3);
-                $pcast->nestedcategory = (int)substr($pcast->category,3,3);
-                break;
-
-            default:
-                // SHOULD NEVER HAPPEN
-                $pcast->topcategory = 1;
-                $pcast->nestedcategory = 1;
-                break;
-        }
-    }
-
+    // Get the episode category information
+    $pcast = pcast_get_itunes_categories($pcast);
 
     # You may have to add extra stuff in here #
 
@@ -423,3 +393,33 @@ function pcast_is_moddata_trusted() {
     return false;
 }
 
+
+function pcast_get_itunes_categories($item) {
+
+    // Split the category info into the top category and nested category
+    if(isset($item->category)) {
+        $length = strlen($item->category);
+        switch ($length) {
+            case 4:
+                $item->topcategory = substr($item->category,0,1);
+                $item->nestedcategory = (int)substr($item->category,1,3);
+                break;
+            case 5:
+                $item->topcategory = substr($item->category,0,2);
+                $item->nestedcategory = (int)substr($item->category,2,3);
+                break;
+            case 6:
+                $item->topcategory = substr($item->category,0,3);
+                $item->nestedcategory = (int)substr($item->category,3,3);
+                break;
+
+            default:
+                // SHOULD NEVER HAPPEN
+                //TODO: Get the category from the podcast
+                $item->topcategory = 1;
+                $item->nestedcategory = 1;
+                break;
+        }
+    }
+    return $item;
+}

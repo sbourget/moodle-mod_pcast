@@ -56,7 +56,8 @@ class mod_pcast_entry_form extends moodleform {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-//
+
+        //$mform->addElement('textarea', 'summary', get_string("summary", "pcast"), 'wrap="virtual" rows="20" cols="50"');
         $mform->addElement('editor', 'summary', get_string('summary', 'pcast'), null);
         $mform->setType('summary', PARAM_RAW);
         $mform->addRule('summary', get_string('required'), 'required', null, 'client');
@@ -117,7 +118,7 @@ class mod_pcast_entry_form extends moodleform {
 
         // Attachment
         $mform->addElement('header', 'attachments', get_string('attachment', 'pcast'));
-        $mform->addElement('filemanager', 'attachment', get_string('pcastmediafile', 'pcast'), null,
+        $mform->addElement('filemanager', 'mediafile', get_string('pcastmediafile', 'pcast'), null,
             array('subdirs'=>0,
                 'maxfiles'=>1,
                 'maxbytes'=>$COURSE->maxbytes,
@@ -143,18 +144,14 @@ class mod_pcast_entry_form extends moodleform {
 
     }
 
-    //TODO: DOES THIS DO ANYTHING???
-    function data_preprocessing(&$default_values) {
-        if ($this->current->instance) {
-            // editing existing instance - copy existing files into draft area
-            $draftitemid = file_get_submitted_draft_itemid('attachment');
-            file_prepare_draft_area($draftitemid, $this->context->id, 'pcast_episode', $this->current->attachment, array('subdirs'=>false));
-            $default_values['attachment'] = $draftitemid;
-
-            // Pull in defaults to hier select element
-            $default_values['category'] = array((int)$this->current->topcategory,(int)$this->current->nestedcategory);
-        }
-    }
+//    function data_preprocessing(&$default_values) {
+//        if ($this->current->instance) {
+//            // editing existing instance - copy existing files into draft area
+//            $draftitemid = file_get_submitted_draft_itemid('mediafile');
+//            file_prepare_draft_area($draftitemid, $this->context->id, 'pcast_episode', $this->current->mediafile, array('subdirs'=>false));
+//            $default_values['mediafile'] = $draftitemid;
+//        }
+//    }
 /*
     function validation($data, $files) {
         global $CFG, $USER, $DB;

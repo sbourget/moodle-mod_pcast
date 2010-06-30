@@ -30,25 +30,44 @@
 
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__).'/locallib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
 
-$id = optional_param('id', 0, PARAM_INT); // course_module ID, or
-$n  = optional_param('n', 0, PARAM_INT);  // pcast instance ID - it should be named as the first character of the module
+$id = optional_param('id', 0, PARAM_INT); // course_module ID.
+
+// COPIED FROM GLOSSARY
+$mode       = optional_param('mode', PCAST_STANDARD_VIEW, PARAM_ALPHANUM); // term entry cat date letter search author approval
+$hook       = optional_param('hook', '', PARAM_CLEAN);           // the term, entry, cat, etc... to look for based on mode
+$sortkey    = optional_param('sortkey', '', PARAM_ALPHA);        // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
+$sortorder  = optional_param('sortorder', 'ASC', PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
+$page       = optional_param('page', 0,PARAM_INT);               // Page to show (for paging purposes)
+
+
+
+// $displayformat = optional_param('displayformat',-1, PARAM_INT);  // override of the glossary display format
+
+// $fullsearch = optional_param('fullsearch', 0,PARAM_INT);         // full search (concept and definition) when searching?
+// $offset     = optional_param('offset', 0,PARAM_INT);             // entries to bypass (for paging purposes)
+// $show       = optional_param('show', '', PARAM_ALPHA);           // [ concept | alias ] => mode=term hook=$show
+
+// END COPY
 
 if ($id) {
     $cm         = get_coursemodule_from_id('pcast', $id, 0, false, MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $pcast  = $DB->get_record('pcast', array('id' => $cm->instance), '*', MUST_EXIST);
-} elseif ($n) {
-    $pcast  = $DB->get_record('pcast', array('id' => $n), '*', MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $pcast->course), '*', MUST_EXIST);
-    $cm         = get_coursemodule_from_instance('pcast', $pcast->id, $course->id, false, MUST_EXIST);
 } else {
     error('You must specify a course_module ID or an instance ID');
 }
 
 require_login($course, true, $cm);
+$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+// Load comment API
+require_once($CFG->dirroot . '/comment/lib.php');
+comment::init();
+
 
 add_to_log($course->id, 'pcast', 'view', "view.php?id=$cm->id", $pcast->name, $cm->id);
 
@@ -67,11 +86,159 @@ $PAGE->set_heading($course->shortname);
 echo $OUTPUT->header();
 
 // Replace the following lines with you own code
-echo $OUTPUT->heading('Yay! It works!');
+echo $OUTPUT->heading('Yay! It works!- LIST THE PCASTS');
 
 /// Print the Add/edit episode button
 /// Need capability manage OR add with allow users to post option set
-echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">edit</a>';
+echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">'.get_string('addnewepisode', 'pcast').'</a>';
+
+    echo $OUTPUT->heading_with_help(get_string("viewpcast","pcast",$pcast->name), 'pcast' ,'pcast', 'icon');
+
+ 
+    // Print heading and tabs
+    //include('tabs.php');
+
+    // *************************************************************************
+    //Sorting info
+    if (!isset($sortorder)) {
+        $sortorder = '';
+    }
+    if (!isset($sortkey)) {
+        $sortkey = '';
+    }
+
+    //make sure variables are properly cleaned
+    $sortkey   = clean_param($sortkey, PARAM_ALPHA);// Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
+    $sortorder = clean_param($sortorder, PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
+
+    $toolsrow = array();
+    $browserow = array();
+    $inactive = array();
+    $activated = array();
+
+    if (!has_capability('mod/pcast:approve', $context) && $tab == PCAST_APPROVAL_VIEW) {
+    /// Non-teachers going to approval view go to defaulttab
+        $tab = $defaulttab;
+    }
+
+
+    $browserow[] = new tabobject(PCAST_STANDARD_VIEW,
+                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_STANDARD_VIEW,
+                                 get_string('standardview', 'pcast'));
+
+    $browserow[] = new tabobject(PCAST_CATEGORY_VIEW,
+                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_CATEGORY_VIEW,
+                                 get_string('categoryview', 'pcast'));
+
+    $browserow[] = new tabobject(PCAST_DATE_VIEW,
+                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_DATE_VIEW,
+                                 get_string('dateview', 'pcast'));
+
+    $browserow[] = new tabobject(PCAST_AUTHOR_VIEW,
+                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_AUTHOR_VIEW,
+                                 get_string('authorview', 'pcast'));
+
+    if ($mode < PCAST_STANDARD_VIEW || $mode > PCAST_AUTHOR_VIEW) {   // We are on second row
+        $inactive = array('edit');
+        $activated = array('edit');
+
+        $browserow[] = new tabobject('edit', '#', get_string('edit'));
+    }
+
+/// Put all this info together
+
+    $tabrows = array();
+    $tabrows[] = $browserow;     // Always put these at the top
+    if ($toolsrow) {
+        $tabrows[] = $toolsrow;
+    }
+
+
+echo'  <div class="pcastdisplay">';
+print_tabs($tabrows, $mode, $inactive, $activated);
+
+echo'  <div class="entrybox">';
+echo '</div></div>';
+
+
+    if (!isset($category)) {
+        $category = "";
+    }
+
+
+    switch ($mode) {
+
+        case PCAST_CATEGORY_VIEW:
+             pcast_print_categories_menu($cm, $pcast, $hook, $category);
+        break;
+
+        case PCAST_APPROVAL_VIEW:
+             pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+        break;
+
+        case PCAST_AUTHOR_VIEW:
+            $search = "";
+             pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder, 'print');
+        break;
+
+        case PCAST_DATE_VIEW:
+            if (!$sortkey) {
+                $sortkey = 'UPDATE';
+            }
+            if (!$sortorder) {
+                $sortorder = 'desc';
+            }
+             pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+        break;
+        
+        case PCAST_STANDARD_VIEW:
+        default:
+             pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+            if ($mode == 'search' and $hook) {
+                echo "<h3>$strsearch: $hook</h3>";
+            }
+        break;
+    }
+    echo '<hr />';
+
+    //**************************************************************************
+
+    // Print the main part of the page (The content)
+    echo'<div id="pcast-view" class="generalbox"><div class="generalboxcontent">';
+
+    switch($mode) {
+        case PCAST_STANDARD_VIEW:
+
+            pcast_display_standard_episodes($pcast, $cm, $hook, $sortorder);
+            break;
+
+        case PCAST_CATEGORY_VIEW:
+
+            echo 'CATEGORY';
+            break;
+
+        case PCAST_DATE_VIEW:
+
+            echo 'DATE';
+            break;
+
+        case PCAST_AUTHOR_VIEW:
+
+            echo 'AUTHOR';
+            break;
+
+        case PCAST_ADDENTRY_VIEW:
+
+            echo 'ADD';
+            break;
+
+        default:
+
+            echo 'NORMAL';
+            break;    }
+
+    echo '</div></div>';
+
 
 /// Next print the list of episodes
 /// These need to be able to be sorted???

@@ -2,7 +2,9 @@
 
 require_once('../../config.php');
 require_once('lib.php');
+require_once('locallib.php');
 require_once('edit_form.php');
+
 
 $cmid = required_param('cmid', PARAM_INT);            // Course Module ID
 $id   = optional_param('id', 0, PARAM_INT);           // EntryID
@@ -40,7 +42,7 @@ if ($id) { // if entry is specified
     }
 
     //TODO: This is from the glossary code.  Rethink how editing will work.
-    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime) || $pcast->editalways);
+    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime) /*|| $pcast->editalways */ );
     if (!has_capability('mod/pcast:manage', $context) and !($episode->userid == $USER->id and ($ineditperiod and has_capability('mod/pcast:write', $context)))) {
         if ($USER->id != $fromdb->userid) {
             print_error('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=entry&amp;hook=$id");
@@ -55,15 +57,14 @@ if ($id) { // if entry is specified
     $episode->id = null;
 }
 
-$maxfiles = 1;
-$maxbytes = $course->maxbytes;
+$draftitemid = file_get_submitted_draft_itemid('attachments');
+file_prepare_draft_area($draftitemid, $context->id, 'pcast_episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio','video')));
+$episode->mediafile = $draftitemid;
 
-
-
-$attachmentoptions = array('subdirs'=>false, 'maxfiles'=>$maxfiles, 'maxbytes'=>$maxbytes);
-$episode = file_prepare_standard_filemanager($episode, 'attachment', $attachmentoptions, $context, 'pcast_episode', $episode->id);
 $episode->cmid = $cm->id;
-
+if(isset($episode->summary)) {
+    $episode->summary =array('text' => $episode->summary,'format' => '1');
+}
 // create form and set initial data
 $mform = new mod_pcast_entry_form(null, array('current'=>$episode, 'cm'=>$cm, 'pcast'=>$pcast));
 
@@ -74,91 +75,68 @@ if ($mform->is_cancelled()){
         redirect("view.php?id=$cm->id");
     }
 
-    //TODO: FINISH FROM HERE DOWN!!!
-} else if ($episode = $mform->get_data()) {
-    echo'<pre>';
-    print_r($episode);
-    echo'</pre>';
+} else if ($episode = $mform->get_data()) {   
     $timenow = time();
 
-    $categories = empty($episode->categories) ? array() : $episode->categories;
-    unset($episode->categories);
-    $aliases = trim($episode->aliases);
-    unset($episode->aliases);
-
+    //Calculated settings
     if (empty($episode->id)) {
         $episode->pcastid       = $pcast->id;
-        $episode->timecreated      = $timenow;
-        $episode->userid           = $USER->id;
-        $episode->timecreated      = $timenow;
-        $episode->sourcepcastid = 0;
-        $episode->teacherentry     = has_capability('mod/pcast:manageentries', $context);
+        $episode->timecreated   = $timenow;
+        $episode->userid        = $USER->id;
+        $episode->course        = $COURSE->id;
     }
-
-    $episode->concept          = trim($episode->concept);
-    $episode->definition       = '';          // updated later
-    $episode->definitionformat = FORMAT_HTML; // updated later
-    $episode->definitiontrust  = 0;           // updated later
+    $episode->summary          = $episode->summary['text'];
     $episode->timemodified     = $timenow;
     $episode->approved         = 0;
-    $episode->usedynalink      = isset($episode->usedynalink) ?   $episode->usedynalink : 0;
-    $episode->casesensitive    = isset($episode->casesensitive) ? $episode->casesensitive : 0;
-    $episode->fullmatch        = isset($episode->fullmatch) ?     $episode->fullmatch : 0;
+    $episode->name = clean_param($episode->name, PARAM_ALPHANUM);
 
-    if ($pcast->defaultapproval or has_capability('mod/pcast:approve', $context)) {
+    // Get the episode category information
+    $episode = pcast_get_itunes_categories($episode);
+
+    // Episode approval
+    if ($pcast->requireapproval or has_capability('mod/pcast:approve', $context)) {
         $episode->approved = 1;
     }
 
     if (empty($episode->id)) {
         //new entry
-        $episode->id = $DB->insert_record('pcast_entries', $episode);
-        add_to_log($course->id, "pcast", "add entry",
+        $episode->id = $DB->insert_record('pcast_episodes', $episode);
+        //TODO: Revist this when view.php is done
+        add_to_log($course->id, "pcast", "add episode",
                    "view.php?id=$cm->id&amp;mode=entry&amp;hook=$episode->id", $episode->id, $cm->id);
 
     } else {
         //existing entry
-        $DB->update_record('pcast_entries', $episode);
-        add_to_log($course->id, "pcast", "update entry",
+        $DB->update_record('pcast_episodes', $episode);
+        //TODO: Revist this when view.php is done
+        add_to_log($course->id, "pcast", "update episode",
                    "view.php?id=$cm->id&amp;mode=entry&amp;hook=$episode->id",
                    $episode->id, $cm->id);
     }
 
-    // save and relink embedded images and save attachments
-    $episode = file_postupdate_standard_editor($episode, 'definition', $definitionoptions, $context, 'pcast_entry', $episode->id);
-    $episode = file_postupdate_standard_filemanager($episode, 'attachment', $attachmentoptions, $context, 'pcast_attachment', $episode->id);
 
-    // store the updated value values
-    $DB->update_record('pcast_entries', $episode);
+    file_save_draft_area_files($episode->mediafile, $context->id, 'pcast_episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio','video')));
 
-    //refetch complete entry
-    $episode = $DB->get_record('pcast_entries', array('id'=>$episode->id));
-
-    // update entry categories
-    $DB->delete_records('pcast_entries_categories', array('entryid'=>$episode->id));
-    // TODO: this deletes cats from both both main and secondary pcast :-(
-    if (!empty($categories) and array_search(0, $categories) === false) {
-        foreach ($categories as $catid) {
-            $newcategory = new object();
-            $newcategory->entryid    = $episode->id;
-            $newcategory->categoryid = $catid;
-            $DB->insert_record('pcast_entries_categories', $newcategory, false);
-        }
-    }
-
-    // update aliases
-    $DB->delete_records('pcast_alias', array('entryid'=>$episode->id));
-    if ($aliases !== '') {
-        $aliases = explode("\n", $aliases);
-        foreach ($aliases as $alias) {
-            $alias = trim($alias);
-            if ($alias !== '') {
-                $newalias = new object();
-                $newalias->entryid = $episode->id;
-                $newalias->alias   = $alias;
-                $DB->insert_record('pcast_alias', $newalias, false);
+    //Get the duration if an MP3 file
+    $fs = get_file_storage();
+    if ($files = $fs->get_area_files($context->id, 'pcast_episode', $episode->id, "timemodified", false)) {
+        foreach ($files as $file) {
+            $hash = $file->get_contenthash();
+            $mime = $file->get_mimetype();
+            if($mime == 'audio/mp3') {
+                $mp3info=pcast_get_mp3_info(pcast_file_path_lookup ($hash));
+                $episode->duration = $mp3info->length;
             }
         }
-    }
+    } 
+
+
+// store the updated value values
+    $DB->update_record('pcast_episodes', $episode);
+
+    //refetch complete entry
+    $episode = $DB->get_record('pcast_episodes', array('id'=>$episode->id));
+    
 
     redirect("view.php?id=$cm->id&amp;mode=entry&amp;hook=$episode->id");
 }

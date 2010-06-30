@@ -108,3 +108,27 @@ $string['attachment']='Attachment';
 $string['pcastmediafile']='Media file';
 $string['']='';
 $string['']='';
+
+// view.php
+$string['view']='View';
+$string['standardview']='Alphabetical';
+$string['categoryview']='By Category';
+$string['dateview']='By Date';
+$string['authorview']='By Author';
+$string['addnewepisode']='Add a new episode';
+$string['viewpcast']='View podcast: {$a}';
+//TODO: CHANGE ME!
+$string['pcast_help']= 'THIS IS A HELP FILE';
+
+
+// locallib.php
+$string['explainaddentry'] = 'Add a new episode to the current podcast.<br />name, summary, and attachment are mandatory fields.';
+$string['explainall'] = 'Shows ALL entries on one page';
+$string['explainalphabet'] = 'Browse the podcast using this index';
+$string['explainspecial'] = 'Shows entries that do not begin with a letter';
+$string['special'] = 'Special';
+$string['allentries'] = 'ALL';
+
+
+//TODO: Delete when MDL-23004 is fixed
+$string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
