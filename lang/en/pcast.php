@@ -128,6 +128,11 @@ $string['explainalphabet'] = 'Browse the podcast using this index';
 $string['explainspecial'] = 'Shows entries that do not begin with a letter';
 $string['special'] = 'Special';
 $string['allentries'] = 'ALL';
+$string['allcategories'] = 'All categories';
+$string['notcategorised']='Not categorised';
+$string['episodeswithoutcategory']='Episodes without a category';
+$string['']='';
+$string['']='';
 
 
 //TODO: Delete when MDL-23004 is fixed

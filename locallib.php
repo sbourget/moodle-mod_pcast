@@ -267,7 +267,7 @@ function pcast_print_author_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sorto
  * @param string $hook
  * @param object $category
  */
-function pcast_print_categories_menu($cm, $pcast, $hook, $category) {
+function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIES) {
      global $CFG, $DB, $OUTPUT;
 
      $context = get_context_instance(CONTEXT_MODULE, $cm->id);
@@ -276,12 +276,7 @@ function pcast_print_categories_menu($cm, $pcast, $hook, $category) {
      echo '<tr>';
 
      echo '<td align="center" style="width:20%">';
-     if (has_capability('mod/pcast:managecategories', $context)) {
-             $options['id'] = $cm->id;
-             $options['mode'] = 'cat';
-             $options['hook'] = $hook;
-             echo $OUTPUT->single_button(new moodle_url("editcategories.php", $options), get_string("editcategories","pcast"), "get");
-     }
+
      echo '</td>';
 
      echo '<td align="center" style="width:60%">';
@@ -291,42 +286,48 @@ function pcast_print_categories_menu($cm, $pcast, $hook, $category) {
      $menu[PCAST_SHOW_ALL_CATEGORIES] = get_string("allcategories","pcast");
      $menu[PCAST_SHOW_NOT_CATEGORISED] = get_string("notcategorised","pcast");
 
-     $categories = $DB->get_records("pcast_categories", array("pcastid"=>$pcast->id), "name ASC");
-     $selected = '';
-     if ( $categories ) {
-          foreach ($categories as $currentcategory) {
-                 $url = $currentcategory->id;
-                 if ( $category ) {
-                     if ($currentcategory->id == $category->id) {
-                         $selected = $url;
-                     }
-                 }
-                 $menu[$url] = clean_text($currentcategory->name); //Only clean, not filters
-          }
-     }
-     if ( !$selected ) {
-         $selected = PCAST_SHOW_NOT_CATEGORISED;
-     }
-
-     if ( $category ) {
-        echo format_text($category->name, FORMAT_PLAIN);
-     } else {
-        if ( $hook == PCAST_SHOW_NOT_CATEGORISED ) {
-
-            echo get_string("entrieswithoutcategory","pcast");
-            $selected = PCAST_SHOW_NOT_CATEGORISED;
-
-        } elseif ( $hook == PCAST_SHOW_ALL_CATEGORIES ) {
-
-            echo get_string("allcategories","pcast");
-            $selected = PCAST_SHOW_ALL_CATEGORIES;
-
+    // Generate Top Categorys;
+    if($topcategories = $DB->get_records("pcast_itunes_categories")) {
+        foreach ($topcategories as $topcategory) {
+            $value = (int)$topcategory->id * 1000;
+            $menu[(int)$value] = $topcategory->name;
         }
-     }
+    }
+
+    // Generate Secondary Category
+    if($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
+        foreach ($nestedcategories as $nestedcategory) {
+            $value = (int)$nestedcategory->topcategoryid * 1000;
+            $value = $value + (int)$nestedcategory->id;
+            $menu[(int)$value] = '&nbsp;&nbsp;' .$nestedcategory->name;
+        }
+    }
+    ksort($menu);
+
+    // Print the category name
+    if ( $hook == PCAST_SHOW_NOT_CATEGORISED ) {
+        echo get_string("episodeswithoutcategory","pcast");
+
+    } else if ( $hook == PCAST_SHOW_ALL_CATEGORIES ) {
+        echo get_string("allcategories","pcast");
+    } else {
+        // Lookup the category name by 4 digit ID
+        $category->category = $hook;
+        $category = pcast_get_itunes_categories($category);
+        
+        // Print the category names in the format top: nested
+        if($category->nestedcategory == 0) {
+            echo $menu[(int)$hook];
+        } else {
+            //Todo: convert to lang file later
+            echo $menu[(int)$category->topcategory*1000].': '.$menu[(int)$hook];
+        }
+    }
+     
      echo '</b></td>';
      echo '<td align="center" style="width:20%">';
 
-     $select = new single_select(new moodle_url("/mod/pcast/view.php", array('id'=>$cm->id, 'mode'=>'cat')), 'hook', $menu, $selected, null, "catmenu");
+     $select = new single_select(new moodle_url("/mod/pcast/view.php", array('id'=>$cm->id, 'mode'=>PCAST_CATEGORY_VIEW)), 'hook', $menu, $hook, null, "catmenu");
      echo $OUTPUT->render($select);
 
      echo '</td>';
@@ -650,5 +651,134 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sort='name ASC'
     return true;
 }
 
+function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEGORIES) {
+    global $CFG, $DB;
+
+    // Get the episodes for this pcast
+
+    if($hook == PCAST_SHOW_ALL_CATEGORIES) {
+           $sql = "SELECT p.id AS id,
+                        p.pcastid AS pcastid,
+                        p.course AS course,
+                        p.userid AS user,
+                        p.name AS name,
+                        p.summary AS summary,
+                        p.mediafile AS mediafile,
+                        p.duration AS duration,
+                        p.explicit AS explicit,
+                        p.subtitle AS subtitle,
+                        p.keywords AS keywords,
+                        p.topcategory as topcatid,
+                        p.nestedcategory as nestedcatid,
+                        p.timecreated as timecreated,
+                        p.timemodified as timemodified,
+                        p.approved as approved,
+                        p.sequencenumber as sequencenumber,
+                        cat.name as topcategory,
+                        ncat.name as nestedcategory
+                    FROM {pcast_episodes} AS p
+                    JOIN
+                        {pcast_itunes_categories} AS cat ON
+                        p.topcategory = cat.id
+                    JOIN
+                        {pcast_itunes_nested_cat} AS ncat ON
+                        p.nestedcategory = ncat.id
+                    WHERE p.pcastid = ?
+                    ORDER BY cat.name, ncat.name, p.name ASC";
+        $episodes = $DB->get_records_sql($sql,array($pcast->id));
+
+    } else if ($hook == PCAST_SHOW_NOT_CATEGORISED) {
+
+        $episodes = $DB->get_records('pcast_episodes',array('pcastid'=> $pcast->id, 'topcategory' => 0), 'name');
+
+    } else {
+        $category->category = $hook;
+        $category = pcast_get_itunes_categories($category);
+        if($category->nestedcategory == 0) {
+           $sql = "SELECT p.id AS id,
+                        p.pcastid AS pcastid,
+                        p.course AS course,
+                        p.userid AS user,
+                        p.name AS name,
+                        p.summary AS summary,
+                        p.mediafile AS mediafile,
+                        p.duration AS duration,
+                        p.explicit AS explicit,
+                        p.subtitle AS subtitle,
+                        p.keywords AS keywords,
+                        p.topcategory as topcatid,
+                        p.nestedcategory as nestedcatid,
+                        p.timecreated as timecreated,
+                        p.timemodified as timemodified,
+                        p.approved as approved,
+                        p.sequencenumber as sequencenumber,
+                        cat.name as topcategory,
+                        ncat.name as nestedcategory
+                    FROM {pcast_episodes} AS p
+                    JOIN
+                        {pcast_itunes_categories} AS cat ON
+                        p.topcategory = cat.id
+                    JOIN
+                        {pcast_itunes_nested_cat} AS ncat ON
+                        p.nestedcategory = ncat.id
+                    WHERE p.pcastid = ? AND
+                    p.topcategory = ?
+                    ORDER BY cat.name, ncat.name, p.name ASC";
+            $episodes = $DB->get_records_sql($sql,array($pcast->id, 'topcategory' => $category->topcategory));
+
+        } else {
+           $sql = "SELECT p.id AS id,
+                        p.pcastid AS pcastid,
+                        p.course AS course,
+                        p.userid AS user,
+                        p.name AS name,
+                        p.summary AS summary,
+                        p.mediafile AS mediafile,
+                        p.duration AS duration,
+                        p.explicit AS explicit,
+                        p.subtitle AS subtitle,
+                        p.keywords AS keywords,
+                        p.topcategory as topcatid,
+                        p.nestedcategory as nestedcatid,
+                        p.timecreated as timecreated,
+                        p.timemodified as timemodified,
+                        p.approved as approved,
+                        p.sequencenumber as sequencenumber,
+                        cat.name as topcategory,
+                        ncat.name as nestedcategory
+                    FROM {pcast_episodes} AS p
+                    JOIN
+                        {pcast_itunes_categories} AS cat ON
+                        p.topcategory = cat.id
+                    JOIN
+                        {pcast_itunes_nested_cat} AS ncat ON
+                        p.nestedcategory = ncat.id
+                    WHERE p.pcastid = ? AND
+                    p.nestedcategory = ?
+                    ORDER BY cat.name, ncat.name, p.name ASC";
+            $episodes = $DB->get_records_sql($sql,array($pcast->id, 'topcategory' => $category->nestedcategory));
+
+        }
+
+    }
+
+    // Print the episodes
+    foreach ($episodes as $episode) {
+
+        echo ('<div class="episode">');
+        //TODO: convert to strings in lang file
+        echo ('TopCat:'.$episode->topcategory.'<br />'."\n");
+        echo ('NestedCat:'.$episode->nestedcategory.'<br />'."\n");
+        echo ('Name:'.$episode->name.'<br />'."\n");
+        echo ('Summary:'.$episode->summary.'<br />'."\n");
+        echo ('Attachment:'.$episode->mediafile.'<br />'."\n");
+
+        // Edit link
+        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+        echo '<hr>';
+        echo ('</div>');
+
+    }
+}
 
 ?>

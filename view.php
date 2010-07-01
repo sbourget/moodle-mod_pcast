@@ -169,7 +169,7 @@ echo '</div></div>';
     switch ($mode) {
 
         case PCAST_CATEGORY_VIEW:
-             pcast_print_categories_menu($cm, $pcast, $hook, $category);
+             pcast_print_categories_menu($cm, $pcast, $hook);
         break;
 
         case PCAST_APPROVAL_VIEW:
@@ -214,7 +214,7 @@ echo '</div></div>';
 
         case PCAST_CATEGORY_VIEW:
 
-            echo 'CATEGORY';
+            pcast_display_category_episodes($pcast, $cm, $hook);
             break;
 
         case PCAST_DATE_VIEW:
