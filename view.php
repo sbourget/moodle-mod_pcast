@@ -188,7 +188,7 @@ echo '</div></div>';
             if (!$sortorder) {
                 $sortorder = 'desc';
             }
-             pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+             pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
         break;
         
         case PCAST_STANDARD_VIEW:
@@ -219,7 +219,7 @@ echo '</div></div>';
 
         case PCAST_DATE_VIEW:
 
-            echo 'DATE';
+            pcast_display_date_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
             break;
 
         case PCAST_AUTHOR_VIEW:

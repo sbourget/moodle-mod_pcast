@@ -131,8 +131,17 @@ $string['allentries'] = 'ALL';
 $string['allcategories'] = 'All categories';
 $string['notcategorised']='Not categorised';
 $string['episodeswithoutcategory']='Episodes without a category';
+$string['ascending']='Acsending';
+$string['descending']='Descending';
+$string['changeto']='Change to {$a}';
+$string['sortbycreation']='Sort by date created';
+$string['sortbylastupdate']='Sort by date updated';
+$string['sortchronogically']='Sort by date added';
+$string['current']='Today';
 $string['']='';
 $string['']='';
+$string['']='';
+
 
 
 //TODO: Delete when MDL-23004 is fixed

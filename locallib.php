@@ -228,18 +228,16 @@ function pcast_print_approval_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sor
  * @param string $sortorder
  */
 function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorder = '') {
-    if ( $mode != PCAST_DATE_VIEW ) {
-            echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
-        
 
-        pcast_print_special_links($cm, $pcast, $mode, $hook);
+    echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
+    pcast_print_special_links($cm, $pcast, $mode, $hook);
+    pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+    pcast_print_all_links($cm, $pcast, $mode, $hook);
 
-        pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+}
 
-        pcast_print_all_links($cm, $pcast, $mode, $hook);
-    } else {
-        pcast_print_sorting_links($cm, $mode, $sortkey,$sortorder);
-    }
+function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorder = '') {
+    pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder);
 }
 
 /**
@@ -781,4 +779,84 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
     }
 }
 
+
+function pcast_display_date_episodes($pcast, $cm, $hook, $sortkey='CREATED', $sortorder='desc') {
+        global $CFG, $DB;
+
+    // Get the episodes for this pcast
+   $sql = "SELECT p.id AS id,
+                p.pcastid AS pcastid,
+                p.course AS course,
+                p.userid AS user,
+                p.name AS name,
+                p.summary AS summary,
+                p.mediafile AS mediafile,
+                p.duration AS duration,
+                p.explicit AS explicit,
+                p.subtitle AS subtitle,
+                p.keywords AS keywords,
+                p.topcategory as topcatid,
+                p.nestedcategory as nestedcatid,
+                p.timecreated as timecreated,
+                p.timemodified as timemodified,
+                p.approved as approved,
+                p.sequencenumber as sequencenumber,
+                cat.name as topcategory,
+                ncat.name as nestedcategory
+            FROM {pcast_episodes} AS p
+            JOIN
+                {pcast_itunes_categories} AS cat ON
+                p.topcategory = cat.id
+            JOIN
+                {pcast_itunes_nested_cat} AS ncat ON
+                p.nestedcategory = ncat.id
+            WHERE p.pcastid = ?";
+
+
+    switch ($sortkey) {
+        case 'UPDATE':
+            $sql .= " ORDER BY p.timemodified";
+            break;
+
+        case 'CREATED':
+        default:
+            $sql .= " ORDER BY p.timecreated";
+            break;
+    }
+
+    switch ($sortorder) {
+        case 'asc':
+            $sql .= " ASC , p.name ASC";
+            break;
+        case 'desc':
+        default:
+            $sql .= " DESC, p.name ASC";
+            break;
+    }
+
+    $episodes = $DB->get_records_sql($sql,array($pcast->id));
+
+    // Print the episodes
+    foreach ($episodes as $episode) {
+
+//        echo'<pre>';
+//        print_r($episode);
+//        echo'</pre>';
+        echo ('<div class="episode">');
+        //TODO: convert to strings in lang file
+        echo ('TopCat:'.$episode->topcategory.'<br />'."\n");
+        echo ('NestedCat:'.$episode->nestedcategory.'<br />'."\n");
+        echo ('Name:'.$episode->name.'<br />'."\n");
+        echo ('Summary:'.$episode->summary.'<br />'."\n");
+        echo ('Attachment:'.$episode->mediafile.'<br />'."\n");
+        echo ('Created:'.$episode->timecreated.'<br />'."\n");
+        echo ('Modified:'.$episode->timemodified.'<br />'."\n");
+
+        // Edit link
+        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+        echo '<hr>';
+        echo ('</div>');
+
+    }
+}
 ?>

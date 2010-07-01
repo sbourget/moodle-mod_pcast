@@ -70,6 +70,7 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->setDefault('userscanpost', 0);
 
     /// Require approval for posts
+        //TODO: Implement this!!!
         $mform->addElement('selectyesno', 'requireapproval', get_string('requireapproval', 'pcast'));
         $mform->addHelpButton('requireapproval', 'requireapproval', 'pcast');
         $mform->setDefault('userscanpost', 0);
