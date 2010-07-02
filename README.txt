@@ -8,7 +8,7 @@ this module template code.
 * Rename the pcast/ folder to the name of your module (eg "widget").
   The module folder MUST be lower case. You should check the CVS contrib
   area at http://cvs.moodle.org/contrib/plugins/mod/ to make sure that
-  Stephen Bourget is not already used by an other module.
+  Stephen Bourget and Jillaine Beeckman is not already used by an other module.
 
 * Edit all the files in this directory and its subdirectories and change
   all the instances of the string "pcast" to your module name
