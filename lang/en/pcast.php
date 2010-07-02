@@ -89,6 +89,7 @@ $string['pcastadministration']='Podcast administration';
 
 //lib.php
 $string['noviews']='No views';
+$string['waitingapproval'] = 'Approve episodes';
 
 // Errors
 $string['invalidcmorid']='Error: You must specify a course_module ID or an instance ID';
@@ -147,3 +148,11 @@ $string['']='';
 // deleteepisode.php
 $string['areyousuredelete']='Are you sure you want to delete this episode';
 $string['episodedeleted']='episode {$a} was sucessfully deleted';
+
+
+// Roles
+$string['pcast:approve']='Approve unapproved episodes';
+$string['pcast:manage']='Manage episodes (Add / Edit / Delete)';
+$string['pcast:view']='View episodes';
+$string['pcast:write']='Create new episodes';
+$string['']='';
