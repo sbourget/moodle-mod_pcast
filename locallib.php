@@ -650,7 +650,7 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sort='p.name AS
         // FIX THIS
         $sql = pcast_get_episode_sql();
         $sql .= " ORDER BY ". $sort;
-        $episodes = $DB->get_records_sql($sql,array($pcast->id));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
     } else if($hook == 'SPECIAL') {
         // Match Other Characters
         $like = $DB->sql_ilike();
@@ -667,12 +667,12 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sort='p.name AS
                  OR p.name $like ?
                  )
                 ORDER BY $sort";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id,'1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1','1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
     } else {
         $like = $DB->sql_ilike();
         $sql = pcast_get_episode_sql();
         $sql .= " and p.name $like ? ORDER BY $sort";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, $hook.'%'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $hook.'%'));
     }
     
     
@@ -691,7 +691,7 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
     if($hook == PCAST_SHOW_ALL_CATEGORIES) {
         $sql = pcast_get_episode_sql();
         $sql .= " ORDER BY cat.name, ncat.name, p.name ASC";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
 
     } else if ($hook == PCAST_SHOW_NOT_CATEGORISED) {
 //TODO: FIX ME
@@ -705,14 +705,14 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
             $sql .= " AND
                     p.topcategory = ?
                     ORDER BY cat.name, ncat.name, p.name ASC";
-            $episodes = $DB->get_records_sql($sql,array($pcast->id, 'topcategory' => $category->topcategory));
+            $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $category->topcategory));
 
         } else {
             $sql = pcast_get_episode_sql();
             $sql .= " AND
                     p.nestedcategory = ?
                     ORDER BY cat.name, ncat.name, p.name ASC";
-            $episodes = $DB->get_records_sql($sql,array($pcast->id, 'topcategory' => $category->nestedcategory));
+            $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $category->nestedcategory));
 
         }
 
@@ -753,7 +753,7 @@ function pcast_display_date_episodes($pcast, $cm, $hook, $sortkey=PCAST_DATE_CRE
             break;
     }
 
-    $episodes = $DB->get_records_sql($sql,array($pcast->id));
+    $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
 
     // Print the episodes
     foreach ($episodes as $episode) {
@@ -813,12 +813,12 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
             // Handle cases where you lookup by first letter of name (last / first)
             if(empty($hook) or ($hook == 'ALL')) {
                 $sql .= $order;
-                $episodes = $DB->get_records_sql($sql,array($pcast->id));
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
 
             } else {
                 $like = $DB->sql_ilike();
                 $sql .= " and u.lastname $like ?" . $order;
-                $episodes = $DB->get_records_sql($sql,array($pcast->id, $hook.'%'));
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $hook.'%'));
             }
         
             break;
@@ -832,12 +832,12 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
             // Handle cases where you lookup by first letter of name (last / first)
             if(empty($hook) or ($hook == 'ALL')) {
                 $sql .= $order;
-                $episodes = $DB->get_records_sql($sql,array($pcast->id));
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
 
             } else {
                 $like = $DB->sql_ilike();
                 $sql .= " and u.firstname $like ?" . $order;
-                $episodes = $DB->get_records_sql($sql,array($pcast->id, $hook.'%'));
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $hook.'%'));
             }
 
             break;
@@ -873,16 +873,16 @@ function pcast_get_episode_sql() {
                 u.firstname as firstname,
                 u.lastname as lastname
             FROM {pcast_episodes} AS p
-            JOIN
+            LEFT JOIN
                 {user} AS u ON
                 p.userid = u.id
-            JOIN
+            LEFT JOIN
                 {pcast_itunes_categories} AS cat ON
                 p.topcategory = cat.id
-            JOIN
+            LEFT JOIN
                 {pcast_itunes_nested_cat} AS ncat ON
                 p.nestedcategory = ncat.id
-            WHERE p.pcastid = ?";
+            WHERE p.pcastid = ? AND p.approved =?";
     return $sql;
 }
 ?>
