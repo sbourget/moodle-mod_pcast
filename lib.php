@@ -426,7 +426,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     $hook = optional_param('hook', 'ALL', PARAM_CLEAN);
 
     if (has_capability('mod/pcast:approve', $PAGE->cm->context) && ($hiddenentries = $DB->count_records('pcast_episodes', array('pcastid'=>$PAGE->cm->instance, 'approved'=>0)))) {
-        $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$PAGE->cm->id, 'mode'=>'approval')));
+        $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$PAGE->cm->id, 'mode'=>PCAST_APPROVAL_VIEW)));
     }
 
     if (has_capability('mod/pcast:write', $PAGE->cm->context)) {
