@@ -40,7 +40,7 @@ $id = optional_param('id', 0, PARAM_INT); // course_module ID.
 $mode       = optional_param('mode', PCAST_STANDARD_VIEW, PARAM_ALPHANUM); // term entry cat date letter search author approval
 $hook       = optional_param('hook', '', PARAM_CLEAN);           // the term, entry, cat, etc... to look for based on mode
 $sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);        // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
-$sortorder  = optional_param('sortorder', 'ASC', PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
+$sortorder  = optional_param('sortorder', 'asc', PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
 $page       = optional_param('page', 0,PARAM_INT);               // Page to show (for paging purposes)
 
 
@@ -218,7 +218,7 @@ echo '</div></div>';
     switch($mode) {
         case PCAST_STANDARD_VIEW:
 
-            pcast_display_standard_episodes($pcast, $cm, $hook, $sortorder);
+            pcast_display_standard_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
             break;
 
         case PCAST_CATEGORY_VIEW:
@@ -237,8 +237,7 @@ echo '</div></div>';
             break;
 
         case PCAST_APPROVAL_VIEW:
-
-            pcast_display_approval_episodes($pcast, $cm, $hook, $sortkey);
+            pcast_display_approval_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
 
             break;
 

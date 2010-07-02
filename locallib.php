@@ -217,7 +217,7 @@ function pcast_print_approval_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sor
 
     pcast_print_all_links($cm, $pcast, $mode, $hook);
 
-    pcast_print_sorting_links($cm, $mode, PCAST_DATE_CREATED, 'asc');
+    pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder);
 }
 
 /**
@@ -424,12 +424,12 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
     $desc   = get_string("descending","pcast");
     $strsortcreation = get_string("sortbycreation", "pcast");
     $strsortlastupdate = get_string("sortbylastupdate", "pcast");
-    $strsortchrono = get_string("sortchronogically", "pcast");
     $strsortfname = get_string("firstname");;
     $strsortlname = get_string("lastname");
     $strsortby = get_string("sortby", "pcast");
 
 
+    // Determine our sort order ASC or DESC
     switch ($sortorder) {
         case 'desc':
             $currentorder = $desc;
@@ -447,18 +447,13 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
 
             break;
         default:
+            // Pick some reasonable defaults if sort order is not specified
             switch ($sortkey) {
                 case PCAST_DATE_UPDATED:
                 case PCAST_DATE_CREATED:
-                    $strchangeto = $desc;
-                    $neworder = '&amp;sortorder=desc';
-                    $icon = ' <img src="'.$OUTPUT->pix_url('asc', 'pcast').'" class="icon" alt="'.$strchangeto.'" />';
-                    $currentorder = '';
-                    break;
-                
                 case PCAST_AUTHOR_FNAME:
-                case PCAST_AUTHOR_LNAME:
-                    $strchangeto = $asc;
+                case PCAST_AUTHOR_LNAME:                    
+                    $strchangeto = get_string('changeto', 'pcast', $asc);
                     $neworder = '&amp;sortorder=asc';
                     $icon = ' <img src="'.$OUTPUT->pix_url('asc', 'pcast').'" class="icon" alt="'.$strchangeto.'" />';
                     $currentorder = '';
@@ -468,7 +463,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
                     $icon = "";
                     $neworder = '';
                     $currentorder = '';
-                    $strchangeto = $asc;
+                    $strchangeto = get_string('changeto', 'pcast', $asc);
 
                     break;
             }
@@ -480,7 +475,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
 
             $html = '<span class="accesshide">';
             $html .= get_string('current', 'pcast', $strsortlastupdate .' ' . $currentorder).'</span>';
-            $html .= $strsortchrono.':';
+            $html .= $strsortby.':';
 
             $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_DATE_UPDATED.$neworder;
             $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_DATE_CREATED;
@@ -495,7 +490,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
             
             $html = '<span class="accesshide">';
             $html .= get_string('current', 'pcast', $strsortcreation .' ' . $currentorder).'</span>';
-            $html .= $strsortchrono.':';
+            $html .= $strsortby.':';
 
             $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_DATE_UPDATED;
             $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_DATE_CREATED.$neworder;
@@ -638,21 +633,20 @@ function pcast_print_dynaentry($courseid, $entries, $displayformat = -1) {
     echo '</tr></table></div>';
 }
 
-function pcast_display_standard_episodes($pcast, $cm, $hook='', $sort='') {
-    global $CFG, $DB;
+function pcast_display_standard_episodes($pcast, $cm, $hook='', $sortkey='', $sortorder='asc') {
+    global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
-    if(!empty($sort)) {
-        $sort = 'p.name '. $sort;
+    if(!empty($sortorder)) {
+        $sort = 'p.name '. $sortorder;
     } else {
         $sort = 'p.name ASC';
     }
 
     if(empty($hook) or ($hook == 'ALL')) {
-        // FIX THIS
         $sql = pcast_get_episode_sql();
         $sql .= " ORDER BY ". $sort;
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
     } else if($hook == 'SPECIAL') {
         // Match Other Characters
         $like = $DB->sql_ilike();
@@ -669,12 +663,12 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sort='') {
                  OR p.name $like ?
                  )
                 ORDER BY $sort";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1','1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id,'1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
     } else {
         $like = $DB->sql_ilike();
         $sql = pcast_get_episode_sql();
         $sql .= " and p.name $like ? ORDER BY $sort";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $hook.'%'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
     }
     
     
@@ -693,11 +687,14 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
     if($hook == PCAST_SHOW_ALL_CATEGORIES) {
         $sql = pcast_get_episode_sql();
         $sql .= " ORDER BY cat.name, ncat.name, p.name ASC";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
 
     } else if ($hook == PCAST_SHOW_NOT_CATEGORISED) {
-//TODO: FIX ME
-        $episodes = $DB->get_records('pcast_episodes',array('pcastid'=> $pcast->id, 'topcategory' => 0), 'p.name');
+        $sql = pcast_get_episode_sql();
+        $sql .= " AND
+                p.topcategory = ?
+                ORDER BY p.name ASC";
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id,'0'));
 
     } else {
         $category->category = $hook;
@@ -707,14 +704,14 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
             $sql .= " AND
                     p.topcategory = ?
                     ORDER BY cat.name, ncat.name, p.name ASC";
-            $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $category->topcategory));
+            $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $category->topcategory));
 
         } else {
             $sql = pcast_get_episode_sql();
             $sql .= " AND
                     p.nestedcategory = ?
                     ORDER BY cat.name, ncat.name, p.name ASC";
-            $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $category->nestedcategory));
+            $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $category->nestedcategory));
 
         }
 
@@ -728,7 +725,7 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
 
 
 function pcast_display_date_episodes($pcast, $cm, $hook, $sortkey=PCAST_DATE_CREATED, $sortorder='desc') {
-        global $CFG, $DB;
+        global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
    $sql = pcast_get_episode_sql();
@@ -755,7 +752,7 @@ function pcast_display_date_episodes($pcast, $cm, $hook, $sortkey=PCAST_DATE_CRE
             break;
     }
 
-    $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
+    $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
 
     // Print the episodes
     foreach ($episodes as $episode) {
@@ -770,19 +767,24 @@ function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL
 //  echo'</pre>';
     echo ('<div class="episode">');
     //TODO: convert to strings in lang file
-    echo ('TopCat:'.$episode->topcategory.'<br />'."\n");
-    echo ('NestedCat:'.$episode->nestedcategory.'<br />'."\n");
-    echo ('Name:'.$episode->name.'<br />'."\n");
-    echo ('Summary:'.$episode->summary.'<br />'."\n");
-    echo ('Attachment:'.$episode->mediafile.'<br />'."\n");
-    echo ('Created:'.$episode->timecreated.'<br />'."\n");
-    echo ('Modified:'.$episode->timemodified.'<br />'."\n");
-    echo ('Name: '. $episode->lastname.', '. $episode->firstname);
+    echo ('TopCat: '.$episode->topcategory.'<br />'."\n");
+    echo ('NestedCat: '.$episode->nestedcategory.'<br />'."\n");
+    echo ('Name: '.$episode->name.'<br />'."\n");
+    echo ('Summary: '.$episode->summary.'<br />'."\n");
+    echo ('Attachment: '.$episode->mediafile.'<br />'."\n");
+    echo ('Created: '.userdate($episode->timecreated).'<br />'."\n");
+    echo ('Modified: '.userdate($episode->timemodified).'<br />'."\n");
+    echo ('Name: '. $episode->lastname.', '. $episode->firstname.'<br />'."\n");
+    echo ('Approval: '. $episode->approved.'<br />'."\n");
 
     // Edit link
     echo'<br />';
-    echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
-    echo' | '."\n";
+    //Calculate editing period
+    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
+    if ($ineditperiod) {
+        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+        echo' | '."\n";
+    }
     // Delete
     echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
 
@@ -798,7 +800,7 @@ function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL
 }
 
 function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sortorder='asc') {
-        global $CFG, $DB;
+        global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
     // TODO: Review this implememntation with Jill UI doesn't seem right.
@@ -824,12 +826,12 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
             // Handle cases where you lookup by first letter of name (last / first)
             if(empty($hook) or ($hook == 'ALL')) {
                 $sql .= $order;
-                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
 
             } else {
                 $like = $DB->sql_ilike();
                 $sql .= " and u.lastname $like ?" . $order;
-                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $hook.'%'));
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
             }
         
             break;
@@ -843,12 +845,12 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
             // Handle cases where you lookup by first letter of name (last / first)
             if(empty($hook) or ($hook == 'ALL')) {
                 $sql .= $order;
-                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1'));
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
 
             } else {
                 $like = $DB->sql_ilike();
                 $sql .= " and u.firstname $like ?" . $order;
-                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $hook.'%'));
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
             }
 
             break;
@@ -861,12 +863,24 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
 }
 
 
-function pcast_display_approval_episodes($pcast, $cm, $hook='', $sort='') {
-    global $CFG, $DB;
+function pcast_display_approval_episodes($pcast, $cm, $hook='', $sortkey='', $sortorder='asc') {
+    global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
-    if(!empty($sort)) {
-        $sort = 'p.name '. $sort;
+    switch ($sortkey) {
+        case PCAST_DATE_CREATED:
+
+            break;
+        case PCAST_DATE_UPDATED:
+
+            break;
+        
+        default:
+            break;
+    }
+
+    if(!empty($sortorder)) {
+        $sort = 'p.name '. $sortorder;
     } else {
         $sort = 'p.name ASC';
     }
@@ -875,7 +889,7 @@ function pcast_display_approval_episodes($pcast, $cm, $hook='', $sort='') {
         // FIX THIS
         $sql = pcast_get_episode_sql();
         $sql .= " ORDER BY ". $sort;
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $USER->id));
     } else if($hook == 'SPECIAL') {
         // Match Other Characters
         $like = $DB->sql_ilike();
@@ -892,12 +906,12 @@ function pcast_display_approval_episodes($pcast, $cm, $hook='', $sort='') {
                  OR p.name $like ?
                  )
                 ORDER BY $sort";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '','1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $USER->id,'1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
     } else {
         $like = $DB->sql_ilike();
         $sql = pcast_get_episode_sql();
         $sql .= " and p.name $like ? ORDER BY $sort";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $hook.'%'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $USER->id, $hook.'%'));
     }
 
 
@@ -941,7 +955,7 @@ function pcast_get_episode_sql() {
             LEFT JOIN
                 {pcast_itunes_nested_cat} AS ncat ON
                 p.nestedcategory = ncat.id
-            WHERE p.pcastid = ? AND p.approved =?";
+            WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
     return $sql;
 }
 ?>

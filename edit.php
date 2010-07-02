@@ -66,15 +66,33 @@ if ($id) { // if entry is specified
         print_error('invalidentry');
     }
 
-    //TODO: This is from the glossary code.  Rethink how editing will work.
-    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime) /*|| $pcast->editalways */ );
-    if (!has_capability('mod/pcast:manage', $context) and !($episode->userid == $USER->id and ($ineditperiod and has_capability('mod/pcast:write', $context)))) {
-        if ($USER->id != $fromdb->userid) {
-            print_error('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$id");
-        } elseif (!$ineditperiod) {
-            print_error('erredittimeexpired', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$id");
+    //Calculate editing period
+    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
+
+    if (has_capability('mod/pcast:manage', $context)) {
+        //Teacher
+        if (!has_capability('mod/pcast:write', $context)) {
+            //No permissions
+            print_error('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         }
+
+    } else {
+        //Not Teacher
+        if (!has_capability('mod/pcast:write', $context)) {
+            //No permissions
+            print_error('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+        }
+        elseif ($episode->userid != $USER->id) {
+            // Not the origional author
+            print_error('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+        }
+        elseif (!$ineditperiod) {
+            // After the editing period
+            print_error('erredittimeexpired', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+        }
+
     }
+
 
 } else { // new entry
     require_capability('mod/pcast:write', $context);
