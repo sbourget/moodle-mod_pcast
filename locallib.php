@@ -23,7 +23,7 @@
  * logic, should go here. Never include this file from your lib.php!
  *
  * @package   mod_pcast
- * @copyright 2010 Stephen Bourget
+ * @copyright 2010 Stephen Bourget and Jillaine Beeckman
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -487,7 +487,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
 
             $link1 = '<a title = "'.$strsortlastupdate.' '.$strchangeto.'" href = "'.$url1.'" >'.$strsortlastupdate.$icon.' </a>';
             $link2 = '<a title = "'.$strsortcreation.' '.$asc.'" href = "'.$url2.'" >'.$strsortcreation.' </a>';
-            $html .= $link1 . ' |<span class="pcastbold">' . $link2. '</span> ';
+            $html .= $link1 . ' |<span class="pcast-bold">' . $link2. '</span> ';
 
             break;
 
@@ -502,7 +502,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
 
             $link1 = '<a title = "'.$strsortlastupdate.' '.$asc.'" href = "'.$url1.'" >'.$strsortlastupdate.' </a>';
             $link2 = '<a title = "'.$strsortcreation.' '.$strchangeto.'" href = "'.$url2.'" >'.$strsortcreation.$icon.' </a>';
-            $html .= '<span class="pcastbold">'. $link1 . '</span>  |' . $link2. '';
+            $html .= '<span class="pcast-bold">'. $link1 . '</span>  |' . $link2. '';
 
             break;
 
@@ -517,7 +517,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
 
             $link1 = '<a title = "'.$strsortlname.' '.$asc.'" href = "'.$url1.'" >'.$strsortlname.' </a>';
             $link2 = '<a title = "'.$strsortfname.' '.$strchangeto.'" href = "'.$url2.'" >'.$strsortfname.$icon.' </a>';
-            $html .= '<span class="pcastbold">'. $link1 . '</span>  |' . $link2. '';
+            $html .= '<span class="pcast-bold">'. $link1 . '</span>  |' . $link2. '';
 
 
             break;
@@ -533,7 +533,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
 
             $link1 = '<a title = "'.$strsortlname.' '.$strchangeto.'" href = "'.$url1.'" >'.$strsortlname.$icon.' </a>';
             $link2 = '<a title = "'.$strsortfname.' '.$asc.'" href = "'.$url2.'" >'.$strsortfname.' </a>';
-            $html .= ''. $link1 . '  |<span class="pcastbold">' . $link2. '</span>';
+            $html .= ''. $link1 . '  |<span class="pcast-bold">' . $link2. '</span>';
             break;
             
         default:
@@ -786,13 +786,14 @@ function pcast_display_episode_brief($episode, $cm){
     echo ('</div>');
 }
 
-function pcast_display_author_episodes($pcast, $cm, $hook, $sortkey='', $sortorder='asc') {
+function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sortorder='asc') {
         global $CFG, $DB;
 
     // Get the episodes for this pcast
-    // TODO: Implement letter searching for author names
+    // TODO: Review this implememntation with Jill UI doesn't seem right.
    $sql = pcast_get_episode_sql();
 
+   // Setup for ASC or DESC sorting
    switch ($sortorder) {
         case 'asc':
             $sort= "ASC";
@@ -802,20 +803,45 @@ function pcast_display_author_episodes($pcast, $cm, $hook, $sortkey='', $sortord
             $sort= "DESC";
             break;
     }
+
+    // Construct lookups based on FNAME / LNAME and HOOK
     switch ($sortkey) {
         case PCAST_AUTHOR_LNAME:
-            $sql .= " ORDER BY u.lastname " .$sort .", u.firstname " . $sort. ", p.name ASC" ;
+            // Order is constant for all LNAME sorts
+            $order = " ORDER BY u.lastname " .$sort .", u.firstname " . $sort. ", p.name ASC" ;
+
+            // Handle cases where you lookup by first letter of name (last / first)
+            if(empty($hook) or ($hook == 'ALL')) {
+                $sql .= $order;
+                $episodes = $DB->get_records_sql($sql,array($pcast->id));
+
+            } else {
+                $like = $DB->sql_ilike();
+                $sql .= " and u.lastname $like ?" . $order;
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, $hook.'%'));
+            }
+        
             break;
 
         case PCAST_AUTHOR_FNAME:
         default:
-            $sql .= " ORDER BY u.firstname " .$sort .", u.lastname " . $sort. ", p.name ASC" ;
+            // TODO: Review this
+            // Order is constant for all FNAME sorts (Use Fname as default ??)
+            $order = " ORDER BY u.firstname " .$sort .", u.lastname " . $sort. ", p.name ASC" ;
+
+            // Handle cases where you lookup by first letter of name (last / first)
+            if(empty($hook) or ($hook == 'ALL')) {
+                $sql .= $order;
+                $episodes = $DB->get_records_sql($sql,array($pcast->id));
+
+            } else {
+                $like = $DB->sql_ilike();
+                $sql .= " and u.firstname $like ?" . $order;
+                $episodes = $DB->get_records_sql($sql,array($pcast->id, $hook.'%'));
+            }
+
             break;
     }
-
-
-
-    $episodes = $DB->get_records_sql($sql,array($pcast->id));
 
     // Print the episodes
     foreach ($episodes as $episode) {
