@@ -111,10 +111,10 @@ $string['']='';
 
 // view.php
 $string['view']='View';
-$string['standardview']='Alphabetical';
-$string['categoryview']='By Category';
-$string['dateview']='By Date';
-$string['authorview']='By Author';
+$string['standardview']='Browse by alphabet';
+$string['categoryview']='Browse by category';
+$string['dateview']='Browse by date';
+$string['authorview']='Browse by author';
 $string['approvalview']='Approve entries';
 $string['addnewepisode']='Add a new episode';
 $string['viewpcast']='View podcast: {$a}';

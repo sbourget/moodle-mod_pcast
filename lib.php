@@ -396,6 +396,56 @@ function pcast_is_moddata_trusted() {
     return false;
 }
 
+/**
+ * Adds module specific settings to the navigation block
+ * @global object $CFG
+ * @param object $navigation
+ * @param object $course
+ * @param object $module
+ * @param object $cm
+ */
+
+function pcast_extend_navigation($navigation, $course, $module, $cm) {
+    global $CFG;
+    $navigation->add(get_string('standardview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_STANDARD_VIEW)));
+    $navigation->add(get_string('categoryview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_CATEGORY_VIEW)));
+    $navigation->add(get_string('dateview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_DATE_VIEW)));
+    $navigation->add(get_string('authorview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_AUTHOR_VIEW)));
+}
+
+/**
+ * Adds module specific settings to the settings block
+ *
+ * @param settings_navigation $settings The settings navigation object
+ * @param navigation_node $pcastnode The node to add module settings to
+ */
+function pcast_extend_settings_navigation(settings_navigation $settings, navigation_node $pcastnode) {
+    global $PAGE, $DB, $CFG, $USER;
+
+    $mode = optional_param('mode', '', PARAM_ALPHA);
+    $hook = optional_param('hook', 'ALL', PARAM_CLEAN);
+
+    if (has_capability('mod/pcast:approve', $PAGE->cm->context) && ($hiddenentries = $DB->count_records('pcast_episodes', array('pcastid'=>$PAGE->cm->instance, 'approved'=>0)))) {
+        $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$PAGE->cm->id, 'mode'=>'approval')));
+    }
+
+    if (has_capability('mod/pcast:write', $PAGE->cm->context)) {
+        $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid'=>$PAGE->cm->id)));
+    }
+
+    $pcast = $DB->get_record('pcast', array("id" => $PAGE->cm->instance));
+
+    if (!empty($CFG->enablerssfeeds) && !empty($CFG->pcast_enablerssfeeds)
+    && $pcast->rsssortorder && $pcast->rssepisodes) {
+        require_once("$CFG->libdir/rsslib.php");
+
+        $string = get_string('rsstype','forum');
+
+        $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $pcast->id));
+        $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
+    }
+}
+
 
 function pcast_get_itunes_categories($item) {
 
