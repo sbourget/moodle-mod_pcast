@@ -73,9 +73,9 @@ if ($id) { // if entry is specified
     $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime) /*|| $pcast->editalways */ );
     if (!has_capability('mod/pcast:manage', $context) and !($episode->userid == $USER->id and ($ineditperiod and has_capability('mod/pcast:write', $context)))) {
         if ($USER->id != $fromdb->userid) {
-            print_error('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=entry&amp;hook=$id");
+            print_error('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$id");
         } elseif (!$ineditperiod) {
-            print_error('erredittimeexpired', 'pcast', "view.php?id=$cm->id&amp;mode=entry&amp;hook=$id");
+            print_error('erredittimeexpired', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$id");
         }
     }
 
@@ -98,7 +98,7 @@ $mform = new mod_pcast_entry_form(null, array('current'=>$episode, 'cm'=>$cm, 'p
 
 if ($mform->is_cancelled()){
     if ($id){
-        redirect("view.php?id=$cm->id&amp;mode=entry&amp;hook=$id");
+        redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$id");
     } else {
         redirect("view.php?id=$cm->id");
     }
@@ -122,23 +122,21 @@ if ($mform->is_cancelled()){
     $episode = pcast_get_itunes_categories($episode);
 
     // Episode approval
-    if ($pcast->requireapproval or has_capability('mod/pcast:approve', $context)) {
+    if (!$pcast->requireapproval or has_capability('mod/pcast:approve', $context)) {
         $episode->approved = 1;
     }
 
     if (empty($episode->id)) {
         //new entry
         $episode->id = $DB->insert_record('pcast_episodes', $episode);
-        //TODO: Revist this when view.php is done
         add_to_log($course->id, "pcast", "add episode",
-                   "view.php?id=$cm->id&amp;mode=entry&amp;hook=$episode->id", $episode->id, $cm->id);
+                   "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id", $episode->id, $cm->id);
 
     } else {
         //existing entry
         $DB->update_record('pcast_episodes', $episode);
-        //TODO: Revist this when view.php is done
         add_to_log($course->id, "pcast", "update episode",
-                   "view.php?id=$cm->id&amp;mode=entry&amp;hook=$episode->id",
+                   "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id",
                    $episode->id, $cm->id);
     }
 
@@ -166,7 +164,7 @@ if ($mform->is_cancelled()){
     $episode = $DB->get_record('pcast_episodes', array('id'=>$episode->id));
     
 
-    redirect("view.php?id=$cm->id&amp;mode=entry&amp;hook=$episode->id");
+    redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id");
 }
 
 if (!empty($id)) {
