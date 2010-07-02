@@ -17,10 +17,7 @@
 
 
 /**
- * Prints a particular instance of pcast
- *
- * You can have a rather longer description of the file as well,
- * if you like, and it can span multiple lines.
+ * Page for deleting pcast episodes
  *
  * @package   mod_pcast
  * @copyright 2010 Stephen Bourget and Jillaine Beeckman

@@ -18,20 +18,17 @@
 
 
 /**
- * Internal library of functions for module pcast
- *
- * All the pcast specific functions, needed to implement the module
- * logic, should go here. Never include this file from your lib.php!
+ * Page for editing pcast episodes
  *
  * @package   mod_pcast
  * @copyright 2010 Stephen Bourget and Jillaine Beeckman
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('../../config.php');
-require_once('lib.php');
-require_once('locallib.php');
-require_once('edit_form.php');
+require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__).'/locallib.php');
+require_once(dirname(__FILE__).'/edit_form.php');
 
 
 $cmid = required_param('cmid', PARAM_INT);            // Course Module ID
@@ -182,3 +179,4 @@ echo $OUTPUT->footer();
 
 
 
+?>
