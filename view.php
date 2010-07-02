@@ -140,6 +140,7 @@ echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">'.get_str
                                  get_string('approvalview', 'pcast'));
     }
 
+    // TODO: Do we need a row for "my episodes" ?
     if ($mode < PCAST_STANDARD_VIEW || $mode > PCAST_APPROVAL_VIEW) {   // We are on second row
         $inactive = array('edit');
         $activated = array('edit');
