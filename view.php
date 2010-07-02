@@ -202,9 +202,7 @@ echo '</div></div>';
         case PCAST_STANDARD_VIEW:
         default:
              pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
-            if ($mode == 'search' and $hook) {
-                echo "<h3>$strsearch: $hook</h3>";
-            }
+
         break;
     }
     echo '<hr />';
@@ -237,7 +235,8 @@ echo '</div></div>';
 
         case PCAST_APPROVAL_VIEW:
 
-            echo 'APPROVAL';
+            pcast_display_approval_episodes($pcast, $cm, $hook, $sortkey);
+
             break;
 
         case PCAST_ADDENTRY_VIEW:

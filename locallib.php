@@ -638,12 +638,14 @@ function pcast_print_dynaentry($courseid, $entries, $displayformat = -1) {
     echo '</tr></table></div>';
 }
 
-function pcast_display_standard_episodes($pcast, $cm, $hook='', $sort='p.name ASC') {
+function pcast_display_standard_episodes($pcast, $cm, $hook='', $sort='') {
     global $CFG, $DB;
 
     // Get the episodes for this pcast
     if(!empty($sort)) {
         $sort = 'p.name '. $sort;
+    } else {
+        $sort = 'p.name ASC';
     }
 
     if(empty($hook) or ($hook == 'ALL')) {
@@ -761,7 +763,7 @@ function pcast_display_date_episodes($pcast, $cm, $hook, $sortkey=PCAST_DATE_CRE
     }
 }
 
-function pcast_display_episode_brief($episode, $cm){
+function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL'){
     global $CFG;
 //  echo'<pre>';
 //  print_r($episode);
@@ -778,11 +780,20 @@ function pcast_display_episode_brief($episode, $cm){
     echo ('Name: '. $episode->lastname.', '. $episode->firstname);
 
     // Edit link
+    echo'<br />';
     echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
-    echo'<br />'."\n";
+    echo' | '."\n";
+    // Delete
     echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
 
-    echo '<hr>';
+    // Approve
+    if(!$approvedonly) {
+        echo' | '."\n";
+        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+    }
+    echo'<br />';
+
+    echo '<hr />';
     echo ('</div>');
 }
 
@@ -847,6 +858,54 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
     foreach ($episodes as $episode) {
         pcast_display_episode_brief($episode, $cm);
     }
+}
+
+
+function pcast_display_approval_episodes($pcast, $cm, $hook='', $sort='') {
+    global $CFG, $DB;
+
+    // Get the episodes for this pcast
+    if(!empty($sort)) {
+        $sort = 'p.name '. $sort;
+    } else {
+        $sort = 'p.name ASC';
+    }
+
+    if(empty($hook) or ($hook == 'ALL')) {
+        // FIX THIS
+        $sql = pcast_get_episode_sql();
+        $sql .= " ORDER BY ". $sort;
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0'));
+    } else if($hook == 'SPECIAL') {
+        // Match Other Characters
+        $like = $DB->sql_ilike();
+        $sql = pcast_get_episode_sql();
+        $sql .= " AND (p.name $like ?
+                 OR p.name $like ?
+                 OR p.name $like ?
+                 OR p.name $like ?
+                 OR p.name $like ?
+                 OR p.name $like ?
+                 OR p.name $like ?
+                 OR p.name $like ?
+                 OR p.name $like ?
+                 OR p.name $like ?
+                 )
+                ORDER BY $sort";
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '','1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
+    } else {
+        $like = $DB->sql_ilike();
+        $sql = pcast_get_episode_sql();
+        $sql .= " and p.name $like ? ORDER BY $sort";
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $hook.'%'));
+    }
+
+
+    foreach ($episodes as $episode) {
+        pcast_display_episode_brief($episode, $cm, 0, $hook);
+    }
+
+    return true;
 }
 
 
