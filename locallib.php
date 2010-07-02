@@ -217,7 +217,7 @@ function pcast_print_approval_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sor
 
     pcast_print_all_links($cm, $pcast, $mode, $hook);
 
-    pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder);
+    pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder, $hook);
 }
 
 /**
@@ -237,7 +237,7 @@ function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey='', $sort
 }
 
 function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorder = '') {
-    pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder);
+    pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder, $hook);
 }
 
 /**
@@ -259,7 +259,7 @@ function pcast_print_author_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sorto
     }
     pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
     pcast_print_all_links($cm, $pcast, $mode, $hook);
-    pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder);
+    pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder, $hook);
 }
 
 /**
@@ -416,8 +416,10 @@ global $CFG;
  * @param string $sortorder
  * @todo Review this function
  */
-function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
+function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $hook='') {
     global $CFG, $OUTPUT;
+    
+    echo '|'.$sortkey.'|'.$sortorder.'|';
 
     //Get our strings
     $asc    = get_string("ascending","pcast");
@@ -477,8 +479,8 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
             $html .= get_string('current', 'pcast', $strsortlastupdate .' ' . $currentorder).'</span>';
             $html .= $strsortby.':';
 
-            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_DATE_UPDATED.$neworder;
-            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_DATE_CREATED;
+            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_UPDATED.$neworder;
+            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_CREATED;
 
             $link1 = '<a title = "'.$strsortlastupdate.' '.$strchangeto.'" href = "'.$url1.'" >'.$strsortlastupdate.$icon.' </a>';
             $link2 = '<a title = "'.$strsortcreation.' '.$asc.'" href = "'.$url2.'" >'.$strsortcreation.' </a>';
@@ -492,8 +494,8 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
             $html .= get_string('current', 'pcast', $strsortcreation .' ' . $currentorder).'</span>';
             $html .= $strsortby.':';
 
-            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_DATE_UPDATED;
-            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_DATE_CREATED.$neworder;
+            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_UPDATED;
+            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_CREATED.$neworder;
 
             $link1 = '<a title = "'.$strsortlastupdate.' '.$asc.'" href = "'.$url1.'" >'.$strsortlastupdate.' </a>';
             $link2 = '<a title = "'.$strsortcreation.' '.$strchangeto.'" href = "'.$url2.'" >'.$strsortcreation.$icon.' </a>';
@@ -507,8 +509,8 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
             $html .= get_string('current', 'pcast', $strsortlname .' ' . $currentorder).'</span>';
             $html .= $strsortby.':';
 
-            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_AUTHOR_LNAME;
-            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_AUTHOR_FNAME.$neworder;
+            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_LNAME;
+            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_FNAME.$neworder;
 
             $link1 = '<a title = "'.$strsortlname.' '.$asc.'" href = "'.$url1.'" >'.$strsortlname.' </a>';
             $link2 = '<a title = "'.$strsortfname.' '.$strchangeto.'" href = "'.$url2.'" >'.$strsortfname.$icon.' </a>';
@@ -523,8 +525,8 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '') {
             $html .= get_string('current', 'pcast', $strsortfname .' ' . $currentorder).'</span>';
             $html .= $strsortby.':';
 
-            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_AUTHOR_LNAME.$neworder;
-            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;sortkey='.PCAST_AUTHOR_FNAME;
+            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_LNAME.$neworder;
+            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_FNAME;
 
             $link1 = '<a title = "'.$strsortlname.' '.$strchangeto.'" href = "'.$url1.'" >'.$strsortlname.$icon.' </a>';
             $link2 = '<a title = "'.$strsortfname.' '.$asc.'" href = "'.$url2.'" >'.$strsortfname.' </a>';

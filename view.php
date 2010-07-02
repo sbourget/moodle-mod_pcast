@@ -176,6 +176,12 @@ echo '</div></div>';
         break;
 
         case PCAST_APPROVAL_VIEW:
+            if (!$sortkey) {
+                $sortkey = PCAST_DATE_CREATED;
+            }
+            if (!$sortorder) {
+                $sortorder = 'asc';
+            }
              pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
         break;
 
