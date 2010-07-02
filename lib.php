@@ -473,6 +473,11 @@ function pcast_get_itunes_categories($item) {
                 $item->nestedcategory = 1;
                 break;
         }
+    } else {
+        // Will only happen if categories are disabled
+        //TODO: Get the category from the podcast
+        $item->topcategory = 1;
+        $item->nestedcategory = 1;
     }
     return $item;
 }
