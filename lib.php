@@ -46,7 +46,10 @@ define("PCAST_ADDENTRY_VIEW", 4);
 define("PCAST_APPROVAL_VIEW", 5);
 define("PCAST_ENTRIES_PER_PAGE", 20);
 
-
+define("PCAST_DATE_UPDATED",100);
+define("PCAST_DATE_CREATED",101);
+define("PCAST_AUTHOR_LNAME",200);
+define("PCAST_AUTHOR_FNAME",201);
 
 /** example constant */
 //define('PCAST_ULTIMATE_ANSWER', 42);

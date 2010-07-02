@@ -39,7 +39,7 @@ $id = optional_param('id', 0, PARAM_INT); // course_module ID.
 // COPIED FROM GLOSSARY
 $mode       = optional_param('mode', PCAST_STANDARD_VIEW, PARAM_ALPHANUM); // term entry cat date letter search author approval
 $hook       = optional_param('hook', '', PARAM_CLEAN);           // the term, entry, cat, etc... to look for based on mode
-$sortkey    = optional_param('sortkey', '', PARAM_ALPHA);        // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
+$sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);        // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
 $sortorder  = optional_param('sortorder', 'ASC', PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
 $page       = optional_param('page', 0,PARAM_INT);               // Page to show (for paging purposes)
 
@@ -108,18 +108,13 @@ echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">'.get_str
     }
 
     //make sure variables are properly cleaned
-    $sortkey   = clean_param($sortkey, PARAM_ALPHA);// Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
+    $sortkey   = clean_param($sortkey, PARAM_ALPHANUM);// Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
     $sortorder = clean_param($sortorder, PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
 
     $toolsrow = array();
     $browserow = array();
     $inactive = array();
     $activated = array();
-
-    if (!has_capability('mod/pcast:approve', $context) && $tab == PCAST_APPROVAL_VIEW) {
-    /// Non-teachers going to approval view go to defaulttab
-        $tab = $defaulttab;
-    }
 
 
     $browserow[] = new tabobject(PCAST_STANDARD_VIEW,
@@ -138,7 +133,14 @@ echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">'.get_str
                                  $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_AUTHOR_VIEW,
                                  get_string('authorview', 'pcast'));
 
-    if ($mode < PCAST_STANDARD_VIEW || $mode > PCAST_AUTHOR_VIEW) {   // We are on second row
+
+    if (has_capability('mod/pcast:approve', $context)) {
+        $browserow[] = new tabobject(PCAST_APPROVAL_VIEW,
+                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_APPROVAL_VIEW,
+                                 get_string('approvalview', 'pcast'));
+    }
+
+    if ($mode < PCAST_STANDARD_VIEW || $mode > PCAST_APPROVAL_VIEW) {   // We are on second row
         $inactive = array('edit');
         $activated = array('edit');
 
@@ -177,20 +179,25 @@ echo '</div></div>';
         break;
 
         case PCAST_AUTHOR_VIEW:
-            $search = "";
-             pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder, 'print');
+            if (!$sortkey) {
+                $sortkey = PCAST_AUTHOR_LNAME;
+            }
+            if (!$sortorder) {
+                $sortorder = 'asc';
+            }
+             pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
         break;
 
         case PCAST_DATE_VIEW:
             if (!$sortkey) {
-                $sortkey = 'UPDATE';
+                $sortkey = PCAST_DATE_UPDATED;
             }
             if (!$sortorder) {
                 $sortorder = 'desc';
             }
              pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
         break;
-        
+
         case PCAST_STANDARD_VIEW:
         default:
              pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
@@ -224,7 +231,12 @@ echo '</div></div>';
 
         case PCAST_AUTHOR_VIEW:
 
-            echo 'AUTHOR';
+            pcast_display_author_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
+            break;
+
+        case PCAST_APPROVAL_VIEW:
+
+            echo 'APPROVAL';
             break;
 
         case PCAST_ADDENTRY_VIEW:

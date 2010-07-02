@@ -95,7 +95,7 @@ $string['invalidcmorid']='Error: You must specify a course_module ID or an insta
 $string['noeditprivlidges']='Error: You do not have editing rights.';
 $string['errcannoteditothers']='Error: you cannot edit other users episodes';
 $string['erredittimeexpired']='Error: Editing time has expired';
-$string['']='';
+$string['nopermissiontodelepisode']='Error: You do not have permission to delete this episode';
 $string['']='';
 $string['']='';
 $string['']='';
@@ -115,6 +115,7 @@ $string['standardview']='Alphabetical';
 $string['categoryview']='By Category';
 $string['dateview']='By Date';
 $string['authorview']='By Author';
+$string['approvalview']='Approve entries';
 $string['addnewepisode']='Add a new episode';
 $string['viewpcast']='View podcast: {$a}';
 //TODO: CHANGE ME!
@@ -137,12 +138,12 @@ $string['changeto']='Change to {$a}';
 $string['sortbycreation']='Sort by date created';
 $string['sortbylastupdate']='Sort by date updated';
 $string['sortchronogically']='Sort by date added';
-$string['current']='Today';
-$string['']='';
+$string['current']='current sort {$a}';
+$string['sortby']='Sort by';
 $string['']='';
 $string['']='';
 
 
-
-//TODO: Delete when MDL-23004 is fixed
-$string['alphabet'] = 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z';
+// deleteepisode.php
+$string['areyousuredelete']='Are you sure you want to delete this episode';
+$string['episodedeleted']='episode {$a} was sucessfully deleted';
