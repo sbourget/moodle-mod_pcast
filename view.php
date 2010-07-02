@@ -212,6 +212,9 @@ echo '</div></div>';
     // Print the main part of the page (The content)
     echo'<div id="pcast-view" class="generalbox"><div class="generalboxcontent">';
 
+
+/// Next print the list of episodes
+
     switch($mode) {
         case PCAST_STANDARD_VIEW:
 
@@ -251,9 +254,6 @@ echo '</div></div>';
 
     echo '</div></div>';
 
-
-/// Next print the list of episodes
-/// These need to be able to be sorted???
 
 // Finish the page
 echo $OUTPUT->footer();
