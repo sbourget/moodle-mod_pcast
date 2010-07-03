@@ -121,17 +121,20 @@ echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">'.get_str
                                  $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_STANDARD_VIEW,
                                  get_string('standardview', 'pcast'));
 
-    $browserow[] = new tabobject(PCAST_CATEGORY_VIEW,
+    if($pcast->userscancategorize) {
+        $browserow[] = new tabobject(PCAST_CATEGORY_VIEW,
                                  $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_CATEGORY_VIEW,
                                  get_string('categoryview', 'pcast'));
-
+    }
     $browserow[] = new tabobject(PCAST_DATE_VIEW,
                                  $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_DATE_VIEW,
                                  get_string('dateview', 'pcast'));
 
-    $browserow[] = new tabobject(PCAST_AUTHOR_VIEW,
+    if($pcast->displayauthor or has_capability('mod/pcast:manage', $context)) {
+        $browserow[] = new tabobject(PCAST_AUTHOR_VIEW,
                                  $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_AUTHOR_VIEW,
                                  get_string('authorview', 'pcast'));
+    }
 
 
     if (has_capability('mod/pcast:approve', $context)) {
