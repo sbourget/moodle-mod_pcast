@@ -864,17 +864,6 @@ function pcast_display_approval_episodes($pcast, $cm, $hook='', $sortkey='', $so
     global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
-    switch ($sortkey) {
-        case PCAST_DATE_CREATED:
-
-            break;
-        case PCAST_DATE_UPDATED:
-
-            break;
-        
-        default:
-            break;
-    }
 
     if(!empty($sortorder)) {
         $sort = 'p.name '. $sortorder;
