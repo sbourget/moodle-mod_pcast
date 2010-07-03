@@ -46,7 +46,7 @@ $string['configusemediafilter2'] = 'Use Media Filter:';
 $string['setupposting']='Posting options';
 $string['userscancomment']='Allow user comments';
 $string['userscanpost']='Allow users to post episodes';
-$string['requireapproval']='Require user posts to be approved';
+$string['requireapproval']='Require approval for posts';
 $string['enablerssfeed']='Enable RSS';
 $string['rssepisodes']='Number of episodes';
 $string['rsssortorder']='RSS sort order';
@@ -65,6 +65,9 @@ $string['imagefile']='Image';
 $string['imageheight']='Height';
 $string['imagewidth']='Width';
 $string['noresize']='Do not resize';
+$string['displayauthor']='Display author names';
+$string['userscancategorize']='Allow episode categories';
+$string['userscanrate']='Allow user ratings';
 
 
 
@@ -82,6 +85,9 @@ $string['keywords_help']='Keywords describing this podcast';
 $string['category_help']='iTunes category';
 $string['explicit_help']='This specifies if the podcast contains explicit content.';
 $string['author_help']='Author of this podcast';
+$string['displayauthor_help']='Display the name of the author for each episode';
+$string['userscancategorize_help']='Allow users to select iTunes categories for each of their episodes';
+$string['userscanrate_help']='Allow users to rate episodes';
 $string['']='';
 
 // Navigation Block

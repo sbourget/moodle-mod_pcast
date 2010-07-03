@@ -316,7 +316,7 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
     } else {
         // Lookup the category name by 4 digit ID
         $category->category = $hook;
-        $category = pcast_get_itunes_categories($category);
+        $category = pcast_get_itunes_categories($category, $pcast);
         
         // Print the category names in the format top: nested
         if($category->nestedcategory == 0) {
@@ -414,13 +414,10 @@ global $CFG;
  * @param string $mode
  * @param string $sortkey
  * @param string $sortorder
- * @todo Review this function
  */
 function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $hook='') {
     global $CFG, $OUTPUT;
     
-    echo '|'.$sortkey.'|'.$sortorder.'|';
-
     //Get our strings
     $asc    = get_string("ascending","pcast");
     $desc   = get_string("descending","pcast");
@@ -700,7 +697,7 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
 
     } else {
         $category->category = $hook;
-        $category = pcast_get_itunes_categories($category);
+        $category = pcast_get_itunes_categories($category, $pcast);
         if($category->nestedcategory == 0) {
             $sql = pcast_get_episode_sql();
             $sql .= " AND
@@ -771,7 +768,7 @@ function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL
     //TODO: convert to strings in lang file
     echo ('TopCat: '.$episode->topcategory.'<br />'."\n");
     echo ('NestedCat: '.$episode->nestedcategory.'<br />'."\n");
-    echo ('Name: '.$episode->name.'<br />'."\n");
+    echo ('Title: '.$episode->name.'<br />'."\n");
     echo ('Summary: '.$episode->summary.'<br />'."\n");
     echo ('Attachment: '.$episode->mediafile.'<br />'."\n");
     echo ('Created: '.userdate($episode->timecreated).'<br />'."\n");
@@ -805,7 +802,6 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
         global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
-    // TODO: Review this implememntation with Jill UI doesn't seem right.
    $sql = pcast_get_episode_sql();
 
    // Setup for ASC or DESC sorting
@@ -840,8 +836,7 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
 
         case PCAST_AUTHOR_FNAME:
         default:
-            // TODO: Review this
-            // Order is constant for all FNAME sorts (Use Fname as default ??)
+            // Order is constant for all FNAME sorts
             $order = " ORDER BY u.firstname " .$sort .", u.lastname " . $sort. ", p.name ASC" ;
 
             // Handle cases where you lookup by first letter of name (last / first)

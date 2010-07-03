@@ -112,15 +112,17 @@ function pcast_add_instance($pcast) {
 
 
     // If no owner then set it to the instance creator.
-    // TODO: THIS COULD BE A POTENTIAL BUG!!!
     if(isset($pcast->enablerssitunes) and ($pcast->enablerssitunes == 1)) {
         if(!isset($pcast->userid)) {
             $pcast->userid = $USER->id;
         }
     }
 
+
     // Get the episode category information
-    $pcast = pcast_get_itunes_categories($pcast);
+    $defaults->topcategory = 0;
+    $defaults->nestedcategory = 0;
+    $pcast = pcast_get_itunes_categories($pcast, $defaults);
 
     # You may have to add extra stuff in here #
 
@@ -155,7 +157,6 @@ function pcast_update_instance($pcast) {
     $pcast->id = $pcast->instance;
 
     // If no owner then set it to the instance creator.
-    // TODO: THIS COULD BE A POTENTIAL BUG!!!
     if(isset($pcast->enablerssitunes) and ($pcast->enablerssitunes == 1)) {
         if(!isset($pcast->userid)) {
             $pcast->userid = $USER->id;
@@ -163,7 +164,9 @@ function pcast_update_instance($pcast) {
     }
 
     // Get the episode category information
-    $pcast = pcast_get_itunes_categories($pcast);
+    $defaults->topcategory = 0;
+    $defaults->nestedcategory = 0;
+    $pcast = pcast_get_itunes_categories($pcast, $defaults);
 
     # You may have to add extra stuff in here #
 
@@ -447,7 +450,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
 }
 
 
-function pcast_get_itunes_categories($item) {
+function pcast_get_itunes_categories($item, $pcast) {
 
     // Split the category info into the top category and nested category
     if(isset($item->category)) {
@@ -468,16 +471,14 @@ function pcast_get_itunes_categories($item) {
 
             default:
                 // SHOULD NEVER HAPPEN
-                //TODO: Get the category from the podcast
-                $item->topcategory = 1;
-                $item->nestedcategory = 1;
+                $item->topcategory = $pcast->topcategory;
+                $item->nestedcategory = $pcast->nestedcategory;
                 break;
         }
     } else {
         // Will only happen if categories are disabled
-        //TODO: Get the category from the podcast
-        $item->topcategory = 0;
-        $item->nestedcategory = 0;
+        $item->topcategory = $pcast->topcategory;
+        $item->nestedcategory = $pcast->nestedcategory;
     }
     return $item;
 }

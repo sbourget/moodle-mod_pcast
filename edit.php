@@ -134,7 +134,7 @@ if ($mform->is_cancelled()){
     $episode->name = clean_param($episode->name, PARAM_ALPHANUM);
 
     // Get the episode category information
-    $episode = pcast_get_itunes_categories($episode);
+    $episode = pcast_get_itunes_categories($episode, $pcast);
 
     // Episode approval
     if (!$pcast->requireapproval or has_capability('mod/pcast:approve', $context)) {

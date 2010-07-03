@@ -77,7 +77,7 @@ class mod_pcast_entry_form extends moodleform {
         $mform->setType('keywords', PARAM_NOTAGS);
         $mform->addHelpButton('keywords', 'keywords', 'pcast');
 
-        //TODO: Disable if turned off on module settins page
+        //TODO: Disable if turned off on module settings page
         // Generate Top Categorys;
         $newoptions = array();
         if($topcategories = $DB->get_records("pcast_itunes_categories")) {

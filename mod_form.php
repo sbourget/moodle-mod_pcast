@@ -55,25 +55,6 @@ class mod_pcast_mod_form extends moodleform_mod {
     /// Adding the standard "intro" and "introformat" fields
         $this->add_intro_editor();
 //-------------------------------------------------------------------------------
-    /// General Podcast settings
-    //-------------------------------------------------------------------------------
-        $mform->addElement('header', 'posting', get_string('setupposting','pcast'));
-
-    /// Allow comments
-        $mform->addElement('selectyesno', 'userscancomment', get_string('userscancomment', 'pcast'));
-        $mform->addHelpButton('userscancomment', 'userscancomment', 'pcast');
-        $mform->setDefault('userscanpost', 0);
-
-    /// Allow users to post episodes
-        $mform->addElement('selectyesno', 'userscanpost', get_string('userscanpost', 'pcast'));
-        $mform->addHelpButton('userscanpost', 'userscanpost', 'pcast');
-        $mform->setDefault('userscanpost', 0);
-
-    /// Require approval for posts
-        $mform->addElement('selectyesno', 'requireapproval', get_string('requireapproval', 'pcast'));
-        $mform->addHelpButton('requireapproval', 'requireapproval', 'pcast');
-        $mform->setDefault('userscanpost', 0);
-
 /// RSS Settings
 //-------------------------------------------------------------------------------
         if ($CFG->enablerssfeeds && isset($CFG->pcast_enablerssfeeds) && $CFG->pcast_enablerssfeeds) {
@@ -193,6 +174,40 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->setDefault('explicit', 2);
         }
 
+    /// General Podcast settings
+    //-------------------------------------------------------------------------------
+        $mform->addElement('header', 'posting', get_string('setupposting','pcast'));
+
+    /// Allow comments
+        $mform->addElement('selectyesno', 'userscancomment', get_string('userscancomment', 'pcast'));
+        $mform->addHelpButton('userscancomment', 'userscancomment', 'pcast');
+        $mform->setDefault('userscancomment', 0);
+
+    /// Allow comments
+        $mform->addElement('selectyesno', 'userscanrate', get_string('userscanrate', 'pcast'));
+        $mform->addHelpButton('userscanrate', 'userscanrate', 'pcast');
+        $mform->setDefault('userscanrate', 0);
+
+    /// Allow users to post episodes
+        $mform->addElement('selectyesno', 'userscanpost', get_string('userscanpost', 'pcast'));
+        $mform->addHelpButton('userscanpost', 'userscanpost', 'pcast');
+        $mform->setDefault('userscanpost', 0);
+
+    /// Require approval for posts
+        $mform->addElement('selectyesno', 'requireapproval', get_string('requireapproval', 'pcast'));
+        $mform->addHelpButton('requireapproval', 'requireapproval', 'pcast');
+        $mform->setDefault('requireapproval', 0);
+
+    /// Allow Display authors names
+        $mform->addElement('selectyesno', 'displayauthor', get_string('displayauthor', 'pcast'));
+        $mform->addHelpButton('displayauthor', 'displayauthor', 'pcast');
+        $mform->setDefault('displayauthor', 0);
+
+    /// Allow users to select categories
+        $mform->addElement('selectyesno', 'userscancategorize', get_string('userscancategorize', 'pcast'));
+        $mform->addHelpButton('userscancategorize', 'userscancategorize', 'pcast');
+        $mform->setDefault('userscancategorize', 0);
+        $mform->disabledIf('userscancategorize', 'enablerssitunes', 'eq', 0);
 
 //-------------------------------------------------------------------------------
 
