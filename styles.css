@@ -11,3 +11,11 @@
     font-weight: bold;
 }
 
+.pcast-header {
+    font-weight: bold;
+    width: 25%;
+}
+
+.pcast-data {
+    width: 75%;
+}

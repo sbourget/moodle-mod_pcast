@@ -109,7 +109,7 @@ $string['']='';
 $string['']='';
 
 //edit_form.php
-$string['name']='Name';
+$string['name']='Title';
 $string['summary']='Summary';
 $string['attachment']='Attachment';
 $string['pcastmediafile']='Media file';
@@ -146,8 +146,10 @@ $string['sortbycreation']='Date created';
 $string['sortbylastupdate']='Date updated';
 $string['current']='current sort {$a}';
 $string['sortby']='Sort by';
-$string['']='';
-$string['']='';
+
+
+$string['created']='Created';
+$string['updated']='Last updated';
 
 
 // deleteepisode.php

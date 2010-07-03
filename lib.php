@@ -132,7 +132,7 @@ function pcast_add_instance($pcast) {
     $draftitemid = $pcast->image;
     // we need to use context now, so we need to make sure all needed info is already in db
     $context = get_context_instance(CONTEXT_MODULE, $cmid);
-
+    //TODO: This needs to be rewritten due to MDL-22950
     if ($draftitemid) {
         file_save_draft_area_files($draftitemid, $context->id, 'pcast_logo', $pcast->image, array('subdirs'=>false));
     }
@@ -176,7 +176,7 @@ function pcast_update_instance($pcast) {
     $draftitemid = $pcast->image;
     // we need to use context now, so we need to make sure all needed info is already in db
     $context = get_context_instance(CONTEXT_MODULE, $cmid);
-
+    //TODO: This needs to be rewritten due to MDL-22950
     if ($draftitemid) {
         file_save_draft_area_files($draftitemid, $context->id, 'pcast_logo', $pcast->image, array('subdirs'=>false));
     }
@@ -369,6 +369,7 @@ function pcast_uninstall() {
  * @param object $context
  * @return array
  */
+//TODO: This needs to be rewritten due to MDL-22950
 function pcast_get_file_areas($course, $cm, $context) {
     $areas = array('pcast_episode','pcast_logo');
     return $areas;

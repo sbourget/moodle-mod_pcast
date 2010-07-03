@@ -426,6 +426,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
     $strsortfname = get_string("firstname");;
     $strsortlname = get_string("lastname");
     $strsortby = get_string("sortby", "pcast");
+    $strsep = get_string('labelsep', 'langconfig');
 
 
     // Determine our sort order ASC or DESC
@@ -474,7 +475,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
 
             $html = '<span class="accesshide">';
             $html .= get_string('current', 'pcast', $strsortlastupdate .' ' . $currentorder).'</span>';
-            $html .= $strsortby.':';
+            $html .= $strsortby.$strsep;
 
             $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_UPDATED.$neworder;
             $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_CREATED;
@@ -489,7 +490,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
             
             $html = '<span class="accesshide">';
             $html .= get_string('current', 'pcast', $strsortcreation .' ' . $currentorder).'</span>';
-            $html .= $strsortby.':';
+            $html .= $strsortby.$strsep;
 
             $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_UPDATED;
             $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_CREATED.$neworder;
@@ -504,7 +505,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
 
             $html = '<span class="accesshide">';
             $html .= get_string('current', 'pcast', $strsortlname .' ' . $currentorder).'</span>';
-            $html .= $strsortby.':';
+            $html .= $strsortby.$strsep;
 
             $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_LNAME;
             $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_FNAME.$neworder;
@@ -520,7 +521,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
 
             $html = '<span class="accesshide">';
             $html .= get_string('current', 'pcast', $strsortfname .' ' . $currentorder).'</span>';
-            $html .= $strsortby.':';
+            $html .= $strsortby.$strsep;
 
             $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_LNAME.$neworder;
             $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_FNAME;
@@ -759,45 +760,6 @@ function pcast_display_date_episodes($pcast, $cm, $hook, $sortkey=PCAST_DATE_CRE
     }
 }
 
-function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL'){
-    global $CFG;
-//  echo'<pre>';
-//  print_r($episode);
-//  echo'</pre>';
-    echo ('<div class="episode">');
-    //TODO: convert to strings in lang file
-    echo ('TopCat: '.$episode->topcategory.'<br />'."\n");
-    echo ('NestedCat: '.$episode->nestedcategory.'<br />'."\n");
-    echo ('Title: '.$episode->name.'<br />'."\n");
-    echo ('Summary: '.$episode->summary.'<br />'."\n");
-    echo ('Attachment: '.$episode->mediafile.'<br />'."\n");
-    echo ('Created: '.userdate($episode->timecreated).'<br />'."\n");
-    echo ('Modified: '.userdate($episode->timemodified).'<br />'."\n");
-    echo ('Name: '. $episode->lastname.', '. $episode->firstname.'<br />'."\n");
-    echo ('Approval: '. $episode->approved.'<br />'."\n");
-
-    // Edit link
-    echo'<br />';
-    //Calculate editing period
-    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
-    if ($ineditperiod) {
-        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
-        echo' | '."\n";
-    }
-    // Delete
-    echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
-
-    // Approve
-    if(!$approvedonly) {
-        echo' | '."\n";
-        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
-    }
-    echo'<br />';
-
-    echo '<hr />';
-    echo ('</div>');
-}
-
 function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sortorder='asc') {
         global $CFG, $DB, $USER;
 
@@ -872,7 +834,6 @@ function pcast_display_approval_episodes($pcast, $cm, $hook='', $sortkey='', $so
     }
 
     if(empty($hook) or ($hook == 'ALL')) {
-        // FIX THIS
         $sql = pcast_get_episode_sql();
         $sql .= " ORDER BY ". $sort;
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $USER->id));
@@ -944,4 +905,119 @@ function pcast_get_episode_sql() {
             WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
     return $sql;
 }
+
+function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL'){
+    global $CFG;
+//  echo'<pre>';
+//  print_r($episode);
+//  echo'</pre>';
+    $strsep = get_string('labelsep', 'langconfig');
+    $html = '<div class="pcast-episode">'."\n";
+    $html .= ''."\n";
+
+    $table = new html_table();
+    //$table->set_classes('views');
+    $table->style = 'views';
+    $table->cellpadding = '5';
+    $table->colclasses = array('pcast-header','pcast-data');
+    $table->width = '100%';
+    $table->align = array ("RIGHT", "LEFT");
+    // Name of episode
+    $table->data[] = array (get_string("name","pcast"), $episode->name);
+    // Description
+    $table->data[] = array (get_string("summary","pcast"), $episode->summary);
+    // Category
+    //TODO: FIX THIS- DO NOT DISPLAY CATEGORY IF DISABLED!
+    if(true) {
+        if((isset($episode->topcategory))and ($episode->topcategory != '0')) {
+            $episode->category = $episode->topcategory;
+
+            if((isset($episode->nestedcategory))and ($episode->nestedcategory != '0')) {
+                $episode->category .= $strsep. ' '.$episode->nestedcategory;
+
+            }
+        }
+        if(isset($episode->category)) {
+            $table->data[] = array (get_string("category","pcast"), $episode->category);
+        }
+    }
+    // Attachment
+    $table->data[] = array (get_string("pcastmediafile","pcast"), $episode->mediafile);
+
+    // Author
+    // TODO: Revisit this There should be an AIP for printing username based on language???
+    // TODO: Only print author if allowed
+    $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
+
+    // Created
+    $table->data[] = array (get_string("created","pcast"), userdate($episode->timecreated));
+
+    // Updated
+    $table->data[] = array (get_string("updated","pcast"), userdate($episode->timemodified));
+
+    // Management Links:
+    // Edit Link
+
+    //Calculate editing period
+    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
+    $link = '';
+    // TODO: Fix editing link
+    if ($ineditperiod) {
+        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+        $link .= ' | '."\n";
+    }
+
+    // Delete link
+    $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
+
+    // Approve Link
+    // TODO: Should check $episode->approved
+    if(!$approvedonly) {
+        $link .= ' | '."\n";
+        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+    }
+
+    $table->data[] = array ('',$link);
+
+
+    
+    echo $html;
+    echo html_writer::table($table);
+    echo '</div>'."\n";
+
+
+//    echo ('<div class="episode">');
+//    //TODO: convert to strings in lang file
+//    echo ('TopCat: '.$episode->topcategory.'<br />'."\n");
+//    echo ('NestedCat: '.$episode->nestedcategory.'<br />'."\n");
+//    echo ('Title: '.$episode->name.'<br />'."\n");
+//    echo ('Summary: '.$episode->summary.'<br />'."\n");
+//    echo ('Attachment: '.$episode->mediafile.'<br />'."\n");
+//    echo ('Created: '.userdate($episode->timecreated).'<br />'."\n");
+//    echo ('Modified: '.userdate($episode->timemodified).'<br />'."\n");
+//    echo ('Name: '. $episode->lastname.', '. $episode->firstname.'<br />'."\n");
+//    echo ('Approval: '. $episode->approved.'<br />'."\n");
+//
+//    // Edit link
+//    echo'<br />';
+//    //Calculate editing period
+//    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
+//    if ($ineditperiod) {
+//        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+//        echo' | '."\n";
+//    }
+//    // Delete
+//    echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
+//
+//    // Approve
+//    if(!$approvedonly) {
+//        echo' | '."\n";
+//        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+//    }
+//    echo'<br />';
+//
+//    echo '<hr />';
+//    echo ('</div>');
+}
+
 ?>
