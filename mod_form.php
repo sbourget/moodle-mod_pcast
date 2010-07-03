@@ -196,7 +196,7 @@ class mod_pcast_mod_form extends moodleform_mod {
     /// Require approval for posts
         $mform->addElement('selectyesno', 'requireapproval', get_string('requireapproval', 'pcast'));
         $mform->addHelpButton('requireapproval', 'requireapproval', 'pcast');
-        $mform->setDefault('requireapproval', 0);
+        $mform->setDefault('requireapproval', 1);
 
     /// Allow Display authors names
         $mform->addElement('selectyesno', 'displayauthor', get_string('displayauthor', 'pcast'));
