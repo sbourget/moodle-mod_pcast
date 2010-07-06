@@ -132,9 +132,8 @@ function pcast_add_instance($pcast) {
     $draftitemid = $pcast->image;
     // we need to use context now, so we need to make sure all needed info is already in db
     $context = get_context_instance(CONTEXT_MODULE, $cmid);
-    //TODO: This needs to be rewritten due to MDL-22950
     if ($draftitemid) {
-        file_save_draft_area_files($draftitemid, $context->id, 'pcast_logo', $pcast->image, array('subdirs'=>false));
+        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast','logo', $pcast->image, array('subdirs'=>false));
     }
 
 
@@ -176,9 +175,8 @@ function pcast_update_instance($pcast) {
     $draftitemid = $pcast->image;
     // we need to use context now, so we need to make sure all needed info is already in db
     $context = get_context_instance(CONTEXT_MODULE, $cmid);
-    //TODO: This needs to be rewritten due to MDL-22950
     if ($draftitemid) {
-        file_save_draft_area_files($draftitemid, $context->id, 'pcast_logo', $pcast->image, array('subdirs'=>false));
+        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast','logo', $pcast->image, array('subdirs'=>false));
     }
 
 
@@ -369,9 +367,12 @@ function pcast_uninstall() {
  * @param object $context
  * @return array
  */
-//TODO: This needs to be rewritten due to MDL-22950
 function pcast_get_file_areas($course, $cm, $context) {
-    $areas = array('pcast_episode','pcast_logo');
+    //$areas = array('pcast_episode','pcast_logo');
+    $areas = array();
+    $areas['logo']   = get_string('arealogo', 'pcast');
+    $areas['episode'] = get_string('areaepisode', 'pcast');
+
     return $areas;
 }
 
@@ -483,3 +484,62 @@ function pcast_get_itunes_categories($item, $pcast) {
     }
     return $item;
 }
+
+/**
+ * Serves all files for the pcast module.
+ *
+ * @global object $CFG
+ * @global object $DB
+ * @global object $USER (used only for logging if available)
+ * @param object $course
+ * @param object $cm
+ * @param object $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
+ * @return bool false if file not found, does not return if found - justsend the file
+ */
+function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
+
+    global $CFG, $DB;
+
+
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return false;
+    }
+
+    if ($filearea === 'episode' or $filearea === 'logo') {
+        $episodeid = (int)array_shift($args);
+
+        if (!$episode = $DB->get_record('pcast_episodes', array('id'=>$episodeid))) {
+
+            return false;
+        }
+
+        if (!$pcast = $DB->get_record('pcast', array('id'=>$cm->instance))) {
+
+            return false;
+        }
+
+        if ($pcast->requireapproval and !$episode->approved and !has_capability('mod/pcast:approve', $context)) {
+
+            return false;
+        }
+        $relativepath = implode('/', $args);
+        $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $fullpath = "/$filecontext->id/mod_pcast/$filearea/$episodeid/$relativepath";
+
+        $fs = get_file_storage();
+        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+
+            return false;
+        }
+
+        // finally send the file
+        send_stored_file($file, 0, 0, $forcedownload); // download MUST be forced - security!
+    }
+
+    return false;
+}
+
+

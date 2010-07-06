@@ -100,9 +100,8 @@ if ($id) { // if entry is specified
     $episode->id = null;
 }
 
-//TODO: This needs to be rewritten due to MDL-22950
-$draftitemid = file_get_submitted_draft_itemid('attachments');
-file_prepare_draft_area($draftitemid, $context->id, 'pcast_episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio','video')));
+$draftitemid = file_get_submitted_draft_itemid('mediafile');
+file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast','episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio','video')));
 $episode->mediafile = $draftitemid;
 
 $episode->cmid = $cm->id;
@@ -156,12 +155,11 @@ if ($mform->is_cancelled()){
                    $episode->id, $cm->id);
     }
 
-    //TODO: This needs to be rewritten due to MDL-22950
-    file_save_draft_area_files($episode->mediafile, $context->id, 'pcast_episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio','video')));
+    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast','episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio','video')));
 
     //Get the duration if an MP3 file
     $fs = get_file_storage();
-    if ($files = $fs->get_area_files($context->id, 'pcast_episode', $episode->id, "timemodified", false)) {
+    if ($files = $fs->get_area_files($context->id, 'mod_pcast','episode', $episode->id, "timemodified", false)) {
         foreach ($files as $file) {
             $hash = $file->get_contenthash();
             $mime = $file->get_mimetype();

@@ -29,6 +29,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 $string['modulename'] = 'pcast';
+$string['pluginname'] = 'pcast';
 $string['modulenameplural'] = 'pcasts';
 $string['pcastfieldset'] = 'Custom example fieldset';
 $string['pcastname'] = 'pcast name';
@@ -96,6 +97,9 @@ $string['pcastadministration']='Podcast administration';
 //lib.php
 $string['noviews']='No views';
 $string['waitingapproval'] = 'Approve episodes';
+$string['arealogo'] = 'Podcast RSS logo';
+$string['areaepisode'] = 'Podcast episodes';
+
 
 // Errors
 $string['invalidcmorid']='Error: You must specify a course_module ID or an instance ID';
@@ -150,6 +154,7 @@ $string['sortby']='Sort by';
 
 $string['created']='Created';
 $string['updated']='Last updated';
+$string['nopcastmediafile'] = 'No media file found';
 
 
 // deleteepisode.php

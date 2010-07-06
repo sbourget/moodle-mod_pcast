@@ -942,8 +942,9 @@ function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL
         }
     }
     // Attachment
-    $table->data[] = array (get_string("pcastmediafile","pcast"), $episode->mediafile);
-
+    $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm));
+    //$table->data[] = array (get_string("pcastmediafile","pcast"), $episode->mediafile);
+    
     // Author
     // TODO: Revisit this There should be an AIP for printing username based on language???
     // TODO: Only print author if allowed
@@ -962,10 +963,10 @@ function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL
     $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
     $link = '';
     // TODO: Fix editing link
-    if ($ineditperiod) {
+    //if ($ineditperiod) {
         $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
         $link .= ' | '."\n";
-    }
+    //}
 
     // Delete link
     $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
@@ -1019,5 +1020,124 @@ function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL
 //    echo '<hr />';
 //    echo ('</div>');
 }
+
+/**
+ * Display the Moodle Media Filter for MP3 / Video File
+ *
+ * @global object $CFG
+ * @global object $THEME
+ * @param object $url
+ * @param object $type (mime type)
+ * @return nothing
+**/
+function pcast_mediaplugin_filter($url, $type) {
+    global $CFG, $THEME;
+
+    if($type == "audio/mpeg" || $type == "audio/mp3") {
+        if (empty($CFG->filter_mediaplugin_ignore_mp3)) {
+            static $c;
+
+            if (empty($c)) {
+                if (!empty($THEME->filter_mediaplugin_colors)) {
+                    $c = $THEME->filter_mediaplugin_colors;   // You can set this up in your theme/xxx/config.php
+                } else {
+                    $c = 'bgColour=000000&btnColour=ffffff&btnBorderColour=cccccc&iconColour=000000&iconOverColour=00cc00&trackColour=cccccc&handleColour=ffffff&loaderColour=ffffff&waitForPlay=yes&';
+                }
+            }
+            $c = htmlentities($c);
+
+            $html  = '<object class="mediaplugin mp3" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"' . "\n";
+            $html .= ' codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" ' . "\n";
+            $html .= ' width="90" height="15" id="mp3player">' . "\n";
+            $html .= " <param name=\"movie\" value=\"$CFG->wwwroot/filter/mediaplugin/mp3player.swf?src=$url\" />" . "\n";
+            $html .= ' <param name="quality" value="high" />' . "\n";
+            $html .= ' <param name="bgcolor" value="#333333" />' . "\n";
+            $html .= ' <param name="flashvars" value="'.$c.'" />' . "\n";
+            $html .= " <embed src=\"$CFG->wwwroot/filter/mediaplugin/mp3player.swf?src=$url\" " . "\n";
+            $html .= "  quality=\"high\" bgcolor=\"#333333\" width=\"90\" height=\"15\" name=\"mp3player\" " . "\n";
+            $html .= ' type="application/x-shockwave-flash" ' . "\n";
+            $html .= ' flashvars="'.$c.'" ' . "\n";
+            $html .= ' pluginspage="http://www.macromedia.com/go/getflashplayer">' . "\n";
+            $html .= '</embed>' . "\n";
+            $html .= '</object>&nbsp;' . "\n";
+        }
+    } else if($type == "video/quicktime" || $type == "video/mp4" || $type == "video/m4v") {
+        if (empty($CFG->filter_mediaplugin_ignore_mov)) {
+
+            $html  = '<p class="mediaplugin mov"><object classid="CLSID:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"' . "\n";
+            $html .= '        codebase="http://www.apple.com/qtactivex/qtplugin.cab" ' . "\n";
+            $html .= '        height="300" width="400"' . "\n";
+            $html .= '        id="quicktime" type="application/x-oleobject">' . "\n";
+            $html .= "<param name=\"src\" value=\"$url\" />" . "\n";
+            $html .= '<param name="autoplay" value="false" />' . "\n";
+            $html .= '<param name="loop" value="true" />' . "\n";
+            $html .= '<param name="controller" value="true" />' . "\n";
+            $html .= '<param name="scale" value="aspect" />' . "\n";
+            $html .= "\n<embed src=\"$url\" name=\"quicktime\" type=\"" . mimeinfo("type",$url) . "\" " . "\n";        //might need to change this
+            $html .= ' height="300" width="400" scale="aspect" ' . "\n";
+            $html .= ' autoplay="false" controller="true" loop="true" ' . "\n";
+            $html .= ' pluginspage="http://quicktime.apple.com/">' . "\n";
+            $html .= '</embed>' . "\n";
+            $html .= '</object></p>' . "\n";
+        }
+    } else if($type == "application/pdf") {
+        $html = "";
+    } else {
+        $html = "";
+    }
+
+    return $html;
+}
+
+/**
+ * Print the podcast attachment and the media player if appropriate
+ *
+ * @global object $CFG
+ * @global object $DB
+ * @global object $OUTPUT
+ * @param object $episode
+ * @param object $cm
+ * @return string image string or nothing depending on $type param
+ */
+
+function pcast_display_mediafile_link($episode, $cm) {
+
+    global $CFG, $DB, $OUTPUT;
+
+
+    if (!$context = get_context_instance(CONTEXT_MODULE, $cm->id)) {
+        return '';
+    }
+
+    $fs = get_file_storage();
+
+    $imagereturn = '';
+
+    echo $episode->mediafile;
+    if ($files = $fs->get_area_files($context->id, 'mod_pcast','episode', $episode->id, "timemodified", false)) {
+        foreach ($files as $file) {
+            $filename = $file->get_filename();
+            $mimetype = $file->get_mimetype();
+            $iconimage = '<img src="'.$OUTPUT->pix_url(file_mimetype_icon($mimetype)).'" class="icon" alt="'.$mimetype.'" />';
+            $path = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/episode/'.$episode->id.'/'.$filename);
+        }
+    }
+    
+    $templink = get_string('nopcastmediafile','pcast');
+    // Make sure there is actually an attachment before trying to render the file link and player
+    if(!empty($filename)) {
+
+        //Add Media player, TODO: Replace with Moodle Media Player Filter?
+        if(($CFG->pcast_usemediafilter)) {
+            $templink = '<a href="'.$path.'">'.$iconimage.$filename.'</a>';
+            $templink .= "</br />\n";
+            $templink .= pcast_mediaplugin_filter($path,$mimetype);
+        } else {
+            $templink = '<a href="'.$path.'">'.$iconimage.$filename.'</a>';
+        }
+    }
+    return $templink;
+}
+
 
 ?>
