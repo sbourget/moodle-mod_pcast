@@ -114,38 +114,23 @@ print_tabs($tabrows, $mode, $inactive, $activated);
 switch ($mode) {
     case PCAST_EPISODE_VIEW:
 
-        echo 'VIEW';
         pcast_display_episode_full($episode, $cm);
 
         break;
     case PCAST_EPISODE_COMMENT_AND_RATE:
 
-        echo 'COMMENT';
-        pcast_display_episode_brief($episode, $cm);
+        pcast_display_episode_comments($episode, $cm);
 
         break;
     case PCAST_EPISODE_VIEWS:
 
-        echo 'VIEWS';
-        pcast_display_episode_brief($episode, $cm);
+        pcast_display_episode_views($episode, $cm);
 
         break;
     default:
 
     break;
 }
-
-
-
-
-
-//        // make sure the episode is approved (or approvable by current user)
-//        if (!$episode->approved and ($USER->id != $episode->userid)) {
-//            $context = get_context_instance(CONTEXT_MODULE, $episode->cmid);
-//            if (!has_capability('mod/pcast:approve', $context)) {
-//
-//            }
-
 
 if ($popup) {
     echo $OUTPUT->close_window_button();

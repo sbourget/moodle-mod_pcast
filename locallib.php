@@ -990,6 +990,7 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
         $link .= ' | '."\n";
 
     }
+        // View Link
         $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id.'">'.get_string('view').'</a>';
 
 
@@ -1015,9 +1016,6 @@ function pcast_display_episode_full($episode, $cm){
 
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
-    echo '<pre>';
-    print_r($episode);
-    echo '</pre>';
 
     $strsep = get_string('labelsep', 'langconfig');
     $html = '<div class="pcast-episode">'."\n";
@@ -1053,6 +1051,11 @@ function pcast_display_episode_full($episode, $cm){
     // Attachment
     $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm));
 
+    // Duration
+    // TODO: Fix durationlength wording
+    $table->data[] = array (get_string("duration","pcast"), get_string("durationlength","pcast",$episode->duration));
+
+
     // Author
     // TODO: Revisit this There should be an API for printing username based on language???
     // Only print author if allowed or has manage rights.
@@ -1065,6 +1068,15 @@ function pcast_display_episode_full($episode, $cm){
 
     // Updated
     $table->data[] = array (get_string("updated","pcast"), userdate($episode->timemodified));
+
+    // Total views
+    $table->data[] = array (get_string("totalviews","pcast"), pcast_get_episode_view_count($episode));
+
+    // Total comments
+    $table->data[] = array (get_string("totalcomments","pcast"), pcast_get_episode_comment_count($episode));
+
+    // Total Ratings
+    $table->data[] = array (get_string("totalratings","pcast"), pcast_get_episode_rating_count($episode));
 
     //Calculate editing period
     $ineditingperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
@@ -1106,7 +1118,44 @@ function pcast_display_episode_full($episode, $cm){
 
 }
 
+function pcast_display_episode_views($episode, $cm){
+    $html = 'DISPLAY VIEWS - FIXME';
 
+    //TODO: Remove Debug code
+    pcast_debug_object($episode);
+
+    echo $html;
+}
+
+function pcast_display_episode_comments($episode, $cm) {
+    $html = 'DISPLAY COMMENTS & RATINGS - FIXME';
+
+    //TODO: Remove Debug code
+    pcast_debug_object($episode);
+
+    echo $html;
+}
+
+function pcast_get_episode_view_count($episode) {
+    $html = 'COUNT ALL VIEWS';
+    return $html;
+}
+
+function pcast_get_episode_comment_count($episode) {
+    $html = 'COUNT ALL COMMENTS';
+    return $html;
+}
+
+function pcast_get_episode_rating_count($episode) {
+    $html = 'COUNT ALL RATINGS';
+    return $html;
+}
+
+function pcast_debug_object($object) {
+    echo '<pre><font color="red">';
+    print_r($object);
+    echo '</font></pre>';
+}
 /**
  * Display the Moodle Media Filter for MP3 / Video File
  *

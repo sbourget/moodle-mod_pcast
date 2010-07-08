@@ -151,7 +151,11 @@ $string['sortbylastupdate']='Date updated';
 $string['current']='current sort {$a}';
 $string['sortby']='Sort by';
 
-
+$string['duration'] = 'Duration';
+$string['durationlength'] = '{$a} minutes';
+$string['totalviews'] = 'Total views';
+$string['totalcomments'] = 'Total comments';
+$string['totalratings'] = 'Total ratings';
 $string['created']='Created';
 $string['updated']='Last updated';
 $string['nopcastmediafile'] = 'No media file found';
@@ -173,4 +177,5 @@ $string['']='';
 $string['episodeview'] = 'Episode';
 $string['episodeviews'] = 'Views';
 $string['episodecommentview'] = 'Comment / Rate';
-$string[''] = '';
+
+
