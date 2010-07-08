@@ -642,15 +642,16 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sortkey='', $so
     } else {
         $sort = 'p.name ASC';
     }
-
+    $sql = pcast_get_episode_sql();
+    $sql .=    " WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
+        
     if(empty($hook) or ($hook == 'ALL')) {
-        $sql = pcast_get_episode_sql();
+
         $sql .= " ORDER BY ". $sort;
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
     } else if($hook == 'SPECIAL') {
         // Match Other Characters
         $like = $DB->sql_ilike();
-        $sql = pcast_get_episode_sql();
         $sql .= " AND (p.name $like ?
                  OR p.name $like ?
                  OR p.name $like ?
@@ -666,7 +667,6 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sortkey='', $so
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id,'1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
     } else {
         $like = $DB->sql_ilike();
-        $sql = pcast_get_episode_sql();
         $sql .= " and p.name $like ? ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
     }
@@ -683,14 +683,14 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
     global $CFG, $DB;
 
     // Get the episodes for this pcast
-
+    $sql = pcast_get_episode_sql();
+    $sql .=    " WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
+    
     if($hook == PCAST_SHOW_ALL_CATEGORIES) {
-        $sql = pcast_get_episode_sql();
         $sql .= " ORDER BY cat.name, ncat.name, p.name ASC";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
 
     } else if ($hook == PCAST_SHOW_NOT_CATEGORISED) {
-        $sql = pcast_get_episode_sql();
         $sql .= " AND
                 p.topcategory = ?
                 ORDER BY p.name ASC";
@@ -700,14 +700,12 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
         $category->category = $hook;
         $category = pcast_get_itunes_categories($category, $pcast);
         if($category->nestedcategory == 0) {
-            $sql = pcast_get_episode_sql();
             $sql .= " AND
                     p.topcategory = ?
                     ORDER BY cat.name, ncat.name, p.name ASC";
             $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $category->topcategory));
 
         } else {
-            $sql = pcast_get_episode_sql();
             $sql .= " AND
                     p.nestedcategory = ?
                     ORDER BY cat.name, ncat.name, p.name ASC";
@@ -729,6 +727,7 @@ function pcast_display_date_episodes($pcast, $cm, $hook, $sortkey=PCAST_DATE_CRE
 
     // Get the episodes for this pcast
    $sql = pcast_get_episode_sql();
+   $sql .=    " WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
 
 
     switch ($sortkey) {
@@ -765,6 +764,7 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
 
     // Get the episodes for this pcast
    $sql = pcast_get_episode_sql();
+   $sql .=    " WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
 
    // Setup for ASC or DESC sorting
    switch ($sortorder) {
@@ -826,6 +826,8 @@ function pcast_display_approval_episodes($pcast, $cm, $hook='', $sortkey='', $so
     global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
+    $sql = pcast_get_episode_sql();
+    $sql .=    " WHERE p.pcastid = ? AND p.approved =?";
 
     if(!empty($sortorder)) {
         $sort = 'p.name '. $sortorder;
@@ -834,13 +836,12 @@ function pcast_display_approval_episodes($pcast, $cm, $hook='', $sortkey='', $so
     }
 
     if(empty($hook) or ($hook == 'ALL')) {
-        $sql = pcast_get_episode_sql();
+
         $sql .= " ORDER BY ". $sort;
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $USER->id));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0'));
     } else if($hook == 'SPECIAL') {
         // Match Other Characters
         $like = $DB->sql_ilike();
-        $sql = pcast_get_episode_sql();
         $sql .= " AND (p.name $like ?
                  OR p.name $like ?
                  OR p.name $like ?
@@ -853,17 +854,16 @@ function pcast_display_approval_episodes($pcast, $cm, $hook='', $sortkey='', $so
                  OR p.name $like ?
                  )
                 ORDER BY $sort";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $USER->id,'1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0','1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
     } else {
         $like = $DB->sql_ilike();
-        $sql = pcast_get_episode_sql();
         $sql .= " and p.name $like ? ORDER BY $sort";
-        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $USER->id, $hook.'%'));
+        $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $hook.'%'));
     }
 
 
     foreach ($episodes as $episode) {
-        pcast_display_episode_brief($episode, $cm, 0, $hook);
+        pcast_display_episode_brief($episode, $cm, $hook);
     }
 
     return true;
@@ -888,11 +888,20 @@ function pcast_get_episode_sql() {
                 p.timemodified as timemodified,
                 p.approved as approved,
                 p.sequencenumber as sequencenumber,
+                pcast.userscancomment as userscancomment,
+                pcast.userscancategorize as userscancategorize,
+                pcast.userscanpost as userscanpost,
+                pcast.userscanrate as userscanrate,
+                pcast.requireapproval as requireapproval,
+                pcast.displayauthor as displayauthor,
                 cat.name as topcategory,
                 ncat.name as nestedcategory,
                 u.firstname as firstname,
                 u.lastname as lastname
             FROM {pcast_episodes} AS p
+            LEFT JOIN
+                {pcast} AS pcast ON
+                p.pcastid = pcast.id
             LEFT JOIN
                 {user} AS u ON
                 p.userid = u.id
@@ -901,16 +910,27 @@ function pcast_get_episode_sql() {
                 p.topcategory = cat.id
             LEFT JOIN
                 {pcast_itunes_nested_cat} AS ncat ON
-                p.nestedcategory = ncat.id
-            WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
+                p.nestedcategory = ncat.id";
+
     return $sql;
 }
 
-function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL'){
+/**
+ * Function to print overview of the episode
+ * @global object $CFG
+ * @param object $episode
+ * @param object $cm
+ * @param string $hook
+ */
+function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     global $CFG;
-//  echo'<pre>';
-//  print_r($episode);
-//  echo'</pre>';
+
+    echo '<pre>';
+    print_r($episode);
+    echo '</pre>';
+
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
     $strsep = get_string('labelsep', 'langconfig');
     $html = '<div class="pcast-episode">'."\n";
     $html .= ''."\n";
@@ -926,9 +946,9 @@ function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL
     $table->data[] = array (get_string("name","pcast"), $episode->name);
     // Description
     $table->data[] = array (get_string("summary","pcast"), $episode->summary);
-    // Category
-    //TODO: FIX THIS- DO NOT DISPLAY CATEGORY IF DISABLED!
-    if(true) {
+
+    // Category -Display only if enabled
+    if((isset($episode->userscancategorize))and ($episode->userscancategorize != '0')) {
         if((isset($episode->topcategory))and ($episode->topcategory != '0')) {
             $episode->category = $episode->topcategory;
 
@@ -941,43 +961,53 @@ function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL
             $table->data[] = array (get_string("category","pcast"), $episode->category);
         }
     }
+
     // Attachment
     $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm));
-    //$table->data[] = array (get_string("pcastmediafile","pcast"), $episode->mediafile);
     
     // Author
-    // TODO: Revisit this There should be an AIP for printing username based on language???
-    // TODO: Only print author if allowed
-    $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
-
+    // TODO: Revisit this There should be an API for printing username based on language???
+    // Only print author if allowed or has manage rights.
+    if(((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
+        $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
+    }
+    
     // Created
     $table->data[] = array (get_string("created","pcast"), userdate($episode->timecreated));
 
     // Updated
     $table->data[] = array (get_string("updated","pcast"), userdate($episode->timemodified));
 
-    // Management Links:
-    // Edit Link
-
     //Calculate editing period
-    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
-    $link = '';
-    // TODO: Fix editing link
-    //if ($ineditperiod) {
-        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
-        $link .= ' | '."\n";
-    //}
+    $ineditingperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
+    $manage = '';
+    $approve = '';
 
-    // Delete link
-    $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
+        // Management Links:
+    if ((has_capability('mod/pcast:manage', $context)) or ($ineditingperiod)) {
 
-    // Approve Link
-    // TODO: Should check $episode->approved
-    if(!$approvedonly) {
-        $link .= ' | '."\n";
-        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+        // Edit Link
+        $manage .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+        $manage .= ' | '."\n";
+
+        // Delete link
+        $manage .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
+
     }
 
+
+    // Approve Link
+    if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
+        
+        $approve .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+    }
+
+    // Construct links
+    if((!empty($manage)) and (!empty($approve))) {
+        $link = $manage . ' | '."\n" . $approve;
+    } else {
+        $link = $manage . $approve;
+    }
     $table->data[] = array ('',$link);
 
 
@@ -986,40 +1016,104 @@ function pcast_display_episode_brief($episode, $cm, $approvedonly=1, $hook ='ALL
     echo html_writer::table($table);
     echo '</div>'."\n";
 
-
-//    echo ('<div class="episode">');
-//    //TODO: convert to strings in lang file
-//    echo ('TopCat: '.$episode->topcategory.'<br />'."\n");
-//    echo ('NestedCat: '.$episode->nestedcategory.'<br />'."\n");
-//    echo ('Title: '.$episode->name.'<br />'."\n");
-//    echo ('Summary: '.$episode->summary.'<br />'."\n");
-//    echo ('Attachment: '.$episode->mediafile.'<br />'."\n");
-//    echo ('Created: '.userdate($episode->timecreated).'<br />'."\n");
-//    echo ('Modified: '.userdate($episode->timemodified).'<br />'."\n");
-//    echo ('Name: '. $episode->lastname.', '. $episode->firstname.'<br />'."\n");
-//    echo ('Approval: '. $episode->approved.'<br />'."\n");
-//
-//    // Edit link
-//    echo'<br />';
-//    //Calculate editing period
-//    $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
-//    if ($ineditperiod) {
-//        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
-//        echo' | '."\n";
-//    }
-//    // Delete
-//    echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
-//
-//    // Approve
-//    if(!$approvedonly) {
-//        echo' | '."\n";
-//        echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
-//    }
-//    echo'<br />';
-//
-//    echo '<hr />';
-//    echo ('</div>');
 }
+
+function pcast_display_episode_full($episode, $cm){
+    global $CFG;
+
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+    echo '<pre>';
+    print_r($episode);
+    echo '</pre>';
+
+    $strsep = get_string('labelsep', 'langconfig');
+    $html = '<div class="pcast-episode">'."\n";
+    $html .= ''."\n";
+
+    $table = new html_table();
+    //$table->set_classes('views');
+    $table->style = 'views';
+    $table->cellpadding = '5';
+    $table->colclasses = array('pcast-header','pcast-data');
+    $table->width = '100%';
+    $table->align = array ("RIGHT", "LEFT");
+    // Name of episode
+    $table->data[] = array (get_string("name","pcast"), $episode->name);
+    // Description
+    $table->data[] = array (get_string("summary","pcast"), $episode->summary);
+
+    // Category -Display only if enabled
+    if((isset($episode->userscancategorize))and ($episode->userscancategorize != '0')) {
+        if((isset($episode->topcategory))and ($episode->topcategory != '0')) {
+            $episode->category = $episode->topcategory;
+
+            if((isset($episode->nestedcategory))and ($episode->nestedcategory != '0')) {
+                $episode->category .= $strsep. ' '.$episode->nestedcategory;
+
+            }
+        }
+        if(isset($episode->category)) {
+            $table->data[] = array (get_string("category","pcast"), $episode->category);
+        }
+    }
+
+    // Attachment
+    $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm));
+
+    // Author
+    // TODO: Revisit this There should be an API for printing username based on language???
+    // Only print author if allowed or has manage rights.
+    if(((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
+        $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
+    }
+
+    // Created
+    $table->data[] = array (get_string("created","pcast"), userdate($episode->timecreated));
+
+    // Updated
+    $table->data[] = array (get_string("updated","pcast"), userdate($episode->timemodified));
+
+    //Calculate editing period
+    $ineditingperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
+    $manage = '';
+    $approve = '';
+
+        // Management Links:
+    if ((has_capability('mod/pcast:manage', $context)) or ($ineditingperiod)) {
+
+        // Edit Link
+        $manage .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+        $manage .= ' | '."\n";
+
+        // Delete link
+        $manage .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
+
+    }
+
+
+    // Approve Link
+    if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
+
+        $approve .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+    }
+
+    // Construct links
+    if((!empty($manage)) and (!empty($approve))) {
+        $link = $manage . ' | '."\n" . $approve;
+    } else {
+        $link = $manage . $approve;
+    }
+    $table->data[] = array ('',$link);
+
+
+
+    echo $html;
+    echo html_writer::table($table);
+    echo '</div>'."\n";
+
+}
+
 
 /**
  * Display the Moodle Media Filter for MP3 / Video File
@@ -1113,7 +1207,6 @@ function pcast_display_mediafile_link($episode, $cm) {
 
     $imagereturn = '';
 
-    echo $episode->mediafile;
     if ($files = $fs->get_area_files($context->id, 'mod_pcast','episode', $episode->id, "timemodified", false)) {
         foreach ($files as $file) {
             $filename = $file->get_filename();

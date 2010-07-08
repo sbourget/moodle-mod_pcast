@@ -168,3 +168,9 @@ $string['pcast:manage']='Manage episodes (Edit / Delete)';
 $string['pcast:view']='View episodes';
 $string['pcast:write']='Create new episodes';
 $string['']='';
+
+//showepisode.php
+$string['episodeview'] = 'Episode';
+$string['episodeviews'] = 'Views';
+$string['episodecommentview'] = 'Comment / Rate';
+$string[''] = '';

@@ -51,6 +51,11 @@ define("PCAST_DATE_CREATED",101);
 define("PCAST_AUTHOR_LNAME",200);
 define("PCAST_AUTHOR_FNAME",201);
 
+define("PCAST_EPISODE_VIEW",300);
+define("PCAST_EPISODE_COMMENT_AND_RATE",301);
+define("PCAST_EPISODE_VIEWS",302);
+
+
 /** example constant */
 //define('PCAST_ULTIMATE_ANSWER', 42);
 
