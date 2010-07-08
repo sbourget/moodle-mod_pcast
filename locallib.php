@@ -925,10 +925,6 @@ function pcast_get_episode_sql() {
 function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     global $CFG;
 
-    echo '<pre>';
-    print_r($episode);
-    echo '</pre>';
-
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
     $strsep = get_string('labelsep', 'langconfig');
@@ -980,34 +976,30 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
 
     //Calculate editing period
     $ineditingperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
-    $manage = '';
-    $approve = '';
+    $link = '';
 
         // Management Links:
     if ((has_capability('mod/pcast:manage', $context)) or ($ineditingperiod)) {
 
         // Edit Link
-        $manage .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
-        $manage .= ' | '."\n";
+        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+        $link .= ' | '."\n";
 
         // Delete link
-        $manage .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
+        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
+        $link .= ' | '."\n";
 
     }
+        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id.'">'.get_string('view').'</a>';
 
 
     // Approve Link
     if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
-        
-        $approve .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+        $link .= ' | '."\n";
+        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
     }
 
     // Construct links
-    if((!empty($manage)) and (!empty($approve))) {
-        $link = $manage . ' | '."\n" . $approve;
-    } else {
-        $link = $manage . $approve;
-    }
     $table->data[] = array ('',$link);
 
 
