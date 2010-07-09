@@ -94,32 +94,51 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
-//    'mod/pcast:comment' => array(
-//
-//        'riskbitmask' => RISK_SPAM,
-//
-//        'captype' => 'write',
-//        'contextlevel' => CONTEXT_MODULE,
-//        'archetypes' => array(
-//            'student' => CAP_ALLOW,
-//            'teacher' => CAP_ALLOW,
-//            'editingteacher' => CAP_ALLOW,
-//            'manager' => CAP_ALLOW
-//        )
-//    ),
-//
-//    'mod/pcast:managecomments' => array(
-//
-//        'riskbitmask' => RISK_SPAM,
-//
-//        'captype' => 'write',
-//        'contextlevel' => CONTEXT_MODULE,
-//        'archetypes' => array(
-//            'teacher' => CAP_ALLOW,
-//            'editingteacher' => CAP_ALLOW,
-//            'manager' => CAP_ALLOW
-//        )
-//    ),
+    'mod/pcast:rate' => array(
+
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        )
+    ),
+
+    'mod/pcast:viewrating' => array(
+
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        )
+    ),
+
+    'mod/pcast:viewanyrating' => array(
+
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+    ),
+
+    'mod/pcast:viewallratings' => array(
+
+        'riskbitmask' => RISK_PERSONAL,
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+            'teacher' => CAP_ALLOW,
+            'editingteacher' => CAP_ALLOW,
+            'manager' => CAP_ALLOW
+        ),
+    ),
 
 
 );

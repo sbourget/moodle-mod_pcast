@@ -179,8 +179,10 @@ $string['pcast:approve']='Approve unapproved episodes';
 $string['pcast:manage']='Manage episodes (Edit / Delete)';
 $string['pcast:view']='View episodes';
 $string['pcast:write']='Create new episodes';
-$string['pcast:comment']='Create comments';
-$string['pcast:managecomments']='Manage comments';
+$string['pcast:rate']='Add ratings to episodes';
+$string['pcast:viewrating']='View the total ratings you received';
+$string['pcast:viewallratings']='View all raw ratings given by individuals';
+$string['pcast:viewanyrating']='View total ratings that anyone received';
 $string['']='';
 
 //showepisode.php
