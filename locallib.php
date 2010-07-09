@@ -1161,27 +1161,25 @@ function pcast_display_episode_comments($episode, $cm, $course) {
 
     global $CFG;
 
-    //Get course commenting settings
-        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    //Get episode comments and display the comment box
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $output = true;
 
-        if (has_capability('mod/pcast:comment', $context) and $episode->userscancomment) {
-        $output = true;
-        
-        // Generate comment box using API
-        if (!empty($CFG->usecomments)) {
-            require_once($CFG->dirroot . '/comment/lib.php');
-            $cmt = new stdclass;
-            $cmt->pluginname = 'pcast';
-            $cmt->context  = $context;
-            $cmt->course   = $course;
-            $cmt->cm       = $cm;
-            $cmt->area     = 'pcast_episode';
-            $cmt->itemid   = $episode->id;
-            $cmt->showcount = true;
-            $comment = new comment($cmt);
-            $html = '<div class="pcast-comments">'.$comment->output(true).'</div>';
-        }
+    // Generate comment box using API
+    if (!empty($CFG->usecomments)) {
+        require_once($CFG->dirroot . '/comment/lib.php');
+        $cmt = new stdclass;
+        $cmt->pluginname = 'pcast';
+        $cmt->context  = $context;
+        $cmt->course   = $course;
+        $cmt->cm       = $cm;
+        $cmt->area     = 'pcast_episode';
+        $cmt->itemid   = $episode->id;
+        $cmt->showcount = true;
+        $comment = new comment($cmt);
+        $html = '<div class="pcast-comments">'.$comment->output(true).'</div>';
     }
+    
     echo $html;
 
 }

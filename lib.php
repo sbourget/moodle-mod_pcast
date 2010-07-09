@@ -355,15 +355,6 @@ function pcast_scale_used_anywhere($scaleid) {
     }
 }
 
-/**
- * Execute post-uninstall custom actions for the module
- * This function was added in 1.9
- *
- * @return boolean true if success, false on error
- */
-function pcast_uninstall() {
-    return true;
-}
 
 /**
  * Lists all browsable file areas
@@ -590,4 +581,12 @@ function pcast_add_view_instance($pcast, $userid) {
     add_to_log($pcast->course, "pcast", "view", $pcast->URL, $pcast->filename,0 ,$userid);
 
     return $result;
+}
+
+/**
+ * Returns all other caps used in module
+ * @return array
+ */
+function pcast_get_extra_capabilities() {
+    return array('moodle/comment:post','moodle/comment:view','moodle/rating:rate','moodle/rating:view','moodle/rating:viewall','moodle/rating:viewany');
 }
