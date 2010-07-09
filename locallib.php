@@ -1365,7 +1365,7 @@ function pcast_display_mediafile_link($episode, $cm) {
     // Make sure there is actually an attachment before trying to render the file link and player
     if(!empty($filename)) {
 
-        //Add Media player, TODO: Replace with Moodle Media Player Filter?
+        //Add Media player, uses the one from filter/mediafilter
         if(($CFG->pcast_usemediafilter)) {
             $templink = '<a href="'.$path.'">'.$iconimage.$filename.'</a>';
             $templink .= "</br />\n";
