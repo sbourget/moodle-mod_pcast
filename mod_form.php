@@ -185,11 +185,6 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->setDefault('userscancomment', 0);
         }
 
-    /// Allow ratings
-        $mform->addElement('selectyesno', 'userscanrate', get_string('userscanrate', 'pcast'));
-        $mform->addHelpButton('userscanrate', 'userscanrate', 'pcast');
-        $mform->setDefault('userscanrate', 0);
-
     /// Allow users to post episodes
         $mform->addElement('selectyesno', 'userscanpost', get_string('userscanpost', 'pcast'));
         $mform->addHelpButton('userscanpost', 'userscanpost', 'pcast');

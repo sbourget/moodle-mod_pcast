@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/ipcast/db" VERSION="20100708" COMMENT="XMLDB file for Moodle mod/pcast"
+<XMLDB PATH="mod/ipcast/db" VERSION="20100709" COMMENT="XMLDB file for Moodle mod/pcast"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -14,9 +14,8 @@
         <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="intro" NEXT="userscancomment"/>
         <FIELD NAME="userscancomment" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="introformat" NEXT="userscancategorize"/>
         <FIELD NAME="userscancategorize" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="allow uses to set the category for their episodes" PREVIOUS="userscancomment" NEXT="userscanpost"/>
-        <FIELD NAME="userscanpost" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userscancategorize" NEXT="userscanrate"/>
-        <FIELD NAME="userscanrate" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Allow ratings" PREVIOUS="userscanpost" NEXT="requireapproval"/>
-        <FIELD NAME="requireapproval" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userscanrate" NEXT="displayauthor"/>
+        <FIELD NAME="userscanpost" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userscancategorize" NEXT="requireapproval"/>
+        <FIELD NAME="requireapproval" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userscanpost" NEXT="displayauthor"/>
         <FIELD NAME="displayauthor" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Display author names" PREVIOUS="requireapproval" NEXT="displayviews"/>
         <FIELD NAME="displayviews" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Display views" PREVIOUS="displayauthor" NEXT="image"/>
         <FIELD NAME="image" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="displayviews" NEXT="imageheight"/>
@@ -31,8 +30,12 @@
         <FIELD NAME="subtitle" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="explicit" NEXT="keywords"/>
         <FIELD NAME="keywords" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="subtitle" NEXT="topcategory"/>
         <FIELD NAME="topcategory" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="keywords" NEXT="nestedcategory"/>
-        <FIELD NAME="nestedcategory" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="topcategory" NEXT="timecreated"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="nestedcategory" NEXT="timemodified"/>
+        <FIELD NAME="nestedcategory" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="topcategory" NEXT="assessed"/>
+        <FIELD NAME="assessed" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="nestedcategory" NEXT="assesstimestart"/>
+        <FIELD NAME="assesstimestart" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="assessed" NEXT="assesstimefinish"/>
+        <FIELD NAME="assesstimefinish" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="assesstimestart" NEXT="scale"/>
+        <FIELD NAME="scale" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="assesstimefinish" NEXT="timecreated"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="scale" NEXT="timemodified"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated"/>
       </FIELDS>
       <KEYS>
