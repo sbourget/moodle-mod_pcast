@@ -98,10 +98,10 @@ if(($episode->userscancomment) or ($episode->assessed)){
     }
     // Can they use ratings?
     if(($episode->assessed) and
-        ((has_capability('moodle/rating:rate', $context)) or
-         ((has_capability('moodle/rating:view', $context)) and ($episode->user == $USER->id)) or
-         (has_capability('moodle/rating:viewall', $context)) or
-         (has_capability('moodle/rating:viewany', $context)))) {
+        ((has_capability('moodle/pcast:rate', $context)) or
+         ((has_capability('moodle/pcast:viewrating', $context)) and ($episode->user == $USER->id)) or
+         (has_capability('moodle/pcast:viewallratings', $context)) or
+         (has_capability('moodle/pcast:viewanyrating', $context)))) {
 
         $tabname = get_string('episoderateview', 'pcast');
         $rate = true;
