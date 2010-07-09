@@ -83,16 +83,21 @@ $PAGE->set_heading($course->shortname);
 // Output starts here
 echo $OUTPUT->header();
 
-// Replace the following lines with you own code
-// TODO: FIX THIS!
-echo $OUTPUT->heading('Yay! It works!- LIST THE PCASTS');
-
-/// Print the Add/edit episode button
-/// TODO: Need capability manage OR add with allow users to post option set with write capability set
-echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">'.get_string('addnewepisode', 'pcast').'</a>';
-
 echo $OUTPUT->heading_with_help(get_string("viewpcast","pcast",$pcast->name), 'pcast' ,'pcast', 'icon');
 
+/// Show the add entry button if allowed
+if (has_capability('mod/pcast:write', $context)) {
+
+    echo '<div class="pcast-addentry">';
+    echo '<form id="newentryform" method="get" action="'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">';
+    echo '<div class="singlebutton">';
+    echo '<input type="hidden" name="cmid" value="'.$cm->id.'" />';
+    echo '<input type="submit" value="'.get_string('addnewepisode', 'pcast').'" />';
+    echo '</div>';
+    echo '</form>';
+    echo '</div>'."\n";
+    echo '<br />';
+}
 
 // Print heading and tabs
 // *************************************************************************

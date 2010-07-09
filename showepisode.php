@@ -89,14 +89,15 @@ $browserow[] = new tabobject(PCAST_EPISODE_VIEW,
 
 $comment = false;
 $rate = false;
-if(($episode->userscancomment) or ($episode->userscanrate)){
+//TODO: Ratings here need to be revisited =(
+if(($episode->userscancomment) or ($episode->assessed)){
     // Can they use comments?
     if(($CFG->usecomments) and ($episode->userscancomment) and ((has_capability('moodle/comment:post', $context)) or (has_capability('moodle/comment:view', $context)))) {
         $tabname = get_string('episodecommentview', 'pcast');
         $comment = true;
     }
     // Can they use ratings?
-    if(($episode->userscanrate) and 
+    if(($episode->assessed) and
         ((has_capability('moodle/rating:rate', $context)) or
          ((has_capability('moodle/rating:view', $context)) and ($episode->user == $USER->id)) or
          (has_capability('moodle/rating:viewall', $context)) or
@@ -140,7 +141,7 @@ if ($toolsrow) {
 
 
 // Check to see if any content should be displayed (prevents guessing of URLs)
-if(((!$pcast->userscancomment) and (!$pcast->userscanrate)) and ($mode == PCAST_EPISODE_COMMENT_AND_RATE)) {
+if(((!$pcast->userscancomment) and (!$pcast->assessed)) and ($mode == PCAST_EPISODE_COMMENT_AND_RATE)) {
     print_error('errorinvalidmode','pcast');
 } else if((!$pcast->displayviews and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_EPISODE_VIEWS)) {
     print_error('errorinvalidmode','pcast');

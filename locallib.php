@@ -891,10 +891,13 @@ function pcast_get_episode_sql() {
                 pcast.userscancomment as userscancomment,
                 pcast.userscancategorize as userscancategorize,
                 pcast.userscanpost as userscanpost,
-                pcast.userscanrate as userscanrate,
                 pcast.requireapproval as requireapproval,
                 pcast.displayauthor as displayauthor,
                 pcast.displayviews as displayviews,
+                pcast.assessed as assessed,
+                pcast.assesstimestart as assesstimestart,
+                pcast.assesstimefinish as assesstimefinish,
+                pcast.scale as scale,
                 cat.name as topcategory,
                 ncat.name as nestedcategory,
                 u.firstname as firstname,
@@ -1087,7 +1090,7 @@ function pcast_display_episode_full($episode, $cm){
     }
 
     // Total Ratings
-    if(($episode->userscanrate) and ((has_capability('moodle/rating:view', $context)) and ($episode->user == $USER->id)) or (has_capability('moodle/rating:viewany', $context))) {
+    if(($episode->assessed) and ((has_capability('moodle/rating:view', $context)) and ($episode->user == $USER->id)) or (has_capability('moodle/rating:viewany', $context))) {
         $table->data[] = array (get_string("totalratings","pcast"), pcast_get_episode_rating_count($episode));
     }
 
@@ -1160,24 +1163,27 @@ function pcast_display_episode_views($episode){
 function pcast_display_episode_comments($episode, $cm, $course) {
 
     global $CFG;
+    $html = '';
 
-    //Get episode comments and display the comment box
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-    $output = true;
+    if($episode->userscancomment) {
+        //Get episode comments and display the comment box
+        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $output = true;
 
-    // Generate comment box using API
-    if (!empty($CFG->usecomments)) {
-        require_once($CFG->dirroot . '/comment/lib.php');
-        $cmt = new stdclass;
-        $cmt->pluginname = 'pcast';
-        $cmt->context  = $context;
-        $cmt->course   = $course;
-        $cmt->cm       = $cm;
-        $cmt->area     = 'pcast_episode';
-        $cmt->itemid   = $episode->id;
-        $cmt->showcount = true;
-        $comment = new comment($cmt);
-        $html = '<div class="pcast-comments">'.$comment->output(true).'</div>';
+        // Generate comment box using API
+        if (!empty($CFG->usecomments)) {
+            require_once($CFG->dirroot . '/comment/lib.php');
+            $cmt = new stdclass;
+            $cmt->pluginname = 'pcast';
+            $cmt->context  = $context;
+            $cmt->course   = $course;
+            $cmt->cm       = $cm;
+            $cmt->area     = 'pcast_episode';
+            $cmt->itemid   = $episode->id;
+            $cmt->showcount = true;
+            $comment = new comment($cmt);
+            $html = '<div class="pcast-comments">'.$comment->output(true).'</div>';
+        }
     }
     
     echo $html;
@@ -1185,12 +1191,31 @@ function pcast_display_episode_comments($episode, $cm, $course) {
 }
 
 function pcast_display_episode_ratings($episode, $cm) {
-    $html = 'DISPLAY RATINGS - FIXME';
 
-    //TODO: Remove Debug code
-    pcast_debug_object($episode);
+    global $CFG, $USER;
 
-    echo $html;
+    // TODO: GET HELP FROM JILL TO FINISH THIS!!!
+    // load ratings
+    require_once($CFG->dirroot.'/rating/lib.php');
+    if ($episode->assessed!=RATING_AGGREGATE_NONE) {
+        $ratingoptions = new stdclass();
+        $ratingoptions->context = $cm->context;
+        //TODO: FIX ME
+        $ratingoptions->items = $allentries;
+
+        $ratingoptions->aggregate = $episode->assessed;//the aggregation method
+        $ratingoptions->scaleid = $episode->scale;
+        $ratingoptions->userid = $USER->id;
+        $ratingoptions->returnurl = $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_EPISODE_COMMENT_AND_RATE;
+        $ratingoptions->assesstimestart = $episode->assesstimestart;
+        $ratingoptions->assesstimefinish = $episode->assesstimefinish;
+        $ratingoptions->plugintype = 'mod';
+        $ratingoptions->pluginname = 'pcast';
+
+        $rm = new rating_manager();
+        $allentries = $rm->get_ratings($ratingoptions);
+    }
+
 }
 
 function pcast_get_episode_view_count($episode) {

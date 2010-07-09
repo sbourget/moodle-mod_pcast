@@ -610,3 +610,168 @@ function pcast_add_view_instance($pcast, $userid) {
 function pcast_get_extra_capabilities() {
     return array('moodle/comment:post','moodle/comment:view','moodle/rating:rate','moodle/rating:view','moodle/rating:viewall','moodle/rating:viewany');
 }
+
+//TODO: RATINGS CODE -UNTESTED
+
+/**
+ * Return grade for given user or all users.
+ *
+ * @global object
+ * @param int $pcastid id of pcast
+ * @param int $userid optional user id, 0 means all users
+ * @return array array of grades, false if none
+ */
+function pcast_get_user_grades($pcast, $userid=0) {
+
+    global $CFG;
+
+    require_once($CFG->dirroot.'/rating/lib.php');
+    $rm = new rating_manager();
+
+    $ratingoptions = new stdclass();
+
+    //need these to work backwards to get a context id. Is there a better way to get contextid from a module instance?
+    $ratingoptions->modulename = 'pcast';
+    $ratingoptions->moduleid   = $pcast->id;
+
+    $ratingoptions->userid = $userid;
+    $ratingoptions->aggregationmethod = $pcast->assessed;
+    $ratingoptions->scaleid = $pcast->scale;
+    $ratingoptions->itemtable = 'pcast_entries';
+    $ratingoptions->itemtableusercolumn = 'userid';
+
+    return $rm->get_user_grades($ratingoptions);
+}
+
+/**
+ * Return rating related permissions
+ * @param string $options the context id
+ * @return array an associative array of the user's rating permissions
+ */
+/*
+function pcast_rating_permissions($options) {
+    $contextid = $options;
+    $context = get_context_instance_by_id($contextid);
+
+    if (!$context) {
+        print_error('invalidcontext');
+        return null;
+    } else {
+        return array('view'=>has_capability('mod/pcast:viewrating',$context), 'viewany'=>has_capability('mod/pcast:viewanyrating',$context), 'viewall'=>has_capability('mod/pcast:viewallratings',$context), 'rate'=>has_capability('mod/pcast:rate',$context));
+    }
+}
+*/
+
+/**
+ * Returns the names of the table and columns necessary to check items for ratings
+ * @return array an array containing the item table, item id and user id columns
+ */
+function pcast_rating_item_check_info() {
+    return array('pcast_episodes','id','userid');
+}
+
+/**
+ * Update activity grades
+ *
+ * @global object
+ * @global object
+ * @param object $pcast null means all glossaries (with extra cmidnumber property)
+ * @param int $userid specific user only, 0 means all
+ */
+function pcast_update_grades($pcast=null, $userid=0, $nullifnone=true) {
+    global $CFG, $DB;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    if (!$pcast->assessed) {
+        pcast_grade_item_update($pcast);
+
+    } else if ($grades = pcast_get_user_grades($pcast, $userid)) {
+        pcast_grade_item_update($pcast, $grades);
+
+    } else if ($userid and $nullifnone) {
+        $grade = new object();
+        $grade->userid   = $userid;
+        $grade->rawgrade = NULL;
+        pcast_grade_item_update($pcast, $grade);
+
+    } else {
+        pcast_grade_item_update($pcast);
+    }
+}
+
+/**
+ * Update all grades in gradebook.
+ *
+ * @global object
+ */
+function pcast_upgrade_grades() {
+    global $DB;
+
+    $sql = "SELECT COUNT('x')
+              FROM {pcast} g, {course_modules} cm, {modules} m
+             WHERE m.name='pcast' AND m.id=cm.module AND cm.instance=g.id";
+    $count = $DB->count_records_sql($sql);
+
+    $sql = "SELECT g.*, cm.idnumber AS cmidnumber, g.course AS courseid
+              FROM {pcast} g, {course_modules} cm, {modules} m
+             WHERE m.name='pcast' AND m.id=cm.module AND cm.instance=g.id";
+    if ($rs = $DB->get_recordset_sql($sql)) {
+        $pbar = new progress_bar('pcastupgradegrades', 500, true);
+        $i=0;
+        foreach ($rs as $pcast) {
+            $i++;
+            upgrade_set_timeout(60*5); // set up timeout, may also abort execution
+            pcast_update_grades($pcast, 0, false);
+            $pbar->update($i, $count, "Updating pcast grades ($i/$count).");
+        }
+        $rs->close();
+    }
+}
+
+/**
+ * Create/update grade item for given pcast
+ *
+ * @global object
+ * @param object $pcast object with extra cmidnumber
+ * @param mixed optional array/object of grade(s); 'reset' means reset grades in gradebook
+ * @return int, 0 if ok, error code otherwise
+ */
+function pcast_grade_item_update($pcast, $grades=NULL) {
+    global $CFG;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    $params = array('itemname'=>$pcast->name, 'idnumber'=>$pcast->cmidnumber);
+
+    if (!$pcast->assessed or $pcast->scale == 0) {
+        $params['gradetype'] = GRADE_TYPE_NONE;
+
+    } else if ($pcast->scale > 0) {
+        $params['gradetype'] = GRADE_TYPE_VALUE;
+        $params['grademax']  = $pcast->scale;
+        $params['grademin']  = 0;
+
+    } else if ($pcast->scale < 0) {
+        $params['gradetype'] = GRADE_TYPE_SCALE;
+        $params['scaleid']   = -$pcast->scale;
+    }
+
+    if ($grades  === 'reset') {
+        $params['reset'] = true;
+        $grades = NULL;
+    }
+
+    return grade_update('mod/pcast', $pcast->course, 'mod', 'pcast', $pcast->id, 0, $grades, $params);
+}
+
+/**
+ * Delete grade item for given pcast
+ *
+ * @global object
+ * @param object $pcast object
+ */
+function pcast_grade_item_delete($pcast) {
+    global $CFG;
+    require_once($CFG->libdir.'/gradelib.php');
+
+    return grade_update('mod/pcast', $pcast->course, 'mod', 'pcast', $pcast->id, 0, NULL, array('deleted'=>1));
+}
