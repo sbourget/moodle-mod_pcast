@@ -202,11 +202,30 @@ function pcast_delete_instance($id) {
     if (! $pcast = $DB->get_record('pcast', array('id' => $id))) {
         return false;
     }
+    if (!$cm = get_coursemodule_from_instance('pcast', $id)) {
+        return false;
+    }
+    if (!$context = get_context_instance(CONTEXT_MODULE, $cm->id)) {
+        return false;
+    }
+
 
     # Delete any dependent records here #
 
     $DB->delete_records('pcast', array('id' => $pcast->id));
-        $DB->delete_records_select('comments', "contextid=? AND commentarea=? AND itemid IN ($entry_select)", array($id, 'pcast_episode', $context->id));
+
+    // Delete Comments
+    $DB->delete_records_select('comments', "contextid=? AND commentarea=? AND itemid IN ($entry_select)", array($id, 'pcast_episode', $context->id));
+
+    // Delete all files
+    $fs->delete_area_files($context->id);
+
+    //delete ratings
+    $rm = new rating_manager();
+    $ratingdeloptions = new stdclass();
+    $ratingdeloptions->contextid = $context->id;
+    $rm->delete_ratings($ratingdeloptions);
+
 
     return true;
 }
