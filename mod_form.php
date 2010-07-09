@@ -188,7 +188,7 @@ class mod_pcast_mod_form extends moodleform_mod {
     /// Allow users to post episodes
         $mform->addElement('selectyesno', 'userscanpost', get_string('userscanpost', 'pcast'));
         $mform->addHelpButton('userscanpost', 'userscanpost', 'pcast');
-        $mform->setDefault('userscanpost', 0);
+        $mform->setDefault('userscanpost', 1);
 
     /// Require approval for posts
         $mform->addElement('selectyesno', 'requireapproval', get_string('requireapproval', 'pcast'));

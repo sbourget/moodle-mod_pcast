@@ -85,8 +85,8 @@ echo $OUTPUT->header();
 
 echo $OUTPUT->heading_with_help(get_string("viewpcast","pcast",$pcast->name), 'pcast' ,'pcast', 'icon');
 
-/// Show the add entry button if allowed
-if (has_capability('mod/pcast:write', $context)) {
+/// Show the add entry button if allowed (usercan post + write or manage caps)
+if (((has_capability('mod/pcast:write', $context))and ($pcast->userscanpost)) or (has_capability('mod/pcast:manage', $context))) {
 
     echo '<div class="pcast-addentry">';
     echo '<form id="newentryform" method="get" action="'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">';
