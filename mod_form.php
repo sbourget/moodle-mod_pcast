@@ -179,11 +179,13 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addElement('header', 'posting', get_string('setupposting','pcast'));
 
     /// Allow comments
-        $mform->addElement('selectyesno', 'userscancomment', get_string('userscancomment', 'pcast'));
-        $mform->addHelpButton('userscancomment', 'userscancomment', 'pcast');
-        $mform->setDefault('userscancomment', 0);
+        if($CFG->usecomments) {
+            $mform->addElement('selectyesno', 'userscancomment', get_string('userscancomment', 'pcast'));
+            $mform->addHelpButton('userscancomment', 'userscancomment', 'pcast');
+            $mform->setDefault('userscancomment', 0);
+        }
 
-    /// Allow comments
+    /// Allow ratings
         $mform->addElement('selectyesno', 'userscanrate', get_string('userscanrate', 'pcast'));
         $mform->addHelpButton('userscanrate', 'userscanrate', 'pcast');
         $mform->setDefault('userscanrate', 0);
@@ -202,6 +204,11 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addElement('selectyesno', 'displayauthor', get_string('displayauthor', 'pcast'));
         $mform->addHelpButton('displayauthor', 'displayauthor', 'pcast');
         $mform->setDefault('displayauthor', 0);
+
+    /// Allow Display of viewers names
+        $mform->addElement('selectyesno', 'displayviews', get_string('displayviews', 'pcast'));
+        $mform->addHelpButton('displayviews', 'displayviews', 'pcast');
+        $mform->setDefault('displayviews', 0);
 
     /// Allow users to select categories
         $mform->addElement('selectyesno', 'userscancategorize', get_string('userscancategorize', 'pcast'));

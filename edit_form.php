@@ -37,12 +37,11 @@ require_once ($CFG->dirroot.'/lib/formslib.php');
 class mod_pcast_entry_form extends moodleform {
 
     function definition() {
-        global $DB, $CFG, $USER, $COURSE;
+        global $DB, $CFG, $USER, $COURSE, $pcast;
 
         $mform =& $this->_form;
         $cm = $this->_customdata['cm'];
         $currententry = $this->_customdata['current'];
-
 
 //-------------------------------------------------------------------------------
     /// Adding the "general" fieldset, where all the common settings are showed
@@ -77,35 +76,36 @@ class mod_pcast_entry_form extends moodleform {
         $mform->setType('keywords', PARAM_NOTAGS);
         $mform->addHelpButton('keywords', 'keywords', 'pcast');
 
-        //TODO: Disable if turned off on module settings page
-        // Generate Top Categorys;
-        $newoptions = array();
-        if($topcategories = $DB->get_records("pcast_itunes_categories")) {
-            foreach ($topcategories as $topcategory) {
-                $value = (int)$topcategory->id * 1000;
-                $newoptions[(int)$value] = $topcategory->name;
+        //Disable if turned off on module settings page
+        if($pcast->userscancategorize) {
+            // Generate Top Categorys;
+            $newoptions = array();
+            if($topcategories = $DB->get_records("pcast_itunes_categories")) {
+                foreach ($topcategories as $topcategory) {
+                    $value = (int)$topcategory->id * 1000;
+                    $newoptions[(int)$value] = $topcategory->name;
+                }
             }
-        }
 
-        // Generate Secondary Category
-        if($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
-            foreach ($nestedcategories as $nestedcategory) {
-                $value = (int)$nestedcategory->topcategoryid * 1000;
-                $value = $value + (int)$nestedcategory->id;
-                $newoptions[(int)$value] = '&nbsp;&nbsp;' .$nestedcategory->name;
+            // Generate Secondary Category
+            if($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
+                foreach ($nestedcategories as $nestedcategory) {
+                    $value = (int)$nestedcategory->topcategoryid * 1000;
+                    $value = $value + (int)$nestedcategory->id;
+                    $newoptions[(int)$value] = '&nbsp;&nbsp;' .$nestedcategory->name;
+                }
             }
+            ksort($newoptions);
+
+            // Category form element
+            $mform->addElement('select', 'category', get_string('category', 'pcast'),
+                    $newoptions, array('size' => '1'));
+            $mform->addHelpButton('category', 'category', 'pcast');
+            $mform->disabledIf('category', 'enablerssitunes', 'eq', 0);
+
+            $this->init_javascript_enhancement('category', 'smartselect',
+                    array('selectablecategories' => false, 'mode' => 'compact'));
         }
-        ksort($newoptions);
-
-        // Category form element
-        $mform->addElement('select', 'category', get_string('category', 'pcast'),
-                $newoptions, array('size' => '1'));
-        $mform->addHelpButton('category', 'category', 'pcast');
-        $mform->disabledIf('category', 'enablerssitunes', 'eq', 0);
-
-        $this->init_javascript_enhancement('category', 'smartselect',
-                array('selectablecategories' => false, 'mode' => 'compact'));
-
 
         // Content
         $explicit=array();
@@ -143,64 +143,5 @@ class mod_pcast_entry_form extends moodleform {
 
 
     }
-
-//    function data_preprocessing(&$default_values) {
-//        if ($this->current->instance) {
-//            // editing existing instance - copy existing files into draft area
-//            $draftitemid = file_get_submitted_draft_itemid('mediafile');
-//            file_prepare_draft_area($draftitemid, $this->context->id, 'pcast_episode', $this->current->mediafile, array('subdirs'=>false));
-//            $default_values['mediafile'] = $draftitemid;
-//        }
-//    }
-/*
-    function validation($data, $files) {
-        global $CFG, $USER, $DB;
-        $errors = parent::validation($data, $files);
-
-        $glossary = $this->_customdata['glossary'];
-        $cm       = $this->_customdata['cm'];
-        $context  = get_context_instance(CONTEXT_MODULE, $cm->id);
-
-        $id = (int)$data['id'];
-        $data['concept'] = trim($data['concept']);
-
-        if ($id) {
-            //We are updating an entry, so we compare current session user with
-            //existing entry user to avoid some potential problems if secureforms=off
-            //Perhaps too much security? Anyway thanks to skodak (Bug 1823)
-            $old = $DB->get_record('glossary_entries', array('id'=>$id));
-            $ineditperiod = ((time() - $old->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
-            if ((!$ineditperiod || $USER->id != $old->userid) and !has_capability('mod/glossary:manageentries', $context)) {
-                if ($USER->id != $old->userid) {
-                    $errors['concept'] = get_string('errcannoteditothers', 'glossary');
-                } elseif (!$ineditperiod) {
-                    $errors['concept'] = get_string('erredittimeexpired', 'glossary');
-                }
-            }
-            if (!$glossary->allowduplicatedentries) {
-                if ($dupentries = $DB->get_records('glossary_entries', array('LOWER(concept)'=>moodle_strtolower($data['concept'])))) {
-                    foreach ($dupentries as $curentry) {
-                        if ($glossary->id == $curentry->glossaryid) {
-                           if ($curentry->id != $id) {
-                               $errors['concept'] = get_string('errconceptalreadyexists', 'glossary');
-                               break;
-                           }
-                        }
-                    }
-                }
-            }
-
-        } else {
-            if (!$glossary->allowduplicatedentries) {
-                if ($dupentries = $DB->get_record('glossary_entries', array('LOWER(concept)'=>moodle_strtolower($data['concept']), 'glossaryid'=>$glossary->id))) {
-                    $errors['concept'] = get_string('errconceptalreadyexists', 'glossary');
-                }
-            }
-        }
-
-        return $errors;
-    }
-*/
-
 
 }

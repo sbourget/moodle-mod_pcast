@@ -67,6 +67,7 @@ $string['imageheight']='Height';
 $string['imagewidth']='Width';
 $string['noresize']='Do not resize';
 $string['displayauthor']='Display author names';
+$string['displayviews']='Display names of viewers';
 $string['userscancategorize']='Allow episode categories';
 $string['userscanrate']='Allow user ratings';
 
@@ -86,7 +87,9 @@ $string['keywords_help']='Keywords describing this podcast';
 $string['category_help']='iTunes category';
 $string['explicit_help']='This specifies if the podcast contains explicit content.';
 $string['author_help']='Author of this podcast';
-$string['displayauthor_help']='Display the name of the author for each episode';
+$string['displayauthor_help']='Display the name of the author for each episode to users';
+$string['displayviews_help']='Display the names and number of views for each episode to users';
+
 $string['userscancategorize_help']='Allow users to select iTunes categories for each of their episodes';
 $string['userscanrate_help']='Allow users to rate episodes';
 $string['']='';
@@ -108,8 +111,8 @@ $string['errcannoteditothers']='Error: you cannot edit other users episodes';
 $string['erredittimeexpired']='Error: Editing time has expired';
 $string['nopermissiontodelepisode']='Error: You do not have permission to delete this episode';
 $string['errcannotedit']='Error: you cannot edit this episode';
-$string['']='';
-$string['']='';
+$string['errorinvalidmode']='Error: you do not have access';
+$string['commentsnotenabled']='Error: Commenting is not enabled';
 $string['']='';
 
 //edit_form.php
@@ -129,8 +132,7 @@ $string['authorview']='Browse by author';
 $string['approvalview']='Approve entries';
 $string['addnewepisode']='Add a new episode';
 $string['viewpcast']='View podcast: {$a}';
-//TODO: CHANGE ME!
-$string['pcast_help']= 'THIS IS A HELP FILE';
+$string['pcast_help']= 'This activity allows users to create and maintain video and audio podcasts. The podcast can easily be configured for iTunes compatiblity.';
 
 
 // locallib.php
@@ -152,13 +154,19 @@ $string['current']='current sort {$a}';
 $string['sortby']='Sort by';
 
 $string['duration'] = 'Duration';
-$string['durationlength'] = '{$a} minutes';
+$string['durationlength'] = '{$a->min} minutes {$a->sec} seconds';
 $string['totalviews'] = 'Total views';
 $string['totalcomments'] = 'Total comments';
 $string['totalratings'] = 'Total ratings';
 $string['created']='Created';
 $string['updated']='Last updated';
 $string['nopcastmediafile'] = 'No media file found';
+$string['views']='Views';
+$string['user']='Users';
+$string['noviews']='No views';
+$string['']='';
+$string['']='';
+$string['']='';
 
 
 // deleteepisode.php
@@ -171,11 +179,13 @@ $string['pcast:approve']='Approve unapproved episodes';
 $string['pcast:manage']='Manage episodes (Edit / Delete)';
 $string['pcast:view']='View episodes';
 $string['pcast:write']='Create new episodes';
+$string['pcast:comment']='Create comments';
+$string['pcast:managecomments']='Manage comments';
 $string['']='';
 
 //showepisode.php
 $string['episodeview'] = 'Episode';
 $string['episodeviews'] = 'Views';
-$string['episodecommentview'] = 'Comment / Rate';
-
-
+$string['episodecommentview'] = 'Comment';
+$string['episoderateview'] = 'Rate';
+$string['episodecommentandrateview'] = 'Comment / Rate';

@@ -894,6 +894,7 @@ function pcast_get_episode_sql() {
                 pcast.userscanrate as userscanrate,
                 pcast.requireapproval as requireapproval,
                 pcast.displayauthor as displayauthor,
+                pcast.displayviews as displayviews,
                 cat.name as topcategory,
                 ncat.name as nestedcategory,
                 u.firstname as firstname,
@@ -923,7 +924,7 @@ function pcast_get_episode_sql() {
  * @param string $hook
  */
 function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
-    global $CFG;
+    global $CFG, $DB;
 
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
@@ -962,10 +963,12 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm));
     
     // Author
-    // TODO: Revisit this There should be an API for printing username based on language???
+    // TODO: Revisit this, Performance!
     // Only print author if allowed or has manage rights.
     if(((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
-        $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
+        $user = $DB->get_record("user", array("id" => $episode->user));
+        $table->data[] = array (get_string("author","pcast"), fullname($user));
+//        $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
     }
     
     // Created
@@ -1012,7 +1015,7 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
 }
 
 function pcast_display_episode_full($episode, $cm){
-    global $CFG;
+    global $CFG, $DB, $USER;
 
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
@@ -1052,15 +1055,21 @@ function pcast_display_episode_full($episode, $cm){
     $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm));
 
     // Duration
-    // TODO: Fix durationlength wording
-    $table->data[] = array (get_string("duration","pcast"), get_string("durationlength","pcast",$episode->duration));
+    // Split up duration for printing
+    $length = explode(":", $episode->duration);
+    $length2->min = $length[0];
+    $length2->sec = $length[1];
+
+    $table->data[] = array (get_string("duration","pcast"), get_string("durationlength","pcast",$length2));
 
 
     // Author
-    // TODO: Revisit this There should be an API for printing username based on language???
+    // TODO: Revisit this, Performance!
     // Only print author if allowed or has manage rights.
     if(((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
-        $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
+        $user = $DB->get_record("user", array("id" => $episode->user));
+        $table->data[] = array (get_string("author","pcast"), fullname($user));
+//        $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
     }
 
     // Created
@@ -1073,10 +1082,14 @@ function pcast_display_episode_full($episode, $cm){
     $table->data[] = array (get_string("totalviews","pcast"), pcast_get_episode_view_count($episode));
 
     // Total comments
-    $table->data[] = array (get_string("totalcomments","pcast"), pcast_get_episode_comment_count($episode));
+    if(($CFG->usecomments) and ($episode->userscancomment) and (has_capability('moodle/comment:view', $context))) {
+        $table->data[] = array (get_string("totalcomments","pcast"), pcast_get_episode_comment_count($episode));
+    }
 
     // Total Ratings
-    $table->data[] = array (get_string("totalratings","pcast"), pcast_get_episode_rating_count($episode));
+    if(($episode->userscanrate) and ((has_capability('moodle/rating:view', $context)) and ($episode->user == $USER->id)) or (has_capability('moodle/rating:viewany', $context))) {
+        $table->data[] = array (get_string("totalratings","pcast"), pcast_get_episode_rating_count($episode));
+    }
 
     //Calculate editing period
     $ineditingperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
@@ -1110,25 +1123,71 @@ function pcast_display_episode_full($episode, $cm){
     }
     $table->data[] = array ('',$link);
 
-
-
     echo $html;
     echo html_writer::table($table);
     echo '</div>'."\n";
 
 }
 
-function pcast_display_episode_views($episode, $cm){
-    $html = 'DISPLAY VIEWS - FIXME';
+function pcast_display_episode_views($episode){
 
-    //TODO: Remove Debug code
-    pcast_debug_object($episode);
+    global $DB;
 
-    echo $html;
+    if (!$views = $DB->get_records("pcast_views", array( "episodeid" => $episode->id))) {
+        echo get_string('noviews','pcast',get_string('modulename','pcast'));
+    } else {
+        $timenow = time();
+        $strviews  = get_string("views","pcast");
+        $struser = get_string("user","pcast");
+        $strdate = get_string("date");
+
+        $table = new html_table();
+        $table->attributes['class'] = 'views';
+        $table->head  = array ($struser, $strdate, $strviews);
+        $table->align = array ("CENTER", "LEFT", "CENTER");
+        $table->width = '100%';
+
+        foreach ($views as $view) {
+            $user = $DB->get_record("user", array("id" => $view->userid));
+            $linedata = array (fullname($user), userdate($view->lastview), $view->views);
+            $table->data[] = $linedata;
+        }
+        echo "<br />";
+        echo html_writer::table($table);
+    }
 }
 
-function pcast_display_episode_comments($episode, $cm) {
-    $html = 'DISPLAY COMMENTS & RATINGS - FIXME';
+function pcast_display_episode_comments($episode, $cm, $course) {
+
+    global $CFG;
+
+    //Get course commenting settings
+        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+        if (has_capability('mod/pcast:comment', $context) and $episode->userscancomment) {
+        $output = true;
+        
+        // Generate comment box using API
+        if (!empty($CFG->usecomments)) {
+            require_once($CFG->dirroot . '/comment/lib.php');
+            $cmt = new stdclass;
+            $cmt->pluginname = 'pcast';
+            $cmt->context  = $context;
+            $cmt->course   = $course;
+            $cmt->cm       = $cm;
+            $cmt->area     = 'pcast_episode';
+            $cmt->itemid   = $episode->id;
+            $cmt->showcount = true;
+            $comment = new comment($cmt);
+            $html = '<div class="pcast-comments">'.$comment->output(true).'</div>';
+        }
+    }
+    echo $html;
+
+}
+
+function pcast_display_episode_ratings($episode, $cm) {
+    $html = 'DISPLAY RATINGS - FIXME';
 
     //TODO: Remove Debug code
     pcast_debug_object($episode);
@@ -1137,8 +1196,19 @@ function pcast_display_episode_comments($episode, $cm) {
 }
 
 function pcast_get_episode_view_count($episode) {
-    $html = 'COUNT ALL VIEWS';
-    return $html;
+    global $DB;
+    $count = 0;
+    // Get all views
+    if (!$views = $DB->get_records("pcast_views", array( "episodeid" => $episode->id))) {
+        // No views
+        return $count;
+    } else {
+        foreach ($views as $view) {
+            // Total up the views
+            $count += (int)$view->views;
+        }
+    }
+    return $count;
 }
 
 function pcast_get_episode_comment_count($episode) {
@@ -1156,6 +1226,9 @@ function pcast_debug_object($object) {
     print_r($object);
     echo '</font></pre>';
 }
+
+
+
 /**
  * Display the Moodle Media Filter for MP3 / Video File
  *

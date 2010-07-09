@@ -64,16 +64,14 @@ if ($id) {
 require_login($course, true, $cm);
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
-// Load comment API
-require_once($CFG->dirroot . '/comment/lib.php');
-comment::init();
+
 
 
 add_to_log($course->id, 'pcast', 'view', "view.php?id=$cm->id", $pcast->name, $cm->id);
 
 /// Print the page header
 
-$PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode'=>$mode));
 $PAGE->set_title($pcast->name);
 $PAGE->set_heading($course->shortname);
 // $PAGE->set_button(update_module_button($cm->id, $course->id, get_string('modulename', 'pcast')));
@@ -86,77 +84,76 @@ $PAGE->set_heading($course->shortname);
 echo $OUTPUT->header();
 
 // Replace the following lines with you own code
+// TODO: FIX THIS!
 echo $OUTPUT->heading('Yay! It works!- LIST THE PCASTS');
 
 /// Print the Add/edit episode button
-/// Need capability manage OR add with allow users to post option set
+/// TODO: Need capability manage OR add with allow users to post option set with write capability set
 echo'<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">'.get_string('addnewepisode', 'pcast').'</a>';
 
-    echo $OUTPUT->heading_with_help(get_string("viewpcast","pcast",$pcast->name), 'pcast' ,'pcast', 'icon');
-
- 
-    // Print heading and tabs
-    //include('tabs.php');
-
-    // *************************************************************************
-    //Sorting info
-    if (!isset($sortorder)) {
-        $sortorder = '';
-    }
-    if (!isset($sortkey)) {
-        $sortkey = '';
-    }
-
-    //make sure variables are properly cleaned
-    $sortkey   = clean_param($sortkey, PARAM_ALPHANUM);// Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
-    $sortorder = clean_param($sortorder, PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
-
-    $toolsrow = array();
-    $browserow = array();
-    $inactive = array();
-    $activated = array();
+echo $OUTPUT->heading_with_help(get_string("viewpcast","pcast",$pcast->name), 'pcast' ,'pcast', 'icon');
 
 
-    $browserow[] = new tabobject(PCAST_STANDARD_VIEW,
-                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_STANDARD_VIEW,
-                                 get_string('standardview', 'pcast'));
+// Print heading and tabs
+// *************************************************************************
+//Sorting info
+if (!isset($sortorder)) {
+    $sortorder = '';
+}
+if (!isset($sortkey)) {
+    $sortkey = '';
+}
 
-    if($pcast->userscancategorize) {
-        $browserow[] = new tabobject(PCAST_CATEGORY_VIEW,
-                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_CATEGORY_VIEW,
-                                 get_string('categoryview', 'pcast'));
-    }
-    $browserow[] = new tabobject(PCAST_DATE_VIEW,
-                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_DATE_VIEW,
-                                 get_string('dateview', 'pcast'));
+//make sure variables are properly cleaned
+$sortkey   = clean_param($sortkey, PARAM_ALPHANUM);// Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
+$sortorder = clean_param($sortorder, PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
 
-    if($pcast->displayauthor or has_capability('mod/pcast:manage', $context)) {
-        $browserow[] = new tabobject(PCAST_AUTHOR_VIEW,
-                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_AUTHOR_VIEW,
-                                 get_string('authorview', 'pcast'));
-    }
+$toolsrow = array();
+$browserow = array();
+$inactive = array();
+$activated = array();
 
 
-    if (has_capability('mod/pcast:approve', $context)) {
-        $browserow[] = new tabobject(PCAST_APPROVAL_VIEW,
-                                 $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_APPROVAL_VIEW,
-                                 get_string('approvalview', 'pcast'));
-    }
+$browserow[] = new tabobject(PCAST_STANDARD_VIEW,
+                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_STANDARD_VIEW,
+                             get_string('standardview', 'pcast'));
 
-    if ($mode < PCAST_STANDARD_VIEW || $mode > PCAST_APPROVAL_VIEW) {   // We are on second row
-        $inactive = array('edit');
-        $activated = array('edit');
+if($pcast->userscancategorize) {
+    $browserow[] = new tabobject(PCAST_CATEGORY_VIEW,
+                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_CATEGORY_VIEW,
+                             get_string('categoryview', 'pcast'));
+}
+$browserow[] = new tabobject(PCAST_DATE_VIEW,
+                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_DATE_VIEW,
+                             get_string('dateview', 'pcast'));
 
-        $browserow[] = new tabobject('edit', '#', get_string('edit'));
-    }
+if($pcast->displayauthor or has_capability('mod/pcast:manage', $context)) {
+    $browserow[] = new tabobject(PCAST_AUTHOR_VIEW,
+                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_AUTHOR_VIEW,
+                             get_string('authorview', 'pcast'));
+}
+
+
+if (has_capability('mod/pcast:approve', $context)) {
+    $browserow[] = new tabobject(PCAST_APPROVAL_VIEW,
+                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_APPROVAL_VIEW,
+                             get_string('approvalview', 'pcast'));
+}
+
+if ($mode < PCAST_STANDARD_VIEW || $mode > PCAST_APPROVAL_VIEW) {   // We are on second row
+    $inactive = array('edit');
+    $activated = array('edit');
+
+    $browserow[] = new tabobject('edit', '#', get_string('edit'));
+}
 
 /// Put all this info together
 
-    $tabrows = array();
-    $tabrows[] = $browserow;     // Always put these at the top
-    if ($toolsrow) {
-        $tabrows[] = $toolsrow;
-    }
+$tabrows = array();
+$tabrows[] = $browserow;     // Always put these at the top
+if ($toolsrow) {
+    $tabrows[] = $toolsrow;
+}
 
 
 echo'  <div class="pcastdisplay">';
@@ -166,100 +163,105 @@ echo'  <div class="entrybox">';
 echo '</div></div>';
 
 
-    if (!isset($category)) {
-        $category = "";
-    }
+if (!isset($category)) {
+    $category = "";
+}
+
+// Check to see if any content should be displayed (prevents guessing of URLs)
+if((!$pcast->userscancategorize) and ($mode == PCAST_CATEGORY_VIEW)) {
+    print_error('errorinvalidmode','pcast');
+} else if((!$pcast->displayauthor and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_AUTHOR_VIEW)) {
+    print_error('errorinvalidmode','pcast');
+} else if ((!has_capability('mod/pcast:approve', $context)) and ($mode == PCAST_APPROVAL_VIEW)) {
+    print_error('errorinvalidmode','pcast');
+}
 
 
-    switch ($mode) {
 
-        case PCAST_CATEGORY_VIEW:
-             pcast_print_categories_menu($cm, $pcast, $hook);
-        break;
+switch ($mode) {
 
-        case PCAST_APPROVAL_VIEW:
-            if (!$sortkey) {
-                $sortkey = PCAST_DATE_CREATED;
-            }
-            if (!$sortorder) {
-                $sortorder = 'asc';
-            }
-             pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
-        break;
+    case PCAST_CATEGORY_VIEW:
+         pcast_print_categories_menu($cm, $pcast, $hook);
+    break;
 
-        case PCAST_AUTHOR_VIEW:
-            if (!$sortkey) {
-                $sortkey = PCAST_AUTHOR_LNAME;
-            }
-            if (!$sortorder) {
-                $sortorder = 'asc';
-            }
-             pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
-        break;
+    case PCAST_APPROVAL_VIEW:
+        if (!$sortkey) {
+            $sortkey = PCAST_DATE_CREATED;
+        }
+        if (!$sortorder) {
+            $sortorder = 'asc';
+        }
+         pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+    break;
 
-        case PCAST_DATE_VIEW:
-            if (!$sortkey) {
-                $sortkey = PCAST_DATE_UPDATED;
-            }
-            if (!$sortorder) {
-                $sortorder = 'desc';
-            }
-             pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
-        break;
+    case PCAST_AUTHOR_VIEW:
+        if (!$sortkey) {
+            $sortkey = PCAST_AUTHOR_LNAME;
+        }
+        if (!$sortorder) {
+            $sortorder = 'asc';
+        }
+         pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+    break;
 
-        case PCAST_STANDARD_VIEW:
-        default:
-             pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+    case PCAST_DATE_VIEW:
+        if (!$sortkey) {
+            $sortkey = PCAST_DATE_UPDATED;
+        }
+        if (!$sortorder) {
+            $sortorder = 'desc';
+        }
+         pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+    break;
 
-        break;
-    }
-    echo '<hr />';
+    case PCAST_STANDARD_VIEW:
+    default:
+         pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
 
-    //**************************************************************************
+    break;
+}
+echo '<hr />';
 
-    // Print the main part of the page (The content)
-    echo'<div id="pcast-view" class="generalbox"><div class="generalboxcontent">';
+//**************************************************************************
+
+// Print the main part of the page (The content)
+echo'<div id="pcast-view" class="generalbox"><div class="generalboxcontent">';
 
 
 /// Next print the list of episodes
 
-    switch($mode) {
-        case PCAST_STANDARD_VIEW:
+switch($mode) {
+    case PCAST_STANDARD_VIEW:
 
-            pcast_display_standard_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
-            break;
+        pcast_display_standard_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
+        break;
 
-        case PCAST_CATEGORY_VIEW:
+    case PCAST_CATEGORY_VIEW:
 
-            pcast_display_category_episodes($pcast, $cm, $hook);
-            break;
+        pcast_display_category_episodes($pcast, $cm, $hook);
+        break;
 
-        case PCAST_DATE_VIEW:
+    case PCAST_DATE_VIEW:
 
-            pcast_display_date_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
-            break;
+        pcast_display_date_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
+        break;
 
-        case PCAST_AUTHOR_VIEW:
+    case PCAST_AUTHOR_VIEW:
 
-            pcast_display_author_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
-            break;
+        pcast_display_author_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
+        break;
 
-        case PCAST_APPROVAL_VIEW:
-            pcast_display_approval_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
+    case PCAST_APPROVAL_VIEW:
+        pcast_display_approval_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
 
-            break;
+        break;
 
-        case PCAST_ADDENTRY_VIEW:
+    default:
 
-            echo 'ADD';
-            break;
+        pcast_display_standard_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
+        break;    }
 
-        default:
-
-            echo 'NORMAL';
-            break;    }
-
-    echo '</div></div>';
+echo '</div></div>';
 
 
 // Finish the page

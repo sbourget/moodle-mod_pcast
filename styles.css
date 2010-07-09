@@ -19,3 +19,7 @@
 .pcast-data {
     width: 75%;
 }
+.pcast-comments {
+    text-align: center;
+    margin:0 auto;
+}

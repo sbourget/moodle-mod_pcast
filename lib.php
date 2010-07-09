@@ -206,6 +206,7 @@ function pcast_delete_instance($id) {
     # Delete any dependent records here #
 
     $DB->delete_records('pcast', array('id' => $pcast->id));
+        $DB->delete_records_select('comments', "contextid=? AND commentarea=? AND itemid IN ($entry_select)", array($id, 'pcast_episode', $context->id));
 
     return true;
 }
@@ -506,7 +507,7 @@ function pcast_get_itunes_categories($item, $pcast) {
  */
 function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
 
-    global $CFG, $DB;
+    global $CFG, $DB, $USER;
 
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -540,6 +541,13 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
             return false;
         }
 
+        // Log the file as viewed
+        $pcast->URL = $CFG->wwwroot . '/pluginfile.php' . $fullpath;
+        $pcast->filename = implode('/', $args);
+        if(!empty($USER->id)){
+            pcast_add_view_instance($pcast, $USER->id);
+        }
+
         // finally send the file
         send_stored_file($file, 0, 0, $forcedownload); // download MUST be forced - security!
     }
@@ -547,4 +555,39 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
     return false;
 }
 
+/**
+ * logs the pcast files.
+ *
+ * @global object $CFG
+ * @param object $pcast
+ * @param string $userid
+ * @return bool false if error else true
+ */
+function pcast_add_view_instance($pcast, $userid) {
+    global $DB;
 
+    //lookup the user add add to the view count
+    if(!$view = $DB->get_record("pcast_views", array("episodeid" => $pcast->id, "userid" => $userid))) {
+        $view=NULL;
+        unset($view);
+        $view->userid=$userid;
+        $view->views=1;
+        $view->episodeid=$pcast->id;
+        $view->lastview = time();
+
+        if(!$result=$DB->insert_record("pcast_views", $view, $returnid=false, $bulk=false)) {
+            print_error('databaseerror','pcast');
+        }
+    } else { //Never viewed the file before
+        $temp_view = $view->views + 1;
+        $view->views = $temp_view;
+        $view->lastview=time();
+        if(!$result = $DB->update_record("pcast_views", $view, $bulk=false)) {
+            print_error('databaseerror','pcast');
+        }
+    }
+
+    add_to_log($pcast->course, "pcast", "view", $pcast->URL, $pcast->filename,0 ,$userid);
+
+    return $result;
+}

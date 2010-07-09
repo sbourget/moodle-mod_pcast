@@ -37,6 +37,7 @@ $popup = optional_param('popup',0, PARAM_INT);
 
 $url = new moodle_url('/mod/pcast/showepisode.php');
 $url->param('eid', $eid);
+$url->param('mode', $mode);
 $PAGE->set_url($url);
 
 if ($eid) {
@@ -47,6 +48,7 @@ if ($eid) {
     $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
     $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
     require_course_login($course, true, $cm);
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
     $episode->pcastname = $pcast->name;
     $episode->cmid = $cm->id;
     $episode->courseid = $cm->course;
@@ -70,6 +72,8 @@ if (!empty($episode->courseid)) {
 }
 
 // Replace the following lines with you own code
+// TODO: FIX THIS!
+
 echo $OUTPUT->heading('Yay! It works!- DISPLAY THE EPISODE');
 
 // Print the tabs
@@ -83,13 +87,40 @@ $browserow[] = new tabobject(PCAST_EPISODE_VIEW,
                              $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$eid.'&amp;mode='.PCAST_EPISODE_VIEW,
                              get_string('episodeview', 'pcast'));
 
-$browserow[] = new tabobject(PCAST_EPISODE_COMMENT_AND_RATE,
-                             $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$eid.'&amp;mode='.PCAST_EPISODE_COMMENT_AND_RATE,
-                             get_string('episodecommentview', 'pcast'));
+$comment = false;
+$rate = false;
+if(($episode->userscancomment) or ($episode->userscanrate)){
+    // Can they use comments?
+    if(($CFG->usecomments) and ($episode->userscancomment) and ((has_capability('moodle/comment:post', $context)) or (has_capability('moodle/comment:view', $context)))) {
+        $tabname = get_string('episodecommentview', 'pcast');
+        $comment = true;
+    }
+    // Can they use ratings?
+    if(($episode->userscanrate) and 
+        ((has_capability('moodle/rating:rate', $context)) or
+         ((has_capability('moodle/rating:view', $context)) and ($episode->user == $USER->id)) or
+         (has_capability('moodle/rating:viewall', $context)) or
+         (has_capability('moodle/rating:viewany', $context)))) {
 
-$browserow[] = new tabobject(PCAST_EPISODE_VIEWS,
+        $tabname = get_string('episoderateview', 'pcast');
+        $rate = true;
+    }
+    // Can they use both?
+    if(($comment) and ($rate)) {
+        $tabname = get_string('episodecommentandrateview', 'pcast');
+    }
+
+
+    $browserow[] = new tabobject(PCAST_EPISODE_COMMENT_AND_RATE,
+                             $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$eid.'&amp;mode='.PCAST_EPISODE_COMMENT_AND_RATE,
+                             $tabname);
+}
+
+if(($episode->displayviews) or (has_capability('mod/pcast:manage', $context))) {
+    $browserow[] = new tabobject(PCAST_EPISODE_VIEWS,
                              $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$eid.'&amp;mode='.PCAST_EPISODE_VIEWS,
                              get_string('episodeviews', 'pcast'));
+}
 
 
 if ($mode < PCAST_EPISODE_VIEW || $mode > PCAST_EPISODE_VIEWS) {   // We are on second row
@@ -108,7 +139,14 @@ if ($toolsrow) {
 }
 
 
-echo'  <div class="pcastdisplay">';
+// Check to see if any content should be displayed (prevents guessing of URLs)
+if(((!$pcast->userscancomment) and (!$pcast->userscanrate)) and ($mode == PCAST_EPISODE_COMMENT_AND_RATE)) {
+    print_error('errorinvalidmode','pcast');
+} else if((!$pcast->displayviews and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_EPISODE_VIEWS)) {
+    print_error('errorinvalidmode','pcast');
+}
+
+echo'  <div class="pcast-display">';
 print_tabs($tabrows, $mode, $inactive, $activated);
 
 switch ($mode) {
@@ -119,7 +157,12 @@ switch ($mode) {
         break;
     case PCAST_EPISODE_COMMENT_AND_RATE:
 
-        pcast_display_episode_comments($episode, $cm);
+        // Load comment API
+        require_once($CFG->dirroot . '/comment/lib.php');
+        comment::init();
+
+        pcast_display_episode_comments($episode, $cm, $course);
+        pcast_display_episode_ratings($episode, $cm);
 
         break;
     case PCAST_EPISODE_VIEWS:

@@ -53,8 +53,7 @@ if (!$episode->approved and confirm_sesskey()) {
     $newepisode->approved     = 1;
     $newepisode->timemodified = time();
     $DB->update_record("pcast_episodes", $newepisode);
-    //TODO: Revisit this link later when view.php is complete
-    add_to_log($course->id, "pcast", "approve episode", "showepisode.php?id=$cm->id&amp;eid=$eid", "$eid", $cm->id);
+    add_to_log($course->id, "pcast", "approve episode", "showepisode.php?eid=$eid", "$eid", $cm->id);
 }
 
 redirect("view.php?id=$cm->id&amp;mode=$mode&amp;hook=$hook");
