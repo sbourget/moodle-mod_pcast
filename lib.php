@@ -608,7 +608,7 @@ function pcast_add_view_instance($pcast, $userid) {
  * @return array
  */
 function pcast_get_extra_capabilities() {
-    return array('moodle/comment:post','moodle/comment:view','moodle/rating:rate','moodle/rating:view','moodle/rating:viewall','moodle/rating:viewany');
+    return array('moodle/comment:post','moodle/comment:view');
 }
 
 //TODO: RATINGS CODE -UNTESTED
@@ -644,11 +644,18 @@ function pcast_get_user_grades($pcast, $userid=0) {
 }
 
 /**
+ * Returns the names of the table and columns necessary to check items for ratings
+ * @return array an array containing the item table, item id and user id columns
+ */
+function pcast_rating_item_check_info() {
+    return array('pcast_episodes','id','userid');
+}
+
+/**
  * Return rating related permissions
  * @param string $options the context id
  * @return array an associative array of the user's rating permissions
  */
-/*
 function pcast_rating_permissions($options) {
     $contextid = $options;
     $context = get_context_instance_by_id($contextid);
@@ -660,15 +667,7 @@ function pcast_rating_permissions($options) {
         return array('view'=>has_capability('mod/pcast:viewrating',$context), 'viewany'=>has_capability('mod/pcast:viewanyrating',$context), 'viewall'=>has_capability('mod/pcast:viewallratings',$context), 'rate'=>has_capability('mod/pcast:rate',$context));
     }
 }
-*/
 
-/**
- * Returns the names of the table and columns necessary to check items for ratings
- * @return array an array containing the item table, item id and user id columns
- */
-function pcast_rating_item_check_info() {
-    return array('pcast_episodes','id','userid');
-}
 
 /**
  * Update activity grades

@@ -163,7 +163,7 @@ switch ($mode) {
         comment::init();
 
         pcast_display_episode_comments($episode, $cm, $course);
-        pcast_display_episode_ratings($episode, $cm);
+        pcast_display_episode_ratings($episode, $cm, $course);
 
         break;
     case PCAST_EPISODE_VIEWS:

@@ -561,21 +561,6 @@ function pcast_sort_entries ( $entry0, $entry1 ) {
 
 
 /**
- * @global object
- * @global object
- * @global object
- * @param object $course
- * @param object $entry
- * @return bool
- */
-function  pcast_print_entry_ratings($course, $entry) {
-    global $OUTPUT;
-    if( !empty($entry->rating) ){
-        echo $OUTPUT->render($entry->rating);
-    }
-}
-
-/**
  *
  * @global object
  * @global object
@@ -1190,19 +1175,21 @@ function pcast_display_episode_comments($episode, $cm, $course) {
 
 }
 
-function pcast_display_episode_ratings($episode, $cm) {
+function pcast_display_episode_ratings($episode, $cm, $course) {
 
-    global $CFG, $USER;
+    global $CFG, $USER, $DB, $OUTPUT;
 
-    // TODO: GET HELP FROM JILL TO FINISH THIS!!!
+    //TODO: Rating API is currently broken in MDL 2.0 Preview 4 (MDL-23187)
+    $sql = pcast_get_episode_sql();
+    $sql .=  " WHERE p.id = ?";
+    $episodes = $DB->get_records_sql($sql,array('id'=>$episode->id));
+
     // load ratings
     require_once($CFG->dirroot.'/rating/lib.php');
     if ($episode->assessed!=RATING_AGGREGATE_NONE) {
         $ratingoptions = new stdclass();
         $ratingoptions->context = $cm->context;
-        //TODO: FIX ME
-        $ratingoptions->items = $allentries;
-
+        $ratingoptions->items = $episodes;
         $ratingoptions->aggregate = $episode->assessed;//the aggregation method
         $ratingoptions->scaleid = $episode->scale;
         $ratingoptions->userid = $USER->id;
@@ -1213,10 +1200,31 @@ function pcast_display_episode_ratings($episode, $cm) {
         $ratingoptions->pluginname = 'pcast';
 
         $rm = new rating_manager();
-        $allentries = $rm->get_ratings($ratingoptions);
+        $allepisodes = $rm->get_ratings($ratingoptions);
+    }
+    foreach ($allepisodes as $thisepisode)
+    {
+        echo $OUTPUT->render($thisepisode->rating);
     }
 
 }
+
+/**
+ * @global object
+ * @global object
+ * @global object
+ * @param object $course
+ * @param object $episode
+ * @return bool
+ */
+function  pcast_print_episode_ratings($course, $episode) {
+    global $OUTPUT;
+    pcast_debug_object($episode);
+    if( !empty($episode->rating) ){
+        echo $OUTPUT->render($episode->rating);
+    }
+}
+
 
 function pcast_get_episode_view_count($episode) {
     global $DB;
@@ -1244,8 +1252,8 @@ function pcast_get_episode_rating_count($episode) {
     return $html;
 }
 
-function pcast_debug_object($object) {
-    echo '<pre><font color="red">';
+function pcast_debug_object($object, $color='red') {
+    echo '<pre><font color="'.$color.'">';
     print_r($object);
     echo '</font></pre>';
 }
