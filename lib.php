@@ -611,6 +611,200 @@ function pcast_get_extra_capabilities() {
     return array('moodle/comment:post','moodle/comment:view');
 }
 
+// Course reset code
+/**
+ * Implementation of the function for printing the form elements that control
+ * whether the course reset functionality affects the pcast.
+ * @param object $mform form passed by reference
+ */
+function pcast_reset_course_form_definition(&$mform) {
+    $mform->addElement('header', 'pcastheader', get_string('modulenameplural', 'pcast'));
+    $mform->addElement('checkbox', 'reset_pcast_all', get_string('resetpcastsall','pcast'));
+
+    $mform->addElement('checkbox', 'reset_pcast_notenrolled', get_string('deletenotenrolled', 'pcast'));
+    $mform->disabledIf('reset_pcast_notenrolled', 'reset_pcast_all', 'checked');
+
+    $mform->addElement('checkbox', 'reset_pcast_ratings', get_string('deleteallratings'));
+    $mform->disabledIf('reset_pcast_ratings', 'reset_pcast_all', 'checked');
+
+    $mform->addElement('checkbox', 'reset_pcast_comments', get_string('deleteallcomments'));
+    $mform->disabledIf('reset_pcast_comments', 'reset_pcast_all', 'checked');
+
+    $mform->addElement('checkbox', 'reset_pcast_views', get_string('deleteallviews','pcast'));
+    $mform->disabledIf('reset_pcast_views', 'reset_pcast_all', 'checked');
+}
+
+/**
+ * Course reset form defaults.
+ * @return array
+ */
+function pcast_reset_course_form_defaults($course) {
+    return array('reset_pcast_all'=>0, 'reset_pcast_ratings'=>1, 'reset_pcast_comments'=>1, 'reset_pcast_notenrolled'=>0, 'reset_pcast_views'=>1);
+}
+
+/**
+ * Removes all grades from gradebook
+ *
+ * @global object
+ * @param int $courseid
+ * @param string optional type
+ */
+// TODO LOOK AT AFTER GRADES ARE IMPLEMENTED
+function pcast_reset_gradebook($courseid, $type='') {
+    global $DB;
+
+    $sql = "SELECT g.*, cm.idnumber as cmidnumber, g.course as courseid
+              FROM {pcast} g, {course_modules} cm, {modules} m
+             WHERE m.name='pcast' AND m.id=cm.module AND cm.instance=g.id AND g.course=?";
+
+    if ($pcasts = $DB->get_records_sql($sql, array($courseid))) {
+        foreach ($pcasts as $pcast) {
+            pcast_grade_item_update($pcast, 'reset');
+        }
+    }
+}
+/**
+ * Actual implementation of the rest coures functionality, delete all the
+ * pcast responses for course $data->courseid.
+ *
+ * @global object
+ * @param $data the data submitted from the reset course.
+ * @return array status array
+ */
+function pcast_reset_userdata($data) {
+    global $CFG, $DB;
+    require_once($CFG->dirroot.'/rating/lib.php');
+
+    $componentstr = get_string('modulenameplural', 'pcast');
+    $status = array();
+
+    $allepisodessql = "SELECT e.id
+                        FROM {pcast_episodes} e
+                             JOIN {pcast} p ON e.pcastid = p.id
+                       WHERE p.course = ?";
+
+    $allpcastssql = "SELECT p.id
+                           FROM {pcast} p
+                          WHERE p.course = ?";
+
+    $params = array($data->courseid);
+
+    $fs = get_file_storage();
+
+    $rm = new rating_manager();
+    $ratingdeloptions = new stdclass();
+
+    // delete entries if requested
+    if (!empty($data->reset_pcast_all)) {
+
+        $params[] = 'pcast_episode';
+        $DB->delete_records_select('comments', "itemid IN ($allepisodessql) AND commentarea=?", $params);
+        $DB->delete_records_select('pcast_episodes', "pcastid IN ($allpcastssql)", $params);
+
+        // now get rid of all attachments
+        if ($pcasts = $DB->get_records_sql($allpcastssql, $params)) {
+            foreach ($pcasts as $pcastid=>$unused) {
+                if (!$cm = get_coursemodule_from_instance('pcast', $pcastid)) {
+                    continue;
+                }
+                $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+                $fs->delete_area_files($context->id, 'mod_pcast', 'episode');
+
+                //delete ratings
+                $ratingdeloptions->contextid = $context->id;
+                $rm->delete_ratings($ratingdeloptions);
+            }
+        }
+
+        // remove all grades from gradebook
+        if (empty($data->reset_gradebook_grades)) {
+            pcast_reset_gradebook($data->courseid);
+        }
+
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('resetpcastsall', 'pcast'), 'error'=>false);
+
+    }
+    // remove entries by users not enrolled into course
+    else if (!empty($data->reset_pcast_notenrolled)) {
+        //TODO: FIX ME (THIS IS MOST LIKELY WRONG DUE TO ENROLLMENT CHANGES)
+        $episodessql = "SELECT e.id, e.userid, e.pcastid, u.id AS userexists, u.deleted AS userdeleted
+                         FROM {pcast_episodes} e
+                              JOIN {pcast} p ON e.pcastid = p.id
+                              LEFT JOIN {user} u ON e.userid = u.id
+                        WHERE p.course = ? AND e.userid > 0";
+
+        $course_context = get_context_instance(CONTEXT_COURSE, $data->courseid);
+        $notenrolled = array();
+        if ($rs = $DB->get_recordset_sql($episodessql, $params)) {
+            foreach ($rs as $episode) {
+                if (array_key_exists($episode->userid, $notenrolled) or !$episode->userexists or $episode->userdeleted
+                  or !is_enrolled($course_context , $episode->userid)) {
+                    $DB->delete_records('comments', array('commentarea'=>'pcast_episode', 'itemid'=>$episode->id));
+                    $DB->delete_records('pcast_episodes', array('id'=>$episode->id));
+
+                    if ($cm = get_coursemodule_from_instance('pcast', $episode->pcastid)) {
+                        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+                        $fs->delete_area_files($context->id, 'mod_pcast', 'episode', $episode->id);
+
+                        //delete ratings
+                        $ratingdeloptions->contextid = $context->id;
+                        $rm->delete_ratings($ratingdeloptions);
+                    }
+                }
+            }
+            $rs->close();
+            $status[] = array('component'=>$componentstr, 'item'=>get_string('deletenotenrolled', 'pcast'), 'error'=>false);
+        }
+    }
+
+    // remove all ratings
+    if (!empty($data->reset_pcast_ratings)) {
+        //remove ratings
+        if ($pcasts = $DB->get_records_sql($allpcastssql, $params)) {
+            foreach ($pcasts as $pcastid=>$unused) {
+                if (!$cm = get_coursemodule_from_instance('pcast', $pcastid)) {
+                    continue;
+                }
+                $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+                //delete ratings
+                $ratingdeloptions->contextid = $context->id;
+                $rm->delete_ratings($ratingdeloptions);
+            }
+        }
+
+        // remove all grades from gradebook
+        if (empty($data->reset_gradebook_grades)) {
+            pcast_reset_gradebook($data->courseid);
+        }
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallratings'), 'error'=>false);
+    }
+
+    // remove comments
+    if (!empty($data->reset_pcast_comments)) {
+        $params[] = 'pcast_episode';
+        $DB->delete_records_select('comments', "itemid IN ($allepisodessql) AND commentarea= ? ", $params);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallcomments'), 'error'=>false);
+    }
+
+    // remove views
+    if (!empty($data->reset_pcast_views)) {
+//        $params[] = 'pcast_episode';
+        $DB->delete_records_select('pcast_views',"episodeid IN ($allepisodessql) ", $params);
+//        $DB->delete_records_select('pcast_views', "itemid IN ($allepisodessql) AND commentarea= ? ", $params);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallviews','pcast'), 'error'=>false);
+    }
+    /// updating dates - shift may be negative too
+    if ($data->timeshift) {
+        shift_course_mod_dates('pcast', array('assesstimestart', 'assesstimefinish'), $data->timeshift, $data->courseid);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('datechanged'), 'error'=>false);
+    }
+
+    return $status;
+}
+
+
+
 //TODO: RATINGS CODE -UNTESTED
 
 /**

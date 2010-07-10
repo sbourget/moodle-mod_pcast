@@ -191,3 +191,8 @@ $string['episodeviews'] = 'Views';
 $string['episodecommentview'] = 'Comment';
 $string['episoderateview'] = 'Rate';
 $string['episodecommentandrateview'] = 'Comment / Rate';
+
+// Reset
+$string['resetpcastsall']='Delete episodes from all podcasts';
+$string['deletenotenrolled']='Delete episodes by users not enrolled';
+$string['deleteallviews']='Delete episode view history';

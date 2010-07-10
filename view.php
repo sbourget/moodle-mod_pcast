@@ -74,11 +74,6 @@ add_to_log($course->id, 'pcast', 'view', "view.php?id=$cm->id", $pcast->name, $c
 $PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode'=>$mode));
 $PAGE->set_title($pcast->name);
 $PAGE->set_heading($course->shortname);
-// $PAGE->set_button(update_module_button($cm->id, $course->id, get_string('modulename', 'pcast')));
-
-// other things you may want to set - remove if not needed
-//$PAGE->set_cacheable(false);
-//$PAGE->set_focuscontrol('some-html-id');
 
 // Output starts here
 echo $OUTPUT->header();
@@ -232,7 +227,7 @@ echo '<hr />';
 // Print the main part of the page (The content)
 echo'<div id="pcast-view" class="generalbox"><div class="generalboxcontent">';
 
-
+//TODO: Fix the view capability or get rid of it!!!
 /// Next print the list of episodes
 
 switch($mode) {

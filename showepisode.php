@@ -89,6 +89,7 @@ $browserow[] = new tabobject(PCAST_EPISODE_VIEW,
 
 $comment = false;
 $rate = false;
+$tabname = '';
 //TODO: Ratings here need to be revisited =(
 if(($episode->userscancomment) or ($episode->assessed)){
     // Can they use comments?
@@ -98,10 +99,10 @@ if(($episode->userscancomment) or ($episode->assessed)){
     }
     // Can they use ratings?
     if(($episode->assessed) and
-        ((has_capability('moodle/pcast:rate', $context)) or
-         ((has_capability('moodle/pcast:viewrating', $context)) and ($episode->user == $USER->id)) or
-         (has_capability('moodle/pcast:viewallratings', $context)) or
-         (has_capability('moodle/pcast:viewanyrating', $context)))) {
+        ((has_capability('mod/pcast:rate', $context)) or
+         ((has_capability('mod/pcast:viewrating', $context)) and ($episode->user == $USER->id)) or
+         (has_capability('mod/pcast:viewallratings', $context)) or
+         (has_capability('mod/pcast:viewanyrating', $context)))) {
 
         $tabname = get_string('episoderateview', 'pcast');
         $rate = true;
@@ -111,10 +112,11 @@ if(($episode->userscancomment) or ($episode->assessed)){
         $tabname = get_string('episodecommentandrateview', 'pcast');
     }
 
-
-    $browserow[] = new tabobject(PCAST_EPISODE_COMMENT_AND_RATE,
+    if(($comment) or ($rate)) {
+        $browserow[] = new tabobject(PCAST_EPISODE_COMMENT_AND_RATE,
                              $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$eid.'&amp;mode='.PCAST_EPISODE_COMMENT_AND_RATE,
                              $tabname);
+    }
 }
 
 if(($episode->displayviews) or (has_capability('mod/pcast:manage', $context))) {
