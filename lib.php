@@ -726,36 +726,54 @@ function pcast_reset_userdata($data) {
     }
     // remove entries by users not enrolled into course
     else if (!empty($data->reset_pcast_notenrolled)) {
-        //TODO: FIX ME (THIS IS MOST LIKELY WRONG DUE TO ENROLLMENT CHANGES)
-        $episodessql = "SELECT e.id, e.userid, e.pcastid, u.id AS userexists, u.deleted AS userdeleted
-                         FROM {pcast_episodes} e
-                              JOIN {pcast} p ON e.pcastid = p.id
-                              LEFT JOIN {user} u ON e.userid = u.id
-                        WHERE p.course = ? AND e.userid > 0";
 
         $course_context = get_context_instance(CONTEXT_COURSE, $data->courseid);
-        $notenrolled = array();
-        if ($rs = $DB->get_recordset_sql($episodessql, $params)) {
-            foreach ($rs as $episode) {
-                if (array_key_exists($episode->userid, $notenrolled) or !$episode->userexists or $episode->userdeleted
-                  or !is_enrolled($course_context , $episode->userid)) {
-                    $DB->delete_records('comments', array('commentarea'=>'pcast_episode', 'itemid'=>$episode->id));
-                    $DB->delete_records('pcast_episodes', array('id'=>$episode->id));
+        
+        // Get list of enrolled users
+        $people = get_enrolled_users($course_context);
+        $list ='';
+        $list2 ='';
+        foreach ($people as $person) {
+            $list .=' AND e.userid != ?';
+            $list2 .=' AND userid != ?';
+            $params[] = $person->id;
 
-                    if ($cm = get_coursemodule_from_instance('pcast', $episode->pcastid)) {
-                        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-                        $fs->delete_area_files($context->id, 'mod_pcast', 'episode', $episode->id);
-
-                        //delete ratings
-                        $ratingdeloptions->contextid = $context->id;
-                        $rm->delete_ratings($ratingdeloptions);
-                    }
-                }
-            }
-            $rs->close();
-            $status[] = array('component'=>$componentstr, 'item'=>get_string('deletenotenrolled', 'pcast'), 'error'=>false);
         }
+        // Construct SQL to episodes from users whe are no longer enrolled
+            $unenrolledepisodessql = "SELECT e.id
+                                      FROM {pcast_episodes} e
+                                      WHERE e.course = ? " . $list;
+
+        $params[] = 'pcast_episode';
+        $DB->delete_records_select('comments', "itemid IN ($unenrolledepisodessql) AND commentarea=?", $params);
+        $DB->delete_records_select('pcast_episodes', "course =? ". $list2, $params);
+
+
+        // now get rid of all attachments
+        if ($pcasts = $DB->get_records_sql($unenrolledepisodessql, $params)) {
+            foreach ($pcasts as $pcastid=>$unused) {
+                if (!$cm = get_coursemodule_from_instance('pcast', $pcastid)) {
+                    continue;
+                }
+                $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+                $fs->delete_area_files($context->id, 'mod_pcast', 'episode');
+
+                //delete ratings
+                $ratingdeloptions->contextid = $context->id;
+                $rm->delete_ratings($ratingdeloptions);
+            }
+        }
+
+        //TODO: FIX ME!
+//        // remove all grades from gradebook
+//        if (empty($data->reset_gradebook_grades)) {
+//            pcast_reset_gradebook($data->courseid);
+//        }
+
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deletenotenrolled', 'pcast'), 'error'=>false);
+
     }
+
 
     // remove all ratings
     if (!empty($data->reset_pcast_ratings)) {
