@@ -608,7 +608,7 @@ function pcast_add_view_instance($pcast, $userid) {
  * @return array
  */
 function pcast_get_extra_capabilities() {
-    return array('moodle/comment:post','moodle/comment:view');
+    return array('moodle/comment:post','moodle/comment:view', 'moodle/site:viewfullnames', 'moodle/site:trustcontent', 'moodle/rating:view', 'moodle/rating:viewany', 'moodle/rating:viewall', 'moodle/rating:rate');
 }
 
 // Course reset code

@@ -264,5 +264,6 @@ class mod_pcast_mod_form extends moodleform_mod {
             $default_values['category'] = (int)$default_values['topcategory'] *1000 + (int)$default_values['nestedcategory'];
             
         }
+        parent::data_preprocessing($default_values);
     }
 }
