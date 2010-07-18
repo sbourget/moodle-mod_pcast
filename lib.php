@@ -156,7 +156,7 @@ function pcast_add_instance($pcast) {
  * @return boolean Success/Fail
  */
 function pcast_update_instance($pcast) {
-    global $DB;
+    global $DB, $USER;
 
     $pcast->timemodified = time();
     $pcast->id = $pcast->instance;
