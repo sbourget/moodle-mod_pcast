@@ -1043,10 +1043,15 @@ function pcast_display_episode_full($episode, $cm){
     $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm));
 
     // Duration
-    // Split up duration for printing
-    $length = explode(":", $episode->duration);
-    $length2->min = $length[0];
-    $length2->sec = $length[1];
+    if(!empty($episode->duration)) {
+        // Split up duration for printing
+        $length = explode(":", $episode->duration);
+        $length2->min = $length[0];
+        $length2->sec = $length[1];
+    } else {
+        $length2->min = 0;
+        $length2->sec = 0;
+    }
 
     $table->data[] = array (get_string("duration","pcast"), get_string("durationlength","pcast",$length2));
 
