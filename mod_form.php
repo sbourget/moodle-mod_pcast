@@ -97,7 +97,7 @@ class mod_pcast_mod_form extends moodleform_mod {
         }
 
 //-------------------------------------------------------------------------------
-        if (isset($CFG->pcast_enablerssitunes) && $CFG->pcast_enablerssitunes) {
+        if ($CFG->enablerssfeeds && isset($CFG->pcast_enablerssitunes) && $CFG->pcast_enablerssitunes) {
 
             /// Itunes Tags
             $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));
