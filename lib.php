@@ -32,6 +32,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+//TODO: THIS SHOULD NOT BE HERE!!!
 require_once($CFG->dirroot . '/rating/lib.php');
 
 define("PCAST_SHOW_ALL_CATEGORIES", 0);
@@ -876,7 +877,10 @@ function pcast_rating_permissions($options) {
         print_error('invalidcontext');
         return null;
     } else {
-        return array('view'=>has_capability('mod/pcast:viewrating',$context), 'viewany'=>has_capability('mod/pcast:viewanyrating',$context), 'viewall'=>has_capability('mod/pcast:viewallratings',$context), 'rate'=>has_capability('mod/pcast:rate',$context));
+        return array('view'=>has_capability('mod/pcast:viewrating',$context),
+            'viewany'=>has_capability('mod/pcast:viewanyrating',$context),
+            'viewall'=>has_capability('mod/pcast:viewallratings',$context),
+            'rate'=>has_capability('mod/pcast:rate',$context));
     }
 }
 
