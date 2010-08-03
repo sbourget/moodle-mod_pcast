@@ -254,6 +254,8 @@ class mod_pcast_mod_form extends moodleform_mod {
     }
 
     function data_preprocessing(&$default_values) {
+        parent::data_preprocessing($default_values);
+        
         if ($this->current->instance) {
             // editing existing instance - copy existing files into draft area
             $draftitemid = file_get_submitted_draft_itemid('image');
@@ -264,6 +266,5 @@ class mod_pcast_mod_form extends moodleform_mod {
             $default_values['category'] = (int)$default_values['topcategory'] *1000 + (int)$default_values['nestedcategory'];
             
         }
-        parent::data_preprocessing($default_values);
     }
 }

@@ -118,6 +118,16 @@ function pcast_add_instance($pcast) {
     $pcast->timemodified = $pcast->timecreated;
 
 
+    // Handle ratings
+    if (empty($pcast->assessed)) {
+        $pcast->assessed = 0;
+    }
+
+    if (empty($pcast->ratingtime) or empty($pcast->assessed)) {
+        $pcast->assesstimestart  = 0;
+        $pcast->assesstimefinish = 0;
+    }
+
     // If no owner then set it to the instance creator.
     if(isset($pcast->enablerssitunes) and ($pcast->enablerssitunes == 1)) {
         if(!isset($pcast->userid)) {
@@ -160,6 +170,17 @@ function pcast_update_instance($pcast) {
     global $DB, $USER;
 
     $pcast->timemodified = time();
+
+    // Handle ratings
+    if (empty($pcast->assessed)) {
+        $pcast->assessed = 0;
+    }
+
+    if (empty($pcast->ratingtime) or empty($pcast->assessed)) {
+        $pcast->assesstimestart  = 0;
+        $pcast->assesstimefinish = 0;
+    }
+
     $pcast->id = $pcast->instance;
 
     // If no owner then set it to the instance creator.
