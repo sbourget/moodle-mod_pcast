@@ -43,14 +43,6 @@ $sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);        // Sorted vi
 $sortorder  = optional_param('sortorder', 'asc', PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
 $page       = optional_param('page', 0,PARAM_INT);               // Page to show (for paging purposes)
 
-
-
-// $displayformat = optional_param('displayformat',-1, PARAM_INT);  // override of the glossary display format
-
-// $fullsearch = optional_param('fullsearch', 0,PARAM_INT);         // full search (concept and definition) when searching?
-// $offset     = optional_param('offset', 0,PARAM_INT);             // entries to bypass (for paging purposes)
-// $show       = optional_param('show', '', PARAM_ALPHA);           // [ concept | alias ] => mode=term hook=$show
-
 // END COPY
 
 if ($id) {
