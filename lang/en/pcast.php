@@ -31,6 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['modulename'] = 'pcast';
 $string['pluginname'] = 'pcast';
 $string['modulenameplural'] = 'pcasts';
+$string['pluginadministration'] = 'Podcast administration';
 $string['pcastfieldset'] = 'Custom example fieldset';
 $string['pcastname'] = 'pcast name';
 $string['pcast'] = 'pcast';
