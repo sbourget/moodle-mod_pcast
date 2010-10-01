@@ -237,11 +237,11 @@ class mod_pcast_mod_form extends moodleform_mod {
         $size[400] = "400";
 
         $mform->addElement('select', 'imageheight', get_string('imageheight', 'pcast'),$size);
-        $mform->setHelpButton('imageheight', array('imageheight', 'imageheight', 'pcast'));
+        $mform->addHelpButton('imageheight', 'imageheight', 'pcast');
         $mform->setDefault('imageheight', 144);
 
         $mform->addElement('select', 'imagewidth', get_string('imagewidth', 'pcast'),$size);
-        $mform->setHelpButton('imagewidth', array('imagewidth', 'imagewidth', 'pcast'));
+        $mform->addHelpButton('imagewidth', 'imagewidth', 'pcast');
         $mform->setDefault('imagewidth', 144);
 
 //-------------------------------------------------------------------------------

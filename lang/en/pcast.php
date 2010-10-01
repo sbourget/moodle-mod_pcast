@@ -90,7 +90,8 @@ $string['explicit_help']='This specifies if the podcast contains explicit conten
 $string['author_help']='Author of this podcast';
 $string['displayauthor_help']='Display the name of the author for each episode to users';
 $string['displayviews_help']='Display the names and number of views for each episode to users';
-
+$string['imageheight_help']='Height of RSS channel logo';
+$string['imagewidth_help']='Width of RSS channel logo';
 $string['userscancategorize_help']='Allow users to select iTunes categories for each of their episodes';
 $string['userscanrate_help']='Allow users to rate episodes';
 $string['']='';
