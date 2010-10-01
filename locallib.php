@@ -190,7 +190,6 @@ function pcast_file_path_lookup ($filehash) {
     if (!empty($filehash)){
         $hash1 = substr($filehash, 0, 2);
         $hash2 = substr($filehash, 2, 2);
-        $hash3 = substr($filehash, 4, 2);
         $filepath = $CFG->dataroot . '/filedir/' . $hash1 .'/' .$hash2 .'/' .$hash3 . '/' . $filehash;
         return $filepath;
 
