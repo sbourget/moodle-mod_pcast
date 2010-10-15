@@ -1291,13 +1291,13 @@ function pcast_mediaplugin_filter($url, $type) {
 
             $html  = '<object class="mediaplugin mp3" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"' . "\n";
             $html .= ' codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" ' . "\n";
-            $html .= ' width="90" height="15" id="mp3player">' . "\n";
+            $html .= ' width="275" height="26" id="mp3player">' . "\n";
             $html .= " <param name=\"movie\" value=\"$CFG->wwwroot/filter/mediaplugin/mp3player.swf?src=$url\" />" . "\n";
             $html .= ' <param name="quality" value="high" />' . "\n";
             $html .= ' <param name="bgcolor" value="#333333" />' . "\n";
             $html .= ' <param name="flashvars" value="'.$c.'" />' . "\n";
             $html .= " <embed src=\"$CFG->wwwroot/filter/mediaplugin/mp3player.swf?src=$url\" " . "\n";
-            $html .= "  quality=\"high\" bgcolor=\"#333333\" width=\"90\" height=\"15\" name=\"mp3player\" " . "\n";
+            $html .= "  quality=\"high\" bgcolor=\"#333333\" width=\"275\" height=\"26\" name=\"mp3player\" " . "\n";
             $html .= ' type="application/x-shockwave-flash" ' . "\n";
             $html .= ' flashvars="'.$c.'" ' . "\n";
             $html .= ' pluginspage="http://www.macromedia.com/go/getflashplayer">' . "\n";
