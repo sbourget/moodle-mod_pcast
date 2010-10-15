@@ -55,8 +55,7 @@ if ($id) {
 
 require_login($course, true, $cm);
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-
-
+require_capability('mod/pcast:view',$context);
 
 
 add_to_log($course->id, 'pcast', 'view', "view.php?id=$cm->id", $pcast->name, $cm->id);
@@ -219,7 +218,6 @@ echo '<hr />';
 // Print the main part of the page (The content)
 echo'<div id="pcast-view" class="generalbox"><div class="generalboxcontent">';
 
-//TODO: Fix the view capability or get rid of it!!!
 /// Next print the list of episodes
 
 switch($mode) {
