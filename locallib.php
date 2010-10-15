@@ -1162,7 +1162,7 @@ function pcast_display_episode_comments($episode, $cm, $course) {
         // Generate comment box using API
         if (!empty($CFG->usecomments)) {
             require_once($CFG->dirroot . '/comment/lib.php');
-            $cmt = new stdclass;
+            $cmt = new stdClass();
             $cmt->pluginname = 'pcast';
             $cmt->context  = $context;
             $cmt->course   = $course;
@@ -1191,7 +1191,7 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
     // load ratings
     require_once($CFG->dirroot.'/rating/lib.php');
     if ($episode->assessed!=RATING_AGGREGATE_NONE) {
-        $ratingoptions = new stdclass();
+        $ratingoptions = new stdClass();
         $ratingoptions->context = $cm->context;
         $ratingoptions->items = $episodes;
         $ratingoptions->aggregate = $episode->assessed;//the aggregation method

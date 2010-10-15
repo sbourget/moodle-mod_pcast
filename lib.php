@@ -245,7 +245,7 @@ function pcast_delete_instance($id) {
 
     //delete ratings
     $rm = new rating_manager();
-    $ratingdeloptions = new stdclass();
+    $ratingdeloptions = new stdClass();
     $ratingdeloptions->contextid = $context->id;
     $rm->delete_ratings($ratingdeloptions);
 
@@ -714,7 +714,7 @@ function pcast_reset_userdata($data) {
     $fs = get_file_storage();
 
     $rm = new rating_manager();
-    $ratingdeloptions = new stdclass();
+    $ratingdeloptions = new stdClass();
 
     // delete entries if requested
     if (!empty($data->reset_pcast_all)) {
@@ -862,7 +862,7 @@ function pcast_get_user_grades($pcast, $userid=0) {
     require_once($CFG->dirroot.'/rating/lib.php');
     $rm = new rating_manager();
 
-    $ratingoptions = new stdclass();
+    $ratingoptions = new stdClass();
 
     //need these to work backwards to get a context id. Is there a better way to get contextid from a module instance?
     $ratingoptions->modulename = 'pcast';
