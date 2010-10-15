@@ -32,9 +32,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-//TODO: THIS SHOULD NOT BE HERE!!!
-require_once($CFG->dirroot . '/rating/lib.php');
-
 define("PCAST_SHOW_ALL_CATEGORIES", 0);
 define("PCAST_SHOW_NOT_CATEGORISED", -1);
 
@@ -221,6 +218,7 @@ function pcast_update_instance($pcast) {
  */
 function pcast_delete_instance($id) {
     global $DB;
+    require_once($CFG->dirroot . '/rating/lib.php');
 
     if (! $pcast = $DB->get_record('pcast', array('id' => $id))) {
         return false;
