@@ -190,7 +190,7 @@ function pcast_file_path_lookup ($filehash) {
     if (!empty($filehash)){
         $hash1 = substr($filehash, 0, 2);
         $hash2 = substr($filehash, 2, 2);
-        $filepath = $CFG->dataroot . '/filedir/' . $hash1 .'/' .$hash2 .'/' .$hash3 . '/' . $filehash;
+        $filepath = $CFG->dataroot . '/filedir/' . $hash1 .'/' .$hash2 . '/' . $filehash;
         return $filepath;
 
     } else {
@@ -650,8 +650,8 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sortkey='', $so
                 ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id,'1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
     } else {
-        $like = $DB->sql_ilike();
-        $sql .= " and p.name $like ? ORDER BY $sort";
+//        $like = $DB->sql_ilike();
+        $sql .= " and ". $DB->sql_like('p.name', '?',false)." ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
     }
     
