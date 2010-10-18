@@ -30,12 +30,7 @@
 function xmldb_pcast_install() {
     global $DB;
 
-    // Install default common logging actions
-    update_log_display_entry('pcast', 'add', 'pcast', 'name');
-    update_log_display_entry('pcast', 'update', 'pcast', 'name');
-    update_log_display_entry('pcast', 'view', 'pcast', 'name');
-    update_log_display_entry('pcast', 'view all', 'pcast', 'name');
-
+    // Install default categories
 
     $dataobject->id = 1;
     $dataobject->name = 'Arts';
