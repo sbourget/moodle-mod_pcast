@@ -1268,68 +1268,46 @@ function pcast_debug_object($object, $color='red') {
  * Display the Moodle Media Filter for MP3 / Video File
  *
  * @global object $CFG
- * @global object $THEME
  * @param object $url
  * @param object $type (mime type)
  * @return nothing
 **/
-function pcast_mediaplugin_filter($url, $type) {
-    global $CFG, $THEME;
 
-    if($type == "audio/mpeg" || $type == "audio/mp3") {
-        if (empty($CFG->filter_mediaplugin_ignore_mp3)) {
-            static $c;
+function pcast_mediaplugin_filter($fullurl, $mimetype) {
+    global $CFG;
+    require_once("$CFG->libdir/resourcelib.php");
+    
+    $title=get_string('episodetitle','pcast',get_string('modulename','pcast'));
+    $clicktoopen=get_string('viewepisode','pcast',get_string('modulename','pcast'));
+    $code = '';
 
-            if (empty($c)) {
-                if (!empty($THEME->filter_mediaplugin_colors)) {
-                    $c = $THEME->filter_mediaplugin_colors;   // You can set this up in your theme/xxx/config.php
-                } else {
-                    $c = 'bgColour=000000&btnColour=ffffff&btnBorderColour=cccccc&iconColour=000000&iconOverColour=00cc00&trackColour=cccccc&handleColour=ffffff&loaderColour=ffffff&waitForPlay=yes&';
-                }
-            }
-            $c = htmlentities($c);
+    if ($mimetype == 'audio/mp3') {
+        // MP3 audio file
+        $code = resourcelib_embed_mp3($fullurl, $title, $clicktoopen);
 
-            $html  = '<object class="mediaplugin mp3" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"' . "\n";
-            $html .= ' codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" ' . "\n";
-            $html .= ' width="275" height="26" id="mp3player">' . "\n";
-            $html .= " <param name=\"movie\" value=\"$CFG->wwwroot/filter/mediaplugin/mp3player.swf?src=$url\" />" . "\n";
-            $html .= ' <param name="quality" value="high" />' . "\n";
-            $html .= ' <param name="bgcolor" value="#333333" />' . "\n";
-            $html .= ' <param name="flashvars" value="'.$c.'" />' . "\n";
-            $html .= " <embed src=\"$CFG->wwwroot/filter/mediaplugin/mp3player.swf?src=$url\" " . "\n";
-            $html .= "  quality=\"high\" bgcolor=\"#333333\" width=\"275\" height=\"26\" name=\"mp3player\" " . "\n";
-            $html .= ' type="application/x-shockwave-flash" ' . "\n";
-            $html .= ' flashvars="'.$c.'" ' . "\n";
-            $html .= ' pluginspage="http://www.macromedia.com/go/getflashplayer">' . "\n";
-            $html .= '</embed>' . "\n";
-            $html .= '</object>&nbsp;' . "\n";
-        }
-    } else if($type == "video/quicktime" || $type == "video/mp4" || $type == "video/m4v") {
-        if (empty($CFG->filter_mediaplugin_ignore_mov)) {
+    } else if ($mimetype == 'video/x-flv') {
+        // Flash video file
+        $code = resourcelib_embed_flashvideo($fullurl, $title, $clicktoopen);
 
-            $html  = '<p class="mediaplugin mov"><object classid="CLSID:02BF25D5-8C17-4B23-BC80-D3488ABDDC6B"' . "\n";
-            $html .= '        codebase="http://www.apple.com/qtactivex/qtplugin.cab" ' . "\n";
-            $html .= '        height="300" width="400"' . "\n";
-            $html .= '        id="quicktime" type="application/x-oleobject">' . "\n";
-            $html .= "<param name=\"src\" value=\"$url\" />" . "\n";
-            $html .= '<param name="autoplay" value="false" />' . "\n";
-            $html .= '<param name="loop" value="true" />' . "\n";
-            $html .= '<param name="controller" value="true" />' . "\n";
-            $html .= '<param name="scale" value="aspect" />' . "\n";
-            $html .= "\n<embed src=\"$url\" name=\"quicktime\" type=\"" . mimeinfo("type",$url) . "\" " . "\n";        //might need to change this
-            $html .= ' height="300" width="400" scale="aspect" ' . "\n";
-            $html .= ' autoplay="false" controller="true" loop="true" ' . "\n";
-            $html .= ' pluginspage="http://quicktime.apple.com/">' . "\n";
-            $html .= '</embed>' . "\n";
-            $html .= '</object></p>' . "\n";
-        }
-    } else if($type == "application/pdf") {
-        $html = "";
-    } else {
-        $html = "";
+    } else if (substr($mimetype, 0, 10) == 'video/x-ms') {
+        // Windows Media Player file
+        $code = resourcelib_embed_mediaplayer($fullurl, $title, $clicktoopen);
+
+    } else if ($mimetype == 'video/quicktime') {
+        // Quicktime file
+        $code = resourcelib_embed_quicktime($fullurl, $title, $clicktoopen);
+
+    } else if ($mimetype == 'video/mpeg') {
+        // Mpeg file
+        $code = resourcelib_embed_mpeg($fullurl, $title, $clicktoopen);
+
+    } else if ($mimetype == 'audio/x-pn-realaudio') {
+        // RealMedia file
+        $code = resourcelib_embed_real($fullurl, $title, $clicktoopen);
+
     }
 
-    return $html;
+    return $code;
 }
 
 /**
@@ -1373,6 +1351,8 @@ function pcast_display_mediafile_link($episode, $cm) {
         if(($CFG->pcast_usemediafilter)) {
             $templink = '<a href="'.$path.'">'.$iconimage.$filename.'</a>';
             $templink .= "</br />\n";
+            //TODO: Replace this code with the embed code used in resourcelib
+            // (See mod/resource, function resource_display_embed()
             $templink .= pcast_mediaplugin_filter($path,$mimetype);
         } else {
             $templink = '<a href="'.$path.'">'.$iconimage.$filename.'</a>';

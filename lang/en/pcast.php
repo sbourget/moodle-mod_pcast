@@ -166,8 +166,8 @@ $string['nopcastmediafile'] = 'No media file found';
 $string['views']='Views';
 $string['user']='Users';
 $string['noviews']='No views';
-$string['']='';
-$string['']='';
+$string['viewepisode']='view this episode';
+$string['episodetitle']='Episode';
 $string['']='';
 
 
