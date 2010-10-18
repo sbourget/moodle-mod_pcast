@@ -635,22 +635,20 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sortkey='', $so
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
     } else if($hook == 'SPECIAL') {
         // Match Other Characters
-        $like = $DB->sql_ilike();
-        $sql .= " AND (p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
+        $sql .= " AND (". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
                  )
                 ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id,'1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
     } else {
-//        $like = $DB->sql_ilike();
         $sql .= " and ". $DB->sql_like('p.name', '?',false)." ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
     }
@@ -773,8 +771,7 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
                 $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
 
             } else {
-                $like = $DB->sql_ilike();
-                $sql .= " and u.lastname $like ?" . $order;
+                $sql .= " and ". $DB->sql_like('u.lastname', '?',false) . $order;
                 $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
             }
         
@@ -791,8 +788,7 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
                 $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
 
             } else {
-                $like = $DB->sql_ilike();
-                $sql .= " and u.firstname $like ?" . $order;
+                $sql .= " and ". $DB->sql_like('u.firstname', '?',false) . $order;
                 $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
             }
 
@@ -825,23 +821,22 @@ function pcast_display_approval_episodes($pcast, $cm, $hook='', $sortkey='', $so
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '0'));
     } else if($hook == 'SPECIAL') {
         // Match Other Characters
-        $like = $DB->sql_ilike();
-        $sql .= " AND (p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
-                 OR p.name $like ?
+        $sql .= " AND (". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
+                 OR ". $DB->sql_like('p.name', '?',false)."
                  )
                 ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '0','1%','2%','3%','4%','5%','6%','7%','8%','9%','0%'));
     } else {
         $like = $DB->sql_ilike();
-        $sql .= " and p.name $like ? ORDER BY $sort";
+        $sql .= " and ". $DB->sql_like('p.name', '?',false)." ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $hook.'%'));
     }
 
