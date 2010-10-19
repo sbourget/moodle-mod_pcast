@@ -942,7 +942,7 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     }
 
     // Attachment
-    $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm));
+    $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm, true));
     
     // Author
     // TODO: Revisit this, Performance!
@@ -1034,7 +1034,7 @@ function pcast_display_episode_full($episode, $cm){
     }
 
     // Attachment
-    $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm));
+    $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm, false));
 
     // Duration
     if(!empty($episode->duration)) {
@@ -1258,6 +1258,48 @@ function pcast_debug_object($object, $color='red') {
 }
 
 
+function pcast_simple_media_filter($fullurl, $mimetype) {
+    global $CFG, $OUTPUT, $PAGE;
+    $code = '';
+    if ($mimetype == 'audio/mp3') {
+
+    $c = $OUTPUT->resource_mp3player_colors();   // You can set this up in your theme/xxx/config.php
+    $colors = explode('&', $c);
+    $playercolors = array();
+    foreach ($colors as $color) {
+        $color = explode('=', $color);
+        $playercolors[$color[0]] = $color[1];
+    }
+
+    $id = 'filter_mp3_'.time(); //we need something unique because it might be stored in text cache
+
+    $playerpath = $CFG->wwwroot .'/filter/mediaplugin/mp3player.swf';
+    $audioplayerpath = $CFG->wwwroot .'/filter/mediaplugin/flowplayer.audio.swf';
+
+    $code = <<<OET
+<div class="pcast_mp3">
+  <span class="pcastmediaplugin pcastplugin_mp3" id="$id"></span>
+  <div>
+    <object width="251" height="25" id="nonjsmp3plugin" name="undefined" data="$playerpath" type="application/x-shockwave-flash">
+    <param name="movie" value="$playerpath" />
+    <param name="allowfullscreen" value="false" />
+    <param name="allowscriptaccess" value="always" />
+    <param name="flashvars" value='config={"plugins": {"controls": {
+                                                            "fullscreen": false,
+                                                            "height": 25,
+                                                            "autoHide": false
+                                                            }
+                                                      },
+                                           "clip":{"url":"$fullurl",
+                                                   "autoPlay": false},
+                                           "content":{"url":"$playerpath"}}}' />
+    </object>
+  </div>
+</div>
+OET;
+    }
+    return $code;
+}
 
 /**
  * Display the Moodle Media Filter for MP3 / Video File
@@ -1268,38 +1310,44 @@ function pcast_debug_object($object, $color='red') {
  * @return nothing
 **/
 
-function pcast_mediaplugin_filter($fullurl, $mimetype) {
+function pcast_mediaplugin_filter($fullurl, $mimetype, $audioonly=false) {
     global $CFG;
     require_once("$CFG->libdir/resourcelib.php");
-    
+
     $title=get_string('episodetitle','pcast',get_string('modulename','pcast'));
     $clicktoopen=get_string('viewepisode','pcast',get_string('modulename','pcast'));
     $code = '';
 
-    if ($mimetype == 'audio/mp3') {
-        // MP3 audio file
-        $code = resourcelib_embed_mp3($fullurl, $title, $clicktoopen);
+    if($audioonly) {
+        $code = pcast_simple_media_filter($fullurl, $mimetype);
+    } else {
+        //Display full player since there will only be one player instance
+        if ($mimetype == 'audio/mp3') {
+            // MP3 audio file
+             $code = resourcelib_embed_mp3($fullurl, $title, $clicktoopen);
+        }
 
-    } else if ($mimetype == 'video/x-flv') {
-        // Flash video file
-        $code = resourcelib_embed_flashvideo($fullurl, $title, $clicktoopen);
+        if ($mimetype == 'video/x-flv') {
+            // Flash video file
+            $code = resourcelib_embed_flashvideo($fullurl, $title, $clicktoopen);
 
-    } else if (substr($mimetype, 0, 10) == 'video/x-ms') {
-        // Windows Media Player file
-        $code = resourcelib_embed_mediaplayer($fullurl, $title, $clicktoopen);
+        } else if (substr($mimetype, 0, 10) == 'video/x-ms') {
+            // Windows Media Player file
+            $code = resourcelib_embed_mediaplayer($fullurl, $title, $clicktoopen);
 
-    } else if ($mimetype == 'video/quicktime') {
-        // Quicktime file
-        $code = resourcelib_embed_quicktime($fullurl, $title, $clicktoopen);
+        } else if ($mimetype == 'video/quicktime') {
+            // Quicktime file
+            $code = resourcelib_embed_quicktime($fullurl, $title, $clicktoopen);
 
-    } else if ($mimetype == 'video/mpeg') {
-        // Mpeg file
-        $code = resourcelib_embed_mpeg($fullurl, $title, $clicktoopen);
+        } else if ($mimetype == 'video/mpeg') {
+            // Mpeg file
+            $code = resourcelib_embed_mpeg($fullurl, $title, $clicktoopen);
 
-    } else if ($mimetype == 'audio/x-pn-realaudio') {
-        // RealMedia file
-        $code = resourcelib_embed_real($fullurl, $title, $clicktoopen);
+        } else if ($mimetype == 'audio/x-pn-realaudio') {
+            // RealMedia file
+            $code = resourcelib_embed_real($fullurl, $title, $clicktoopen);
 
+        }
     }
 
     return $code;
@@ -1316,7 +1364,7 @@ function pcast_mediaplugin_filter($fullurl, $mimetype) {
  * @return string image string or nothing depending on $type param
  */
 
-function pcast_display_mediafile_link($episode, $cm) {
+function pcast_display_mediafile_link($episode, $cm,$audioonly=false) {
 
     global $CFG, $DB, $OUTPUT;
 
@@ -1348,7 +1396,7 @@ function pcast_display_mediafile_link($episode, $cm) {
             $templink .= "</br />\n";
             //TODO: Replace this code with the embed code used in resourcelib
             // (See mod/resource, function resource_display_embed()
-            $templink .= pcast_mediaplugin_filter($path,$mimetype);
+            $templink .= pcast_mediaplugin_filter($path,$mimetype,$audioonly);
         } else {
             $templink = '<a href="'.$path.'">'.$iconimage.$filename.'</a>';
         }
