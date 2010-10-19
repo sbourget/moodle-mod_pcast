@@ -1099,7 +1099,7 @@ function pcast_display_episode_full($episode, $cm){
     // Approve Link
     if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
 
-        $approve .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+        $approve .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
     }
 
     // Construct links
@@ -1158,7 +1158,7 @@ function pcast_display_episode_comments($episode, $cm, $course) {
         if (!empty($CFG->usecomments)) {
             require_once($CFG->dirroot . '/comment/lib.php');
             $cmt = new stdClass();
-            $cmt->pluginname = 'pcast';
+            $cmt->component = 'pcast';
             $cmt->context  = $context;
             $cmt->course   = $course;
             $cmt->cm       = $cm;
@@ -1186,7 +1186,11 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
     // load ratings
     require_once($CFG->dirroot.'/rating/lib.php');
     if ($episode->assessed!=RATING_AGGREGATE_NONE) {
+        $rm = new rating_manager();
         $ratingoptions = new stdClass();
+        $ratingoptions->modulename = 'pcast';
+        $ratingoptions->plugintype = 'mod';
+        $ratingoptions->pluginname = 'pcast';
         $ratingoptions->context = $cm->context;
         $ratingoptions->items = $episodes;
         $ratingoptions->aggregate = $episode->assessed;//the aggregation method
@@ -1195,10 +1199,7 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
         $ratingoptions->returnurl = $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_EPISODE_COMMENT_AND_RATE;
         $ratingoptions->assesstimestart = $episode->assesstimestart;
         $ratingoptions->assesstimefinish = $episode->assesstimefinish;
-        $ratingoptions->plugintype = 'mod';
-        $ratingoptions->pluginname = 'pcast';
 
-        $rm = new rating_manager();
         $allepisodes = $rm->get_ratings($ratingoptions);
     }
     foreach ($allepisodes as $thisepisode)

@@ -869,7 +869,7 @@ function pcast_get_user_grades($pcast, $userid=0) {
     $ratingoptions->userid = $userid;
     $ratingoptions->aggregationmethod = $pcast->assessed;
     $ratingoptions->scaleid = $pcast->scale;
-    $ratingoptions->itemtable = 'pcast_entries';
+    $ratingoptions->itemtable = 'pcast_episodes';
     $ratingoptions->itemtableusercolumn = 'userid';
 
     return $rm->get_user_grades($ratingoptions);
