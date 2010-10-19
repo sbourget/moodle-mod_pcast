@@ -1266,7 +1266,7 @@ function pcast_debug_object($object, $color='red') {
  * @param string $mimetype
  * @return string
  */
-function pcast_simple_media_filter($fullurl, $mimetype) {
+function pcast_mediaplugin_simple($fullurl, $mimetype) {
     global $CFG, $OUTPUT, $PAGE;
     $code = '';
     if ($mimetype == 'audio/mp3') {
@@ -1328,7 +1328,7 @@ function pcast_mediaplugin_filter($fullurl, $mimetype, $audioonly=false) {
 
     if($audioonly) {
         // For some reason the regular JS media player will only render once
-        $code = pcast_simple_media_filter($fullurl, $mimetype);
+        $code = pcast_mediaplugin_simple($fullurl, $mimetype);
     } else {
         //Display full player since there will only be one player instance
         if ($mimetype == 'audio/mp3') {
