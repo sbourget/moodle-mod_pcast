@@ -1257,7 +1257,15 @@ function pcast_debug_object($object, $color='red') {
     echo '</font></pre>';
 }
 
-
+/**
+ * Display the small Moodle Media Filter for MP3 File
+ * @global global $CFG
+ * @global global $OUTPUT
+ * @global global $PAGE
+ * @param string $fullurl
+ * @param string $mimetype
+ * @return string
+ */
 function pcast_simple_media_filter($fullurl, $mimetype) {
     global $CFG, $OUTPUT, $PAGE;
     $code = '';
@@ -1319,6 +1327,7 @@ function pcast_mediaplugin_filter($fullurl, $mimetype, $audioonly=false) {
     $code = '';
 
     if($audioonly) {
+        // For some reason the regular JS media player will only render once
         $code = pcast_simple_media_filter($fullurl, $mimetype);
     } else {
         //Display full player since there will only be one player instance
