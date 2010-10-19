@@ -903,13 +903,6 @@ function pcast_rating_permissions($options) {
     }
 }
 
-/**
- * Returns the names of tables and columns necessary to check items for ratings
- * @return array
- */
-function pcast_rating_item_check_info() {
-    return array('pcast_episodes','id','userid');
-}
 
 /**
  * Update activity grades
