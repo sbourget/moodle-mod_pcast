@@ -193,6 +193,7 @@ $string['episodeviews'] = 'Views';
 $string['episodecommentview'] = 'Comment';
 $string['episoderateview'] = 'Rate';
 $string['episodecommentandrateview'] = 'Comment / Rate';
+$string['viewthisepisode']='Viewing an episode from: {$a}';
 
 // Reset
 $string['resetpcastsall']='Delete episodes from all podcasts';

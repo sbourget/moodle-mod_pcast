@@ -71,10 +71,7 @@ if (!empty($episode->courseid)) {
     echo $OUTPUT->header();    // Needs to be something here to allow linking back to the whole pcast
 }
 
-// Replace the following lines with you own code
-// TODO: FIX THIS!
-
-echo $OUTPUT->heading('Yay! It works!- DISPLAY THE EPISODE');
+echo $OUTPUT->heading(get_string("viewthisepisode","pcast",$pcast->name));
 
 // Print the tabs
 $toolsrow = array();
