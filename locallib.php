@@ -1186,9 +1186,9 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
     // load ratings
     require_once($CFG->dirroot.'/rating/lib.php');
     if ($episode->assessed!=RATING_AGGREGATE_NONE) {
-        $rm = new rating_manager();
+        
         $ratingoptions = new stdClass();
-        $ratingoptions->modulename = 'pcast';
+        // $ratingoptions->modulename = 'pcast';
         $ratingoptions->plugintype = 'mod';
         $ratingoptions->pluginname = 'pcast';
         $ratingoptions->context = $cm->context;
@@ -1199,12 +1199,15 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
         $ratingoptions->returnurl = $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_EPISODE_COMMENT_AND_RATE;
         $ratingoptions->assesstimestart = $episode->assesstimestart;
         $ratingoptions->assesstimefinish = $episode->assesstimefinish;
-
+        
+        $rm = new rating_manager();
         $allepisodes = $rm->get_ratings($ratingoptions);
     }
     foreach ($allepisodes as $thisepisode)
     {
-        echo $OUTPUT->render($thisepisode->rating);
+        if(!empty($thisepisode->rating)) {
+            echo html_writer::tag('div',$OUTPUT->render($thisepisode->rating), array('class'=> 'pcast-episode-rating'));
+        }
     }
 
 }
