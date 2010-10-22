@@ -1070,12 +1070,12 @@ function pcast_display_episode_full($episode, $cm, $course){
 
     // Total comments
     if(($CFG->usecomments) and ($episode->userscancomment) and (has_capability('moodle/comment:view', $context))) {
-        $table->data[] = array (get_string("totalcomments","pcast"), pcast_get_episode_comment_count($episode, $cm, $course));
+        $table->data[] = array (get_string("totalcomments","pcast"), pcast_get_episode_comment_count($episode, $cm));
     }
 
     // Total Ratings
     if(($episode->assessed) and ((has_capability('moodle/rating:view', $context)) and ($episode->user == $USER->id)) or (has_capability('moodle/rating:viewany', $context))) {
-        $table->data[] = array (get_string("totalratings","pcast"), pcast_get_episode_rating_count($episode, $cm, $course));
+        $table->data[] = array (get_string("totalratings","pcast"), pcast_get_episode_rating_count($episode, $cm));
     }
 
     //Calculate editing period
@@ -1251,10 +1251,9 @@ function pcast_get_episode_view_count($episode) {
  * @global object $DB
  * @param object $episode
  * @param object $cm
- * @param object $course
  * @return string
  */
-function pcast_get_episode_comment_count($episode, $cm, $course) {
+function pcast_get_episode_comment_count($episode, $cm) {
     global $CFG, $DB;
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
     if($count = $DB->count_records('comments',array('itemid'=>$episode->id, 'commentarea'=>'pcast_episode', 'contextid'=>$context->id))) {
@@ -1264,41 +1263,23 @@ function pcast_get_episode_comment_count($episode, $cm, $course) {
     }
 }
 
-function pcast_get_episode_rating_count($episode, $cm, $course) {
+/**
+ * Get the total number of ratings for a specific episode
+ * @global object $CFG
+ * @global object $DB
+ * @param object $episode
+ * @param object $cm
+ * @return string
+ */
+function pcast_get_episode_rating_count($episode, $cm) {
 
-    global $CFG, $USER, $DB;
-    $count = 0;
-    $sql = pcast_get_episode_sql();
-    $sql .=  " WHERE p.id = ?";
-    $episodes = $DB->get_records_sql($sql,array('id'=>$episode->id));
-
-    // load ratings
-    require_once($CFG->dirroot.'/rating/lib.php');
-    if ($episode->assessed!=RATING_AGGREGATE_NONE) {
-        
-        $ratingoptions = new stdClass();
-        $ratingoptions->plugintype = 'mod';
-        $ratingoptions->pluginname = 'pcast';
-        $ratingoptions->context = $cm->context;
-        $ratingoptions->items = $episodes;
-        $ratingoptions->aggregate = $episode->assessed;//the aggregation method
-        $ratingoptions->scaleid = $episode->scale;
-        $ratingoptions->userid = $USER->id;
-        $ratingoptions->returnurl = $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_EPISODE_COMMENT_AND_RATE;
-        $ratingoptions->assesstimestart = $episode->assesstimestart;
-        $ratingoptions->assesstimefinish = $episode->assesstimefinish;
-
-        $rm = new rating_manager();
-        $allepisodes = $rm->get_ratings($ratingoptions);
+    global $CFG, $DB;
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    if($count = $DB->count_records('rating',array('itemid'=>$episode->id, 'scaleid'=>$episode->scale, 'contextid'=>$context->id))) {
+        return $count;
+    } else {
+        return 0;
     }
-    foreach ($allepisodes as $thisepisode)
-    {
-        // Count the number of ratings
-        // TODO: Check this for accuracy
-        $count += ($thisepisode->rating->count);
-    }
-
-    return $count;
 }
 
 function pcast_debug_object($object, $color='red') {
