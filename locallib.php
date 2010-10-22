@@ -1245,14 +1245,28 @@ function pcast_get_episode_view_count($episode) {
     return $count;
 }
 
+/**
+ * Get the total number of comments for a specific episode
+ * @global object $CFG
+ * @global object $DB
+ * @param object $episode
+ * @param object $cm
+ * @param object $course
+ * @return string
+ */
 function pcast_get_episode_comment_count($episode, $cm, $course) {
-    $html = 'COUNT ALL COMMENTS';
-    return $html;
+    global $CFG, $DB;
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    if($count = $DB->count_records('comments',array('itemid'=>$episode->id, 'commentarea'=>'pcast_episode', 'contextid'=>$context->id))) {
+        return $count;
+    } else {
+        return 0;
+    }
 }
 
 function pcast_get_episode_rating_count($episode, $cm, $course) {
 
-    global $CFG, $USER, $DB, $OUTPUT;
+    global $CFG, $USER, $DB;
     $count = 0;
     $sql = pcast_get_episode_sql();
     $sql .=  " WHERE p.id = ?";
@@ -1279,6 +1293,8 @@ function pcast_get_episode_rating_count($episode, $cm, $course) {
     }
     foreach ($allepisodes as $thisepisode)
     {
+        // Count the number of ratings
+        // TODO: Check this for accuracy
         $count += ($thisepisode->rating->count);
     }
 
