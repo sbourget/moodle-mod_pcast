@@ -152,7 +152,7 @@ print_tabs($tabrows, $mode, $inactive, $activated);
 switch ($mode) {
     case PCAST_EPISODE_VIEW:
 
-        pcast_display_episode_full($episode, $cm);
+        pcast_display_episode_full($episode, $cm, $course);
 
         break;
     case PCAST_EPISODE_COMMENT_AND_RATE:
