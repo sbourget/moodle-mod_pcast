@@ -1166,7 +1166,8 @@ function pcast_display_episode_comments($episode, $cm, $course) {
             $cmt->itemid   = $episode->id;
             $cmt->showcount = true;
             $comment = new comment($cmt);
-            $html = '<div class="pcast-comments">'.$comment->output(true).'</div>';
+            $html = html_writer::tag('div',$comment->output(true), array('class'=> 'pcast-comments'));
+
         }
     }
     
@@ -1188,7 +1189,6 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
     if ($episode->assessed!=RATING_AGGREGATE_NONE) {
         
         $ratingoptions = new stdClass();
-        // $ratingoptions->modulename = 'pcast';
         $ratingoptions->plugintype = 'mod';
         $ratingoptions->pluginname = 'pcast';
         $ratingoptions->context = $cm->context;
