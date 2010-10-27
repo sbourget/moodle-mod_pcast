@@ -57,7 +57,7 @@ if ($id) {
     $pcast      = $DB->get_record('pcast', array('id' => $cm->instance), '*', MUST_EXIST);
 
 } else {
-    error('You must specify a course_module ID or an instance ID');
+    print_error('invalidcmorid', 'pcast');
 }
 
 require_login($course->id, false, $cm);

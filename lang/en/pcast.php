@@ -108,6 +108,7 @@ $string['areaepisode'] = 'Podcast episodes';
 
 // Errors
 $string['invalidcmorid']='Error: You must specify a course_module ID or an instance ID';
+$string['invalidcourse'] = 'Error: Course ID is incorrect';
 $string['noeditprivlidges']='Error: You do not have editing rights.';
 $string['errcannoteditothers']='Error: you cannot edit other users episodes';
 $string['erredittimeexpired']='Error: Editing time has expired';
