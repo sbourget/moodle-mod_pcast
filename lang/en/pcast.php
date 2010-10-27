@@ -104,6 +104,7 @@ $string['noviews']='No views';
 $string['waitingapproval'] = 'Approve episodes';
 $string['arealogo'] = 'Podcast RSS logo';
 $string['areaepisode'] = 'Podcast episodes';
+$string['newepisodes'] = 'New podcast episodes';
 
 
 // Errors

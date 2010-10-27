@@ -324,8 +324,82 @@ function pcast_user_complete($course, $user, $mod, $pcast) {
  * @return boolean
  * @todo Finish documenting this function
  */
-function pcast_print_recent_activity($course, $isteacher, $timestart) {
-    return false;  //  True if anything was printed, otherwise false
+function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
+
+    // return false;  //  True if anything was printed, otherwise false
+
+    global $CFG, $USER, $DB, $OUTPUT;
+
+    //TODO: use timestamp in approved field instead of changing timemodified when approving in 2.0
+
+    $modinfo = get_fast_modinfo($course);
+    $ids = array();
+    foreach ($modinfo->cms as $cm) {
+        if ($cm->modname != 'pcast') {
+            continue;
+        }
+        if (!$cm->uservisible) {
+            continue;
+        }
+        $ids[$cm->instance] = $cm->instance;
+    }
+
+    if (!$ids) {
+        return false;
+    }
+
+    $plist = implode(',', $ids); // there should not be hundreds of glossaries in one course, right?
+
+    if (!$episodes = $DB->get_records_sql("SELECT e.id, e.name, e.approved, e.timemodified, e.pcastid,
+                                                 e.userid, u.firstname, u.lastname, u.email, u.picture
+                                            FROM {pcast_episodes} e
+                                            JOIN {user} u ON u.id = e.userid
+                                           WHERE e.pcastid IN ($plist) AND e.timemodified > ?
+                                        ORDER BY e.timemodified ASC", array($timestart))) {
+        return false;
+    }
+
+    $editor  = array();
+
+    foreach ($episodes as $episodeid=>$episode) {
+        if ($episode->approved) {
+            continue;
+        }
+
+        if (!isset($editor[$episode->pcastid])) {
+            $editor[$episode->pcastid] = has_capability('mod/pcast:approve', get_context_instance(CONTEXT_MODULE, $modinfo->instances['pcast'][$episode->pcastid]->id));
+        }
+
+        if (!$editor[$episode->pcastid]) {
+            unset($episodes[$episodeid]);
+        }
+    }
+
+    if (!$episodes) {
+        return false;
+    }
+    echo $OUTPUT->heading(get_string('newepisodes', 'pcast').':');
+
+    $strftimerecent = get_string('strftimerecent');
+    foreach ($episodes as $episode) {
+        $link = $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id;
+        if ($episode->approved) {
+            $dimmed = '';
+        } else {
+            $dimmed = ' dimmed_text';
+        }
+        echo '<div class="head'.$dimmed.'">';
+        echo '<div class="date">'.userdate($episode->timemodified, $strftimerecent).'</div>';
+        echo '<div class="name">'.fullname($episode, $viewfullnames).'</div>';
+        echo '</div>';
+        echo '<div class="info"><a href="'.$link.'">'.format_text($episode->name, true).'</a></div>';
+    }
+
+    return true;
+
+
+
+
 }
 
 /**
