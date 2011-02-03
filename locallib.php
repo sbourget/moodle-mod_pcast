@@ -35,6 +35,10 @@ defined('MOODLE_INTERNAL') || die();
  * @param array $things
  * @return object
  */
+
+/***************THESE FUNCTIONS WERE BORROWED FROM iPodcast *******************/
+//TODO: REFACTOR THESE
+
 //function pcast_do_something_useful(array $things) {
 //    return new stdClass();
 //}
@@ -176,7 +180,7 @@ function pcast_get_mp3_info($filename) {
     fclose($filehandle);
     return $info;
 }
-
+/******************************* END OF BORROWED CODE ********************************/
 
 /**
  * Get the complete file path based on the SHA1 hash

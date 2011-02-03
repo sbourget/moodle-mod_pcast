@@ -330,8 +330,6 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
 
     global $CFG, $USER, $DB, $OUTPUT;
 
-    //TODO: use timestamp in approved field instead of changing timemodified when approving in 2.0
-
     $modinfo = get_fast_modinfo($course);
     $ids = array();
     foreach ($modinfo->cms as $cm) {
