@@ -105,7 +105,7 @@ $string['waitingapproval'] = 'Approve episodes';
 $string['arealogo'] = 'Podcast RSS logo';
 $string['areaepisode'] = 'Podcast episodes';
 $string['newepisodes'] = 'New podcast episodes';
-
+$string['rsslink']='RSS feed for this activity';
 
 // Errors
 $string['invalidcmorid']='Error: You must specify a course_module ID or an instance ID';

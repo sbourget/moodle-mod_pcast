@@ -550,10 +550,10 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     $pcast = $DB->get_record('pcast', array("id" => $PAGE->cm->instance));
 
     if (!empty($CFG->enablerssfeeds) && !empty($CFG->pcast_enablerssfeeds)
-    && $pcast->rsssortorder && $pcast->rssepisodes) {
+    && $pcast->rssepisodes) {
         require_once("$CFG->libdir/rsslib.php");
 
-        $string = get_string('rsstype','forum');
+        $string = get_string('rsslink','pcast');
 
         $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $pcast->id));
         $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
