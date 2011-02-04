@@ -1,8 +1,40 @@
 <?php
-    //This file adds support to rss feeds generation
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-    //This function is the main entry point to pcast
-    //rss feeds generation.
+
+/**
+ * Library of rss generation functions for module pcast
+ *
+ *
+ * @package   mod_pcast
+ * @copyright 2010 Stephen Bourget and Jillaine Beeckman
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+
+/**
+ * This function is the main entry point to pcast
+ * rss feeds generation.
+ *
+ * @global object $CFG
+ * @global object $DB
+ * @param string? $context
+ * @param array $args
+ * @return string (path)
+ */
     function pcast_rss_get_feed($context, $args) {
         global $CFG, $DB;
 
@@ -36,7 +68,7 @@
         $pcast = $DB->get_record('pcast', array('id' => $pcastid), '*', MUST_EXIST);
 
         // Check to se if RSS is enabled
-        // NOTE: cannot use the rss_enabled_for_mod() function due to naming conflicts
+        // NOTE: cannot use the rss_enabled_for_mod() function due to the functions internals and naming conflicts
         if (($pcast->rssepisodes == 0)||(empty($pcast->rssepisodes))) {
             return null;
         }
@@ -88,6 +120,7 @@
                                           format_string($pcast->intro,true));
             //Now all the rss items
             if (!empty($header)) {
+                // TODO: There should be a custom function to generate the RSS format needed
                 $episodes = rss_add_items($items);
             }
             //Now all rss feeds common footers
@@ -151,7 +184,7 @@
                       e.approved = 1 $time $sort";
 
         } else {//Without author
-            $sql = "SELECT e.id AS entryid,
+            $sql = "SELECT e.id AS episodeid,
                       e.name AS episodename,
                       e.summary AS episodesummary,
                       e.mediafile AS mediafile,
