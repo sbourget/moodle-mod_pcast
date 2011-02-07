@@ -321,7 +321,6 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         $result .= rss_end_tag('image', 2, true);
     }
 
-        die($result);
     if (!$status) {
         return false;
     } else {
