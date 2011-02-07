@@ -221,6 +221,17 @@
         return ($recs && !empty($recs));
     }
 
+    /**
+     * Looks up the author information from the id
+     * @global object $DB
+     * @param int $userid
+     * @return object
+     */
+    function pcast_rss_author_lookup($userid) {
+        global $DB;
+        $author = $DB->get_record('user', array("id"=>$userid), '*', true);
+        return $author;
+    }
 
 //This function return all the headers for every pcast rss feed
 function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pcast = NULL) {
@@ -235,6 +246,9 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         $itunes = true;
     } else
         $itunes = false;
+    if(isset($pcast->userid) && !empty($pcast->userid)) {
+        $author = pcast_rss_author_lookup($pcast->userid);
+    }
 
     if (!$site = get_site()) {
         $status = false;
@@ -274,8 +288,8 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         }
         $today = getdate();
         $result .= rss_full_tag('copyright', 2, false, '&#169; '. $today['year'] .' '. format_string($site->fullname));
-        $result .= rss_full_tag('lastBuildDate',2,false,gmdate('D, d M Y H:i:s',$today[0]).' GMT');
-        $result .= rss_full_tag('pubDate',2,false,gmdate('D, d M Y H:i:s',$today[0]).' GMT');
+        $result .= rss_full_tag('lastBuildDate', 2, false, gmdate('D, d M Y H:i:s',$today[0]).' GMT');
+        $result .= rss_full_tag('pubDate', 2, false, gmdate('D, d M Y H:i:s',$today[0]).' GMT');
 
         /*
        if (!empty($USER->email)) {
@@ -285,22 +299,29 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
        */
 
         // itunes tags
-        if($itunes) {
-            $result .= rss_full_tag('itunes:author',2,'');
-            $result .= rss_full_tag('itunes:subtitle',2,s($pcast->subtitle));
-            $result .= rss_full_tag('itunes:summary',2,s($pcast->summary));
 
-            $result .= rss_start_tag('itunes:owner', 2, true);
-            $result .= rss_full_tag('itunes:name',3,'');
-            $result .= rss_full_tag('itunes:email',3,'');
-            $result .= rss_end_tag('itunes:owner', 2, true);
+        if($itunes) {
+            if(isset($author)) {
+                $result .= rss_full_tag('itunes:author', 2, false, fullname($author));
+            }
+            
+            $result .= rss_full_tag('itunes:subtitle', 2, false, s($pcast->subtitle));
+            $result .= rss_full_tag('itunes:summary', 2, false, s($pcast->keywords));
+
+            if(isset($author)) {
+                $result .= rss_start_tag('itunes:owner', 2, true);
+                $result .= rss_full_tag('itunes:name',3, false,fullname($author));
+                $result .= rss_full_tag('itunes:email',3,false,$author->email);
+                $result .= rss_end_tag('itunes:owner', 2, true);
+            }
 
             // Explicit
-            // TODO: FIX THIS
             if($pcast->explicit == 0) {
-                $result .= rss_full_tag('itunes:explicit',2,'FALSE');
+                $result .= rss_full_tag('itunes:explicit',2,false,'FALSE');
+            } else if ($pcast->explicit == 1) {
+                $result .= rss_full_tag('itunes:explicit',2,false,'TRUE');
             } else {
-                $result .= rss_full_tag('itunes:explicit',2,'TRUE');
+                $result .= rss_full_tag('itunes:explicit',2,false,'CLEAN');
             }
             
             //TODO: image, category
