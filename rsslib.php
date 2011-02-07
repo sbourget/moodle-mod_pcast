@@ -35,203 +35,211 @@
  * @param array $args
  * @return string (path)
  */
-    function pcast_rss_get_feed($context, $args) {
-        global $CFG, $DB;
+function pcast_rss_get_feed($context, $args) {
+    global $CFG, $DB;
 
 
-        if (empty($CFG->pcast_enablerssfeeds)) {
-            debugging("DISABLED (module configuration)");
-            return null;
-        }
-
-        $status = true;
-        $pcastid  = clean_param($args[3], PARAM_INT);
-        $uservalidated = false;
-
-        //check capabilities
-        $cm = get_coursemodule_from_instance('pcast', $pcastid, 0, false, MUST_EXIST);
-        if ($cm) {
-                $modcontext = get_context_instance(CONTEXT_MODULE, $cm->id);
-
-            //context id from db should match the submitted one
-            if ($context->id==$modcontext->id && has_capability('mod/pcast:view', $modcontext)) {
-                $uservalidated = true;
-            }
-        }
-
-        if (!$uservalidated) {
-            return null;
-        }
-
-        // OK the user can view the RSS feed
-
-        $pcast = $DB->get_record('pcast', array('id' => $pcastid), '*', MUST_EXIST);
-
-        // Check to se if RSS is enabled
-        // NOTE: cannot use the rss_enabled_for_mod() function due to the functions internals and naming conflicts
-        if (($pcast->rssepisodes == 0)||(empty($pcast->rssepisodes))) {
-            return null;
-        }
-
-        $sql = pcast_rss_get_sql($pcast);
-
-        //get the cache file info
-        $filename = rss_get_file_name($pcast, $sql);
-        $cachedfilepath = rss_get_file_full_name('mod_pcast', $filename);
-
-        //Is the cache out of date?
-        $cachedfilelastmodified = 0;
-        if (file_exists($cachedfilepath)) {
-            $cachedfilelastmodified = filemtime($cachedfilepath);
-        }
-        //if the cache is more than 60 seconds old and there's new stuff
-        $dontrecheckcutoff = time()-60;
-        if ( $dontrecheckcutoff > $cachedfilelastmodified && pcast_rss_newstuff($pcast, $cachedfilelastmodified)) {
-            if (!$recs = $DB->get_records_sql($sql, array(), 0, $pcast->rssarticles)) {
-                return null;
-            }
-
-            $items = array();
-
-            $formatoptions = new stdClass();
-            $formatoptions->trusttext = true;
-
-            foreach ($recs as $rec) {
-                $item = new stdClass();
-                $user = new stdClass();
-                $item->title = $rec->episodename;
-
-                if ($pcast->rsstype == 1) {//With author
-                    $user->firstname = $rec->userfirstname;
-                    $user->lastname = $rec->userlastname;
-
-                    $item->author = fullname($user);
-                }
-
-                $item->pubdate = $rec->episodetimecreated;
-                $item->link = $CFG->wwwroot."/mod/pcast/showepisode.php?eid=".$rec->episodeid;
-                $item->description = format_text($rec->episodesummary,'HTML',NULL,$pcast->course);
-                $items[] = $item;
-            }
-
-            //First all rss feeds common headers
-            $header = pcast_rss_header(format_string($pcast->name,true),
-                                          $CFG->wwwroot."/mod/pcast/view.php?id=".$pcast->id,
-                                          format_string($pcast->intro,true), $pcast);
-            //Now all the rss items
-            if (!empty($header)) {
-                $episodes = pcast_rss_add_items($items);
-            }
-            //Now all rss feeds common footers
-            if (!empty($header) && !empty($episodes)) {
-                $footer = pcast_rss_footer();
-            }
-            //Now, if everything is ok, concatenate it
-            if (!empty($header) && !empty($episodes) && !empty($footer)) {
-                $rss = $header.$episodes.$footer;
-
-                //Save the XML contents to file.
-                $status = rss_save_file('mod_pcast', $filename, $rss);
-            }
-        }
-        if (!$status) {
-            $cachedfilepath = null;
-        }
-
-        return $cachedfilepath;
+    if (empty($CFG->pcast_enablerssfeeds)) {
+        debugging("DISABLED (module configuration)");
+        return null;
     }
+
+    $status = true;
+    $pcastid  = clean_param($args[3], PARAM_INT);
+    $uservalidated = false;
+
+    //check capabilities
+    $cm = get_coursemodule_from_instance('pcast', $pcastid, 0, false, MUST_EXIST);
+    if ($cm) {
+            $modcontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+        //context id from db should match the submitted one
+        if ($context->id==$modcontext->id && has_capability('mod/pcast:view', $modcontext)) {
+            $uservalidated = true;
+        }
+    }
+
+    if (!$uservalidated) {
+        return null;
+    }
+
+    // OK the user can view the RSS feed
+
+    $pcast = $DB->get_record('pcast', array('id' => $pcastid), '*', MUST_EXIST);
+
+    // Check to se if RSS is enabled
+    // NOTE: cannot use the rss_enabled_for_mod() function due to the functions internals and naming conflicts
+    if (($pcast->rssepisodes == 0)||(empty($pcast->rssepisodes))) {
+        return null;
+    }
+
+    $sql = pcast_rss_get_sql($pcast);
+
+    //get the cache file info
+    $filename = rss_get_file_name($pcast, $sql);
+    $cachedfilepath = rss_get_file_full_name('mod_pcast', $filename);
+
+    //Is the cache out of date?
+    $cachedfilelastmodified = 0;
+    if (file_exists($cachedfilepath)) {
+        $cachedfilelastmodified = filemtime($cachedfilepath);
+    }
+    //if the cache is more than 60 seconds old and there's new stuff
+    $dontrecheckcutoff = time()-60;
+    if ( $dontrecheckcutoff > $cachedfilelastmodified && pcast_rss_newstuff($pcast, $cachedfilelastmodified)) {
+        if (!$recs = $DB->get_records_sql($sql, array(), 0, $pcast->rssarticles)) {
+            return null;
+        }
+
+        $items = array();
+
+        $formatoptions = new stdClass();
+        $formatoptions->trusttext = true;
+
+        foreach ($recs as $rec) {
+            $item = new stdClass();
+            $user = new stdClass();
+            $item->title = $rec->episodename;
+
+            if ($pcast->rsstype == 1) {//With author
+                $user->firstname = $rec->userfirstname;
+                $user->lastname = $rec->userlastname;
+
+                $item->author = fullname($user);
+            }
+
+            $item->pubdate = $rec->episodetimecreated;
+            $item->link = $CFG->wwwroot."/mod/pcast/showepisode.php?eid=".$rec->episodeid;
+            $item->description = format_text($rec->episodesummary,'HTML',NULL,$pcast->course);
+            $items[] = $item;
+        }
+
+        //First all rss feeds common headers
+        $header = pcast_rss_header(format_string($pcast->name,true),
+                                      $CFG->wwwroot."/mod/pcast/view.php?id=".$pcast->id,
+                                      format_string($pcast->intro,true), $pcast);
+        //Now all the rss items
+        if (!empty($header)) {
+            $episodes = pcast_rss_add_items($items);
+        }
+        //Now all rss feeds common footers
+        if (!empty($header) && !empty($episodes)) {
+            $footer = pcast_rss_footer();
+        }
+        //Now, if everything is ok, concatenate it
+        if (!empty($header) && !empty($episodes) && !empty($footer)) {
+            $rss = $header.$episodes.$footer;
+
+            //Save the XML contents to file.
+            $status = rss_save_file('mod_pcast', $filename, $rss);
+        }
+    }
+    if (!$status) {
+        $cachedfilepath = null;
+    }
+
+    return $cachedfilepath;
+}
 
 /**
- * Generate the SQL needed to get the episodes for the RSS feed
- * (approved episodes only)
- * @param object $pcast
- * @param bool $time
- * @return string
+* Generate the SQL needed to get the episodes for the RSS feed
+* (approved episodes only)
+* @param object $pcast
+* @param bool $time
+* @return string
+*/
+function pcast_rss_get_sql($pcast, $time=0) {
+    //do we only want new items?
+    if ($time) {
+        $time = "AND e.timecreated > $time";
+    } else {
+        $time = "";
+    }
+
+    if ($pcast->rsssortorder == 0) { //Newest first
+        $sort = "ORDER BY e.timecreated desc";
+
+    } else { // Oldest first
+        $sort = "ORDER BY e.timecreated asc";
+    }
+    if ($pcast->displayauthor == 1) {//With author
+        $sql = "SELECT e.id AS episodeid,
+                  e.name AS episodename,
+                  e.summary AS episodesummary,
+                  e.mediafile AS mediafile,
+                  e.duration AS duration,
+                  e.subtitle AS subtitle,
+                  e.keywords AS keywords,
+                  e.topcategory AS topcategory,
+                  e.nestedcategory AS nestedcategory,
+                  e.timecreated AS episodetimecreated,
+                  u.id AS userid,
+                  u.firstname AS userfirstname,
+                  u.lastname AS userlastname
+             FROM {pcast_episodes} e,
+                  {user} u
+            WHERE e.pcastid = {$pcast->id} AND
+                  u.id = e.userid AND
+                  e.approved = 1 $time $sort";
+
+    } else {//Without author
+        $sql = "SELECT e.id AS episodeid,
+                  e.name AS episodename,
+                  e.summary AS episodesummary,
+                  e.mediafile AS mediafile,
+                  e.duration AS duration,
+                  e.subtitle AS subtitle,
+                  e.keywords AS keywords,
+                  e.topcategory AS topcategory,
+                  e.nestedcategory AS nestedcategory,
+                  e.timecreated AS episodetimecreated,
+                  u.id AS userid
+             FROM {pcast_episodes} e,
+                  {user} u
+            WHERE e.pcastid = {$pcast->id} AND
+                  u.id = e.userid AND
+                  e.approved = 1 $time $sort";
+    }
+
+    return $sql;
+}
+
+/**
+ * If there is new stuff in since $time this returns true
+ * Otherwise it returns false.
+ *
+ * @param object $pcast the pcast activity object
+ * @param int $time timestamp
+ * @return bool
  */
-    function pcast_rss_get_sql($pcast, $time=0) {
-        //do we only want new items?
-        if ($time) {
-            $time = "AND e.timecreated > $time";
-        } else {
-            $time = "";
-        }
+function pcast_rss_newstuff($pcast, $time) {
+    global $DB;
 
-        if ($pcast->rsssortorder == 0) { //Newest first
-            $sort = "ORDER BY e.timecreated desc";
+    $sql = pcast_rss_get_sql($pcast, $time);
 
-        } else { // Oldest first
-            $sort = "ORDER BY e.timecreated asc";
-        }
-        if ($pcast->displayauthor == 1) {//With author
-            $sql = "SELECT e.id AS episodeid,
-                      e.name AS episodename,
-                      e.summary AS episodesummary,
-                      e.mediafile AS mediafile,
-                      e.duration AS duration,
-                      e.subtitle AS subtitle,
-                      e.keywords AS keywords,
-                      e.topcategory AS topcategory,
-                      e.nestedcategory AS nestedcategory,
-                      e.timecreated AS episodetimecreated,
-                      u.id AS userid,
-                      u.firstname AS userfirstname,
-                      u.lastname AS userlastname
-                 FROM {pcast_episodes} e,
-                      {user} u
-                WHERE e.pcastid = {$pcast->id} AND
-                      u.id = e.userid AND
-                      e.approved = 1 $time $sort";
+    $recs = $DB->get_records_sql($sql, null, 0, 1);//limit of 1. If we get even 1 back we have new stuff
+    return ($recs && !empty($recs));
+}
 
-        } else {//Without author
-            $sql = "SELECT e.id AS episodeid,
-                      e.name AS episodename,
-                      e.summary AS episodesummary,
-                      e.mediafile AS mediafile,
-                      e.duration AS duration,
-                      e.subtitle AS subtitle,
-                      e.keywords AS keywords,
-                      e.topcategory AS topcategory,
-                      e.nestedcategory AS nestedcategory,
-                      e.timecreated AS episodetimecreated,
-                      u.id AS userid
-                 FROM {pcast_episodes} e,
-                      {user} u
-                WHERE e.pcastid = {$pcast->id} AND
-                      u.id = e.userid AND
-                      e.approved = 1 $time $sort";
-        }
+/**
+ * Looks up the author information from the id
+ * @global object $DB
+ * @param int $userid
+ * @return object
+ */
+function pcast_rss_author_lookup($userid) {
+    global $DB;
+    $author = $DB->get_record('user', array("id"=>$userid), '*', true);
+    return $author;
+}
 
-        return $sql;
-    }
-
-    /**
-     * If there is new stuff in since $time this returns true
-     * Otherwise it returns false.
-     *
-     * @param object $pcast the pcast activity object
-     * @param int $time timestamp
-     * @return bool
-     */
-    function pcast_rss_newstuff($pcast, $time) {
-        global $DB;
-
-        $sql = pcast_rss_get_sql($pcast, $time);
-
-        $recs = $DB->get_records_sql($sql, null, 0, 1);//limit of 1. If we get even 1 back we have new stuff
-        return ($recs && !empty($recs));
-    }
-
-    /**
-     * Looks up the author information from the id
-     * @global object $DB
-     * @param int $userid
-     * @return object
-     */
-    function pcast_rss_author_lookup($userid) {
-        global $DB;
-        $author = $DB->get_record('user', array("id"=>$userid), '*', true);
-        return $author;
-    }
+function pcast_rss_category_lookup($pcast) {
+    global $DB;
+    $category = new stdClass();
+    $category->top = $DB->get_record('pcast_itunes_categories', array("id"=>$pcast->topcategory), '*', true);
+    $category->nested = $DB->get_record('pcast_itunes_nested_cat', array("id"=>$pcast->nestedcategory), '*', true);
+    return $category;
+}
 
 //This function return all the headers for every pcast rss feed
 function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pcast = NULL) {
@@ -248,6 +256,10 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         $itunes = false;
     if(isset($pcast->userid) && !empty($pcast->userid)) {
         $author = pcast_rss_author_lookup($pcast->userid);
+    }
+
+    if(isset($pcast->topcategory)) {
+        $categories = pcast_rss_category_lookup($pcast);
     }
 
     if (!$site = get_site()) {
@@ -306,7 +318,9 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
             }
             
             $result .= rss_full_tag('itunes:subtitle', 2, false, s($pcast->subtitle));
-            $result .= rss_full_tag('itunes:summary', 2, false, s($pcast->keywords));
+            // TODO: Implement summary
+            // $result .= rss_full_tag('itunes:summary', 2, false, s($pcast->summary));
+            $result .= rss_full_tag('itunes:keywords', 2, false, s($pcast->keywords));
 
             if(isset($author)) {
                 $result .= rss_start_tag('itunes:owner', 2, true);
@@ -323,8 +337,16 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
             } else {
                 $result .= rss_full_tag('itunes:explicit',2,false,'CLEAN');
             }
-            
-            //TODO: image, category
+
+            // Categories
+            if (isset($categories->top->name)) {
+                $result .= rss_start_tag('itunes:category text="'.$categories->top->name .'"', 2, true);
+                if (isset($categories->nested)) {
+                    $result .= rss_start_tag('itunes:category text="'.$categories->nested->name .'"/', 4, true);
+                }
+                $result .= rss_end_tag('itunes:category', 2, true);
+            }
+            //TODO: image
         }
 
 
@@ -355,7 +377,7 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
 //item->pubdate: The pubdate of the item
 //item->link: The link url of the item
 //item->description: The content of the item
-function pcast_rss_add_items($items) {
+function pcast_rss_add_items($items, $itunes=false) {
 
     global $CFG;
 
@@ -379,15 +401,11 @@ function pcast_rss_add_items($items) {
             }
             $result .= rss_full_tag('title',3,false,strip_tags($item->title));
             $result .= rss_full_tag('link',3,false,$item->link);
-            $result .= rss_add_enclosures($item);
+            $result .= pcast_rss_add_enclosures($item);
             $result .= rss_full_tag('pubDate',3,false,gmdate('D, d M Y H:i:s',$item->pubdate).' GMT');  # MDL-12563
             //Include the author if exists
             if (isset($item->author)) {
-                //$result .= rss_full_tag('author',3,false,$item->author);
-                //We put it in the description instead because it's more important
-                //for moodle than most other feeds, and most rss software seems to ignore
-                //the author field ...
-                $item->description = get_string('byname','',$item->author).'. &nbsp;<p>'.$item->description.'</p>';
+                $result .= rss_full_tag('author',3,false,$item->author);
             }
             $result .= rss_full_tag('description',3,false,$item->description);
             $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
@@ -399,6 +417,74 @@ function pcast_rss_add_items($items) {
     }
     return $result;
 }
+
+/**
+* Adds RSS Media Enclosures for "podcasting" by examining links to media files,
+* and attachments which are media files. Please note that the RSS that is
+* produced cannot be strictly valid for the linked files, since we do not know
+* the files' sizes and cannot include them in the "length" attribute. At
+* present, the validity (and therefore the podcast working in most software)
+* can only be ensured for attachments, and not for links.
+* Note also that iTunes does some things very badly - one thing it does is
+* refuse to download ANY of your files if you're using "file.php?file=blah"
+* and can't use the more elegant "file.php/blah" slasharguments setting. It
+* stops after ".php" and assumes the files are not media files, despite what
+* is specified in the "type" attribute. Dodgy coding all round!
+*
+* @param    $item     object representing an RSS item
+* @return   string    RSS enclosure tags
+* @author   Hannes Gassert <hannes@mediagonal.ch>
+* @author   Dan Stowell
+*/
+function pcast_rss_add_enclosures($item){
+
+    global $CFG;
+
+    $returnstring = '';
+    $rss_text = $item->description;
+
+    // list of media file extensions and their respective mime types
+    include_once($CFG->libdir.'/filelib.php');
+    $mediafiletypes = get_mimetypes_array();
+
+    // regular expression (hopefully) matching all links to media files
+    $medialinkpattern = '@href\s*=\s*(\'|")(\S+(' . implode('|', array_keys($mediafiletypes)) . '))\1@Usie';
+
+    // take into account attachments (e.g. from forum) - with these, we are able to know the file size
+    if (isset($item->attachments) && is_array($item->attachments)) {
+        foreach ($item->attachments as $attachment){
+            $extension = strtolower(substr($attachment->url, strrpos($attachment->url, '.')+1));
+            if (isset($mediafiletypes[$extension]['type'])) {
+                $type = $mediafiletypes[$extension]['type'];
+            } else {
+                $type = 'document/unknown';
+            }
+            $returnstring .= "\n<enclosure url=\"$attachment->url\" length=\"$attachment->length\" type=\"$type\" />\n";
+        }
+    }
+
+    if (!preg_match_all($medialinkpattern, $rss_text, $matches)){
+        return $returnstring;
+    }
+
+    // loop over matches of regular expression
+    for ($i = 0; $i < count($matches[2]); $i++){
+        $url = htmlspecialchars($matches[2][$i]);
+        $extension = strtolower($matches[3][$i]);
+        if (isset($mediafiletypes[$extension]['type'])) {
+            $type = $mediafiletypes[$extension]['type'];
+        } else {
+            $type = 'document/unknown';
+        }
+
+        // the rss_*_tag functions can't deal with methods, unfortunately
+        $returnstring .= "\n<enclosure url='$url' type='$type' />\n";
+    }
+
+    return $returnstring;
+}
+
+
 
 //This function return all the common footers for every rss feed in the site
 function pcast_rss_footer($title = NULL, $link = NULL, $description = NULL) {
