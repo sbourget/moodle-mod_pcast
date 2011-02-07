@@ -112,8 +112,10 @@ function pcast_rss_get_feed($context, $args) {
             $item->description = format_text($rec->episodesummary,'HTML',NULL,$pcast->course);
 
             if($pcast->userscancategorize) {
-                $item->topcategory = '';
-                $item->nestedcategory = '';
+                //TODO: This is very inefficient the SQL query should be re-written (this generates 2 DB queries per entry)
+                $category = pcast_rss_category_lookup($rec);
+                $item->topcategory = $category->top->name;
+                $item->nestedcategory = $category->nested->name;
             }
             $items[] = $item;
         }
@@ -401,8 +403,11 @@ function pcast_rss_add_items($items, $itunes=false) {
         foreach ($items as $item) {
             $result .= rss_start_tag('item',2,true);
             //Include the category if exists (some rss readers will use it to group items)
-            if (isset($item->category)) {
-                $result .= rss_full_tag('category',3,false,$item->category);
+            if (isset($item->topcategory)) {
+                $result .= rss_full_tag('category',3,false,$item->topcategory);
+            }
+            if (isset($item->nestedcategory) && $itunes) {
+                $result .= rss_full_tag('category',3,false,$item->nestedcategory);
             }
             if (isset($item->tags)) {
                 $attributes = array();
@@ -497,6 +502,31 @@ function pcast_rss_add_enclosures($item){
 
     return $returnstring;
 }
+
+//TODO: Finish writing ME!
+function pcast_rss_enclosure($episode) {
+
+    global $CFG, $DB, $OUTPUT;
+
+    $pcast  = $DB->get_record('pcast', array('id' => $episode->pcastid), '*', MUST_EXIST);
+    $cm = get_coursemodule_from_id('pcast', $id, 0, false, MUST_EXIST);
+    if (!$context = get_context_instance(CONTEXT_MODULE, $cm->id)) {
+        return '';
+    }
+
+    $fs = get_file_storage();
+
+    $imagereturn = '';
+
+    if ($files = $fs->get_area_files($context->id, 'mod_pcast','episode', $episode->id, "timemodified", false)) {
+        foreach ($files as $file) {
+            $filename = $file->get_filename();
+            $mimetype = $file->get_mimetype();
+            $path = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/episode/'.$episode->id.'/'.$filename);
+        }
+    }
+}
+
 
 
 
