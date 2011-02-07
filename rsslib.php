@@ -90,7 +90,6 @@ function pcast_rss_get_feed($context, $args) {
         if (!$recs = $DB->get_records_sql($sql, array(), 0, $pcast->rssarticles)) {
             return null;
         }
-
         $items = array();
 
         $formatoptions = new stdClass();
@@ -111,6 +110,11 @@ function pcast_rss_get_feed($context, $args) {
             $item->pubdate = $rec->episodetimecreated;
             $item->link = $CFG->wwwroot."/mod/pcast/showepisode.php?eid=".$rec->episodeid;
             $item->description = format_text($rec->episodesummary,'HTML',NULL,$pcast->course);
+
+            if($pcast->userscancategorize) {
+                $item->topcategory = '';
+                $item->nestedcategory = '';
+            }
             $items[] = $item;
         }
 
@@ -118,9 +122,17 @@ function pcast_rss_get_feed($context, $args) {
         $header = pcast_rss_header(format_string($pcast->name,true),
                                       $CFG->wwwroot."/mod/pcast/view.php?id=".$pcast->id,
                                       format_string($pcast->intro,true), $pcast);
+
+        // Do we need iTunes tags?
+        if(isset($pcast->enablerssitunes) && ($pcast->enablerssitunes == 1)) {
+            $itunes = true;
+        } else {
+            $itunes = false;
+        }
+
         //Now all the rss items
         if (!empty($header)) {
-            $episodes = pcast_rss_add_items($items);
+            $episodes = pcast_rss_add_items($items, $itunes);
         }
         //Now all rss feeds common footers
         if (!empty($header) && !empty($episodes)) {
@@ -162,6 +174,7 @@ function pcast_rss_get_sql($pcast, $time=0) {
     } else { // Oldest first
         $sort = "ORDER BY e.timecreated asc";
     }
+    
     if ($pcast->displayauthor == 1) {//With author
         $sql = "SELECT e.id AS episodeid,
                   e.name AS episodename,
@@ -252,8 +265,9 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
     $result = "";
     if(isset($pcast->enablerssitunes) && ($pcast->enablerssitunes == 1)) {
         $itunes = true;
-    } else
+    } else {
         $itunes = false;
+    }
     if(isset($pcast->userid) && !empty($pcast->userid)) {
         $author = pcast_rss_author_lookup($pcast->userid);
     }
@@ -486,7 +500,7 @@ function pcast_rss_add_enclosures($item){
 
 
 
-//This function return all the common footers for every rss feed in the site
+//This function return all the common footers for every rss feeds
 function pcast_rss_footer($title = NULL, $link = NULL, $description = NULL) {
 
     global $CFG, $USER;
