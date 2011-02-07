@@ -115,17 +115,16 @@
             }
 
             //First all rss feeds common headers
-            $header = rss_standard_header(format_string($pcast->name,true),
+            $header = pcast_rss_header(format_string($pcast->name,true),
                                           $CFG->wwwroot."/mod/pcast/view.php?id=".$pcast->id,
-                                          format_string($pcast->intro,true));
+                                          format_string($pcast->intro,true), $pcast);
             //Now all the rss items
             if (!empty($header)) {
-                // TODO: There should be a custom function to generate the RSS format needed
-                $episodes = rss_add_items($items);
+                $episodes = pcast_rss_add_items($items);
             }
             //Now all rss feeds common footers
             if (!empty($header) && !empty($episodes)) {
-                $footer = rss_standard_footer();
+                $footer = pcast_rss_footer();
             }
             //Now, if everything is ok, concatenate it
             if (!empty($header) && !empty($episodes) && !empty($footer)) {
@@ -223,3 +222,176 @@
     }
 
 
+//This function return all the headers for every pcast rss feed
+function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pcast = NULL) {
+
+    global $CFG, $USER;
+
+    static $pixpath = '';
+
+    $status = true;
+    $result = "";
+    if(isset($pcast->enablerssitunes) && ($pcast->enablerssitunes == 1)) {
+        $itunes = true;
+    } else
+        $itunes = false;
+
+    if (!$site = get_site()) {
+        $status = false;
+    }
+
+    if ($status) {
+
+        //Calculate title, link and description
+        if (empty($title)) {
+            $title = format_string($site->fullname);
+        }
+        if (empty($link)) {
+            $link = $CFG->wwwroot;
+        }
+        if (empty($description)) {
+            $description = $site->summary;
+        }
+
+        //xml headers
+        $result .= "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        if($itunes) {
+            $result .= "<rss xmlns:itunes=\"http://www.itunes.com/dtds/podcast-1.0.dtd\" version=\"2.0\">\n";
+        } else {
+            $result .= "<rss version=\"2.0\">\n";
+        }
+
+        //open the channel
+        $result .= rss_start_tag('channel', 1, true);
+
+        //write channel info
+        $result .= rss_full_tag('title', 2, false, strip_tags($title));
+        $result .= rss_full_tag('link', 2, false, $link);
+        $result .= rss_full_tag('description', 2, false, $description);
+        $result .= rss_full_tag('generator', 2, false, 'Moodle');
+        if (!empty($USER->lang)) {
+            $result .= rss_full_tag('language', 2, false, substr($USER->lang,0,2));
+        }
+        $today = getdate();
+        $result .= rss_full_tag('copyright', 2, false, '&#169; '. $today['year'] .' '. format_string($site->fullname));
+        $result .= rss_full_tag('lastBuildDate',2,false,gmdate('D, d M Y H:i:s',$today[0]).' GMT');
+        $result .= rss_full_tag('pubDate',2,false,gmdate('D, d M Y H:i:s',$today[0]).' GMT');
+
+        /*
+       if (!empty($USER->email)) {
+            $result .= rss_full_tag('managingEditor', 2, false, fullname($USER));
+            $result .= rss_full_tag('webMaster', 2, false, fullname($USER));
+        }
+       */
+
+        // itunes tags
+        if($itunes) {
+            $result .= rss_full_tag('itunes:author',2,'');
+            $result .= rss_full_tag('itunes:subtitle',2,s($pcast->subtitle));
+            $result .= rss_full_tag('itunes:summary',2,s($pcast->summary));
+
+            $result .= rss_start_tag('itunes:owner', 2, true);
+            $result .= rss_full_tag('itunes:name',3,'');
+            $result .= rss_full_tag('itunes:email',3,'');
+            $result .= rss_end_tag('itunes:owner', 2, true);
+
+            // Explicit
+            // TODO: FIX THIS
+            if($pcast->explicit == 0) {
+                $result .= rss_full_tag('itunes:explicit',2,'FALSE');
+            } else {
+                $result .= rss_full_tag('itunes:explicit',2,'TRUE');
+            }
+            
+            //TODO: image, category
+        }
+
+
+        //TODO: Implement custom image handling
+        //write image info
+        $rsspix = $CFG->pixpath."/i/rsssitelogo.gif";
+
+        //write the info
+        $result .= rss_start_tag('image', 2, true);
+        $result .= rss_full_tag('url', 3, false, $rsspix);
+        $result .= rss_full_tag('title', 3, false, 'moodle');
+        $result .= rss_full_tag('link', 3, false, $CFG->wwwroot);
+        $result .= rss_full_tag('width', 3, false, '140');
+        $result .= rss_full_tag('height', 3, false, '35');
+        $result .= rss_end_tag('image', 2, true);
+    }
+
+        die($result);
+    if (!$status) {
+        return false;
+    } else {
+        return $result;
+    }
+}
+
+//This function returns the rss XML code for every item passed in the array
+//item->title: The title of the item
+//item->author: The author of the item. Optional !!
+//item->pubdate: The pubdate of the item
+//item->link: The link url of the item
+//item->description: The content of the item
+function pcast_rss_add_items($items) {
+
+    global $CFG;
+
+    $result = '';
+
+    if (!empty($items)) {
+        foreach ($items as $item) {
+            $result .= rss_start_tag('item',2,true);
+            //Include the category if exists (some rss readers will use it to group items)
+            if (isset($item->category)) {
+                $result .= rss_full_tag('category',3,false,$item->category);
+            }
+            if (isset($item->tags)) {
+                $attributes = array();
+                if (isset($item->tagscheme)) {
+                    $attributes['domain'] = s($item->tagscheme);
+                }
+                foreach ($item->tags as $tag) {
+                    $result .= rss_full_tag('category', 3, false, $tag, $attributes);
+                }
+            }
+            $result .= rss_full_tag('title',3,false,strip_tags($item->title));
+            $result .= rss_full_tag('link',3,false,$item->link);
+            $result .= rss_add_enclosures($item);
+            $result .= rss_full_tag('pubDate',3,false,gmdate('D, d M Y H:i:s',$item->pubdate).' GMT');  # MDL-12563
+            //Include the author if exists
+            if (isset($item->author)) {
+                //$result .= rss_full_tag('author',3,false,$item->author);
+                //We put it in the description instead because it's more important
+                //for moodle than most other feeds, and most rss software seems to ignore
+                //the author field ...
+                $item->description = get_string('byname','',$item->author).'. &nbsp;<p>'.$item->description.'</p>';
+            }
+            $result .= rss_full_tag('description',3,false,$item->description);
+            $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
+            $result .= rss_end_tag('item',2,true);
+
+        }
+    } else {
+        $result = false;
+    }
+    return $result;
+}
+
+//This function return all the common footers for every rss feed in the site
+function pcast_rss_footer($title = NULL, $link = NULL, $description = NULL) {
+
+    global $CFG, $USER;
+
+    $status = true;
+    $result = '';
+
+    //Close the chanel
+    $result .= rss_end_tag('channel', 1, true);
+    ////Close the rss tag
+    $result .= '</rss>';
+
+    return $result;
+}
