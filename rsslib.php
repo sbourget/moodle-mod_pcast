@@ -266,7 +266,7 @@ function pcast_rss_category_lookup($pcast) {
 //This function return all the headers for every pcast rss feed
 function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pcast = NULL) {
 
-    global $CFG, $USER;
+    global $CFG, $USER, $OUTPUT;
 
     $status = true;
     $result = "";
@@ -346,8 +346,7 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         if (isset($image->url)) {
             $rsspix = $image->url;
         } else {
-            //TODO: FIX ME TO USE SITE THEME
-            $rsspix = $CFG->wwwroot."/pix/i/rsssitelogo.gif";
+            $rsspix = $OUTPUT->pix_url('i/rsssitelogo');
         }
 
         //write the image

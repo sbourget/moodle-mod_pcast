@@ -557,6 +557,15 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
 
         $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $pcast->id));
         $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
+
+        /*
+        if (!empty($CFG->pcast_enablerssitunes)) {
+            $string = get_string('pcastlink','pcast');
+            $url = new moodle_url(pcast_rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $pcast->id));
+            $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
+
+        }
+         */
     }
 }
 
