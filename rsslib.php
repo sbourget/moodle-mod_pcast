@@ -109,6 +109,9 @@ function pcast_rss_get_feed($context, $args) {
                 $item->author = fullname($user);
             }
 
+            $item->keywords = $rec->keywords;
+            $item->subtitle = $rec->subtitle;
+            $item->duration = $rec->duration;
             $item->pubdate = $rec->episodetimecreated;
             $item->link = $CFG->wwwroot."/mod/pcast/showepisode.php?eid=".$rec->episodeid;
             $item->description = format_text($rec->episodesummary,'HTML',NULL,$pcast->course);
@@ -331,7 +334,7 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         $fs = get_file_storage();
         $image = new stdClass();
 
-        if ($files = $fs->get_area_files($context->id, 'mod_pcast','logo', $pcast->id, "timemodified", false)) {
+        if ($files = $fs->get_area_files($context->id, 'mod_pcast','logo', $pcast->image, "timemodified", false)) {
             foreach ($files as $file) {
                 $image->filename = $file->get_filename();
                 $image->type = $file->get_mimetype();
@@ -427,25 +430,35 @@ function pcast_rss_add_items($items, $itunes=false) {
             if (isset($item->nestedcategory) && $itunes) {
                 $result .= rss_full_tag('category',3,false,$item->nestedcategory);
             }
-            if (isset($item->tags)) {
-                $attributes = array();
-                if (isset($item->tagscheme)) {
-                    $attributes['domain'] = s($item->tagscheme);
-                }
-                foreach ($item->tags as $tag) {
-                    $result .= rss_full_tag('category', 3, false, $tag, $attributes);
-                }
-            }
+
             $result .= rss_full_tag('title',3,false,strip_tags($item->title));
             $result .= rss_full_tag('link',3,false,$item->link);
-            $result .= rss_start_tag(pcast_rss_add_enclosure($item),3,true);
             $result .= rss_full_tag('pubDate',3,false,gmdate('D, d M Y H:i:s',$item->pubdate).' GMT');  # MDL-12563
+            $result .= rss_full_tag('description',3,false,$item->description);
+            $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
+            
             //Include the author if exists
             if (isset($item->author)) {
                 $result .= rss_full_tag('author',3,false,$item->author);
             }
-            $result .= rss_full_tag('description',3,false,$item->description);
-            $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
+            $result .= rss_start_tag(pcast_rss_add_enclosure($item),3,true);
+
+            // Add iTunes tags
+            if($itunes) {
+                if (isset($item->author)) {
+                    $result .= rss_full_tag('itunes:author',3,false,$item->author);
+                }
+                if (isset($item->subtitle)) {
+                    $result .= rss_full_tag('itunes:subtitle',3,false,$item->subtitle);
+                }
+                if (isset($item->duration)) {
+                    $result .= rss_full_tag('itunes:duration',3,false,$item->duration);
+                }
+                if (isset($item->keywords)) {
+                    $result .= rss_full_tag('itunes:keywords',3,false,$item->keywords);
+                }
+            }
+
             $result .= rss_end_tag('item',2,true);
 
         }
