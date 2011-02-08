@@ -87,7 +87,7 @@ function pcast_rss_get_feed($context, $args) {
     //if the cache is more than 60 seconds old and there's new stuff
     $dontrecheckcutoff = time()-60;
     if ( $dontrecheckcutoff > $cachedfilelastmodified && pcast_rss_newstuff($pcast, $cachedfilelastmodified)) {
-        if (!$recs = $DB->get_records_sql($sql, array(), 0, $pcast->rssarticles)) {
+        if (!$recs = $DB->get_records_sql($sql, array(), 0, $pcast->rssepisodes)) {
             return null;
         }
         $items = array();
@@ -99,8 +99,10 @@ function pcast_rss_get_feed($context, $args) {
             $item = new stdClass();
             $user = new stdClass();
             $item->title = $rec->episodename;
+            $item->pcastid = $rec->pcastid;
+            $item->id = $rec->episodeid;
 
-            if ($pcast->rsstype == 1) {//With author
+            if ($pcast->displayauthor == 1) {//With author
                 $user->firstname = $rec->userfirstname;
                 $user->lastname = $rec->userlastname;
 
@@ -143,7 +145,7 @@ function pcast_rss_get_feed($context, $args) {
         //Now, if everything is ok, concatenate it
         if (!empty($header) && !empty($episodes) && !empty($footer)) {
             $rss = $header.$episodes.$footer;
-
+            
             //Save the XML contents to file.
             $status = rss_save_file('mod_pcast', $filename, $rss);
         }
@@ -179,6 +181,7 @@ function pcast_rss_get_sql($pcast, $time=0) {
     
     if ($pcast->displayauthor == 1) {//With author
         $sql = "SELECT e.id AS episodeid,
+                  e.pcastid AS pcastid,
                   e.name AS episodename,
                   e.summary AS episodesummary,
                   e.mediafile AS mediafile,
@@ -199,6 +202,7 @@ function pcast_rss_get_sql($pcast, $time=0) {
 
     } else {//Without author
         $sql = "SELECT e.id AS episodeid,
+                  e.pcastid AS pcastid,
                   e.name AS episodename,
                   e.summary AS episodesummary,
                   e.mediafile AS mediafile,
@@ -261,8 +265,6 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
 
     global $CFG, $USER;
 
-    static $pixpath = '';
-
     $status = true;
     $result = "";
     if(isset($pcast->enablerssitunes) && ($pcast->enablerssitunes == 1)) {
@@ -319,15 +321,42 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         $result .= rss_full_tag('lastBuildDate', 2, false, gmdate('D, d M Y H:i:s',$today[0]).' GMT');
         $result .= rss_full_tag('pubDate', 2, false, gmdate('D, d M Y H:i:s',$today[0]).' GMT');
 
-        /*
-       if (!empty($USER->email)) {
-            $result .= rss_full_tag('managingEditor', 2, false, fullname($USER));
-            $result .= rss_full_tag('webMaster', 2, false, fullname($USER));
+
+        //Custom image handling
+        $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
+        if (!$context = get_context_instance(CONTEXT_MODULE, $cm->id)) {
+            return '';
         }
-       */
+
+        $fs = get_file_storage();
+        $image = new stdClass();
+
+        if ($files = $fs->get_area_files($context->id, 'mod_pcast','logo', $pcast->id, "timemodified", false)) {
+            foreach ($files as $file) {
+                $image->filename = $file->get_filename();
+                $image->type = $file->get_mimetype();
+                $image->size = $file->get_filesize();
+                $image->url = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/logo/'.$pcast->id.'/'.$image->filename);
+            }
+        }
+        //write image info
+        if (isset($image->url)) {
+            $rsspix = $image->url;
+        } else {
+            //TODO: FIX ME TO USE SITE THEME
+            $rsspix = $CFG->wwwroot."/pix/i/rsssitelogo.gif";
+        }
+
+        //write the image
+        $result .= rss_start_tag('image', 2, true);
+        $result .= rss_full_tag('url', 3, false, $rsspix);
+        $result .= rss_full_tag('title', 3, false, 'moodle');
+        $result .= rss_full_tag('link', 3, false, $CFG->wwwroot);
+        $result .= rss_full_tag('width', 3, false, $pcast->imagewidth);
+        $result .= rss_full_tag('height', 3, false, $pcast->imageheight);
+        $result .= rss_end_tag('image', 2, true);
 
         // itunes tags
-
         if($itunes) {
             if(isset($author)) {
                 $result .= rss_full_tag('itunes:author', 2, false, fullname($author));
@@ -362,22 +391,11 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
                 }
                 $result .= rss_end_tag('itunes:category', 2, true);
             }
-            //TODO: image
+            //Image
+            $result .= rss_start_tag('itunes:image href="'.$rsspix.'"/',2,true);
         }
 
 
-        //TODO: Implement custom image handling
-        //write image info
-        $rsspix = $CFG->pixpath."/i/rsssitelogo.gif";
-
-        //write the info
-        $result .= rss_start_tag('image', 2, true);
-        $result .= rss_full_tag('url', 3, false, $rsspix);
-        $result .= rss_full_tag('title', 3, false, 'moodle');
-        $result .= rss_full_tag('link', 3, false, $CFG->wwwroot);
-        $result .= rss_full_tag('width', 3, false, '140');
-        $result .= rss_full_tag('height', 3, false, '35');
-        $result .= rss_end_tag('image', 2, true);
     }
 
     if (!$status) {
@@ -420,7 +438,7 @@ function pcast_rss_add_items($items, $itunes=false) {
             }
             $result .= rss_full_tag('title',3,false,strip_tags($item->title));
             $result .= rss_full_tag('link',3,false,$item->link);
-            $result .= pcast_rss_add_enclosures($item);
+            $result .= rss_start_tag(pcast_rss_add_enclosure($item),3,true);
             $result .= rss_full_tag('pubDate',3,false,gmdate('D, d M Y H:i:s',$item->pubdate).' GMT');  # MDL-12563
             //Include the author if exists
             if (isset($item->author)) {
@@ -437,94 +455,30 @@ function pcast_rss_add_items($items, $itunes=false) {
     return $result;
 }
 
-/**
-* Adds RSS Media Enclosures for "podcasting" by examining links to media files,
-* and attachments which are media files. Please note that the RSS that is
-* produced cannot be strictly valid for the linked files, since we do not know
-* the files' sizes and cannot include them in the "length" attribute. At
-* present, the validity (and therefore the podcast working in most software)
-* can only be ensured for attachments, and not for links.
-* Note also that iTunes does some things very badly - one thing it does is
-* refuse to download ANY of your files if you're using "file.php?file=blah"
-* and can't use the more elegant "file.php/blah" slasharguments setting. It
-* stops after ".php" and assumes the files are not media files, despite what
-* is specified in the "type" attribute. Dodgy coding all round!
-*
-* @param    $item     object representing an RSS item
-* @return   string    RSS enclosure tags
-* @author   Hannes Gassert <hannes@mediagonal.ch>
-* @author   Dan Stowell
-*/
-function pcast_rss_add_enclosures($item){
 
-    global $CFG;
-
-    $returnstring = '';
-    $rss_text = $item->description;
-
-    // list of media file extensions and their respective mime types
-    include_once($CFG->libdir.'/filelib.php');
-    $mediafiletypes = get_mimetypes_array();
-
-    // regular expression (hopefully) matching all links to media files
-    $medialinkpattern = '@href\s*=\s*(\'|")(\S+(' . implode('|', array_keys($mediafiletypes)) . '))\1@Usie';
-
-    // take into account attachments (e.g. from forum) - with these, we are able to know the file size
-    if (isset($item->attachments) && is_array($item->attachments)) {
-        foreach ($item->attachments as $attachment){
-            $extension = strtolower(substr($attachment->url, strrpos($attachment->url, '.')+1));
-            if (isset($mediafiletypes[$extension]['type'])) {
-                $type = $mediafiletypes[$extension]['type'];
-            } else {
-                $type = 'document/unknown';
-            }
-            $returnstring .= "\n<enclosure url=\"$attachment->url\" length=\"$attachment->length\" type=\"$type\" />\n";
-        }
-    }
-
-    if (!preg_match_all($medialinkpattern, $rss_text, $matches)){
-        return $returnstring;
-    }
-
-    // loop over matches of regular expression
-    for ($i = 0; $i < count($matches[2]); $i++){
-        $url = htmlspecialchars($matches[2][$i]);
-        $extension = strtolower($matches[3][$i]);
-        if (isset($mediafiletypes[$extension]['type'])) {
-            $type = $mediafiletypes[$extension]['type'];
-        } else {
-            $type = 'document/unknown';
-        }
-
-        // the rss_*_tag functions can't deal with methods, unfortunately
-        $returnstring .= "\n<enclosure url='$url' type='$type' />\n";
-    }
-
-    return $returnstring;
-}
-
-//TODO: Finish writing ME!
-function pcast_rss_enclosure($episode) {
+function pcast_rss_add_enclosure($item) {
 
     global $CFG, $DB, $OUTPUT;
+    $enclosure = new stdClass();
 
-    $pcast  = $DB->get_record('pcast', array('id' => $episode->pcastid), '*', MUST_EXIST);
-    $cm = get_coursemodule_from_id('pcast', $id, 0, false, MUST_EXIST);
+    $pcast  = $DB->get_record('pcast', array('id' => $item->pcastid), '*', MUST_EXIST);
+    $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
     if (!$context = get_context_instance(CONTEXT_MODULE, $cm->id)) {
         return '';
     }
 
     $fs = get_file_storage();
 
-    $imagereturn = '';
-
-    if ($files = $fs->get_area_files($context->id, 'mod_pcast','episode', $episode->id, "timemodified", false)) {
+    if ($files = $fs->get_area_files($context->id, 'mod_pcast','episode', $item->id, "timemodified", false)) {
         foreach ($files as $file) {
-            $filename = $file->get_filename();
-            $mimetype = $file->get_mimetype();
-            $path = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/episode/'.$episode->id.'/'.$filename);
+            $enclosure->filename = $file->get_filename();
+            $enclosure->type = $file->get_mimetype();
+            $enclosure->size = $file->get_filesize();
+            $enclosure->url = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/episode/'.$item->id.'/'.$enclosure->filename);
         }
     }
+
+    return 'enclosure url="'.$enclosure->url.'" length="'.$enclosure->size.'" type ="'.$enclosure->type.'" /';
 }
 
 
