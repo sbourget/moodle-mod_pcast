@@ -1408,7 +1408,7 @@ function pcast_mediaplugin_filter($fullurl, $mimetype, $audioonly=false) {
  * @return string image string or nothing depending on $type param
  */
 
-function pcast_display_mediafile_link($episode, $cm,$audioonly=false) {
+function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
 
     global $CFG, $DB, $OUTPUT;
 
