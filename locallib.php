@@ -928,9 +928,9 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $table->width = '100%';
     $table->align = array ("RIGHT", "LEFT");
     // Name of episode
-    $table->data[] = array (get_string("name","pcast"), $episode->name);
+    $table->data[] = array (get_string("name","pcast"), s($episode->name));
     // Description
-    $table->data[] = array (get_string("summary","pcast"), $episode->summary);
+    $table->data[] = array (get_string("summary","pcast"), s($episode->summary));
 
     // Category -Display only if enabled
     if((isset($episode->userscancategorize))and ($episode->userscancategorize != '0')) {
@@ -943,7 +943,7 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
             }
         }
         if(isset($episode->category)) {
-            $table->data[] = array (get_string("category","pcast"), $episode->category);
+            $table->data[] = array (get_string("category","pcast"), s($episode->category));
         }
     }
 
@@ -1337,7 +1337,7 @@ function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
             $out .= '<a href="'.$path.'">'.s($filename).'</a>'; // File
             $out .= html_writer::end_tag('div');
 
-        //Add Media player, uses the one from filter/mediafilter
+        //Add Media player if enabled
         if(($CFG->pcast_usemediafilter)) {
 
             $templink = $out;
