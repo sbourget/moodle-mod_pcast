@@ -915,7 +915,9 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
     $strsep = get_string('labelsep', 'langconfig');
-    $html = '<div class="pcast-episode">'."\n";
+    $html = '<div class="no-overflow">';
+
+    $html .= '<div class="pcast-episode">'."\n";
     $html .= ''."\n";
 
     $table = new html_table();
@@ -996,6 +998,7 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     
     echo $html;
     echo html_writer::table($table);
+    echo '</div>'."\n";
     echo '</div>'."\n";
 
 }
@@ -1293,111 +1296,6 @@ function pcast_debug_object($object, $color='red') {
 }
 
 /**
- * Display the small Moodle Media Filter for MP3 File
- * @global global $CFG
- * @global global $OUTPUT
- * @global global $PAGE
- * @param string $fullurl
- * @param string $mimetype
- * @return string
- */
-function pcast_mediaplugin_simple($fullurl, $mimetype) {
-    global $CFG, $OUTPUT, $PAGE;
-    $code = '';
-    if ($mimetype == 'audio/mp3') {
-
-    $c = $OUTPUT->resource_mp3player_colors();   // You can set this up in your theme/xxx/config.php
-    $colors = explode('&', $c);
-    $playercolors = array();
-    foreach ($colors as $color) {
-        $color = explode('=', $color);
-        $playercolors[$color[0]] = $color[1];
-    }
-
-    $id = 'filter_mp3_'.time(); //we need something unique because it might be stored in text cache
-
-    $playerpath = $CFG->wwwroot .'/filter/mediaplugin/mp3player.swf';
-    $audioplayerpath = $CFG->wwwroot .'/filter/mediaplugin/flowplayer.audio.swf';
-
-    $code = <<<OET
-<div class="pcast_mp3">
-  <span class="pcastmediaplugin pcastplugin_mp3" id="$id"></span>
-  <div>
-    <object width="251" height="25" id="nonjsmp3plugin" name="undefined" data="$playerpath" type="application/x-shockwave-flash">
-    <param name="movie" value="$playerpath" />
-    <param name="allowfullscreen" value="false" />
-    <param name="allowscriptaccess" value="always" />
-    <param name="flashvars" value='config={"plugins": {"controls": {
-                                                            "fullscreen": false,
-                                                            "height": 25,
-                                                            "autoHide": false
-                                                            }
-                                                      },
-                                           "clip":{"url":"$fullurl",
-                                                   "autoPlay": false},
-                                           "content":{"url":"$playerpath"}}}' />
-    </object>
-  </div>
-</div>
-OET;
-    }
-    return $code;
-}
-
-/**
- * Display the Moodle Media Filter for MP3 / Video File
- *
- * @global object $CFG
- * @param object $url
- * @param object $type (mime type)
- * @return nothing
-**/
-
-function pcast_mediaplugin_filter($fullurl, $mimetype, $audioonly=false) {
-    global $CFG;
-    require_once("$CFG->libdir/resourcelib.php");
-
-    $title=get_string('episodetitle','pcast',get_string('modulename','pcast'));
-    $clicktoopen=get_string('viewepisode','pcast',get_string('modulename','pcast'));
-    $code = '';
-
-    if($audioonly) {
-        // For some reason the regular JS media player will only render once
-        $code = pcast_mediaplugin_simple($fullurl, $mimetype);
-    } else {
-        //Display full player since there will only be one player instance
-        if ($mimetype == 'audio/mp3') {
-            // MP3 audio file
-             $code = resourcelib_embed_mp3($fullurl, $title, $clicktoopen);
-        }
-
-        if ($mimetype == 'video/x-flv') {
-            // Flash video file
-            $code = resourcelib_embed_flashvideo($fullurl, $title, $clicktoopen);
-
-        } else if (substr($mimetype, 0, 10) == 'video/x-ms') {
-            // Windows Media Player file
-            $code = resourcelib_embed_mediaplayer($fullurl, $title, $clicktoopen);
-
-        } else if ($mimetype == 'video/quicktime') {
-            // Quicktime file
-            $code = resourcelib_embed_quicktime($fullurl, $title, $clicktoopen);
-
-        } else if ($mimetype == 'video/mpeg') {
-            // Mpeg file
-            $code = resourcelib_embed_mpeg($fullurl, $title, $clicktoopen);
-
-        } else if ($mimetype == 'audio/x-pn-realaudio') {
-            // RealMedia file
-            $code = resourcelib_embed_real($fullurl, $title, $clicktoopen);
-
-        }
-    }
-
-    return $code;
-}
-
-/**
  * Print the podcast attachment and the media player if appropriate
  *
  * @global object $CFG
@@ -1434,17 +1332,24 @@ function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
     // Make sure there is actually an attachment before trying to render the file link and player
     if(!empty($filename)) {
 
+            $out = html_writer::start_tag('div');
+            $out .= '<a href="'.$path.'">'.$iconimage.'</a>'; // Icon
+            $out .= '<a href="'.$path.'">'.s($filename).'</a>'; // File
+            $out .= html_writer::end_tag('div');
+
         //Add Media player, uses the one from filter/mediafilter
         if(($CFG->pcast_usemediafilter)) {
-            $templink = '<a href="'.$path.'">'.$iconimage.$filename.'</a>';
-            $templink .= "</br />\n";
-            //TODO: Replace this code with the embed code used in resourcelib
-            // (See mod/resource, function resource_display_embed()
-            $templink .= pcast_mediaplugin_filter($path,$mimetype,$audioonly);
+
+            $templink = $out;
+            
         } else {
-            $templink = '<a href="'.$path.'">'.$iconimage.$filename.'</a>';
+            $templink = html_writer::start_tag('div',array('class'=>'nolink'));
+            $templink .= $out;
+            $templink .= html_writer::end_tag('div');
         }
+        $templink = format_text($templink, FORMAT_HTML, array('context'=>$context));
     }
+
     return $templink;
 }
 
