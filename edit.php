@@ -56,6 +56,7 @@ if (!empty($id)) {
     $url->param('id', $id);
 }
 $PAGE->set_url($url);
+$PAGE->set_context($context);
 
 if ($id) { // if entry is specified
     if (!has_capability('mod/pcast:write', $context)){

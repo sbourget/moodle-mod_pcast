@@ -45,6 +45,9 @@ if ($hook !== '') {
 }
 $PAGE->set_url($url);
 
+$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$PAGE->set_context($context);
+
 $strpcast   = get_string("modulename", "pcast");
 $strglossaries = get_string("modulenameplural", "pcast");
 $stredit       = get_string("edit");
@@ -61,7 +64,7 @@ if ($id) {
 }
 
 require_login($course->id, false, $cm);
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
 $manageentries = has_capability('mod/pcast:manage', $context);
 
 //if (! $pcast = $DB->get_record("pcast", array("id"=>$cm->instance))) {

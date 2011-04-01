@@ -66,6 +66,7 @@ if (!empty($episode->courseid)) {
     $PAGE->navbar->add($strpcasts);
     $PAGE->set_title(strip_tags("$course->shortname: $strpcasts"));
     $PAGE->set_heading($course->fullname);
+    $PAGE->set_context($context);
     echo $OUTPUT->header();
 } else {
     echo $OUTPUT->header();    // Needs to be something here to allow linking back to the whole pcast

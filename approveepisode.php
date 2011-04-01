@@ -33,9 +33,6 @@ $eid = required_param('eid', PARAM_INT);    // Episode ID
 $mode = optional_param('mode', PCAST_APPROVAL_VIEW, PARAM_ALPHANUM);
 $hook = optional_param('hook', 'ALL', PARAM_CLEAN);
 
-$url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$eid,'mode'=>$mode, 'hook'=>$hook));
-$PAGE->set_url($url);
-
 
 $episode = $DB->get_record('pcast_episodes', array('id'=> $eid), '*', MUST_EXIST);
 $pcast = $DB->get_record('pcast', array('id'=> $episode->pcastid), '*', MUST_EXIST);
@@ -46,6 +43,11 @@ require_login($course, false, $cm);
 
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 require_capability('mod/pcast:approve', $context);
+
+$url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$eid,'mode'=>$mode, 'hook'=>$hook));
+
+$PAGE->set_url($url);
+$PAGE->set_context($context);
 
 if (!$episode->approved and confirm_sesskey()) {
     $newepisode = new object();

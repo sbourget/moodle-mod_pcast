@@ -65,6 +65,7 @@ add_to_log($course->id, 'pcast', 'view', "view.php?id=$cm->id", $pcast->name, $c
 $PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode'=>$mode));
 $PAGE->set_title($pcast->name);
 $PAGE->set_heading($course->fullname);
+$PAGE->set_context($context);
 
 // Output starts here
 echo $OUTPUT->header();
