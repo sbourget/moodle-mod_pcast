@@ -956,7 +956,6 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     if(((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
         $user = $DB->get_record("user", array("id" => $episode->user));
         $table->data[] = array (get_string("author","pcast"), fullname($user));
-//        $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
     }
     
     // Created
