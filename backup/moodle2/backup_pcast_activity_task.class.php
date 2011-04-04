@@ -63,9 +63,6 @@ class backup_pcast_activity_task extends backup_activity_task {
         $search="/(".$base."\/mod\/pcast\/view.php\?id\=)([0-9]+)/";
         $content= preg_replace($search, '$@PCASTVIEWBYID*$2@$', $content);
 
-        // Link to pcast episode by episodeid
-        $search="/(".$base."\/mod\/pcast\/showepisode.php\?eid\=)([0-9]+)/";
-        $content= preg_replace($search, '$@PCASTSHOWEPISODEBYID*$2@$', $content);
 
         return $content;
     }
