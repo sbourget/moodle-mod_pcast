@@ -54,6 +54,12 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $view = new backup_nested_element('view', array('id'), array(
             'episodeid', 'userid', 'views', 'lastview'));
 
+        $ratings = new backup_nested_element('ratings');
+
+        $rating = new backup_nested_element('rating', array('id'), array(
+            'scaleid', 'value', 'userid', 'timecreated', 'timemodified'));
+
+
 
         // Build the tree
 
@@ -62,6 +68,10 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
 
         $episode->add_child($views);
         $views->add_child($view);
+
+        $episode->add_child($ratings);
+        $ratings->add_child($rating);
+
 
         // Define sources
 
@@ -80,13 +90,22 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
             SELECT *
               FROM {pcast_views}
              WHERE episodeid = ?',
-            array(backup::VAR_PARENTID));        }
+            array(backup::VAR_PARENTID));
+
+            $rating->set_source_table('rating', array('contextid' => backup::VAR_CONTEXTID,
+                                      'itemid'    => backup::VAR_PARENTID));
+            $rating->set_source_alias('rating', 'value');
+
+            }
 
         // Define id annotations
 
         $pcast->annotate_ids('user', 'userid');
         $episode->annotate_ids('user', 'userid');
         $view->annotate_ids('user', 'userid');
+
+        $rating->annotate_ids('scale', 'scaleid');
+        $rating->annotate_ids('user', 'userid');
 
         // Define file annotations
 
