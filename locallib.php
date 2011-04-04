@@ -928,9 +928,9 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $table->width = '100%';
     $table->align = array ("RIGHT", "LEFT");
     // Name of episode
-    $table->data[] = array (get_string("name","pcast"), s($episode->name));
+    $table->data[] = array (get_string("name","pcast"),  format_text($episode->name, FORMAT_HTML, array('context'=>$context)));
     // Description
-    $table->data[] = array (get_string("summary","pcast"), s($episode->summary));
+    $table->data[] = array (get_string("summary","pcast"),  format_text($episode->summary, FORMAT_HTML, array('context'=>$context)));
 
     // Category -Display only if enabled
     if((isset($episode->userscancategorize))and ($episode->userscancategorize != '0')) {
