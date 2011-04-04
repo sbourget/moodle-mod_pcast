@@ -217,7 +217,7 @@ function pcast_update_instance($pcast) {
  * @return boolean Success/Failure
  */
 function pcast_delete_instance($id) {
-    global $DB;
+    global $DB, $CFG;
     require_once($CFG->dirroot . '/rating/lib.php');
 
     if (! $pcast = $DB->get_record('pcast', array('id' => $id))) {
@@ -236,9 +236,11 @@ function pcast_delete_instance($id) {
     $DB->delete_records('pcast', array('id' => $pcast->id));
 
     // Delete Comments
-    $DB->delete_records_select('comments', "contextid=? AND commentarea=? AND itemid IN ($entry_select)", array($id, 'pcast_episode', $context->id));
+    $episode_select = "SELECT id FROM {pcast_episodes} WHERE pcastid = ?";
+    $DB->delete_records_select('comments', "contextid=? AND commentarea=? AND itemid IN ($episode_select)", array($id, 'pcast_episode', $context->id));
 
     // Delete all files
+    $fs = get_file_storage();
     $fs->delete_area_files($context->id);
 
     //delete ratings
