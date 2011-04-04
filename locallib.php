@@ -1189,6 +1189,7 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
     $sql = pcast_get_episode_sql();
     $sql .=  " WHERE p.id = ?";
     $episodes = $DB->get_records_sql($sql,array('id'=>$episode->id));
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
     // load ratings
     require_once($CFG->dirroot.'/rating/lib.php');
@@ -1197,7 +1198,7 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
         $ratingoptions = new stdClass();
         $ratingoptions->plugintype = 'mod';
         $ratingoptions->pluginname = 'pcast';
-        $ratingoptions->context = $cm->context;
+        $ratingoptions->context = $context;
         $ratingoptions->items = $episodes;
         $ratingoptions->aggregate = $episode->assessed;//the aggregation method
         $ratingoptions->scaleid = $episode->scale;
