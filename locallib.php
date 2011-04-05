@@ -39,19 +39,6 @@ defined('MOODLE_INTERNAL') || die();
 /***************THESE FUNCTIONS WERE BORROWED FROM iPodcast *******************/
 //TODO: REFACTOR THESE
 
-//function pcast_do_something_useful(array $things) {
-//    return new stdClass();
-//}
-
-
-/*function set_id3($filename, $title = "", $author = "", $album = "", $year = "", $comment = "", $genre_id = 0) {
-            $this->error = false;
-            $this->wfh = fopen($this->file,"a");
-            fseek($this->wfh, -128, SEEK_END);
-            fwrite($this->wfh, pack("a3a30a30a30a4a30C1", "TAG", $title, $author, $album, $year, $comment, $genre_id), 128);
-            fclose($this->wfh);
-        }*/
-
 /////////////////////////////////////////////////
 //Get all id3 information and decode to an array
 //Takes a single parameter a full local path to file as $filename
