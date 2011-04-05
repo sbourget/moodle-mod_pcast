@@ -117,7 +117,6 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
 
     protected function after_execute() {
-        //TODO: Revisit this, Files do not restore properly!!!
         // Add pcast related files, no need to match by itemname (just internally handled context)
         $this->add_related_files('mod_pcast', 'intro', null);
         $this->add_related_files('mod_pcast', 'logo', null);

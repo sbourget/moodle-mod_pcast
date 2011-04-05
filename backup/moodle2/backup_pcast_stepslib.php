@@ -110,8 +110,9 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         // Define file annotations
 
         $pcast->annotate_files('mod_pcast', 'intro', null); // This file area hasn't itemid
-        $pcast->annotate_files('mod_pcast','episode','id');
         $pcast->annotate_files('mod_pcast','logo', null);
+
+        $episode->annotate_files('mod_pcast','episode','id');
 
         // Return the root element (pcast), wrapped into standard activity structure
         return $this->prepare_activity_structure($pcast);
