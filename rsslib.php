@@ -113,7 +113,7 @@ function pcast_rss_get_feed($context, $args) {
             $item->subtitle = $rec->subtitle;
             $item->duration = $rec->duration;
             $item->pubdate = $rec->episodetimecreated;
-            $item->link = $CFG->wwwroot."/mod/pcast/showepisode.php?eid=".$rec->episodeid;
+            $item->link = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$rec->episodeid));
             $item->description = format_text($rec->episodesummary,'HTML',NULL,$pcast->course);
 
             if($pcast->userscancategorize) {
@@ -126,9 +126,8 @@ function pcast_rss_get_feed($context, $args) {
         }
 
         //First all rss feeds common headers
-        $header = pcast_rss_header(format_string($pcast->name,true),
-                                      $CFG->wwwroot."/mod/pcast/view.php?id=".$pcast->id,
-                                      format_string($pcast->intro,true), $pcast);
+        $url = new moodle_url('/mod/pcast/view.php', array('id'=>$pcast->id));
+        $header = pcast_rss_header(format_string($pcast->name,true), $url, format_string($pcast->intro,true), $pcast);
 
         // Do we need iTunes tags?
         if(isset($pcast->enablerssitunes) && ($pcast->enablerssitunes == 1)) {
