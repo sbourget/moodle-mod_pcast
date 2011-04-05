@@ -384,15 +384,25 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
     foreach ($episodes as $episode) {
         $link = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id));
         if ($episode->approved) {
-            $dimmed = '';
+            $out = html_writer::start_tag('div',array('class'=>'head')). "\n";
         } else {
-            $dimmed = ' dimmed_text';
+            $out = html_writer::start_tag('div',array('class'=>'head dimmed_text')). "\n";
         }
-        echo '<div class="head'.$dimmed.'">';
-        echo '<div class="date">'.userdate($episode->timemodified, $strftimerecent).'</div>';
-        echo '<div class="name">'.fullname($episode, $viewfullnames).'</div>';
-        echo '</div>';
-        echo '<div class="info"><a href="'.$link.'">'.format_text($episode->name, true).'</a></div>';
+
+        $out = html_writer::start_tag('div',array('class'=>$dimmed)). "\n";
+        $out .= html_writer::start_tag('div',array('class'=>'date')). "\n";
+        $out .= userdate($episode->timemodified, $strftimerecent);
+        $out .= html_writer::end_tag('div') . "\n";
+        $out .= html_writer::start_tag('div',array('class'=>'name')). "\n";
+        $out .= fullname($episode, $viewfullnames);
+        $out .= html_writer::end_tag('div') . "\n";
+        $out .= html_writer::end_tag('div') . "\n";
+        $out .= html_writer::start_tag('div',array('class'=>'info')). "\n";
+        $out .= html_writer::tag('a', format_text($episode->name, true), array('href'=>$link));
+        $out .= html_writer::end_tag('div') . "\n";
+
+        echo $out;
+
     }
 
     return true;

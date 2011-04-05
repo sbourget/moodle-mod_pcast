@@ -199,7 +199,9 @@ function pcast_file_path_lookup ($filehash) {
  */
 function pcast_print_approval_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sortorder = '') {
 
-    echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
+    //echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
+    echo html_writer::tag('div', get_string("explainalphabet","pcast"), array('class'=>'pcastexplain'));
+    echo '<br />';
     
     pcast_print_special_links($cm, $pcast, $mode, $hook);
 
@@ -219,7 +221,10 @@ function pcast_print_approval_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sor
  */
 function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorder = '') {
 
-    echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
+    // echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
+    echo html_writer::tag('div', get_string("explainalphabet","pcast"), array('class'=>'pcastexplain'));
+    echo '<br />';
+    
     pcast_print_special_links($cm, $pcast, $mode, $hook);
     pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
     pcast_print_all_links($cm, $pcast, $mode, $hook);
@@ -239,8 +244,10 @@ function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorde
  */
 function pcast_print_author_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sortorder = '') {
 
-    echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
-    
+    // echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
+    echo html_writer::tag('div', get_string("explainalphabet","pcast"), array('class'=>'pcastexplain'));
+    echo '<br />';
+
     if(empty($sortkey)) {
         $sortkey = PCAST_AUTHOR_LNAME;
     }
@@ -341,11 +348,11 @@ function pcast_print_all_links($cm, $pcast, $mode, $hook) {
     global $CFG;
     $strallentries = get_string("allentries", "pcast");
     if ( $hook == 'ALL' ) {
-      echo "<b>$strallentries</b>";
+      echo html_writer::tag('span', $strallentries, array('class'=>'pcast-bold'));
     } else {
       $strexplainall = strip_tags(get_string("explainall","pcast"));
       $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>'ALL'));
-      echo '<a title="'.$strexplainall.'" href="'.$url.'">'.$strallentries.'</a>';
+      echo html_writer::tag('a', $strallentries, array('title'=>$strexplainall,'href'=>$url));
     }
      
 }
@@ -363,11 +370,13 @@ function pcast_print_special_links($cm, $pcast, $mode, $hook) {
 
     $strspecial = get_string("special", "pcast");
     if ( $hook == 'SPECIAL' ) {
-      echo "<b>$strspecial</b> | ";
+      echo html_writer::tag('span', $strspecial, array('class'=>'pcast-bold'));
+      echo "  | ";
     } else {
       $strexplainspecial = strip_tags(get_string("explainspecial","pcast"));
       $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>'SPECIAL'));
-      echo '<a title="'.$strexplainspecial.'" href="'.$url.'">'.$strspecial.'</a> | ';
+      echo html_writer::tag('a', $strspecial, array('title'=>$strexplainspecial,'href'=>$url));
+      echo "  | ";
     }
      
 }
