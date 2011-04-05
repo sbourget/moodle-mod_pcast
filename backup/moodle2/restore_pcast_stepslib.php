@@ -99,7 +99,6 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
         // Cannot use ratings API, cause, it's missing the ability to specify times (modified/created)
         $data->contextid = $this->task->get_contextid();
-        //$data->itemid    = $this->get_mappingid('pcast_episode', $oldid);
         $data->itemid    = $this->get_new_parentid('pcast_episode');
 
 
