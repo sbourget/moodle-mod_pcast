@@ -18,7 +18,7 @@
 /**
  * @package moodlecore
  * @subpackage backup-moodle2
- * @copyright 2010 Stephen Bourget and Jillaine Beeckman
+ * @copyright 2011 Stephen Bourget and Jillaine Beeckman
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
