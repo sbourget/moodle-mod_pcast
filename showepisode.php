@@ -75,10 +75,8 @@ if (!empty($episode->courseid)) {
 echo $OUTPUT->heading(get_string("viewthisepisode","pcast",$pcast->name));
 
 // Print the tabs
-$toolsrow = array();
+$tabrows = array();
 $browserow = array();
-$inactive = array();
-$activated = array();
 
 $url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_VIEW));
 $browserow[] = new tabobject(PCAST_EPISODE_VIEW, $url, get_string('episodeview', 'pcast'));
@@ -86,7 +84,7 @@ $browserow[] = new tabobject(PCAST_EPISODE_VIEW, $url, get_string('episodeview',
 $comment = false;
 $rate = false;
 $tabname = '';
-//TODO: Ratings here need to be revisited =(
+
 if(($episode->userscancomment) or ($episode->assessed)){
     // Can they use comments?
     if(($CFG->usecomments) and ($episode->userscancomment) and ((has_capability('moodle/comment:post', $context)) or (has_capability('moodle/comment:view', $context)))) {
@@ -120,20 +118,7 @@ if(($episode->displayviews) or (has_capability('mod/pcast:manage', $context))) {
 }
 
 
-if ($mode < PCAST_EPISODE_VIEW || $mode > PCAST_EPISODE_VIEWS) {   // We are on second row
-    $inactive = array('edit');
-    $activated = array('edit');
-
-    $browserow[] = new tabobject('edit', '#', get_string('edit'));
-}
-
-/// Put all this info together
-
-$tabrows = array();
-$tabrows[] = $browserow;     // Always put these at the top
-if ($toolsrow) {
-    $tabrows[] = $toolsrow;
-}
+$tabrows[] = $browserow;     // Needs to be an Array of Arrays (2D Array)
 
 
 // Check to see if any content should be displayed (prevents guessing of URLs)
@@ -144,7 +129,7 @@ if(((!$pcast->userscancomment) and (!$pcast->assessed)) and ($mode == PCAST_EPIS
 }
 
 echo'  <div class="pcast-display">';
-print_tabs($tabrows, $mode, $inactive, $activated);
+print_tabs($tabrows, $mode);
 
 switch ($mode) {
     case PCAST_EPISODE_VIEW:

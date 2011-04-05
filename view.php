@@ -100,10 +100,8 @@ if (!isset($sortkey)) {
 $sortkey   = clean_param($sortkey, PARAM_ALPHANUM);// Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
 $sortorder = clean_param($sortorder, PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
 
-$toolsrow = array();
+$tabrows = array();
 $browserow = array();
-$inactive = array();
-$activated = array();
 
 $url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_STANDARD_VIEW));
 $browserow[] = new tabobject(PCAST_STANDARD_VIEW, $url, get_string('standardview', 'pcast'));
@@ -126,24 +124,14 @@ if (has_capability('mod/pcast:approve', $context)) {
     $browserow[] = new tabobject(PCAST_APPROVAL_VIEW, $url, get_string('approvalview', 'pcast'));
 }
 
-if ($mode < PCAST_STANDARD_VIEW || $mode > PCAST_APPROVAL_VIEW) {   // We are on second row
-    $inactive = array('edit');
-    $activated = array('edit');
-
-    $browserow[] = new tabobject('edit', '#', get_string('edit'));
-}
 
 /// Put all this info together
 
-$tabrows = array();
 $tabrows[] = $browserow;     // Always put these at the top
-if ($toolsrow) {
-    $tabrows[] = $toolsrow;
-}
 
 
 echo'  <div class="pcastdisplay">';
-print_tabs($tabrows, $mode, $inactive, $activated);
+print_tabs($tabrows, $mode);
 
 echo'  <div class="entrybox">';
 echo '</div></div>';
