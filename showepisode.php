@@ -80,10 +80,8 @@ $browserow = array();
 $inactive = array();
 $activated = array();
 
-
-$browserow[] = new tabobject(PCAST_EPISODE_VIEW,
-                             $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$eid.'&amp;mode='.PCAST_EPISODE_VIEW,
-                             get_string('episodeview', 'pcast'));
+$url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_VIEW));
+$browserow[] = new tabobject(PCAST_EPISODE_VIEW, $url, get_string('episodeview', 'pcast'));
 
 $comment = false;
 $rate = false;
@@ -111,16 +109,14 @@ if(($episode->userscancomment) or ($episode->assessed)){
     }
 
     if(($comment) or ($rate)) {
-        $browserow[] = new tabobject(PCAST_EPISODE_COMMENT_AND_RATE,
-                             $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$eid.'&amp;mode='.PCAST_EPISODE_COMMENT_AND_RATE,
-                             $tabname);
+        $url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_COMMENT_AND_RATE));
+        $browserow[] = new tabobject(PCAST_EPISODE_COMMENT_AND_RATE, $url, $tabname);
     }
 }
 
 if(($episode->displayviews) or (has_capability('mod/pcast:manage', $context))) {
-    $browserow[] = new tabobject(PCAST_EPISODE_VIEWS,
-                             $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$eid.'&amp;mode='.PCAST_EPISODE_VIEWS,
-                             get_string('episodeviews', 'pcast'));
+    $url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_VIEWS));
+    $browserow[] = new tabobject(PCAST_EPISODE_VIEWS, $url, get_string('episodeviews', 'pcast'));
 }
 
 

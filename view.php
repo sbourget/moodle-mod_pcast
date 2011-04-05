@@ -74,9 +74,9 @@ echo $OUTPUT->heading_with_help(get_string("viewpcast","pcast",$pcast->name), 'p
 
 /// Show the add entry button if allowed (usercan post + write or manage caps)
 if (((has_capability('mod/pcast:write', $context))and ($pcast->userscanpost)) or (has_capability('mod/pcast:manage', $context))) {
-
+    $url = new moodle_url('/mod/pcast/showepisode.php', array('cmid'=>$cm->id));
     echo '<div class="pcast-addentry">';
-    echo '<form id="newentryform" method="get" action="'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'">';
+    echo '<form id="newentryform" method="get" action="'.$url.'">';
     echo '<div class="singlebutton">';
     echo '<input type="hidden" name="cmid" value="'.$cm->id.'" />';
     echo '<input type="submit" value="'.get_string('addnewepisode', 'pcast').'" />';
@@ -105,31 +105,25 @@ $browserow = array();
 $inactive = array();
 $activated = array();
 
-
-$browserow[] = new tabobject(PCAST_STANDARD_VIEW,
-                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_STANDARD_VIEW,
-                             get_string('standardview', 'pcast'));
+$url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_STANDARD_VIEW));
+$browserow[] = new tabobject(PCAST_STANDARD_VIEW, $url, get_string('standardview', 'pcast'));
 
 if($pcast->userscancategorize) {
-    $browserow[] = new tabobject(PCAST_CATEGORY_VIEW,
-                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_CATEGORY_VIEW,
-                             get_string('categoryview', 'pcast'));
+    $url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_CATEGORY_VIEW));
+    $browserow[] = new tabobject(PCAST_CATEGORY_VIEW, $url, get_string('categoryview', 'pcast'));
 }
-$browserow[] = new tabobject(PCAST_DATE_VIEW,
-                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_DATE_VIEW,
-                             get_string('dateview', 'pcast'));
+$url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_DATE_VIEW));
+$browserow[] = new tabobject(PCAST_DATE_VIEW, $url, get_string('dateview', 'pcast'));
 
 if($pcast->displayauthor or has_capability('mod/pcast:manage', $context)) {
-    $browserow[] = new tabobject(PCAST_AUTHOR_VIEW,
-                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_AUTHOR_VIEW,
-                             get_string('authorview', 'pcast'));
+    $url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_AUTHOR_VIEW));
+    $browserow[] = new tabobject(PCAST_AUTHOR_VIEW, $url, get_string('authorview', 'pcast'));
 }
 
 
 if (has_capability('mod/pcast:approve', $context)) {
-    $browserow[] = new tabobject(PCAST_APPROVAL_VIEW,
-                             $CFG->wwwroot.'/mod/pcast/view.php?id='.$id.'&amp;mode='.PCAST_APPROVAL_VIEW,
-                             get_string('approvalview', 'pcast'));
+    $url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_APPROVAL_VIEW));
+    $browserow[] = new tabobject(PCAST_APPROVAL_VIEW, $url, get_string('approvalview', 'pcast'));
 }
 
 if ($mode < PCAST_STANDARD_VIEW || $mode > PCAST_APPROVAL_VIEW) {   // We are on second row

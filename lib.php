@@ -382,7 +382,7 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
 
     $strftimerecent = get_string('strftimerecent');
     foreach ($episodes as $episode) {
-        $link = $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id;
+        $link = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id));
         if ($episode->approved) {
             $dimmed = '';
         } else {

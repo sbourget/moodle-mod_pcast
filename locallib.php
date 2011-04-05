@@ -352,12 +352,13 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
 function pcast_print_all_links($cm, $pcast, $mode, $hook) {
 
     global $CFG;
-    $strallentries       = get_string("allentries", "pcast");
+    $strallentries = get_string("allentries", "pcast");
     if ( $hook == 'ALL' ) {
       echo "<b>$strallentries</b>";
     } else {
       $strexplainall = strip_tags(get_string("explainall","pcast"));
-      echo "<a title=\"$strexplainall\" href=\"$CFG->wwwroot/mod/pcast/view.php?id=$cm->id&amp;mode=$mode&amp;hook=ALL\">$strallentries</a>";
+      $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>'ALL'));
+      echo '<a title="'.$strexplainall.'" href="'.$url.'">'.$strallentries.'</a>';
     }
      
 }
@@ -373,12 +374,13 @@ function pcast_print_special_links($cm, $pcast, $mode, $hook) {
     
     global $CFG;
 
-    $strspecial          = get_string("special", "pcast");
+    $strspecial = get_string("special", "pcast");
     if ( $hook == 'SPECIAL' ) {
       echo "<b>$strspecial</b> | ";
     } else {
       $strexplainspecial = strip_tags(get_string("explainspecial","pcast"));
-      echo "<a title=\"$strexplainspecial\" href=\"$CFG->wwwroot/mod/pcast/view.php?id=$cm->id&amp;mode=$mode&amp;hook=SPECIAL\">$strspecial</a> | ";
+      $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>'SPECIAL'));
+      echo '<a title="'.$strexplainspecial.'" href="'.$url.'">'.$strspecial.'</a> | ';
     }
      
 }
@@ -972,22 +974,26 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     if ((has_capability('mod/pcast:manage', $context)) or ($ineditingperiod)) {
 
         // Edit Link
-        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+        $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id, 'id'=>$episode->id));
+        $link .= '<a href = "'.$url.'">'.get_string('edit').'</a>';
         $link .= ' | '."\n";
 
         // Delete link
-        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
+        $url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$cm->id, 'id'=>$episode->id, 'prevmode'=>0));
+        $link .= '<a href = "'.$url.'">'.get_string('delete').'</a>';
         $link .= ' | '."\n";
 
     }
         // View Link
-        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id.'">'.get_string('view').'</a>';
+        $url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id));
+        $link .= '<a href = "'.$url.'">'.get_string('view').'</a>';
 
 
     // Approve Link
     if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
         $link .= ' | '."\n";
-        $link .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;hook='.$hook.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+        $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW,'hook'=>$hook,'sesskey'=>sesskey()));
+        $link .= '<a href = "'.$url.'">'.get_string('approve').'</a>';
     }
 
     // Construct links
@@ -1093,11 +1099,13 @@ function pcast_display_episode_full($episode, $cm, $course){
     if ((has_capability('mod/pcast:manage', $context)) or ($ineditingperiod)) {
 
         // Edit Link
-        $manage .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/edit.php?cmid='.$cm->id.'&id='.$episode->id.'">'.get_string('edit').'</a>';
+        $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id, 'id'=>$episode->id));
+        $manage .= '<a href = "'.$url.'">'.get_string('edit').'</a>';
         $manage .= ' | '."\n";
 
         // Delete link
-        $manage .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/deleteepisode.php?id='.$cm->id.'&amp;episode='.$episode->id.'&amp;prevmode=0">'.get_string('delete').'</a>';
+        $url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$cm->id, 'episode'=>$episode->id, 'prevmode'=>0));
+        $manage .= '<a href = "'.$url.'">'.get_string('delete').'</a>';
 
     }
 
@@ -1105,7 +1113,8 @@ function pcast_display_episode_full($episode, $cm, $course){
     // Approve Link
     if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
 
-        $approve .= '<a href = "'.$CFG->wwwroot.'/mod/pcast/approveepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_APPROVAL_VIEW.'&amp;sesskey='.sesskey().'">'.get_string('approve').'</a>';
+        $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW,'hook'=>$hook,'sesskey'=>sesskey()));
+        $approve .= '<a href = "'.$url.'">'.get_string('approve').'</a>';
     }
 
     // Construct links
@@ -1203,7 +1212,7 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
         $ratingoptions->aggregate = $episode->assessed;//the aggregation method
         $ratingoptions->scaleid = $episode->scale;
         $ratingoptions->userid = $USER->id;
-        $ratingoptions->returnurl = $CFG->wwwroot.'/mod/pcast/showepisode.php?eid='.$episode->id.'&amp;mode='.PCAST_EPISODE_COMMENT_AND_RATE;
+        $ratingoptions->returnurl = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_COMMENT_AND_RATE));
         $ratingoptions->assesstimestart = $episode->assesstimestart;
         $ratingoptions->assesstimefinish = $episode->assesstimefinish;
 

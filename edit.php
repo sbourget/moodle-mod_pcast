@@ -60,11 +60,12 @@ $PAGE->set_context($context);
 
 if ($id) { // if entry is specified
     if (!has_capability('mod/pcast:write', $context)){
-        print_error('noeditprivlidges', 'pcast', "$CFG->wwwroot/mod/pcast/view.php?id=$cmid");
+
+        print_error('noeditprivlidges', 'pcast', new moodle_url('/mod/pcast/view.php', array('id'=>$cmid)));
     }
 
     if (!$episode = $DB->get_record('pcast_episodes', array('id'=>$id, 'pcastid'=>$pcast->id))) {
-        print_error('invalidentry');
+        print_error('invalidentry','pcast');
     }
 
     //Calculate editing period

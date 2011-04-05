@@ -110,6 +110,7 @@ $string['rsslink']='RSS feed for this activity';
 // Errors
 $string['invalidcmorid']='Error: You must specify a course_module ID or an instance ID';
 $string['invalidcourse'] = 'Error: Course ID is incorrect';
+$string['invalidentry'] = 'Error: Invalid episode ID';
 $string['noeditprivlidges']='Error: You do not have editing rights.';
 $string['errcannoteditothers']='Error: you cannot edit other users episodes';
 $string['erredittimeexpired']='Error: Editing time has expired';
