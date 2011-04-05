@@ -389,7 +389,6 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
             $out = html_writer::start_tag('div',array('class'=>'head dimmed_text')). "\n";
         }
 
-        $out = html_writer::start_tag('div',array('class'=>$dimmed)). "\n";
         $out .= html_writer::start_tag('div',array('class'=>'date')). "\n";
         $out .= userdate($episode->timemodified, $strftimerecent);
         $out .= html_writer::end_tag('div') . "\n";
