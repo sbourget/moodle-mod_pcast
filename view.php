@@ -74,7 +74,7 @@ echo $OUTPUT->heading_with_help(get_string("viewpcast","pcast",$pcast->name), 'p
 
 /// Show the add entry button if allowed (usercan post + write or manage caps)
 if (((has_capability('mod/pcast:write', $context))and ($pcast->userscanpost)) or (has_capability('mod/pcast:manage', $context))) {
-    $url = new moodle_url('/mod/pcast/showepisode.php', array('cmid'=>$cm->id));
+    $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id));
     echo '<div class="pcast-addentry">';
     echo '<form id="newentryform" method="get" action="'.$url.'">';
     echo '<div class="singlebutton">';
