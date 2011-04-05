@@ -74,7 +74,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
         $newitemid = $DB->insert_record('pcast_episodes', $data);
-        $this->set_mapping('pcast_episode', $oldid, $newitemid);
+        $this->set_mapping('pcast_episode', $oldid, $newitemid, true); // files by this itemname
     }
 
     protected function process_pcast_view($data) {
@@ -88,7 +88,8 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         //$data->lastview = $this->apply_date_offset($data->lastview);
 
         $newitemid = $DB->insert_record('pcast_views', $data);
-        $this->set_mapping('pcast_views', $oldid, $newitemid);
+        $this->set_mapping('pcast_views', $oldid, $newitemid, false); // no files attached
+
     }
 
         protected function process_pcast_rating($data) {
