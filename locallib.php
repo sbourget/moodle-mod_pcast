@@ -392,20 +392,24 @@ function pcast_print_special_links($cm, $pcast, $mode, $hook) {
 function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder) {
 global $CFG;
 
-      $alphabet = explode(",", get_string('alphabet', 'langconfig'));
-      $letters_by_line = 26;
-      for ($i = 0; $i < count($alphabet); $i++) {
-          if ( $hook == $alphabet[$i] and $hook) {
-               echo "<b>$alphabet[$i]</b>";
-          } else {
-               echo "<a href=\"$CFG->wwwroot/mod/pcast/view.php?id=$cm->id&amp;mode=$mode&amp;hook=".urlencode($alphabet[$i])."&amp;sortkey=$sortkey&amp;sortorder=$sortorder\">$alphabet[$i]</a>";
-          }
-          if ((int) ($i % $letters_by_line) != 0 or $i == 0) {
-               echo ' | ';
-          } else {
-               echo '<br />';
-          }
-      }
+    $alphabet = explode(",", get_string('alphabet', 'langconfig'));
+    $letters_by_line = 26;
+    for ($i = 0; $i < count($alphabet); $i++) {
+        if ( $hook == $alphabet[$i] and $hook) {
+            echo html_writer::tag('span', $alphabet[$i], array('class'=>'pcast-bold'));
+        } else {
+            $strexplainspecial = strip_tags(get_string("explainspecial","pcast"));
+            $url = new moodle_url('/mod/pcast/view.php',
+                   array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>urlencode($alphabet[$i]), 'sortkey'=>$sortkey, 'sortorder'=>$sortorder));
+
+            echo html_writer::tag('a', $alphabet[$i], array('href'=>$url));
+        }
+        if ((int) ($i % $letters_by_line) != 0 or $i == 0) {
+            echo ' | ';
+        } else {
+            echo '<br />';
+        }
+    }
      
 }
 
