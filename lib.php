@@ -147,7 +147,7 @@ function pcast_add_instance($pcast) {
     // we need to use context now, so we need to make sure all needed info is already in db
     $context = get_context_instance(CONTEXT_MODULE, $cmid);
     if ($draftitemid) {
-        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast','logo', $pcast->image, array('subdirs'=>false));
+        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast','logo', 0, array('subdirs'=>false));
     }
 
 
@@ -201,7 +201,7 @@ function pcast_update_instance($pcast) {
     // we need to use context now, so we need to make sure all needed info is already in db
     $context = get_context_instance(CONTEXT_MODULE, $cmid);
     if ($draftitemid) {
-        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast','logo', $pcast->image, array('subdirs'=>false));
+        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast','logo', 0, array('subdirs'=>false));
     }
 
 
@@ -628,7 +628,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         return false;
     }
 
-    if ($filearea === 'episode' or $filearea === 'logo') {
+    if ($filearea === 'episode') {
         $episodeid = (int)array_shift($args);
 
         if (!$episode = $DB->get_record('pcast_episodes', array('id'=>$episodeid))) {
@@ -664,6 +664,23 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
 
         // finally send the file
         send_stored_file($file, 0, 0, $forcedownload); // download MUST be forced - security!
+
+    } elseif ($filearea === 'logo') {
+        
+
+        $relativepath = implode('/', $args);
+        $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $fullpath = "/$filecontext->id/mod_pcast/$filearea/$relativepath";
+
+        $fs = get_file_storage();
+        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+
+            return false;
+        }
+
+        // finally send the file
+        send_stored_file($file, 0, 0, $forcedownload); // download MUST be forced - security!
+
     }
 
     return false;

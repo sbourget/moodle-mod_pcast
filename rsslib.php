@@ -334,12 +334,12 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         $fs = get_file_storage();
         $image = new stdClass();
 
-        if ($files = $fs->get_area_files($context->id, 'mod_pcast','logo', $pcast->image, "timemodified", false)) {
+        if ($files = $fs->get_area_files($context->id, 'mod_pcast','logo', 0, "timemodified", false)) {
             foreach ($files as $file) {
                 $image->filename = $file->get_filename();
                 $image->type = $file->get_mimetype();
                 $image->size = $file->get_filesize();
-                $image->url = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/logo/'.$pcast->id.'/'.$image->filename);
+                $image->url = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/logo/0/'.$image->filename);
             }
         }
         //write image info
