@@ -36,6 +36,8 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         if ($userinfo) {
             $paths[] = new restore_path_element('pcast_episode', '/activity/pcast/episodes/episode');
             $paths[] = new restore_path_element('pcast_view', '/activity/pcast/episodes/episode/views/view');
+            $paths[] = new restore_path_element('pcast_rating', '/activity/pcast/episodes/episode/ratings/rating');
+
         }
 
         // Return the paths wrapped into standard activity structure
@@ -58,6 +60,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $newitemid = $DB->insert_record('pcast', $data);
         // immediately after inserting "activity" record, call this
         $this->apply_activity_instance($newitemid);
+        $this->set_mapping('pcast', $oldid, $newitemid);
     }
 
     protected function process_pcast_episode($data) {
@@ -71,7 +74,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
         $newitemid = $DB->insert_record('pcast_episodes', $data);
-        $this->set_mapping('pcast_episodes', $oldid, $newitemid);
+        $this->set_mapping('pcast_episode', $oldid, $newitemid);
     }
 
     protected function process_pcast_view($data) {
@@ -85,15 +88,39 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         //$data->lastview = $this->apply_date_offset($data->lastview);
 
         $newitemid = $DB->insert_record('pcast_views', $data);
-        // No need to save this mapping as far as nothing depend on it
-        // (child paths, file areas nor links decoder)
+        $this->set_mapping('pcast_views', $oldid, $newitemid);
     }
+
+        protected function process_pcast_rating($data) {
+        global $DB;
+
+        $data = (object)$data;
+        $oldid = $data->id;
+
+        // Cannot use ratings API, cause, it's missing the ability to specify times (modified/created)
+        $data->contextid = $this->task->get_contextid();
+        //$data->itemid    = $this->get_mappingid('pcast_episode', $oldid);
+        $data->itemid    = $this->get_new_parentid('pcast_episode');
+
+
+        if ($data->scaleid < 0) { // scale found, get mapping
+            $data->scaleid = -($this->get_mappingid('scale', abs($data->scaleid)));
+        }
+        $data->rating = $data->value;
+        $data->userid = $this->get_mappingid('user', $data->userid);
+        $data->timecreated = $this->apply_date_offset($data->timecreated);
+        $data->timemodified = $this->apply_date_offset($data->timemodified);
+
+        $newitemid = $DB->insert_record('rating', $data);
+
+    }
+
 
     protected function after_execute() {
         //TODO: Revisit this, Files do not restore properly!!!
         // Add pcast related files, no need to match by itemname (just internally handled context)
         $this->add_related_files('mod_pcast', 'intro', null);
-        $this->add_related_files('mod_pcast', 'logo', 'pcast');
+        $this->add_related_files('mod_pcast', 'logo', null);
 
         // Add pcast related files, matching by itemname (pcast_episode)
 
