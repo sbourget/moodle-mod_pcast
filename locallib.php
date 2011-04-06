@@ -319,7 +319,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
     switch ($sortorder) {
         case 'desc':
             $currentorder = $desc;
-            $neworder = '&amp;sortorder=asc';
+            $neworder = 'asc';
             $strchangeto = get_string('changeto', 'pcast', $asc);
             $icon = " <img src=\"".$OUTPUT->pix_url($sortorder, 'pcast')."\" class=\"icon\" alt=\"$strchangeto\" />";
 
@@ -327,7 +327,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
 
         case 'asc':
             $currentorder = $asc;
-            $neworder = '&amp;sortorder=desc';
+            $neworder = 'desc';
             $strchangeto = get_string('changeto', 'pcast', $desc);
             $icon = " <img src=\"".$OUTPUT->pix_url($sortorder, 'pcast')."\" class=\"icon\" alt=\"$strchangeto\" />";
 
@@ -340,7 +340,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
                 case PCAST_AUTHOR_FNAME:
                 case PCAST_AUTHOR_LNAME:                    
                     $strchangeto = get_string('changeto', 'pcast', $asc);
-                    $neworder = '&amp;sortorder=asc';
+                    $neworder = 'asc';
                     $icon = ' <img src="'.$OUTPUT->pix_url('asc', 'pcast').'" class="icon" alt="'.$strchangeto.'" />';
                     $currentorder = '';
                     break;
@@ -360,8 +360,12 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
         case PCAST_DATE_UPDATED:
 
             //URLs
-            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_UPDATED.$neworder));
+            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_UPDATED));
             $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_CREATED));
+
+            if ($neworder != '') {
+                $url1->param('sortorder', $neworder);
+            }
 
             //Hyperlinks
             $link1 = html_writer::tag('a', $strsortlastupdate.$icon , array('href'=>$url1, 'title'=>$strsortlastupdate.' '.$strchangeto));
@@ -380,7 +384,11 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
 
             //URLs
             $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_UPDATED));
-            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_CREATED.$neworder));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_CREATED));
+
+            if ($neworder != '') {
+                $url2->param('sortorder', $neworder);
+            }
 
             //Hyperlinks
             $link1 = html_writer::tag('a', $strsortlastupdate , array('href'=>$url1, 'title'=>$strsortlastupdate.' '.$asc));
@@ -399,7 +407,11 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
 
             //URLs
             $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_LNAME));
-            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME.$neworder));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME));
+
+            if ($neworder != '') {
+                $url2->param('sortorder', $neworder);
+            }
 
             //Hyperlinks
             $link1 = html_writer::tag('a', $strsortlname , array('href'=>$url1, 'title'=>$strsortlname.' '.$asc));
@@ -419,7 +431,11 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
 
             //URLs
             $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_LNAME));
-            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME.$neworder));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME));
+
+            if ($neworder != '') {
+                $url1->param('sortorder', $neworder);
+            }
 
             //Hyperlinks
             $link1 = html_writer::tag('a', $strsortlname.$icon , array('href'=>$url1, 'title'=>$strsortlname.' '.$strchangeto));

@@ -38,7 +38,7 @@ $id = optional_param('id', 0, PARAM_INT); // course_module ID.
 
 // COPIED FROM GLOSSARY
 $mode       = optional_param('mode', PCAST_STANDARD_VIEW, PARAM_ALPHANUM); // term entry cat date letter search author approval
-$hook       = optional_param('hook', '', PARAM_CLEAN);           // the term, entry, cat, etc... to look for based on mode
+$hook       = optional_param('hook', 'ALL', PARAM_CLEAN);           // the term, entry, cat, etc... to look for based on mode
 $sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);        // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
 $sortorder  = optional_param('sortorder', 'asc', PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
 $page       = optional_param('page', 0,PARAM_INT);               // Page to show (for paging purposes)
