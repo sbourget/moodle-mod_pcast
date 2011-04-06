@@ -1211,8 +1211,8 @@ function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
     if(!empty($filename)) {
 
             $out = html_writer::start_tag('div');
-            $out .= html_writer::tag('a', $path, array('href'=>$iconimage)); //Icon
-            $out .= html_writer::tag('a', $path, array('href'=>s($filename))); //File
+            $out .= html_writer::tag('a', $iconimage, array('href'=>$path)); //Icon
+            $out .= html_writer::tag('a', s($filename), array('href'=>$path)); //File
             $out .= html_writer::end_tag('div');
 
         //Add Media player if enabled
