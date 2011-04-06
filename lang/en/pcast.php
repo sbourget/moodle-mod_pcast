@@ -159,7 +159,8 @@ $string['current']='current sort {$a}';
 $string['sortby']='Sort by';
 
 $string['duration'] = 'Duration';
-$string['durationlength'] = '{$a->min} minutes {$a->sec} seconds';
+$string['durationlength'] = '{$a->hour} hours {$a->min} minutes {$a->sec} seconds';
+$string['durationlength2'] = '{$a->min} minutes {$a->sec} seconds';
 $string['totalviews'] = 'Total views';
 $string['totalcomments'] = 'Total comments';
 $string['totalratings'] = 'Total ratings';
