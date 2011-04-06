@@ -75,15 +75,16 @@ echo $OUTPUT->heading_with_help(get_string("viewpcast","pcast",$pcast->name), 'p
 /// Show the add entry button if allowed (usercan post + write or manage caps)
 if (((has_capability('mod/pcast:write', $context))and ($pcast->userscanpost)) or (has_capability('mod/pcast:manage', $context))) {
     $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id));
-    echo '<div class="pcast-addentry">';
-    echo '<form id="newentryform" method="get" action="'.$url.'">';
-    echo '<div class="singlebutton">';
-    echo '<input type="hidden" name="cmid" value="'.$cm->id.'" />';
-    echo '<input type="submit" value="'.get_string('addnewepisode', 'pcast').'" />';
-    echo '</div>';
-    echo '</form>';
-    echo '</div>'."\n";
-    echo '<br />';
+    $out = html_writer::start_tag('div',array('class'=>'pcast-addentry')). "\n";
+    $out .= html_writer::start_tag('form',array('id'=>'newentryform','method'=>'get', 'action'=>$url)). "\n";
+    $out .= html_writer::start_tag('div',array('class'=>'singlebutton')). "\n";
+    $out .= html_writer::empty_tag('input',array('type'=>'hidden','name'=>'cmid','value'=>$cm->id)). "\n";
+    $out .= html_writer::empty_tag('input',array('type'=>'submit','value'=>get_string('addnewepisode', 'pcast'))). "\n";
+    $out .= html_writer::end_tag('div'). "\n";
+    $out .= html_writer::end_tag('form'). "\n";
+    $out .= html_writer::end_tag('div'). "\n";
+    $out .= html_writer::empty_tag('br'). "\n";
+    echo $out;
 }
 
 // Print heading and tabs
@@ -129,13 +130,9 @@ if (has_capability('mod/pcast:approve', $context)) {
 
 $tabrows[] = $browserow;     // Always put these at the top
 
-
-echo'  <div class="pcastdisplay">';
+echo html_writer::start_tag('div',array('class'=>'pcastdisplay')). "\n";
 print_tabs($tabrows, $mode);
-
-echo'  <div class="entrybox">';
-echo '</div></div>';
-
+echo html_writer::end_tag('div'). "\n";
 
 if (!isset($category)) {
     $category = "";
@@ -194,13 +191,13 @@ switch ($mode) {
 
     break;
 }
-echo '<hr />';
+echo html_writer::empty_tag('hr'). "\n";
 
 //**************************************************************************
 
 // Print the main part of the page (The content)
-echo'<div id="pcast-view" class="generalbox"><div class="generalboxcontent">';
-
+echo html_writer::start_tag('div',array('id'=>'pcast-view','class'=>'generalbox')). "\n";
+echo html_writer::start_tag('div',array('class'=>'generalboxcontent')). "\n";
 /// Next print the list of episodes
 
 switch($mode) {
@@ -234,7 +231,8 @@ switch($mode) {
         pcast_display_standard_episodes($pcast, $cm, $hook, $sortkey, $sortorder);
         break;    }
 
-echo '</div></div>';
+echo html_writer::end_tag('div'). "\n";
+echo html_writer::end_tag('div'). "\n";
 
 
 // Finish the page
