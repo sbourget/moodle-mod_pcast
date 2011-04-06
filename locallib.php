@@ -82,9 +82,8 @@ function pcast_file_path_lookup ($filehash) {
  */
 function pcast_print_approval_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sortorder = '') {
 
-    //echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
     echo html_writer::tag('div', get_string("explainalphabet","pcast"), array('class'=>'pcastexplain'));
-    echo '<br />';
+    echo html_writer::empty_tag('br');
     
     pcast_print_special_links($cm, $pcast, $mode, $hook);
 
@@ -104,9 +103,8 @@ function pcast_print_approval_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sor
  */
 function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorder = '') {
 
-    // echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
     echo html_writer::tag('div', get_string("explainalphabet","pcast"), array('class'=>'pcastexplain'));
-    echo '<br />';
+    echo html_writer::empty_tag('br');
     
     pcast_print_special_links($cm, $pcast, $mode, $hook);
     pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
@@ -127,9 +125,8 @@ function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorde
  */
 function pcast_print_author_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sortorder = '') {
 
-    // echo '<div class="pcastexplain">' . get_string("explainalphabet","pcast") . '</div><br />';
     echo html_writer::tag('div', get_string("explainalphabet","pcast"), array('class'=>'pcastexplain'));
-    echo '<br />';
+    echo html_writer::empty_tag('br');
 
     if(empty($sortkey)) {
         $sortkey = PCAST_AUTHOR_LNAME;
@@ -290,7 +287,7 @@ global $CFG;
         if ((int) ($i % $letters_by_line) != 0 or $i == 0) {
             echo ' | ';
         } else {
-            echo '<br />';
+            echo html_writer::empty_tag('br');
         }
     }
      
@@ -302,6 +299,7 @@ global $CFG;
  * @param string $mode
  * @param string $sortkey
  * @param string $sortorder
+ * @todo convert to html_writer
  */
 function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $hook='') {
     global $CFG, $OUTPUT;
@@ -361,62 +359,79 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
     switch ($sortkey) {
         case PCAST_DATE_UPDATED:
 
-            $html = '<span class="accesshide">';
-            $html .= get_string('current', 'pcast', $strsortlastupdate .' ' . $currentorder).'</span>';
+            //URLs
+            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_UPDATED.$neworder));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_CREATED));
+
+            //Hyperlinks
+            $link1 = html_writer::tag('a', $strsortlastupdate.$icon , array('href'=>$url1, 'title'=>$strsortlastupdate.' '.$strchangeto));
+            $link2 = html_writer::tag('a', $strsortcreation , array('href'=>$url2, 'title'=>$strsortcreation.' '.$asc));
+
+            //Output
+            $html = html_writer::tag('span', get_string('current', 'pcast', $strsortlastupdate .' ' . $currentorder),
+                                             array('class'=>'accesshide'));
             $html .= $strsortby.$strsep;
-
-            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_UPDATED.$neworder;
-            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_CREATED;
-
-            $link1 = '<a title = "'.$strsortlastupdate.' '.$strchangeto.'" href = "'.$url1.'" >'.$strsortlastupdate.$icon.' </a>';
-            $link2 = '<a title = "'.$strsortcreation.' '.$asc.'" href = "'.$url2.'" >'.$strsortcreation.' </a>';
-            $html .= $link1 . ' |<span class="pcast-bold">' . $link2. '</span> ';
+            $html .= $link1 . ' | ';
+            $html .= html_writer::tag('span', $link2, array('class'=>'pcast-bold'));
 
             break;
 
         case PCAST_DATE_CREATED:
-            
-            $html = '<span class="accesshide">';
-            $html .= get_string('current', 'pcast', $strsortcreation .' ' . $currentorder).'</span>';
+
+            //URLs
+            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_UPDATED));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_CREATED.$neworder));
+
+            //Hyperlinks
+            $link1 = html_writer::tag('a', $strsortlastupdate , array('href'=>$url1, 'title'=>$strsortlastupdate.' '.$asc));
+            $link2 = html_writer::tag('a', $strsortcreation.$icon , array('href'=>$url2, 'title'=>$strsortcreation.' '.$strchangeto));
+
+            //Output
+            $html = html_writer::tag('span', get_string('current', 'pcast', $strsortcreation .' ' . $currentorder),
+                                             array('class'=>'accesshide'));
             $html .= $strsortby.$strsep;
-
-            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_UPDATED;
-            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_DATE_CREATED.$neworder;
-
-            $link1 = '<a title = "'.$strsortlastupdate.' '.$asc.'" href = "'.$url1.'" >'.$strsortlastupdate.' </a>';
-            $link2 = '<a title = "'.$strsortcreation.' '.$strchangeto.'" href = "'.$url2.'" >'.$strsortcreation.$icon.' </a>';
-            $html .= '<span class="pcast-bold">'. $link1 . '</span>  |' . $link2. '';
-
+            $html .= $link1 . ' | ';
+            $html .= html_writer::tag('span', $link2, array('class'=>'pcast-bold'));
+            
             break;
 
         case PCAST_AUTHOR_FNAME:
 
-            $html = '<span class="accesshide">';
-            $html .= get_string('current', 'pcast', $strsortlname .' ' . $currentorder).'</span>';
+            //URLs
+            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_LNAME));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME.$neworder));
+
+            //Hyperlinks
+            $link1 = html_writer::tag('a', $strsortlname , array('href'=>$url1, 'title'=>$strsortlname.' '.$asc));
+            $link2 = html_writer::tag('a', $strsortfname.$icon , array('href'=>$url2, 'title'=>$strsortfname.' '.$strchangeto));
+
+            //Output
+            $html = html_writer::tag('span', get_string('current', 'pcast', $strsortlname .' ' . $currentorder),
+                                             array('class'=>'accesshide'));
             $html .= $strsortby.$strsep;
-
-            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_LNAME;
-            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_FNAME.$neworder;
-
-            $link1 = '<a title = "'.$strsortlname.' '.$asc.'" href = "'.$url1.'" >'.$strsortlname.' </a>';
-            $link2 = '<a title = "'.$strsortfname.' '.$strchangeto.'" href = "'.$url2.'" >'.$strsortfname.$icon.' </a>';
-            $html .= '<span class="pcast-bold">'. $link1 . '</span>  |' . $link2. '';
-
+            $html .= $link1 . ' | ';
+            $html .= html_writer::tag('span', $link2, array('class'=>'pcast-bold'));
+            
 
             break;
 
         case PCAST_AUTHOR_LNAME:
 
-            $html = '<span class="accesshide">';
-            $html .= get_string('current', 'pcast', $strsortfname .' ' . $currentorder).'</span>';
+            //URLs
+            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_LNAME));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME.$neworder));
+
+            //Hyperlinks
+            $link1 = html_writer::tag('a', $strsortlname.$icon , array('href'=>$url1, 'title'=>$strsortlname.' '.$strchangeto));
+            $link2 = html_writer::tag('a', $strsortfname , array('href'=>$url2, 'title'=>$strsortfname.' '.$asc));
+
+            //Output
+            $html = html_writer::tag('span', get_string('current', 'pcast', $strsortfname .' ' . $currentorder),
+                                             array('class'=>'accesshide'));
             $html .= $strsortby.$strsep;
-
-            $url1 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_LNAME.$neworder;
-            $url2 = $CFG->wwwroot.'/mod/pcast/view.php?id='.$cm->id.'&amp;mode='.$mode.'&amp;hook='.$hook.'&amp;sortkey='.PCAST_AUTHOR_FNAME;
-
-            $link1 = '<a title = "'.$strsortlname.' '.$strchangeto.'" href = "'.$url1.'" >'.$strsortlname.$icon.' </a>';
-            $link2 = '<a title = "'.$strsortfname.' '.$asc.'" href = "'.$url2.'" >'.$strsortfname.' </a>';
-            $html .= ''. $link1 . '  |<span class="pcast-bold">' . $link2. '</span>';
+            $html .= $link1 . ' | ';
+            $html .= html_writer::tag('span', $link2, array('class'=>'pcast-bold'));
+            
             break;
             
         default:
@@ -426,7 +441,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
     }
 
     // Display the links
-    echo '<br />'. $html .'<br />';
+    echo html_writer::empty_tag('br'). $html . html_writer::empty_tag('br');
 
 }
 
@@ -762,10 +777,8 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
     $strsep = get_string('labelsep', 'langconfig');
-    $html = '<div class="no-overflow">';
-
-    $html .= '<div class="pcast-episode">'."\n";
-    $html .= ''."\n";
+    $html = html_writer::start_tag('div',array('class'=>'no-overflow')). "\n";
+    $html .= html_writer::start_tag('div',array('class'=>'pcast-episode')). "\n";
 
     $table = new html_table();
     //$table->set_classes('views');
@@ -820,25 +833,25 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
 
         // Edit Link
         $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id, 'id'=>$episode->id));
-        $link .= '<a href = "'.$url.'">'.get_string('edit').'</a>';
+        $link .= html_writer::tag('a', get_string('edit'), array('href'=>$url));
         $link .= ' | '."\n";
 
         // Delete link
         $url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$cm->id, 'episode'=>$episode->id, 'prevmode'=>0));
-        $link .= '<a href = "'.$url.'">'.get_string('delete').'</a>';
+        $link .= html_writer::tag('a', get_string('delete'), array('href'=>$url));
         $link .= ' | '."\n";
 
     }
         // View Link
         $url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id));
-        $link .= '<a href = "'.$url.'">'.get_string('view').'</a>';
+        $link .= html_writer::tag('a', get_string('view'), array('href'=>$url));
 
 
     // Approve Link
     if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
         $link .= ' | '."\n";
         $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW,'hook'=>$hook,'sesskey'=>sesskey()));
-        $link .= '<a href = "'.$url.'">'.get_string('approve').'</a>';
+        $link .= html_writer::tag('a', get_string('approve'), array('href'=>$url));
     }
 
     // Construct links
@@ -848,8 +861,8 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     
     echo $html;
     echo html_writer::table($table);
-    echo '</div>'."\n";
-    echo '</div>'."\n";
+    echo html_writer::end_tag('div') . "\n";
+    echo html_writer::end_tag('div') . "\n";
 
 }
 
@@ -860,8 +873,7 @@ function pcast_display_episode_full($episode, $cm, $course){
 
 
     $strsep = get_string('labelsep', 'langconfig');
-    $html = '<div class="pcast-episode">'."\n";
-    $html .= ''."\n";
+    $html = html_writer::start_tag('div',array('class'=>'pcast-episode')). "\n";
 
     $table = new html_table();
     //$table->set_classes('views');
@@ -956,12 +968,12 @@ function pcast_display_episode_full($episode, $cm, $course){
 
         // Edit Link
         $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id, 'id'=>$episode->id));
-        $manage .= '<a href = "'.$url.'">'.get_string('edit').'</a>';
+        $manage .= html_writer::tag('a', get_string('edit'), array('href'=>$url));
         $manage .= ' | '."\n";
 
         // Delete link
         $url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$cm->id, 'episode'=>$episode->id, 'prevmode'=>0));
-        $manage .= '<a href = "'.$url.'">'.get_string('delete').'</a>';
+        $manage .= html_writer::tag('a', get_string('delete'), array('href'=>$url));
 
     }
 
@@ -970,7 +982,7 @@ function pcast_display_episode_full($episode, $cm, $course){
     if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
 
         $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW,'hook'=>$hook,'sesskey'=>sesskey()));
-        $approve .= '<a href = "'.$url.'">'.get_string('approve').'</a>';
+        $approve .= html_writer::tag('a', get_string('approve'), array('href'=>$url));
     }
 
     // Construct links
@@ -983,7 +995,7 @@ function pcast_display_episode_full($episode, $cm, $course){
 
     echo $html;
     echo html_writer::table($table);
-    echo '</div>'."\n";
+    echo html_writer::end_tag('div') . "\n";
 
 }
 
@@ -1010,7 +1022,7 @@ function pcast_display_episode_views($episode){
             $linedata = array (fullname($user), userdate($view->lastview), $view->views);
             $table->data[] = $linedata;
         }
-        echo "<br />";
+        echo html_writer::empty_tag('br');
         echo html_writer::table($table);
     }
 }
@@ -1091,6 +1103,7 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
  * @param object $course
  * @param object $episode
  * @return bool
+ * @todo NOT USED
  */
 function  pcast_print_episode_ratings($course, $episode) {
     global $OUTPUT;
@@ -1198,8 +1211,8 @@ function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
     if(!empty($filename)) {
 
             $out = html_writer::start_tag('div');
-            $out .= '<a href="'.$path.'">'.$iconimage.'</a>'; // Icon
-            $out .= '<a href="'.$path.'">'.s($filename).'</a>'; // File
+            $out .= html_writer::tag('a', $path, array('href'=>$iconimage)); //Icon
+            $out .= html_writer::tag('a', $path, array('href'=>s($filename))); //File
             $out .= html_writer::end_tag('div');
 
         //Add Media player if enabled
@@ -1208,6 +1221,7 @@ function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
             $templink = $out;
             
         } else {
+            //Add nolink tags to prevent autolinking.
             $templink = html_writer::start_tag('div',array('class'=>'nolink'));
             $templink .= $out;
             $templink .= html_writer::end_tag('div');

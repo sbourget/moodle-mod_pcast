@@ -82,10 +82,12 @@ if ($course->format == 'weeks') {
 foreach ($pcasts as $pcast) {
     if (!$pcast->visible) {
         //Show dimmed if the mod is hidden
-        $link = '<a class="dimmed" href="view.php?id='.$pcast->coursemodule.'">'.format_string($pcast->name).'</a>';
+        $url = new moodle_url('/mod/pcast/view.php', array('id'=>$pcast->coursemodule));
+        $link = html_writer::tag('a', format_string($pcast->name) , array('href'=>$url, 'class'=>'dimmed'));
     } else {
         //Show normal if the mod is visible
-        $link = '<a href="view.php?id='.$pcast->coursemodule.'">'.format_string($pcast->name).'</a>';
+        $url = new moodle_url('/mod/pcast/view.php', array('id'=>$pcast->coursemodule));
+        $link = html_writer::tag('a', format_string($pcast->name) , array('href'=>$url));
     }
 
     if ($course->format == 'weeks' or $course->format == 'topics') {
