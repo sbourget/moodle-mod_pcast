@@ -43,10 +43,6 @@ if ($episode !== 0) {
 if ($hook !== '') {
     $url->param('hook', $hook);
 }
-$PAGE->set_url($url);
-
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
-$PAGE->set_context($context);
 
 $strpcast   = get_string("modulename", "pcast");
 $strglossaries = get_string("modulenameplural", "pcast");
@@ -64,6 +60,10 @@ if ($id) {
 }
 
 require_login($course->id, false, $cm);
+
+$PAGE->set_url($url);
+$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$PAGE->set_context($context);
 
 $manageentries = has_capability('mod/pcast:manage', $context);
 
