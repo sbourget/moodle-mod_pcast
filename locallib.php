@@ -299,7 +299,6 @@ global $CFG;
  * @param string $mode
  * @param string $sortkey
  * @param string $sortorder
- * @todo convert to html_writer
  */
 function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $hook='') {
     global $CFG, $OUTPUT;
