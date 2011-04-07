@@ -331,9 +331,16 @@ function pcast_user_complete($course, $user, $mod, $pcast) {
  * that has occurred in pcast activities and print it out.
  * Return true if there was output, or false is there was none.
  *
- * @return boolean
- * @todo Finish documenting this function
+ * @global object $CFG
+ * @global object $USER
+ * @global object $DB
+ * @global object $OUTPUT
+ * @param object $course
+ * @param bool $viewfullnames
+ * @param int $timestart
+ * @return bool 
  */
+
 function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
 
     // return false;  //  True if anything was printed, otherwise false
