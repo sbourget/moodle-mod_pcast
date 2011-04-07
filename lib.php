@@ -233,8 +233,6 @@ function pcast_delete_instance($id) {
 
     # Delete any dependent records here #
 
-    $DB->delete_records('pcast', array('id' => $pcast->id));
-
     // Delete Comments
     $episode_select = "SELECT id FROM {pcast_episodes} WHERE pcastid = ?";
     $DB->delete_records_select('comments', "contextid=? AND commentarea=? AND itemid IN ($episode_select)", array($id, 'pcast_episode', $context->id));
@@ -248,6 +246,16 @@ function pcast_delete_instance($id) {
     $ratingdeloptions = new stdClass();
     $ratingdeloptions->contextid = $context->id;
     $rm->delete_ratings($ratingdeloptions);
+
+    //Delete Views
+    $episode_select = "SELECT id FROM {pcast_episodes} WHERE pcastid = ?";
+    $DB->delete_records_select('pcast_views', "episodeid  IN ($episode_select)", array($pcast->id));
+
+    //Delete Episodes
+    $DB->delete_records('pcast_episodes', array('pcastid' => $pcast->id));
+
+    //Delete Podcast
+    $DB->delete_records('pcast', array('id' => $pcast->id));
 
 
     return true;
