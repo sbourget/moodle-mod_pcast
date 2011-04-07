@@ -461,22 +461,6 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
 
 }
 
-/**
- *
- * @param object $entry0
- * @param object $entry1
- * @return int [-1 | 0 | 1]
- */
-function pcast_sort_entries ( $entry0, $entry1 ) {
-
-    if ( moodle_strtolower(ltrim($entry0->concept)) < moodle_strtolower(ltrim($entry1->concept)) ) {
-        return -1;
-    } elseif ( moodle_strtolower(ltrim($entry0->concept)) > moodle_strtolower(ltrim($entry1->concept)) ) {
-        return 1;
-    } else {
-        return 0;
-    }
-}
 
 /**
  * Function to display Pcast episodes
@@ -485,14 +469,24 @@ function pcast_sort_entries ( $entry0, $entry1 ) {
  * @global object $USER
  * @param object $pcast
  * @param object $cm
+ * @param int $groupmode
  * @param string $hook
  * @param string $sortkey
  * @param string $sortorder
  * @return boolean
  */
 
-function pcast_display_standard_episodes($pcast, $cm, $hook='', $sortkey='', $sortorder='asc') {
+function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
     global $CFG, $DB, $USER;
+
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+    // Get the current group
+    if($groupmode > 0) {
+        $currentgroup = groups_get_activity_group($cm);
+    } else {
+        $currentgroup = 0;
+    }
 
     // Get the episodes for this pcast
     if(!empty($sortorder)) {
@@ -527,9 +521,13 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sortkey='', $so
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
     }
     
-    
+    //Get Group members
+    $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        pcast_display_episode_brief($episode, $cm);
+        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+            //Display this episode
+            pcast_display_episode_brief($episode, $cm);
+        }
     }
 
     return true;
@@ -541,9 +539,10 @@ function pcast_display_standard_episodes($pcast, $cm, $hook='', $sortkey='', $so
  * @global object $DB
  * @param object $pcast
  * @param object $cm
+ * @param int $groupmode
  * @param string $hook
  */
-function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEGORIES) {
+function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAST_SHOW_ALL_CATEGORIES) {
     global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
@@ -586,7 +585,7 @@ function pcast_display_category_episodes($pcast, $cm, $hook=PCAST_SHOW_ALL_CATEG
 }
 
 
-function pcast_display_date_episodes($pcast, $cm, $hook, $sortkey=PCAST_DATE_CREATED, $sortorder='desc') {
+function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey=PCAST_DATE_CREATED, $sortorder='desc') {
         global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
@@ -623,7 +622,7 @@ function pcast_display_date_episodes($pcast, $cm, $hook, $sortkey=PCAST_DATE_CRE
     }
 }
 
-function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sortorder='asc') {
+function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
         global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
@@ -684,7 +683,7 @@ function pcast_display_author_episodes($pcast, $cm, $hook='', $sortkey='', $sort
 }
 
 
-function pcast_display_approval_episodes($pcast, $cm, $hook='', $sortkey='', $sortorder='asc') {
+function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
     global $CFG, $DB, $USER;
 
     // Get the episodes for this pcast
