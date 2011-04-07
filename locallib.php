@@ -533,6 +533,41 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     return true;
 }
 
+function pcast_group_allowed_viewing($episode, $cm, $groupmode) {
+
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $currentgroup = 0;
+
+    // Get the current group info
+    if($groupmode > 0) {
+        $currentgroup = groups_get_activity_group($cm);
+    } else {
+        //No groups
+        return true;
+    }
+
+    // See if user can view all groups
+    if(has_capability('moodle/site:accessallgroups',$context)) {
+        return true;
+    }
+
+    //Get Group members
+    $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
+
+    //See if episode is created by a member of the group
+    if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+        //Member of the group
+        return true;
+
+    } else {
+        //Not a member
+        return false;
+    }
+
+    //Not able to view episode (should never get here)
+    return false;
+}
+
 /**
  * Function to display episodes by category
  * @global object $CFG

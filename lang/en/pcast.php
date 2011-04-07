@@ -118,7 +118,7 @@ $string['nopermissiontodelepisode']='Error: You do not have permission to delete
 $string['errcannotedit']='Error: you cannot edit this episode';
 $string['errorinvalidmode']='Error: you do not have access';
 $string['commentsnotenabled']='Error: Commenting is not enabled';
-$string['']='';
+$string['notingroup']='Error: You do not have access to episodes created by members of this group';
 
 //edit_form.php
 $string['name']='Title';

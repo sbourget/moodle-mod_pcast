@@ -72,6 +72,9 @@ if (!empty($episode->courseid)) {
     echo $OUTPUT->header();    // Needs to be something here to allow linking back to the whole pcast
 }
 
+if(!pcast_group_allowed_viewing($episode, $cm, groups_get_activity_groupmode($cm))) {
+    print_error('notingroup','pcast');
+}
 echo $OUTPUT->heading(get_string("viewthisepisode","pcast",$pcast->name));
 
 // Print the tabs
