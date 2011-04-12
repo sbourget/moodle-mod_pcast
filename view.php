@@ -60,6 +60,11 @@ require_capability('mod/pcast:view',$context);
 
 add_to_log($course->id, 'pcast', 'view', "view.php?id=$cm->id", $pcast->name, $cm->id);
 
+
+/// Mark as viewed
+$completion=new completion_info($course);
+$completion->set_module_viewed($cm);
+
 /// Print the page header
 
 $PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode'=>$mode));
@@ -246,7 +251,4 @@ echo html_writer::end_tag('div'). "\n";
 // Finish the page
 echo $OUTPUT->footer();
 
-/// Mark as viewed
-$completion=new completion_info($course);
-$completion->set_module_viewed($cm);
 
