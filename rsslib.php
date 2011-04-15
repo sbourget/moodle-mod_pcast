@@ -117,7 +117,7 @@ function pcast_rss_get_feed($context, $args) {
             $item->description = format_text($rec->episodesummary,'HTML',NULL,$pcast->course);
 
             if($pcast->userscancategorize) {
-                //TODO: This is very inefficient the SQL query should be re-written (this generates 2 DB queries per entry)
+                //TODO: This is very inefficient (this generates 2 DB queries per entry)
                 $category = pcast_rss_category_lookup($rec);
                 $item->topcategory = $category->top->name;
                 $item->nestedcategory = $category->nested->name;
@@ -255,6 +255,7 @@ function pcast_rss_author_lookup($userid) {
 }
 
 function pcast_rss_category_lookup($pcast) {
+    //TODO: $category should be redone to be more efficient.
     global $DB;
     $category = new stdClass();
     $category->top = $DB->get_record('pcast_itunes_categories', array("id"=>$pcast->topcategory), '*', true);

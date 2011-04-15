@@ -925,7 +925,6 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm, true));
     
     // Author
-    // TODO: Revisit this, Performance!
     // Only print author if allowed or has manage rights.
     if(((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
         $user = $DB->get_record("user", array("id" => $episode->user));
@@ -1054,12 +1053,10 @@ function pcast_display_episode_full($episode, $cm, $course){
 
 
     // Author
-    // TODO: Revisit this, Performance!
     // Only print author if allowed or has manage rights.
     if(((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
         $user = $DB->get_record("user", array("id" => $episode->user));
         $table->data[] = array (get_string("author","pcast"), fullname($user));
-//        $table->data[] = array (get_string("author","pcast"), $episode->lastname.', '. $episode->firstname);
     }
 
     // Created
