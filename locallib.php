@@ -1145,22 +1145,6 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
 
 }
 
-/**
- * @global object
- * @global object
- * @global object
- * @param object $course
- * @param object $episode
- * @return bool
- * @todo NOT USED
- */
-function  pcast_print_episode_ratings($course, $episode) {
-    global $OUTPUT;
-    pcast_debug_object($episode);
-    if( !empty($episode->rating) ){
-        echo $OUTPUT->render($episode->rating);
-    }
-}
 
 
 function pcast_get_episode_view_count($episode) {
