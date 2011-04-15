@@ -62,8 +62,8 @@ define("PCAST_EPISODE_VIEWS",302);
  * global as this file can be included inside a function scope. However, using the global variables
  * at the module level is not a recommended.
  */
-//global $pcast_GLOBAL_VARIABLE;
-//$pcast_QUESTION_OF = array('Life', 'Universe', 'Everything');
+//global $PCAST_GLOBAL_VARIABLE;
+//$PCAST_QUESTION_OF = array('Life', 'Universe', 'Everything');
 
 /**
  * Lists supported features
@@ -103,6 +103,8 @@ function pcast_supports($feature) {
  * of the new instance.
  *
  * @param object $pcast An object from the form in mod_form.php
+ * @global object $DB
+ * @global object $USER
  * @return int The id of the newly inserted pcast record
  */
 function pcast_add_instance($pcast) {
@@ -161,6 +163,8 @@ function pcast_add_instance($pcast) {
  * will update an existing instance with new data.
  *
  * @param object $pcast An object from the form in mod_form.php
+ * @global object $DB
+ * @global object $USER
  * @return boolean Success/Fail
  */
 function pcast_update_instance($pcast) {
@@ -214,6 +218,8 @@ function pcast_update_instance($pcast) {
  * and any data that depends on it.
  *
  * @param int $id Id of the module instance
+ * @global object $DB
+ * @global object $USER
  * @return boolean Success/Failure
  */
 function pcast_delete_instance($id) {
@@ -268,6 +274,7 @@ function pcast_delete_instance($id) {
  * $return->time = the time they did it
  * $return->info = a short text description
  *
+ * @global object $DB
  * @param object $course
  * @param object $user
  * @param object $mod
@@ -299,11 +306,12 @@ function pcast_user_outline($course, $user, $mod, $pcast) {
  * Print a detailed representation of what a user has done with
  * a given particular instance of this module, for user activity reports.
  *
- * @return boolean
+ * @global object $DB
+ * @global object $CFG
  * @param object $course
  * @param object $user
  * @param object $mod
- * @param object $ipodcast
+ * @param object $pcast
  * @return object $result
 
  */
@@ -448,7 +456,18 @@ function pcast_cron () {
  * @return mixed boolean/array of students
  */
 function pcast_get_participants($pcastid) {
-    return false;
+
+global $DB;
+
+//Get participants
+
+$participants = $DB->get_records_sql("SELECT DISTINCT u.id, u.id
+                                        FROM {user} u, {pcast_episodes} p
+                                       WHERE p.pcastid = ? AND u.id = p.userid", array($pcastid));
+
+//Return participants array (it contains an array of unique users)
+
+return $participants;
 }
 
 /**
