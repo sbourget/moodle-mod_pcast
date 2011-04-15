@@ -30,7 +30,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Function to get information from MP3 files
+ * Function to get information from media files
  * used for <itunes::duration>
  * @global object $CFG
  * @param string $filename
@@ -38,7 +38,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 
 
-function pcast_get_mp3_information($filename) {
+function pcast_get_media_information($filename) {
     global $CFG;
     include_once $CFG->dirroot.'/mod/pcast/lib/getid3/getid3/getid3.php';
 
@@ -73,6 +73,7 @@ function pcast_file_path_lookup ($filehash) {
 }
 
 /**
+ * Prints the approval menu
  * @param object $cm
  * @param object $pcast
  * @param string $mode
@@ -95,6 +96,7 @@ function pcast_print_approval_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sor
 }
 
 /**
+ * Prints the alphabet menu
  * @param object $cm
  * @param object $pcast
  * @param string $hook
@@ -112,13 +114,24 @@ function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey='', $sort
 
 }
 
+/**
+ * Prints the date menu
+ * @param object $cm
+ * @param object $pcast
+ * @param string $mode
+ * @param string $hook
+ * @param string $sortkey
+ * @param string $sortorder
+ */
 function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorder = '') {
     pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder, $hook);
 }
 
 /**
+ * Prints the author menu link
  * @param object $cm
  * @param object $pcast
+ * @param string mode
  * @param string $hook
  * @param string $sortkey
  * @param string $sortorder
@@ -140,12 +153,15 @@ function pcast_print_author_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sorto
 }
 
 /**
+ * Prints the category menu
  * @global object
  * @global object
  * @param object $cm
  * @param object $pcast
  * @param string $hook
  * @param object $category
+ * @todo This should use html_writer::tag()
+ * @todo These styles should not be hard coded
  */
 function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIES) {
      global $CFG, $DB, $OUTPUT;
@@ -217,7 +233,8 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
 }
 
 /**
- * @global object
+ * Prints the link to display all episodes.
+ * @global object $CFG
  * @param object $cm
  * @param object $pcast
  * @param string $mode
@@ -238,7 +255,8 @@ function pcast_print_all_links($cm, $pcast, $mode, $hook) {
 }
 
 /**
- * @global object
+ * Prints the symbols links used to sort the episodes.
+ * @global object $CFG
  * @param object $cm
  * @param object $pcast
  * @param string $mode
@@ -262,7 +280,8 @@ function pcast_print_special_links($cm, $pcast, $mode, $hook) {
 }
 
 /**
- * @global object
+ * Prints the individual letter links used to sort the episodes.
+ * @global object $CFG
  * @param object $pcast
  * @param string $mode
  * @param string $hook
@@ -294,7 +313,9 @@ global $CFG;
 }
 
 /**
- * @global object
+ * Prints the sort by ASC / DSC links on the view page.
+ * @global object $CFG
+ * @global object $OUTPUT
  * @param object $cm
  * @param string $mode
  * @param string $sortkey
@@ -532,6 +553,13 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     return true;
 }
 
+/**
+ * Determine if the user is able to view the specified episode.
+ * @param object $episode
+ * @param object $cm
+ * @param int $groupmode
+ * @return bool (true if allowed, false if denied)
+ */
 function pcast_group_allowed_viewing($episode, $cm, $groupmode) {
 
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
@@ -571,6 +599,7 @@ function pcast_group_allowed_viewing($episode, $cm, $groupmode) {
  * Function to display episodes by category
  * @global object $CFG
  * @global object $DB
+ * @global object $USER
  * @param object $pcast
  * @param object $cm
  * @param int $groupmode
@@ -618,7 +647,18 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAS
     }
 }
 
-
+/**
+ * Display all episodes that sorted by date
+ * @global object $CFG
+ * @global object $DB
+ * @global object $USER
+ * @param object $pcast
+ * @param object $cm
+ * @param int $groupmode
+ * @param string $hook
+ * @param string $sortkey
+ * @param string $sortorder
+ */
 function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey=PCAST_DATE_CREATED, $sortorder='desc') {
         global $CFG, $DB, $USER;
 
@@ -656,6 +696,18 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sor
     }
 }
 
+/**
+ * Display all episodes that sorted by author
+ * @global object $CFG
+ * @global object $DB
+ * @global object $USER
+ * @param object $pcast
+ * @param object $cm
+ * @param int $groupmode
+ * @param string $hook
+ * @param string $sortkey
+ * @param string $sortorder
+ */
 function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
         global $CFG, $DB, $USER;
 
@@ -716,7 +768,18 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
     }
 }
 
-
+/**
+ * Display all episodes that have not yet been approved
+ * @global object $CFG
+ * @global object $DB
+ * @global object $USER
+ * @param object $pcast
+ * @param object $cm
+ * @param int $groupmode
+ * @param string $hook
+ * @param string $sortkey
+ * @param string $sortorder
+ */
 function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
     global $CFG, $DB, $USER;
 
@@ -760,10 +823,12 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
         pcast_display_episode_brief($episode, $cm, $hook);
     }
 
-    return true;
 }
 
-
+/**
+ * Generates the SQL needed to get all episodes belonging to a specific pcast.
+ * @return string
+ */
 function pcast_get_episode_sql() {
        $sql = "SELECT p.id AS id,
                 p.pcastid AS pcastid,
@@ -915,6 +980,15 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
 
 }
 
+/**
+ * Display the full pcast episode
+ * @global object $CFG
+ * @global object $DB
+ * @global object $USER
+ * @param object $episode
+ * @param object $cm
+ * @param object $course
+ */
 function pcast_display_episode_full($episode, $cm, $course){
     global $CFG, $DB, $USER;
 
@@ -1048,6 +1122,11 @@ function pcast_display_episode_full($episode, $cm, $course){
 
 }
 
+/**
+ * Displays all views for a single episode
+ * @global object $DB
+ * @param object $episode
+ */
 function pcast_display_episode_views($episode){
 
     global $DB;
@@ -1076,6 +1155,13 @@ function pcast_display_episode_views($episode){
     }
 }
 
+/**
+ * Displays all comments for a single episode
+ * @global object $CFG
+ * @param object $episode
+ * @param object $cm
+ * @param object $course
+ */
 function pcast_display_episode_comments($episode, $cm, $course) {
 
     global $CFG;
@@ -1107,6 +1193,16 @@ function pcast_display_episode_comments($episode, $cm, $course) {
 
 }
 
+/**
+ * Displays the ratingsfor a specific episode
+ * @global object $CFG
+ * @global object $USER
+ * @global object $DB
+ * @global object $OUTPUT
+ * @param object $episode
+ * @param object $cm
+ * @param object $course
+ */
 function pcast_display_episode_ratings($episode, $cm, $course) {
 
     global $CFG, $USER, $DB, $OUTPUT;
@@ -1146,7 +1242,12 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
 }
 
 
-
+/**
+ * Get the total number of views for a specific episode
+ * @global object $DB
+ * @param object $episode
+ * @return string
+ */
 function pcast_get_episode_view_count($episode) {
     global $DB;
     $count = 0;
@@ -1200,6 +1301,11 @@ function pcast_get_episode_rating_count($episode, $cm) {
     }
 }
 
+/**
+ * Function used for debugging only (Should not be used elseware)
+ * @param object $object
+ * @param string $color
+ */
 function pcast_debug_object($object, $color='red') {
     echo '<pre><font color="'.$color.'">';
     print_r($object);

@@ -168,8 +168,8 @@ if ($mform->is_cancelled()){
             if($mime == 'audio/mp3') {
                 //$mp3info=pcast_get_mp3_info(pcast_file_path_lookup ($hash));
                 // $episode->duration = $mp3info->length;
-                $mp3info=pcast_get_mp3_information(pcast_file_path_lookup ($hash));;
-                $episode->duration = $mp3info['playtime_string'];
+                $mediainfo=pcast_get_media_information(pcast_file_path_lookup ($hash));;
+                $episode->duration = $mediainfo['playtime_string'];
                 
             }
         }
