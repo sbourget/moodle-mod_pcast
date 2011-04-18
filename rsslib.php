@@ -75,8 +75,19 @@ function pcast_rss_get_feed($context, $args) {
 
     $sql = pcast_rss_get_sql($pcast);
 
+    //Sort out groups
+    $groupmode = groups_get_activity_groupmode($cm);
+    if($groupmode > 0) {
+        $currentgroup = groups_get_activity_group($cm);
+    } else {
+        $currentgroup = 0;
+    }
+
     //get the cache file info
     $filename = rss_get_file_name($pcast, $sql);
+
+    //Append the GroupID to the end of the dilename
+    $filename .= '_'.$currentgroup;
     $cachedfilepath = rss_get_file_full_name('mod_pcast', $filename);
 
     //Is the cache out of date?
@@ -101,6 +112,7 @@ function pcast_rss_get_feed($context, $args) {
             $item->title = $rec->episodename;
             $item->pcastid = $rec->pcastid;
             $item->id = $rec->episodeid;
+            $item->userid = $rec->userid;
 
             if ($pcast->displayauthor == 1) {//With author
                 $user->firstname = $rec->userfirstname;
@@ -138,7 +150,7 @@ function pcast_rss_get_feed($context, $args) {
 
         //Now all the rss items
         if (!empty($header)) {
-            $episodes = pcast_rss_add_items($items, $itunes);
+            $episodes = pcast_rss_add_items($context, $items, $itunes, $currentgroup);
         }
         //Now all rss feeds common footers
         if (!empty($header) && !empty($episodes)) {
@@ -413,53 +425,58 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
 //item->pubdate: The pubdate of the item
 //item->link: The link url of the item
 //item->description: The content of the item
-function pcast_rss_add_items($items, $itunes=false) {
+function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) {
 
     global $CFG;
 
     $result = '';
 
+    //Get Group members
+    $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
+
     if (!empty($items)) {
         foreach ($items as $item) {
-            $result .= rss_start_tag('item',2,true);
-            //Include the category if exists (some rss readers will use it to group items)
-            if (isset($item->topcategory)) {
-                $result .= rss_full_tag('category',3,false,$item->topcategory);
-            }
-            if (isset($item->nestedcategory) && $itunes) {
-                $result .= rss_full_tag('category',3,false,$item->nestedcategory);
-            }
+            if(isset($members[$item->userid]->id) and ($members[$item->userid]->id == $item->userid)){
+                $result .= rss_start_tag('item',2,true);
+                //Include the category if exists (some rss readers will use it to group items)
+                if (isset($item->topcategory)) {
+                    $result .= rss_full_tag('category',3,false,$item->topcategory);
+                }
+                if (isset($item->nestedcategory) && $itunes) {
+                    $result .= rss_full_tag('category',3,false,$item->nestedcategory);
+                }
 
-            $result .= rss_full_tag('title',3,false,strip_tags($item->title));
-            $result .= rss_full_tag('link',3,false,$item->link);
-            $result .= rss_full_tag('pubDate',3,false,gmdate('D, d M Y H:i:s',$item->pubdate).' GMT');  # MDL-12563
-            $result .= rss_full_tag('description',3,false,$item->description);
-            $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
-            
-            //Include the author if exists
-            if (isset($item->author)) {
-                $result .= rss_full_tag('author',3,false,$item->author);
-            }
-            $result .= rss_start_tag(pcast_rss_add_enclosure($item),3,true);
+                $result .= rss_full_tag('title',3,false,strip_tags($item->title));
+                $result .= rss_full_tag('link',3,false,$item->link);
+                $result .= rss_full_tag('pubDate',3,false,gmdate('D, d M Y H:i:s',$item->pubdate).' GMT');  # MDL-12563
+                $result .= rss_full_tag('description',3,false,$item->description);
+                $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
 
-            // Add iTunes tags
-            if($itunes) {
+                //Include the author if exists
                 if (isset($item->author)) {
-                    $result .= rss_full_tag('itunes:author',3,false,$item->author);
+                    $result .= rss_full_tag('author',3,false,$item->author);
                 }
-                if (isset($item->subtitle)) {
-                    $result .= rss_full_tag('itunes:subtitle',3,false,$item->subtitle);
+                $result .= rss_start_tag(pcast_rss_add_enclosure($item),3,true);
+
+                // Add iTunes tags
+                if($itunes) {
+                    if (isset($item->author)) {
+                        $result .= rss_full_tag('itunes:author',3,false,$item->author);
+                    }
+                    if (isset($item->subtitle)) {
+                        $result .= rss_full_tag('itunes:subtitle',3,false,$item->subtitle);
+                    }
+                    if (isset($item->duration)) {
+                        $result .= rss_full_tag('itunes:duration',3,false,$item->duration);
+                    }
+                    if (isset($item->keywords)) {
+                        $result .= rss_full_tag('itunes:keywords',3,false,$item->keywords);
+                    }
                 }
-                if (isset($item->duration)) {
-                    $result .= rss_full_tag('itunes:duration',3,false,$item->duration);
-                }
-                if (isset($item->keywords)) {
-                    $result .= rss_full_tag('itunes:keywords',3,false,$item->keywords);
-                }
+
+                $result .= rss_end_tag('item',2,true);
+
             }
-
-            $result .= rss_end_tag('item',2,true);
-
         }
     } else {
         $result = false;
