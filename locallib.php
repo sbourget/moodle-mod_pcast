@@ -215,12 +215,13 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
         if($category->nestedcategory == 0) {
             echo $menu[(int)$hook];
         } else {
-            //Todo: convert to lang file later
+            //TODO: convert to lang file later
             echo $menu[(int)$category->topcategory*1000].': '.$menu[(int)$hook];
         }
     }
      
      echo '</b></td>';
+     //TODO: should not be hard coded
      echo '<td align="center" style="width:20%">';
 
      $select = new single_select(new moodle_url("/mod/pcast/view.php", array('id'=>$cm->id, 'mode'=>PCAST_CATEGORY_VIEW)), 'hook', $menu, $hook, null, "catmenu");
@@ -545,7 +546,10 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
         if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
-            //Display this episode
+            //Display this episode (User is in the group)
+            pcast_display_episode_brief($episode, $cm);
+        } else if ($currentgroup == 0) {
+            //Display this episode (NO GROUPS USED)
             pcast_display_episode_brief($episode, $cm);
         }
     }
