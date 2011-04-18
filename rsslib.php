@@ -365,8 +365,8 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
             }
             
             $result .= rss_full_tag('itunes:subtitle', 2, false, s($pcast->subtitle));
-            // TODO: Implement summary from episode description?
-            // $result .= rss_full_tag('itunes:summary', 2, false, s($pcast->summary));
+            //Implement summary from pcast intro
+            $result .= rss_full_tag('itunes:summary', 2, false, s($pcast->intro));
             $result .= rss_full_tag('itunes:keywords', 2, false, s($pcast->keywords));
 
             if(isset($author)) {
