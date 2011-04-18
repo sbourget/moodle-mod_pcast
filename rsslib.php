@@ -86,7 +86,7 @@ function pcast_rss_get_feed($context, $args) {
     //get the cache file info
     $filename = rss_get_file_name($pcast, $sql);
 
-    //Append the GroupID to the end of the dilename
+    //Append the GroupID to the end of the filename
     $filename .= '_'.$currentgroup;
     $cachedfilepath = rss_get_file_full_name('mod_pcast', $filename);
 
