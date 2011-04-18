@@ -440,7 +440,6 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
  * as sending out mail, toggling flags etc ...
  *
  * @return boolean
- * @todo Finish documenting this function
  **/
 function pcast_cron () {
     return true;
@@ -477,19 +476,20 @@ return $participants;
  * as reference.
  *
  * @param int $pcastid ID of an instance of this module
+ * @param int $scaleid
+ * @global $DB
  * @return mixed
- * @todo Finish documenting this function
  */
 function pcast_scale_used($pcastid, $scaleid) {
     global $DB;
 
     $return = false;
 
-    //$rec = $DB->get_record("pcast", array("id" => "$pcastid", "scale" => "-$scaleid"));
-    //
-    //if (!empty($rec) && !empty($scaleid)) {
-    //    $return = true;
-    //}
+    $rec = $DB->get_record("pcast", array("id" => "$pcastid", "scale" => "-$scaleid"));
+    
+    if (!empty($rec) && !empty($scaleid)) {
+        $return = true;
+    }
 
     return $return;
 }
