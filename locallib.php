@@ -612,6 +612,15 @@ function pcast_group_allowed_viewing($episode, $cm, $groupmode) {
 function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAST_SHOW_ALL_CATEGORIES) {
     global $CFG, $DB, $USER;
 
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+    // Get the current group
+    if($groupmode > 0) {
+        $currentgroup = groups_get_activity_group($cm);
+    } else {
+        $currentgroup = 0;
+    }
+
     // Get the episodes for this pcast
     $sql = pcast_get_episode_sql();
     $sql .=    " WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
@@ -645,9 +654,16 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAS
 
     }
 
-    // Print the episodes
+    //Get Group members
+    $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        pcast_display_episode_brief($episode, $cm);
+        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+            //Display this episode (User is in the group)
+            pcast_display_episode_brief($episode, $cm);
+        } else if ($currentgroup == 0) {
+            //Display this episode (NO GROUPS USED)
+            pcast_display_episode_brief($episode, $cm);
+        }
     }
 }
 
@@ -664,7 +680,16 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAS
  * @param string $sortorder
  */
 function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey=PCAST_DATE_CREATED, $sortorder='desc') {
-        global $CFG, $DB, $USER;
+    global $CFG, $DB, $USER;
+
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+    // Get the current group
+    if($groupmode > 0) {
+        $currentgroup = groups_get_activity_group($cm);
+    } else {
+        $currentgroup = 0;
+    }
 
     // Get the episodes for this pcast
    $sql = pcast_get_episode_sql();
@@ -694,9 +719,16 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sor
 
     $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
 
-    // Print the episodes
+    //Get Group members
+    $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        pcast_display_episode_brief($episode, $cm);
+        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+            //Display this episode (User is in the group)
+            pcast_display_episode_brief($episode, $cm);
+        } else if ($currentgroup == 0) {
+            //Display this episode (NO GROUPS USED)
+            pcast_display_episode_brief($episode, $cm);
+        }
     }
 }
 
@@ -713,7 +745,17 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sor
  * @param string $sortorder
  */
 function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
-        global $CFG, $DB, $USER;
+    global $CFG, $DB, $USER;
+
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+    // Get the current group
+    if($groupmode > 0) {
+        $currentgroup = groups_get_activity_group($cm);
+    } else {
+        $currentgroup = 0;
+    }
+
 
     // Get the episodes for this pcast
    $sql = pcast_get_episode_sql();
@@ -766,9 +808,16 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
             break;
     }
 
-    // Print the episodes
+    //Get Group members
+    $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        pcast_display_episode_brief($episode, $cm);
+        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+            //Display this episode (User is in the group)
+            pcast_display_episode_brief($episode, $cm);
+        } else if ($currentgroup == 0) {
+            //Display this episode (NO GROUPS USED)
+            pcast_display_episode_brief($episode, $cm);
+        }
     }
 }
 
@@ -786,6 +835,16 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
  */
 function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
     global $CFG, $DB, $USER;
+
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+    // Get the current group
+    if($groupmode > 0) {
+        $currentgroup = groups_get_activity_group($cm);
+    } else {
+        $currentgroup = 0;
+    }
+
 
     // Get the episodes for this pcast
     $sql = pcast_get_episode_sql();
@@ -823,8 +882,16 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     }
 
 
+    //Get Group members
+    $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        pcast_display_episode_brief($episode, $cm, $hook);
+        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+            //Display this episode (User is in the group)
+            pcast_display_episode_brief($episode, $cm);
+        } else if ($currentgroup == 0) {
+            //Display this episode (NO GROUPS USED)
+            pcast_display_episode_brief($episode, $cm);
+        }
     }
 
 }
