@@ -583,6 +583,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
 
     $mode = optional_param('mode', '', PARAM_ALPHA);
     $hook = optional_param('hook', 'ALL', PARAM_CLEAN);
+    $group = optional_param('group', '', PARAM_ALPHANUM);
 
     if (has_capability('mod/pcast:approve', $PAGE->cm->context) && ($hiddenentries = $DB->count_records('pcast_episodes', array('pcastid'=>$PAGE->cm->instance, 'approved'=>0)))) {
         $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$PAGE->cm->id, 'mode'=>PCAST_APPROVAL_VIEW)));
@@ -600,7 +601,22 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
 
         $string = get_string('rsslink','pcast');
 
-        $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $pcast->id));
+        //Sort out groups
+        if(is_numeric($group)) {
+            $currentgroup = $group;
+            
+        } else {
+            $groupmode = groups_get_activity_groupmode($PAGE->cm);
+            if($groupmode > 0) {
+                $currentgroup = groups_get_activity_group($PAGE->cm);
+            } else {
+                $currentgroup = 0;
+            }
+            
+        }
+        $args = $pcast->id . '/'.$USER->id.'/'.$currentgroup;
+
+        $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args));
         $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
 
         /*

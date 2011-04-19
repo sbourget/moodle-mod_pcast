@@ -46,6 +46,8 @@ function pcast_rss_get_feed($context, $args) {
 
     $status = true;
     $pcastid  = clean_param($args[3], PARAM_INT);
+    $userid   = clean_param($args[4], PARAM_INT);
+    $groupid  = clean_param($args[5], PARAM_INT);
     $uservalidated = false;
 
     //check capabilities
@@ -57,6 +59,34 @@ function pcast_rss_get_feed($context, $args) {
         if ($context->id==$modcontext->id && has_capability('mod/pcast:view', $modcontext)) {
             $uservalidated = true;
         }
+    }
+
+
+
+    //Check group mode 0/1/2 (All participants)
+    $groupmode = groups_get_activity_groupmode($cm);
+
+    //Using Groups, check to see if user should see all participants
+    if ($groupmode == SEPARATEGROUPS) {
+        //User must have the capability to see all groups or be a member of that group
+        $members = get_enrolled_users($context, 'mod/pcast:write', $groupid, 'u.id', 'u.id ASC');
+        
+        // Is a member of the current group
+        if(!isset($members[$userid]->id) or ($members[$userid]->id != $userid)){
+
+            // Not a member of the group, can you see all groups (from CAPS)
+            if(!has_capability('moodle/site:accessallgroups', $context, $userid)) {
+                $uservalidated = false;
+            }
+
+        } else {
+            // Are a member of the current group
+            // Is the group #0 (Group 0 is all users)
+            if($groupid == 0 and !has_capability('moodle/site:accessallgroups', $context, $userid)){
+                $uservalidated = false;
+            }
+        }
+        
     }
 
     if (!$uservalidated) {
@@ -75,19 +105,12 @@ function pcast_rss_get_feed($context, $args) {
 
     $sql = pcast_rss_get_sql($pcast);
 
-    //Sort out groups
-    $groupmode = groups_get_activity_groupmode($cm);
-    if($groupmode > 0) {
-        $currentgroup = groups_get_activity_group($cm);
-    } else {
-        $currentgroup = 0;
-    }
 
     //get the cache file info
     $filename = rss_get_file_name($pcast, $sql);
 
     //Append the GroupID to the end of the filename
-    $filename .= '_'.$currentgroup;
+    $filename .= '_'.$groupid;
     $cachedfilepath = rss_get_file_full_name('mod_pcast', $filename);
 
     //Is the cache out of date?
