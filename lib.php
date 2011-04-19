@@ -915,7 +915,6 @@ function pcast_reset_userdata($data) {
     else if (!empty($data->reset_pcast_notenrolled)) {
 
         $course_context = get_context_instance(CONTEXT_COURSE, $data->courseid);
-        
         // Get list of enrolled users
         $people = get_enrolled_users($course_context);
         $list ='';
@@ -951,11 +950,10 @@ function pcast_reset_userdata($data) {
             }
         }
 
-        //TODO: FIX ME!
-//        // remove all grades from gradebook
-//        if (empty($data->reset_gradebook_grades)) {
-//            pcast_reset_gradebook($data->courseid);
-//        }
+        // remove all grades from gradebook
+        if (empty($data->reset_gradebook_grades)) {
+            pcast_reset_gradebook($data->courseid);
+        }
 
         $status[] = array('component'=>$componentstr, 'item'=>get_string('deletenotenrolled', 'pcast'), 'error'=>false);
 
@@ -1070,6 +1068,8 @@ function pcast_rating_permissions($options) {
     }
 }
 
+
+// Gradebook functions (Based on mod_glossary) Not sure how these are called
 
 /**
  * Update activity grades
