@@ -45,9 +45,9 @@ function pcast_rss_get_feed($context, $args) {
     }
 
     $status = true;
+    $token  = clean_param($args[1], PARAM_ALPHANUM);
     $pcastid  = clean_param($args[3], PARAM_INT);
-    $userid   = clean_param($args[4], PARAM_INT);
-    $groupid  = clean_param($args[5], PARAM_INT);
+    $groupid  = clean_param($args[4], PARAM_INT);
     $uservalidated = false;
 
     //check capabilities
@@ -61,7 +61,9 @@ function pcast_rss_get_feed($context, $args) {
         }
     }
 
-
+    //get userid from Token
+    $userid = rss_get_userid_from_token($token);
+    die($userid);
 
     //Check group mode 0/1/2 (All participants)
     $groupmode = groups_get_activity_groupmode($cm);
