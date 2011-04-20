@@ -203,3 +203,6 @@ $string['viewthisepisode']='Viewing an episode from: {$a}';
 $string['resetpcastsall']='Delete episodes from all podcasts';
 $string['deletenotenrolled']='Delete episodes by users not enrolled';
 $string['deleteallviews']='Delete episode view history';
+
+
+$string['pcastlink'] = 'Subscribe in iTunes';

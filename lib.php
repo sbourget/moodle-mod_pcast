@@ -614,19 +614,20 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
             }
             
         }
-        $args = $pcast->id . '/'.$USER->id.'/'.$currentgroup;
+        $args = $pcast->id . '/'.$currentgroup;
 
         $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args));
         $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
 
-        /*
+        
         if (!empty($CFG->pcast_enablerssitunes)) {
             $string = get_string('pcastlink','pcast');
-            $url = new moodle_url(pcast_rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $pcast->id));
+            require_once("$CFG->dirroot/mod/pcast/rsslib.php");
+            $url = pcast_rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args);
             $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
 
         }
-         */
+         
     }
 }
 

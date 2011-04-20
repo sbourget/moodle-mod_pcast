@@ -552,3 +552,105 @@ function pcast_rss_footer($title = NULL, $link = NULL, $description = NULL) {
 
     return $result;
 }
+
+
+
+
+/**
+ * This function returns the URL for the RSS XML file.
+ *
+ * @global object
+ * @param int contextid the course id
+ * @param int userid the current user id
+ * @param string modulename the name of the current module. For example "forum"
+ * @param string $additionalargs For modules, module instance id
+ */
+function pcast_rss_get_url($contextid, $userid, $componentname, $additionalargs) {
+    global $CFG, $USER, $PAGE;
+    require_once($CFG->libdir.'/rsslib.php');
+    $usertoken = rss_get_token($userid);
+    $args = '/'.$contextid.'/'.$usertoken.'/'.$componentname.'/'.$additionalargs.'/rss.pcast';
+    $url = new moodle_url('/mod/pcast/subscribe.php'.$args);
+    return $url;
+
+}
+
+
+/**
+ * Generates the file path to the .pcast file
+ * @global object $CFG
+ * @param string $componentname
+ * @param string $filename
+ * @return string URL
+ */
+function pcast_rss_get_file_full_name($componentname, $filename) {
+    global $CFG;
+    return "$CFG->dataroot/cache/rss/$componentname/$filename.pcast";
+}
+
+/**
+ * Builds the .pcast file with the users RSS token
+ * @param object $pcast
+ * @param string $url
+ * @return string
+ */
+function pcast_build_pcast_file($pcast, $url) {
+
+    //xml headers
+    $result = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    $result .= "<!DOCTYPE pcast PUBLIC \"-//Apple Computer//DTD PCAST 1.0//EN\" \"http://www.itunes.com/DTDs/pcast-1.0.dtd\">\n";
+    $result .= rss_start_tag('pcast version="1.0"', 1, true);
+    $result .= rss_start_tag('channel', 1, true);
+    $result .= rss_start_tag('link rel="feed" type="application/rss+xml" href="'.$url.'" /',2,true);
+    $result .= rss_full_tag('title',2,false,$pcast->name);
+
+    $category = pcast_rss_category_lookup($pcast);
+    if(isset($category->top->name) && !empty($category->top->name)) {
+        $result .= rss_full_tag('category',2,false,$category->top->name);
+    }
+    if(isset($category->nested->name) && !empty($category->nested->name)) {
+        $result .= rss_full_tag('category',2,false,$category->nested->name);
+    }
+    if(isset($pcast->subtitle) && !empty($category->subtitle)) {
+        $result .= rss_full_tag('subtitle',2,false,$pcast->subtitle);
+    }
+    $result .= rss_end_tag('channel', 1, true);
+    $result .= rss_end_tag('pcast', 1, true);
+
+    return $result;
+}
+
+/**
+ * This function saves to file the rss feed specified in the parameters
+ *
+ * @global object
+ * @param string $componentname the module name ie forum. Used to create a cache directory.
+ * @param string $filename the name of the file to be created ie "1234"
+ * @param string $contents the data to be written to the file
+ */
+function pcast_rss_save_file($componentname, $filename, $contents, $expandfilename=true) {
+    global $CFG;
+
+    $status = true;
+
+    if (! $basedir = make_upload_directory ('cache/rss/'. $componentname)) {
+        //Cannot be created, so error
+        $status = false;
+    }
+
+    if ($status) {
+        $fullfilename = $filename;
+        if ($expandfilename) {
+            $fullfilename = pcast_rss_get_file_full_name($componentname, $filename);
+        }
+
+        $rss_file = fopen($fullfilename, "w");
+        if ($rss_file) {
+            $status = fwrite ($rss_file, $contents);
+            fclose($rss_file);
+        } else {
+            $status = false;
+        }
+    }
+    return $status;
+}
