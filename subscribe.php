@@ -28,7 +28,7 @@
  */
 
 // Disable moodle specific debug messages and any errors in output
-//define('NO_DEBUG_DISPLAY', true);//comment this out to see any error messages during RSS generation
+define('NO_DEBUG_DISPLAY', true);//comment this out to see any error messages during RSS generation
 
 // Sessions not used here, we recreate $USER every time we are called
 define('NO_MOODLE_COOKIES', true);
