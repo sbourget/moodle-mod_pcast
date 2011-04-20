@@ -63,7 +63,6 @@ function pcast_rss_get_feed($context, $args) {
 
     //get userid from Token
     $userid = rss_get_userid_from_token($token);
-    die($userid);
 
     //Check group mode 0/1/2 (All participants)
     $groupmode = groups_get_activity_groupmode($cm);
