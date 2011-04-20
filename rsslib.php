@@ -564,6 +564,7 @@ function pcast_rss_footer($title = NULL, $link = NULL, $description = NULL) {
  * @param int userid the current user id
  * @param string modulename the name of the current module. For example "forum"
  * @param string $additionalargs For modules, module instance id
+ * @todo THIS WILL NOT WORK WITH SLASHARGS DISABLED
  */
 function pcast_rss_get_url($contextid, $userid, $componentname, $additionalargs) {
     global $CFG, $USER, $PAGE;
