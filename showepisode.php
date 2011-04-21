@@ -142,12 +142,18 @@ switch ($mode) {
         break;
     case PCAST_EPISODE_COMMENT_AND_RATE:
 
-        // Load comment API
-        require_once($CFG->dirroot . '/comment/lib.php');
-        comment::init();
 
-        pcast_display_episode_comments($episode, $cm, $course);
-        pcast_display_episode_ratings($episode, $cm, $course);
+        // Load comment API
+        if ($comment) {
+            require_once($CFG->dirroot . '/comment/lib.php');
+            comment::init();
+            pcast_display_episode_comments($episode, $cm, $course);
+        }
+
+        //Load rating API
+        if($rate) {
+            pcast_display_episode_ratings($episode, $cm, $course);
+        }
 
         break;
     case PCAST_EPISODE_VIEWS:
