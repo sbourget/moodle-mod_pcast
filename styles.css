@@ -23,3 +23,17 @@
     text-align: center;
     margin:0 auto;
 }
+
+.pcast-center {
+    text-align: center;
+}
+
+.pcast-menu20 {
+    width:20%;
+    text-align:center;
+}
+
+.pcast-menu60 {
+    width:60%;
+    text-align:center;
+}

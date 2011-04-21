@@ -171,11 +171,11 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
      echo '<table border="0" width="100%">';
      echo '<tr>';
 
-     echo '<td align="center" style="width:20%">';
+     echo '<td class="pcast-menu20">';
 
      echo '</td>';
 
-     echo '<td align="center" style="width:60%">';
+     echo '<td class="pcast-menu60">';
      echo '<b>';
 
      $menu = array();
@@ -221,8 +221,7 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
     }
      
      echo '</b></td>';
-     //TODO: should not be hard coded
-     echo '<td align="center" style="width:20%">';
+     echo '<td class="pcast-menu20">';
 
      $select = new single_select(new moodle_url("/mod/pcast/view.php", array('id'=>$cm->id, 'mode'=>PCAST_CATEGORY_VIEW)), 'hook', $menu, $hook, null, "catmenu");
      echo $OUTPUT->render($select);
