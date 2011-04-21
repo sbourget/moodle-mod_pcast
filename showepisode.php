@@ -131,7 +131,7 @@ if(((!$pcast->userscancomment) and (!$pcast->assessed)) and ($mode == PCAST_EPIS
     print_error('errorinvalidmode','pcast');
 }
 
-echo'  <div class="pcast-display">';
+echo html_writer::start_tag('div',array('class'=>'pcast-display')). "\n";
 print_tabs($tabrows, $mode);
 
 switch ($mode) {
@@ -165,7 +165,7 @@ if ($popup) {
 }
 
 /// Show one reduced footer
-echo '</div>';
+echo html_writer::end_tag('div') . "\n";
 echo $OUTPUT->footer();
 
 
