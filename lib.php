@@ -1031,6 +1031,7 @@ function pcast_get_user_grades($pcast, $userid=0) {
     //need these to work backwards to get a context id. Is there a better way to get contextid from a module instance?
     $ratingoptions->modulename = 'pcast';
     $ratingoptions->moduleid   = $pcast->id;
+    $ratingoptions->component = 'mod_pcast';
 
     $ratingoptions->userid = $userid;
     $ratingoptions->aggregationmethod = $pcast->assessed;
@@ -1123,13 +1124,6 @@ function pcast_comment_validate($comment_param) {
 
 
 
-/**
- * Returns the names of the table and columns necessary to check items for ratings
- * @return array an array containing the item table, item id and user id columns
- */
-function pcast_rating_item_check_info() {
-    return array('pcast_episodes','id','userid');
-}
 
 /**
  * Return rating related permissions
@@ -1150,6 +1144,74 @@ function pcast_rating_permissions($options) {
             'rate'=>has_capability('mod/pcast:rate',$context));
     }
 }
+
+
+/**
+ * Validates a submitted rating
+ * @param array $params submitted data
+ *            context => object the context in which the rated items exists [required]
+ *            itemid => int the ID of the object being rated
+ *            scaleid => int the scale from which the user can select a rating. Used for bounds checking. [required]
+ *            rating => int the submitted rating
+ *            rateduserid => int the id of the user whose items have been rated. NOT the user who submitted the ratings. 0 to update all. [required]
+ *            aggregation => int the aggregation method to apply when calculating grades ie RATING_AGGREGATE_AVERAGE [optional]
+ * @return boolean true if the rating is valid. Will throw rating_exception if not
+ */
+function pcast_rating_validate($params) {
+    global $DB, $USER;
+
+    if (!array_key_exists('itemid', $params) || !array_key_exists('context', $params) || !array_key_exists('rateduserid', $params)) {
+        throw new rating_exception('missingparameter');
+    }
+
+    $pcastsql = "SELECT p.id as pid, e.userid as userid, e.approved, e.timecreated, p.assesstimestart, p.assesstimefinish
+                      FROM {pcast_episodes} e
+                      JOIN {pcast} p ON e.pcastid = p.id
+                     WHERE e.id = :itemid";
+    $pcastparams = array('itemid'=>$params['itemid']);
+    if (!$info = $DB->get_record_sql($pcastsql, $pcastparams)) {
+        //item doesn't exist
+        throw new rating_exception('invaliditemid');
+    }
+
+    if ($info->userid == $USER->id) {
+        //user is attempting to rate their own pcast entry
+        throw new rating_exception('nopermissiontorate');
+    }
+
+    if ($params['rateduserid'] != $info->userid) {
+        //supplied user ID doesnt match the user ID from the database
+        throw new rating_exception('invaliduserid');
+    }
+
+    if (!$info->approved) {
+        //item isnt approved
+        throw new rating_exception('nopermissiontorate');
+    }
+
+    //check the item we're rating was created in the assessable time window
+    if (!empty($info->assesstimestart) && !empty($info->assesstimefinish)) {
+        if ($info->timecreated < $info->assesstimestart || $info->timecreated > $info->assesstimefinish) {
+            throw new rating_exception('notavailable');
+        }
+    }
+
+    $pcastid = $info->pid;
+
+    $cm = get_coursemodule_from_instance('pcast', $pcastid);
+    if (empty($cm)) {
+        throw new rating_exception('unknowncontext');
+    }
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+    //if the supplied context doesnt match the item's context
+    if (empty($context) || $context->id != $params['context']->id) {
+        throw new rating_exception('invalidcontext');
+    }
+
+    return true;
+}
+
 
 
 // Gradebook functions (Based on mod_glossary) Not sure how these are called

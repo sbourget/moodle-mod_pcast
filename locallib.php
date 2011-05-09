@@ -544,7 +544,7 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     //Get Group members
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+        if(isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)){
             //Display this episode (User is in the group)
             pcast_display_episode_brief($episode, $cm);
         } else if ($currentgroup == 0) {
@@ -585,7 +585,7 @@ function pcast_group_allowed_viewing($episode, $cm, $groupmode) {
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
 
     //See if episode is created by a member of the group
-    if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+    if(isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)){
         //Member of the group
         return true;
 
@@ -656,7 +656,7 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAS
     //Get Group members
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+        if(isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)){
             //Display this episode (User is in the group)
             pcast_display_episode_brief($episode, $cm);
         } else if ($currentgroup == 0) {
@@ -721,7 +721,7 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sor
     //Get Group members
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+        if(isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)){
             //Display this episode (User is in the group)
             pcast_display_episode_brief($episode, $cm);
         } else if ($currentgroup == 0) {
@@ -810,7 +810,7 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
     //Get Group members
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+        if(isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)){
             //Display this episode (User is in the group)
             pcast_display_episode_brief($episode, $cm);
         } else if ($currentgroup == 0) {
@@ -884,7 +884,7 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     //Get Group members
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if(isset($members[$episode->user]->id) and ($members[$episode->user]->id == $episode->user)){
+        if(isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)){
             //Display this episode (User is in the group)
             pcast_display_episode_brief($episode, $cm);
         } else if ($currentgroup == 0) {
@@ -903,7 +903,7 @@ function pcast_get_episode_sql() {
        $sql = "SELECT p.id AS id,
                 p.pcastid AS pcastid,
                 p.course AS course,
-                p.userid AS user,
+                p.userid AS userid,
                 p.name AS name,
                 p.summary AS summary,
                 p.mediafile AS mediafile,
@@ -997,7 +997,7 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     // Author
     // Only print author if allowed or has manage rights.
     if(((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
-        $user = $DB->get_record("user", array("id" => $episode->user));
+        $user = $DB->get_record("user", array("id" => $episode->userid));
         $table->data[] = array (get_string("author","pcast"), fullname($user));
     }
     
@@ -1125,7 +1125,7 @@ function pcast_display_episode_full($episode, $cm, $course){
     // Author
     // Only print author if allowed or has manage rights.
     if(((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
-        $user = $DB->get_record("user", array("id" => $episode->user));
+        $user = $DB->get_record("user", array("id" => $episode->userid));
         $table->data[] = array (get_string("author","pcast"), fullname($user));
     }
 
@@ -1144,7 +1144,7 @@ function pcast_display_episode_full($episode, $cm, $course){
     }
 
     // Total Ratings
-    if(($episode->assessed) and ((has_capability('moodle/rating:view', $context)) and ($episode->user == $USER->id)) or (has_capability('moodle/rating:viewany', $context))) {
+    if(($episode->assessed) and ((has_capability('moodle/rating:view', $context)) and ($episode->userid == $USER->id)) or (has_capability('moodle/rating:viewany', $context))) {
         $table->data[] = array (get_string("totalratings","pcast"), pcast_get_episode_rating_count($episode, $cm));
     }
 
@@ -1274,7 +1274,6 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
 
     global $CFG, $USER, $DB, $OUTPUT;
 
-    //TODO: Rating API is currently broken in MDL 2.0 Preview 4 (MDL-23187)
     $sql = pcast_get_episode_sql();
     $sql .=  " WHERE p.id = ?";
     $episodes = $DB->get_records_sql($sql,array('id'=>$episode->id));
@@ -1285,8 +1284,9 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
     if ($episode->assessed!=RATING_AGGREGATE_NONE) {
         
         $ratingoptions = new stdClass();
-        $ratingoptions->plugintype = 'mod';
-        $ratingoptions->pluginname = 'pcast';
+        // $ratingoptions->plugintype = 'mod';
+        // $ratingoptions->pluginname = 'pcast';
+        $ratingoptions->component = 'mod_pcast';
         $ratingoptions->context = $context;
         $ratingoptions->items = $episodes;
         $ratingoptions->aggregate = $episode->assessed;//the aggregation method

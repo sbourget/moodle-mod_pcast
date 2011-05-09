@@ -97,7 +97,7 @@ if(($episode->userscancomment) or ($episode->assessed)){
     // Can they use ratings?
     if(($episode->assessed) and
         ((has_capability('mod/pcast:rate', $context)) or
-         ((has_capability('mod/pcast:viewrating', $context)) and ($episode->user == $USER->id)) or
+         ((has_capability('mod/pcast:viewrating', $context)) and ($episode->userid == $USER->id)) or
          (has_capability('mod/pcast:viewallratings', $context)) or
          (has_capability('mod/pcast:viewanyrating', $context)))) {
 
