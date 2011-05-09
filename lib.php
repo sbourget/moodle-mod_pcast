@@ -1042,6 +1042,88 @@ function pcast_get_user_grades($pcast, $userid=0) {
 }
 
 /**
+ * Running addtional permission check on plugin, for example, plugins
+ * may have switch to turn on/off comments option, this callback will
+ * affect UI display, not like pluginname_comment_validate only throw
+ * exceptions.
+ * Capability check has been done in comment->check_permissions(), we
+ * don't need to do it again here.
+ *
+ * @param stdClass $comment_param {
+ *              context  => context the context object
+ *              courseid => int course id
+ *              cm       => stdClass course module object
+ *              commentarea => string comment area
+ *              itemid      => int itemid
+ * }
+ * @return array
+ */
+function pcast_comment_permissions($comment_param) {
+    return array('post'=>true, 'view'=>true);
+}
+
+/**
+ * Validate comment parameter before perform other comments actions
+ *
+ * @param stdClass $comment_param {
+ *              context  => context the context object
+ *              courseid => int course id
+ *              cm       => stdClass course module object
+ *              commentarea => string comment area
+ *              itemid      => int itemid
+ * }
+ * @return boolean
+ */
+function pcast_comment_validate($comment_param) {
+    global $DB;
+    // validate comment area
+    if ($comment_param->commentarea != 'pcast_episode') {
+        throw new comment_exception('invalidcommentarea');
+    }
+    if (!$record = $DB->get_record('pcast_episodes', array('id'=>$comment_param->itemid))) {
+        throw new comment_exception('invalidcommentitemid');
+    }
+    if (!$pcast = $DB->get_record('pcast', array('id'=>$record->pcastid))) {
+        throw new comment_exception('invalidid', 'data');
+    }
+    if (!$course = $DB->get_record('course', array('id'=>$pcast->course))) {
+        throw new comment_exception('coursemisconf');
+    }
+    if (!$cm = get_coursemodule_from_instance('pcast', $pcast->id, $course->id)) {
+        throw new comment_exception('invalidcoursemodule');
+    }
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+
+    if ($pcast->requireapproval and !$record->approved and !has_capability('mod/pcast:approve', $context)) {
+        throw new comment_exception('notapproved', 'pcast');
+    }
+    // validate context id
+    if ($context->id != $comment_param->context->id) {
+        throw new comment_exception('invalidcontext');
+    }
+    // validation for comment deletion
+    if (!empty($comment_param->commentid)) {
+        if ($comment = $DB->get_record('comments', array('id'=>$comment_param->commentid))) {
+            if ($comment->commentarea != 'pcast_episode') {
+                throw new comment_exception('invalidcommentarea');
+            }
+            if ($comment->contextid != $comment_param->context->id) {
+                throw new comment_exception('invalidcontext');
+            }
+            if ($comment->itemid != $comment_param->itemid) {
+                throw new comment_exception('invalidcommentitemid');
+            }
+        } else {
+            throw new comment_exception('invalidcommentid');
+        }
+    }
+    return true;
+}
+
+
+
+
+/**
  * Returns the names of the table and columns necessary to check items for ratings
  * @return array an array containing the item table, item id and user id columns
  */
