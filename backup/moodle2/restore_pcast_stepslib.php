@@ -93,7 +93,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
     }
 
-        protected function process_pcast_rating($data) {
+    protected function process_pcast_rating($data) {
         global $DB;
 
         $data = (object)$data;
@@ -102,7 +102,6 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         // Cannot use ratings API, cause, it's missing the ability to specify times (modified/created)
         $data->contextid = $this->task->get_contextid();
         $data->itemid    = $this->get_new_parentid('pcast_episode');
-
 
         if ($data->scaleid < 0) { // scale found, get mapping
             $data->scaleid = -($this->get_mappingid('scale', abs($data->scaleid)));

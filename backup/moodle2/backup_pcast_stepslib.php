@@ -31,22 +31,22 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
 
         // To know if we are including userinfo
         $userinfo = $this->get_setting_value('userinfo');
- 
+
         // Define each element separated
 
         $pcast = new backup_nested_element('pcast', array('id'), array(
-            'userid','name', 'intro', 'introformat', 'userscancomment',
+            'userid', 'name', 'intro', 'introformat', 'userscancomment',
             'userscancategorize', 'userscanpost', 'requireapproval', 'displayauthor',
-            'displayviews', 'image', 'imageheight', 'imagewidth','rssepisodes',
+            'displayviews', 'image', 'imageheight', 'imagewidth', 'rssepisodes',
             'rsssortorder', 'enablerssfeed', 'enableitunes', 'visible', 'explicit',
-            'subtitle', 'keywords', 'topcategory','nestedcategory','assessed',
-            'assesstimestart','assesstimefinish', 'scale', 'timecreated', 'timemodified'));
+            'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'assessed',
+            'assesstimestart', 'assesstimefinish', 'scale', 'timecreated', 'timemodified'));
 
         $episodes = new backup_nested_element('episodes');
 
         $episode = new backup_nested_element('episode', array('id'), array(
             'userid', 'name', 'summary', 'mediafile', 'duration', 'explicit',
-            'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'timecreated','timemodified',
+            'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'timecreated', 'timemodified',
             'approved', 'sequencenumber'));
 
         $views = new backup_nested_element('views');
@@ -59,8 +59,6 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $rating = new backup_nested_element('rating', array('id'), array(
             'scaleid', 'value', 'userid', 'timecreated', 'timemodified'));
 
-
-
         // Build the tree
 
         $pcast->add_child($episodes);
@@ -71,7 +69,6 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
 
         $episode->add_child($ratings);
         $ratings->add_child($rating);
-
 
         // Define sources
 
@@ -96,7 +93,7 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
                                       'itemid'    => backup::VAR_PARENTID));
             $rating->set_source_alias('rating', 'value');
 
-            }
+        }
 
         // Define id annotations
 
@@ -110,9 +107,9 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         // Define file annotations
 
         $pcast->annotate_files('mod_pcast', 'intro', null); // This file area hasn't itemid
-        $pcast->annotate_files('mod_pcast','logo', null);
+        $pcast->annotate_files('mod_pcast', 'logo', null);
 
-        $episode->annotate_files('mod_pcast','episode','id');
+        $episode->annotate_files('mod_pcast', 'episode', 'id');
 
         // Return the root element (pcast), wrapped into standard activity structure
         return $this->prepare_activity_structure($pcast);

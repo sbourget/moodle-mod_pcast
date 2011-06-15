@@ -1,6 +1,5 @@
 <?php
 
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -44,7 +43,7 @@ require_login($course, false, $cm);
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 require_capability('mod/pcast:approve', $context);
 
-$url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$eid,'mode'=>$mode, 'hook'=>$hook));
+$url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$eid, 'mode'=>$mode, 'hook'=>$hook));
 
 $PAGE->set_url($url);
 $PAGE->set_context($context);
@@ -59,4 +58,3 @@ if (!$episode->approved and confirm_sesskey()) {
 }
 
 redirect("view.php?id=$cm->id&amp;mode=$mode&amp;hook=$hook");
- ?>
