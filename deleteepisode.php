@@ -33,7 +33,7 @@ $episode    = optional_param('episode', 0, PARAM_INT);    // episode id
 $prevmode = required_param('prevmode', PARAM_ALPHA);
 $hook     = optional_param('hook', '', PARAM_CLEAN);
 
-$url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$id,'prevmode'=>$prevmode));
+$url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$id, 'prevmode'=>$prevmode));
 if ($confirm !== 0) {
     $url->param('confirm', $confirm);
 }
@@ -47,7 +47,7 @@ if ($hook !== '') {
 $strpcast   = get_string("modulename", "pcast");
 $strglossaries = get_string("modulenameplural", "pcast");
 $stredit       = get_string("edit");
-$episodedeleted  = get_string("episodedeleted","pcast");
+$episodedeleted  = get_string("episodedeleted", "pcast");
 
 if ($id) {
     $cm         = get_coursemodule_from_id('pcast', $id, 0, false, MUST_EXIST);
@@ -72,7 +72,7 @@ $manageentries = has_capability('mod/pcast:manage', $context);
 //}
 
 
-$strareyousuredelete = get_string("areyousuredelete","pcast");
+$strareyousuredelete = get_string("areyousuredelete", "pcast");
 
 if (($episode->userid != $USER->id) and !$manageentries) { // guest id is never matched, no need for special check here
     print_error('nopermissiontodelepisode');
@@ -99,7 +99,7 @@ if ($confirm and confirm_sesskey()) { // the operation was confirmed.
     $rm = new rating_manager();
     $rm->delete_ratings($delopt);
 
-    add_to_log($course->id, "pcast", "delete episode", "view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook", $episode->id,$cm->id);
+    add_to_log($course->id, "pcast", "delete episode", "view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook", $episode->id, $cm->id);
     redirect("view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook");
 
 } else {        // the operation has not been confirmed yet so ask the user to do so
@@ -107,10 +107,16 @@ if ($confirm and confirm_sesskey()) { // the operation was confirmed.
     $PAGE->set_title(format_string($pcast->name));
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
+    //TODO: Replace withg CSS
     $areyousure = "<b>".format_string($episode->name)."</b><p>$strareyousuredelete</p>";
     $linkyes    = 'deleteepisode.php';
     $linkno     = 'view.php';
-    $optionsyes = array('id'=>$cm->id, 'episode'=>$episode->id, 'confirm'=>1, 'sesskey'=>sesskey(), 'prevmode'=>$prevmode, 'hook'=>$hook);
+    $optionsyes = array('id'=>$cm->id,
+                        'episode'=>$episode->id,
+                        'confirm'=>1,
+                        'sesskey'=>sesskey(),
+                        'prevmode'=>$prevmode,
+                        'hook'=>$hook);
     $optionsno  = array('id'=>$cm->id, 'mode'=>$prevmode, 'hook'=>$hook);
 
     echo $OUTPUT->confirm($areyousure, new moodle_url($linkyes, $optionsyes), new moodle_url($linkno, $optionsno));

@@ -42,7 +42,7 @@ if ($cmid) {
     $pcast      = $DB->get_record('pcast', array('id' => $cm->instance), '*', MUST_EXIST);
 
 } else {
-    print_error('invalidcmorid','pcast');
+    print_error('invalidcmorid', 'pcast');
 }
 
 
@@ -59,13 +59,13 @@ $PAGE->set_url($url);
 $PAGE->set_context($context);
 
 if ($id) { // if entry is specified
-    if (!has_capability('mod/pcast:write', $context)){
+    if (!has_capability('mod/pcast:write', $context)) {
 
         print_error('noeditprivlidges', 'pcast', new moodle_url('/mod/pcast/view.php', array('id'=>$cmid)));
     }
 
     if (!$episode = $DB->get_record('pcast_episodes', array('id'=>$id, 'pcastid'=>$pcast->id))) {
-        print_error('invalidentry','pcast');
+        print_error('invalidentry', 'pcast');
     }
 
     //Calculate editing period
@@ -84,11 +84,11 @@ if ($id) { // if entry is specified
             //No permissions
             print_error('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         }
-        elseif ($episode->userid != $USER->id) {
+        else if ($episode->userid != $USER->id) {
             // Not the origional author
             print_error('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         }
-        elseif (!$ineditperiod) {
+        else if (!$ineditperiod) {
             // After the editing period
             print_error('erredittimeexpired', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         }
@@ -103,24 +103,24 @@ if ($id) { // if entry is specified
 }
 
 $draftitemid = file_get_submitted_draft_itemid('mediafile');
-file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast','episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio','video')));
+file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
 $episode->mediafile = $draftitemid;
 
 $episode->cmid = $cm->id;
-if(isset($episode->summary)) {
-    $episode->summary =array('text' => $episode->summary,'format' => '1');
+if (isset($episode->summary)) {
+    $episode->summary =array('text' => $episode->summary, 'format' => '1');
 }
 // create form and set initial data
 $mform = new mod_pcast_entry_form(null, array('current'=>$episode, 'cm'=>$cm, 'pcast'=>$pcast));
 
-if ($mform->is_cancelled()){
-    if ($id){
+if ($mform->is_cancelled()) {
+    if ($id) {
         redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$id");
     } else {
         redirect("view.php?id=$cm->id");
     }
 
-} else if ($episode = $mform->get_data()) {   
+} else if ($episode = $mform->get_data()) {
     $timenow = time();
 
     //Calculated settings
@@ -147,7 +147,8 @@ if ($mform->is_cancelled()){
         //new entry
         $episode->id = $DB->insert_record('pcast_episodes', $episode);
         add_to_log($course->id, "pcast", "add episode",
-                   "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id", $episode->id, $cm->id);
+                   "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id",
+                   $episode->id, $cm->id);
 
     } else {
         //existing entry
@@ -157,32 +158,30 @@ if ($mform->is_cancelled()){
                    $episode->id, $cm->id);
     }
 
-    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast','episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio','video')));
+    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
 
     //Get the duration if an MP3 file
     $fs = get_file_storage();
-    if ($files = $fs->get_area_files($context->id, 'mod_pcast','episode', $episode->id, "timemodified", false)) {
+    if ($files = $fs->get_area_files($context->id, 'mod_pcast', 'episode', $episode->id, "timemodified", false)) {
         foreach ($files as $file) {
             $hash = $file->get_contenthash();
             $mime = $file->get_mimetype();
-            if($mime == 'audio/mp3') {
-                //$mp3info=pcast_get_mp3_info(pcast_file_path_lookup ($hash));
+            if ($mime == 'audio/mp3') {
+                // $mp3info=pcast_get_mp3_info(pcast_file_path_lookup ($hash));
                 // $episode->duration = $mp3info->length;
                 $mediainfo=pcast_get_media_information(pcast_file_path_lookup ($hash));;
                 $episode->duration = $mediainfo['playtime_string'];
-                
+
             }
         }
-    } 
+    }
 
-
-// store the updated value values
+    // store the updated value values
     $DB->update_record('pcast_episodes', $episode);
 
     //refetch complete entry
     $episode = $DB->get_record('pcast_episodes', array('id'=>$episode->id));
     
-
     redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id");
 }
 
@@ -198,7 +197,3 @@ echo $OUTPUT->heading(format_string($pcast->name));
 $mform->display();
 
 echo $OUTPUT->footer();
-
-
-
-?>

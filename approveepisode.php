@@ -22,7 +22,7 @@
  * @copyright 2010 Stephen Bourget and Jillaine Beeckman
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
- 
+
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');

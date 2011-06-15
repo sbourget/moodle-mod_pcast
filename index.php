@@ -52,7 +52,7 @@ echo $OUTPUT->header();
 
 /// Get all the appropriate data
 
-if (! $pcasts = get_all_instances_in_course('pcast', $course)) {
+if (!$pcasts = get_all_instances_in_course('pcast', $course)) {
     echo $OUTPUT->heading(get_string('nopcasts', 'pcast'), 2);
     echo $OUTPUT->continue_button("view.php?id=$course->id");
     echo $OUTPUT->footer();
