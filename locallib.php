@@ -1300,6 +1300,7 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
         $ratingoptions->returnurl = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_COMMENT_AND_RATE));
         $ratingoptions->assesstimestart = $episode->assesstimestart;
         $ratingoptions->assesstimefinish = $episode->assesstimefinish;
+        $ratingoptions->ratingarea = 'episode';
 
         $rm = new rating_manager();
         $allepisodes = $rm->get_ratings($ratingoptions);

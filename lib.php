@@ -864,6 +864,8 @@ function pcast_reset_userdata($data) {
 
     $rm = new rating_manager();
     $ratingdeloptions = new stdClass();
+    $ratingdeloptions->component = 'mod_pcast';
+    $ratingdeloptions->ratingarea = 'episode';
 
     // delete entries if requested
     if (!empty($data->reset_pcast_all)) {
@@ -1012,6 +1014,7 @@ function pcast_get_user_grades($pcast, $userid=0) {
     $ratingoptions->modulename = 'pcast';
     $ratingoptions->moduleid   = $pcast->id;
     $ratingoptions->component = 'mod_pcast';
+    $ratingoptions->ratingarea = 'episode';
 
     $ratingoptions->userid = $userid;
     $ratingoptions->aggregationmethod = $pcast->assessed;
@@ -1019,6 +1022,7 @@ function pcast_get_user_grades($pcast, $userid=0) {
     $ratingoptions->itemtable = 'pcast_episodes';
     $ratingoptions->itemtableusercolumn = 'userid';
 
+    $rm = new rating_manager();
     return $rm->get_user_grades($ratingoptions);
 }
 
@@ -1110,8 +1114,15 @@ function pcast_comment_validate($comment_param) {
  * @param string $options the context id
  * @return array an associative array of the user's rating permissions
  */
-function pcast_rating_permissions($options) {
-    $contextid = $options;
+function pcast_rating_permissions($contextid, $component, $ratingarea) {
+
+    if ($component != 'mod_pcast' || $ratingarea != 'episode') {
+
+        // We don't know about this component/ratingarea so just return null to get the
+        // default restrictive permissions.
+        return null;
+
+    }
     $context = get_context_instance_by_id($contextid);
 
     if (!$context) {
@@ -1140,29 +1151,59 @@ function pcast_rating_permissions($options) {
 function pcast_rating_validate($params) {
     global $DB, $USER;
 
-    if (!array_key_exists('itemid', $params) || !array_key_exists('context', $params) || !array_key_exists('rateduserid', $params)) {
-        throw new rating_exception('missingparameter');
+    // Check the component is mod_pcast
+
+    if ($params['component'] != 'mod_pcast') {
+        throw new rating_exception('invalidcomponent');
     }
 
-    $pcastsql = "SELECT p.id as pid, e.userid as userid, e.approved, e.timecreated, p.assesstimestart, p.assesstimefinish
+    // Check the ratingarea is episode (the only rating area in pcast)
+
+    if ($params['ratingarea'] != 'episode') {
+        throw new rating_exception('invalidratingarea');
+    }
+
+    // Check the rateduserid is not the current user .. you can't rate your own posts
+    if ($params['rateduserid'] == $USER->id) {
+        throw new rating_exception('nopermissiontorate');
+    }
+
+
+    $pcastsql = "SELECT p.id as pcastid, p.scale, p.course, e.userid as userid, e.approved, e.timecreated, p.assesstimestart, p.assesstimefinish
                       FROM {pcast_episodes} e
                       JOIN {pcast} p ON e.pcastid = p.id
                      WHERE e.id = :itemid";
+    
     $pcastparams = array('itemid'=>$params['itemid']);
-    if (!$info = $DB->get_record_sql($pcastsql, $pcastparams)) {
+    $info = $DB->get_record_sql($pcastsql, $pcastparams);
+    if (!$info) {
         //item doesn't exist
         throw new rating_exception('invaliditemid');
     }
 
-    if ($info->userid == $USER->id) {
-        //user is attempting to rate their own pcast entry
-        throw new rating_exception('nopermissiontorate');
+    if ($info->scale != $params['scaleid']) {
+        //the scale being submitted doesnt match the one in the database
+        throw new rating_exception('invalidscaleid');
     }
 
-    if ($params['rateduserid'] != $info->userid) {
-        //supplied user ID doesnt match the user ID from the database
-        throw new rating_exception('invaliduserid');
-    }
+    //check that the submitted rating is valid for the scale
+    if ($params['rating'] < 0) {
+        throw new rating_exception('invalidnum');
+    } else if ($info->scale < 0) {
+        //its a custom scale
+        $scalerecord = $DB->get_record('scale', array('id' => -$info->scale));
+        if ($scalerecord) {
+            $scalearray = explode(',', $scalerecord->scale);
+            if ($params['rating'] > count($scalearray)) {
+                throw new rating_exception('invalidnum');
+            }
+        } else {
+            throw new rating_exception('invalidscaleid');
+        }
+    } else if ($params['rating'] > $info->scale) {
+        //if its numeric and submitted rating is above maximum
+        throw new rating_exception('invalidnum');
+    }    
 
     if (!$info->approved) {
         //item isnt approved
@@ -1176,16 +1217,11 @@ function pcast_rating_validate($params) {
         }
     }
 
-    $pcastid = $info->pid;
-
-    $cm = get_coursemodule_from_instance('pcast', $pcastid);
-    if (empty($cm)) {
-        throw new rating_exception('unknowncontext');
-    }
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $cm = get_coursemodule_from_instance('pcast', $info->pcastid, $info->course, false, MUST_EXIST);
+    $context = get_context_instance(CONTEXT_MODULE, $cm->id, MUST_EXIST);
 
     //if the supplied context doesnt match the item's context
-    if (empty($context) || $context->id != $params['context']->id) {
+    if ($context->id != $params['context']->id) {
         throw new rating_exception('invalidcontext');
     }
 

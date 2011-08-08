@@ -57,7 +57,7 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $ratings = new backup_nested_element('ratings');
 
         $rating = new backup_nested_element('rating', array('id'), array(
-            'scaleid', 'value', 'userid', 'timecreated', 'timemodified'));
+            'component', 'ratingarea','scaleid', 'value', 'userid', 'timecreated', 'timemodified'));
 
         // Build the tree
 
@@ -89,10 +89,12 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
              WHERE episodeid = ?',
             array(backup::VAR_PARENTID));
 
-            $rating->set_source_table('rating', array('contextid' => backup::VAR_CONTEXTID,
-                                      'itemid'    => backup::VAR_PARENTID));
+            $rating->set_source_table('rating', array('contextid'  => backup::VAR_CONTEXTID,
+                                                      'itemid'     => backup::VAR_PARENTID,
+                                                      'component'  => 'mod_pcast',
+                                                      'ratingarea' => 'episode'));
             $rating->set_source_alias('rating', 'value');
-
+            
         }
 
         // Define id annotations

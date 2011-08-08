@@ -96,6 +96,8 @@ if ($confirm and confirm_sesskey()) { // the operation was confirmed.
     $delopt = new stdClass();
     $delopt->contextid = $context->id;
     $delopt->itemid = $episode->id;
+    $delopt->component = 'mod_pcast';
+    $delopt->ratingarea = 'episode';
     $rm = new rating_manager();
     $rm->delete_ratings($delopt);
 
