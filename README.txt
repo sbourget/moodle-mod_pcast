@@ -1,42 +1,45 @@
-The following steps should get you up and running with
-this module template code.
+Pcast module for Moodle
+Copyright (C) 2010-2011  Stephen Bourget and Jillaine Beeckman
 
-* DO NOT PANIC!
 
-* Unzip the archive and read this file
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
 
-* Rename the pcast/ folder to the name of your module (eg "widget").
-  The module folder MUST be lower case. You should check the CVS contrib
-  area at http://cvs.moodle.org/contrib/plugins/mod/ to make sure that
-  Stephen Bourget and Jillaine Beeckman is not already used by an other module.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details:
 
-* Edit all the files in this directory and its subdirectories and change
-  all the instances of the string "pcast" to your module name
-  (eg "widget"). If you are using Linux, you can use the following command
-  $ find . -type f -exec sed -i 's/pcast/widget/g' {} \;
+http:www.gnu.org/copyleft/gpl.html
 
-* Rename the file lang/en_utf8/pcast.php to lang/en_utf8/widget.php
-  where "widget" is the name of your module
 
-* Place the widget folder into the /mod folder of the moodle
-  directory.
+Pcast module for Moodle - version 2.0rc
+===============================================================================
+Created by:
+      Stephen Bourget - most of the coding & design
+      Jillaine Beeckman - QA Testing & Bugfixing
 
-* Go to Settings > Site Administration > Development > XMLDB editor
-  and modify the module's tables.
+Developed for Goffstown School District (Goffstown NH, USA)
+Many ideas and code were taken from other Moodle modules and Moodle itself
 
-* Modify version.php and set the initial version of you module.
+Installation:
+    * see http://docs.moodle.org/en/Installing_contributed_modules_or_plugins
+    * Works only with Moodle 2.1 or Later
 
-* Visit Settings > Site Administration > Notifications, you should find
-  the module's tables successfully created
+List of features - version 2.1:
 
-* Go to Site Administration > Plugins > Activity modules > Manage activities
-  and you should find that this pcast has been added to the list of
-  installed modules.
 
-* You may now proceed to run your own code in an attempt to develop
-  your module. You will probably want to modify mod_form.php and view.php
-  as a first step. Check db/access.php to add capabilities.
+    * Users can post podcast episodes. These episodes can be moderated
+    * Support for ratings via the Rating API
+    * Support for commenting via the commenting API
+    * Itunes tag support
+    * RSS Support
 
-We encourage you to share your code and experience - visit http://moodle.org
 
-Good luck!
+
+Known issues, please do not file tracker reports:
+    * paging of large podcasts
+
+-Steve
