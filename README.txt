@@ -15,7 +15,7 @@ GNU General Public License for more details:
 http:www.gnu.org/copyleft/gpl.html
 
 
-Pcast module for Moodle - version 2.0rc
+Pcast module for Moodle - version 2.1
 ===============================================================================
 Created by:
       Stephen Bourget - most of the coding & design
