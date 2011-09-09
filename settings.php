@@ -21,7 +21,7 @@
  *
  *
  * @package   mod-pcast
- * @copyright 2010 Stephen Bourget and Jillaine Beeckman
+ * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

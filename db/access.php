@@ -42,7 +42,7 @@
  * The variable name for the capability definitions array is $capabilities
  *
  * @package   mod_pcast
- * @copyright 2010 Stephen Bourget and Jillaine Beeckman
+ * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
