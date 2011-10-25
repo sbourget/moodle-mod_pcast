@@ -137,6 +137,7 @@ function pcast_rss_get_feed($context, $args) {
             $item->pcastid = $rec->pcastid;
             $item->id = $rec->episodeid;
             $item->userid = $rec->userid;
+            $item->course = $rec->course;
 
             if ($pcast->displayauthor == 1) {//With author
                 $user->firstname = $rec->userfirstname;
@@ -151,6 +152,7 @@ function pcast_rss_get_feed($context, $args) {
             $item->pubdate = $rec->episodetimecreated;
             $item->link = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$rec->episodeid));
             $item->description = format_text($rec->episodesummary,'HTML',NULL,$pcast->course);
+            // $item->description = strip_tags($rec->episodesummary);
 
             if($pcast->userscancategorize) {
                 //TODO: This is very inefficient (this generates 2 DB queries per entry)
@@ -159,8 +161,8 @@ function pcast_rss_get_feed($context, $args) {
                 $item->nestedcategory = $category->nested->name;
             }
             $items[] = $item;
-        }
 
+        }
         //First all rss feeds common headers
         $url = new moodle_url('/mod/pcast/view.php', array('id'=>$pcast->id));
         $header = pcast_rss_header(format_string($pcast->name,true), $url, format_string($pcast->intro,true), $pcast);
@@ -174,7 +176,7 @@ function pcast_rss_get_feed($context, $args) {
 
         //Now all the rss items
         if (!empty($header)) {
-            $episodes = pcast_rss_add_items($context, $items, $itunes, $currentgroup);
+            $episodes = pcast_rss_add_items($context, $items, $itunes, $groupid);
         }
         //Now all rss feeds common footers
         if (!empty($header) && !empty($episodes)) {
@@ -231,11 +233,14 @@ function pcast_rss_get_sql($pcast, $time=0) {
                   e.timecreated AS episodetimecreated,
                   u.id AS userid,
                   u.firstname AS userfirstname,
-                  u.lastname AS userlastname
+                  u.lastname AS userlastname,
+                  p.course AS course
              FROM {pcast_episodes} e,
-                  {user} u
+                  {user} u,
+                  {pcast} p
             WHERE e.pcastid = {$pcast->id} AND
                   u.id = e.userid AND
+                  p.id = pcastid AND
                   e.approved = 1 $time $sort";
 
     } else {//Without author
@@ -250,11 +255,14 @@ function pcast_rss_get_sql($pcast, $time=0) {
                   e.topcategory AS topcategory,
                   e.nestedcategory AS nestedcategory,
                   e.timecreated AS episodetimecreated,
-                  u.id AS userid
+                  u.id AS userid,
+                  p.course AS course
              FROM {pcast_episodes} e,
-                  {user} u
+                  {user} u,
+                  {pcast} p
             WHERE e.pcastid = {$pcast->id} AND
                   u.id = e.userid AND
+                  p.id = pcastid AND
                   e.approved = 1 $time $sort";
     }
 
@@ -424,7 +432,7 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
             // Categories
             if (isset($categories->top->name)) {
                 $result .= rss_start_tag('itunes:category text="'.$categories->top->name .'"', 2, true);
-                if (isset($categories->nested)) {
+                if (isset($categories->nested->name)) {
                     $result .= rss_start_tag('itunes:category text="'.$categories->nested->name .'"/', 4, true);
                 }
                 $result .= rss_end_tag('itunes:category', 2, true);
@@ -457,10 +465,10 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
 
     //Get Group members
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
-
     if (!empty($items)) {
         foreach ($items as $item) {
-            if(isset($members[$item->userid]->id) and ($members[$item->userid]->id == $item->userid)){
+            // Only display group members entries in regular courses, Display everything when used on the front page
+            if(((isset($members[$item->userid]->id) and ($members[$item->userid]->id == $item->userid))||($item->course === SITEID))){
                 $result .= rss_start_tag('item',2,true);
                 //Include the category if exists (some rss readers will use it to group items)
                 if (isset($item->topcategory)) {
