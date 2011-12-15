@@ -880,7 +880,6 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
                 ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', '1%', '2%', '3%', '4%', '5%', '6%', '7%', '8%', '9%', '0%'));
     } else {
-        $like = $DB->sql_ilike();
         $sql .= " and ". $DB->sql_like('p.name', '?',false)." ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '0', $hook.'%'));
     }
