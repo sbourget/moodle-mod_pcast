@@ -103,7 +103,7 @@ if ($id) { // if entry is specified
 }
 
 $draftitemid = file_get_submitted_draft_itemid('mediafile');
-file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
+file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$pcast->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
 $episode->mediafile = $draftitemid;
 
 $episode->cmid = $cm->id;
@@ -158,7 +158,7 @@ if ($mform->is_cancelled()) {
                    $episode->id, $cm->id);
     }
 
-    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$COURSE->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
+    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$pcast->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
 
     //Get the duration if an MP3 file
     $fs = get_file_storage();

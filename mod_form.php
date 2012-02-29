@@ -54,6 +54,14 @@ class mod_pcast_mod_form extends moodleform_mod {
 
     /// Adding the standard "intro" and "introformat" fields
         $this->add_intro_editor();
+        
+    /// Adding the max upload size of episodes    
+        $choices = get_max_upload_sizes($CFG->maxbytes, $COURSE->maxbytes);
+        $choices[0] = get_string('courseuploadlimit') . ' ('.display_size($COURSE->maxbytes).')';
+        $mform->addElement('select', 'maxbytes', get_string('maxattachmentsize', 'pcast'), $choices);
+        $mform->addHelpButton('maxbytes', 'maxattachmentsize', 'pcast');
+        $mform->setDefault('maxbytes', $COURSE->maxbytes);
+        
 //-------------------------------------------------------------------------------
 /// RSS Settings
 //-------------------------------------------------------------------------------

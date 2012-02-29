@@ -120,7 +120,7 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addElement('filemanager', 'mediafile', get_string('pcastmediafile', 'pcast'), null,
             array('subdirs'=>0,
                 'maxfiles'=>1,
-                'maxbytes'=>$COURSE->maxbytes,
+                'maxbytes'=>$pcast->maxbytes,
                 'filetypes' => array('audio','video'),
                 'returnvalue'=>'ref_id'
             ));
