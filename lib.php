@@ -490,7 +490,7 @@ function pcast_scale_used($pcastid, $scaleid) {
 function pcast_scale_used_anywhere($scaleid) {
     global $DB;
 
-    if ($scaleid and $DB->record_exists('pcast', 'grade', -$scaleid)) {
+    if ($scaleid and $DB->record_exists('pcast', array('scale'=>-$scaleid)))  {
         return true;
     } else {
         return false;
