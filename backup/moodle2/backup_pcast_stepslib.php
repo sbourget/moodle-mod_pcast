@@ -91,8 +91,8 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
 
             $rating->set_source_table('rating', array('contextid'  => backup::VAR_CONTEXTID,
                                                       'itemid'     => backup::VAR_PARENTID,
-                                                      'component'  => 'mod_pcast',
-                                                      'ratingarea' => 'episode'));
+                                                      'component'  => backup_helper::is_sqlparam('mod_pcast'),
+                                                      'ratingarea' => backup_helper::is_sqlparam('episode')));
             $rating->set_source_alias('rating', 'value');
             
         }
