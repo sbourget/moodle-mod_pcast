@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/ipcast/db" VERSION="20100709" COMMENT="XMLDB file for Moodle mod/pcast"
+<XMLDB PATH="mod/pcast/db" VERSION="20100709" COMMENT="XMLDB file for Moodle mod/pcast"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
