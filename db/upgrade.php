@@ -42,7 +42,8 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_pcast_upgrade($oldversion=0) {
 
-    global $CFG, $THEME, $db;
+    global $CFG, $THEME, $DB;
+    $dbman = $DB->get_manager();
 
     $result = true;
 
@@ -62,7 +63,7 @@ function xmldb_pcast_upgrade($oldversion=0) {
         // rating.component and rating.ratingarea have now been added as mandatory fields.
         // Presently you can only rate data entries so component = 'mod_pcast' and ratingarea = 'episode'
         // for all ratings with a pcast context.
-        // We want to update all ratings that belong to a glossary context and don't already have a
+        // We want to update all ratings that belong to a pcast context and don't already have a
         // component set.
         // This could take a while reset upgrade timeout to 5 min
 
