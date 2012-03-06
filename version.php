@@ -35,5 +35,5 @@ $module->requires = 2011070101;    // Requires this Moodle version
 $module->cron     = 0;             // Period for cron to check this module (secs)
 $module->component = 'mod_pcast';  // Full name of the plugin (used for diagnostics)
 
-$module->maturity = MATURITY_STABLE;
+$module->maturity = MATURITY_BETA;
 $module->release = "2.1.1 (2012022901)";  // User-friendly version number
