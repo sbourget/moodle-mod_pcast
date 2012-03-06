@@ -36,7 +36,7 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
 
         $pcast = new backup_nested_element('pcast', array('id'), array(
             'userid', 'name', 'intro', 'introformat', 'userscancomment',
-            'userscancategorize', 'userscanpost', 'requireapproval', 'displayauthor',
+            'userscancategorize', 'userscanpost', 'maxbytes', 'requireapproval', 'displayauthor',
             'displayviews', 'image', 'imageheight', 'imagewidth', 'rssepisodes',
             'rsssortorder', 'enablerssfeed', 'enableitunes', 'visible', 'explicit',
             'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'assessed',
