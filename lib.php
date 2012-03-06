@@ -991,6 +991,23 @@ function pcast_reset_userdata($data) {
 }
 
 
+/**
+ * Return a list of page types
+ * @param string $pagetype current page type
+ * @param stdClass $parentcontext Block's parent context
+ * @param stdClass $currentcontext Current context of block
+ */
+
+function pcast_page_type_list($pagetype, $parentcontext, $currentcontext) {
+    $module_pagetype = array(
+        'mod-pcast-*'=>get_string('page-mod-pcast-x', 'pcast'),
+        'mod-pcast-view'=>get_string('page-mod-pcast-view', 'pcast'),
+        'mod-pcast-edit'=>get_string('page-mod-pcast-edit', 'pcast'));
+    return $module_pagetype;
+
+}
+
+
 //TODO: RATINGS CODE -UNTESTED
 
 /**
