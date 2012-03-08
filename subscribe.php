@@ -124,17 +124,17 @@ if ($groupmode == SEPARATEGROUPS) {
     $members = get_enrolled_users($context, 'mod/pcast:write', $groupid, 'u.id', 'u.id ASC');
 
     // Is a member of the current group
-    if(!isset($members[$userid]->id) or ($members[$userid]->id != $userid)){
+    if (!isset($members[$userid]->id) or ($members[$userid]->id != $userid)){
 
         // Not a member of the group, can you see all groups (from CAPS)
-        if(!has_capability('moodle/site:accessallgroups', $context, $userid)) {
+        if (!has_capability('moodle/site:accessallgroups', $context, $userid)) {
             $uservalidated = false;
         }
 
     } else {
         // Are a member of the current group
         // Is the group #0 (Group 0 is all users)
-        if($groupid == 0 and !has_capability('moodle/site:accessallgroups', $context, $userid)){
+        if ($groupid == 0 and !has_capability('moodle/site:accessallgroups', $context, $userid)){
             $uservalidated = false;
         }
     }
@@ -186,7 +186,7 @@ if (empty($cachedfilepath) || !file_exists($cachedfilepath)) {
 }
 
 // Send the .pcast file to the user!
-send_file($cachedfilepath, 'rss.pcast', 0,0,0,1);   // DO NOT CACHE
+send_file($cachedfilepath, 'rss.pcast', 0, 0, 0, 1);   // DO NOT CACHE
 
 
 
@@ -197,4 +197,3 @@ function pcast_rss_error($error='rsserror', $filename='rss.xml', $lifetime=0) {
     send_file(rss_geterrorxmlfile($error), $filename, $lifetime, false, true);
     exit;
 }
-?>
