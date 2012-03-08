@@ -83,13 +83,13 @@ if ($groupmode) {
     groups_print_activity_menu($cm, new moodle_url('/mod/pcast/view.php', array('id'=>$id)));
 }
 
-echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast' ,'pcast', 'icon');
+echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
 
 /// Show the add entry button if allowed (usercan post + write or manage caps)
 if (((has_capability('mod/pcast:write', $context))and ($pcast->userscanpost)) or (has_capability('mod/pcast:manage', $context))) {
     $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id));
     $out = html_writer::start_tag('div', array('class'=>'pcast-addentry')). "\n";
-    $out .= html_writer::start_tag('form', array('id'=>'newentryform','method'=>'get', 'action'=>$url)). "\n";
+    $out .= html_writer::start_tag('form', array('id'=>'newentryform', 'method'=>'get', 'action'=>$url)). "\n";
     $out .= html_writer::start_tag('div', array('class'=>'singlebutton')). "\n";
     $out .= html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'cmid', 'value'=>$cm->id)). "\n";
     $out .= html_writer::empty_tag('input', array('type'=>'submit', 'value'=>get_string('addnewepisode', 'pcast'))). "\n";
@@ -143,7 +143,7 @@ if (has_capability('mod/pcast:approve', $context)) {
 
 $tabrows[] = $browserow;     // Always put these at the top
 
-echo html_writer::start_tag('div',array('class'=>'pcastdisplay')). "\n";
+echo html_writer::start_tag('div', array('class'=>'pcastdisplay')). "\n";
 print_tabs($tabrows, $mode);
 echo html_writer::end_tag('div'). "\n";
 
@@ -243,7 +243,7 @@ switch($mode) {
 
         pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
         break;
-    }
+}
 
 echo html_writer::end_tag('div'). "\n";
 echo html_writer::end_tag('div'). "\n";
