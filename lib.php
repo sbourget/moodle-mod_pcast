@@ -53,17 +53,11 @@ define("PCAST_EPISODE_VIEW", 300);
 define("PCAST_EPISODE_COMMENT_AND_RATE", 301);
 define("PCAST_EPISODE_VIEWS", 302);
 
-
-/** example constant */
-//define('PCAST_ULTIMATE_ANSWER', 42);
-
 /**
  * If you for some reason need to use global variables instead of constants, do not forget to make them
  * global as this file can be included inside a function scope. However, using the global variables
  * at the module level is not a recommended.
  */
-//global $PCAST_GLOBAL_VARIABLE;
-//$PCAST_QUESTION_OF = array('Life', 'Universe', 'Everything');
 
 /**
  * Lists supported features
@@ -490,7 +484,7 @@ function pcast_scale_used($pcastid, $scaleid) {
 function pcast_scale_used_anywhere($scaleid) {
     global $DB;
 
-    if ($scaleid and $DB->record_exists('pcast', array('scale'=>-$scaleid)))  {
+    if ($scaleid and $DB->record_exists('pcast', array('scale'=>-$scaleid))) {
         return true;
     } else {
         return false;
@@ -521,14 +515,14 @@ function pcast_get_file_areas($course, $cm, $context) {
  */
 function pcast_get_view_actions() {
     return array('view', 'view all', 'get attachment');
- }
+}
 /**
  * Support for the Reports (Participants)
  * @return array()
  */
 function pcast_get_post_actions() {
     return array('add', 'update');
- }
+}
 
  /**
   * Tells if files in moddata are trusted and can be served without XSS protection.
@@ -604,7 +598,6 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
         $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args));
         $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
 
-        
         if (!empty($CFG->pcast_enablerssitunes)) {
             $string = get_string('pcastlink', 'pcast');
             require_once("$CFG->dirroot/mod/pcast/rsslib.php");
@@ -702,7 +695,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         // Log the file as viewed
         $pcast->URL = $CFG->wwwroot . '/pluginfile.php' . $fullpath;
         $pcast->filename = implode('/', $args);
-        if (!empty($USER->id)){
+        if (!empty($USER->id)) {
             pcast_add_view_instance($pcast, $USER->id);
         }
 
@@ -749,19 +742,19 @@ function pcast_add_view_instance($pcast, $userid) {
         $view->episodeid=$pcast->id;
         $view->lastview = time();
 
-        if(!$result=$DB->insert_record("pcast_views", $view, $returnid=false, $bulk=false)) {
+        if (!$result=$DB->insert_record("pcast_views", $view, $returnid=false, $bulk=false)) {
             print_error('databaseerror', 'pcast');
         }
     } else { //Never viewed the file before
         $temp_view = $view->views + 1;
         $view->views = $temp_view;
         $view->lastview=time();
-        if(!$result = $DB->update_record("pcast_views", $view, $bulk=false)) {
+        if (!$result = $DB->update_record("pcast_views", $view, $bulk=false)) {
             print_error('databaseerror', 'pcast');
         }
     }
 
-    add_to_log($pcast->course, "pcast", "view", $pcast->URL, $pcast->filename,0 ,$userid);
+    add_to_log($pcast->course, "pcast", "view", $pcast->URL, $pcast->filename, 0, $userid);
 
     return $result;
 }
@@ -896,10 +889,10 @@ function pcast_reset_userdata($data) {
 
         $status[] = array('component'=>$componentstr, 'item'=>get_string('resetpcastsall', 'pcast'), 'error'=>false);
 
-    }
-    // remove entries by users not enrolled into course
-    else if (!empty($data->reset_pcast_notenrolled)) {
-
+    
+    } else if (!empty($data->reset_pcast_notenrolled)) {
+        // remove entries by users not enrolled into course
+        
         $course_context = get_context_instance(CONTEXT_COURSE, $data->courseid);
         // Get list of enrolled users
         $people = get_enrolled_users($course_context);
@@ -976,10 +969,8 @@ function pcast_reset_userdata($data) {
 
     // remove views
     if (!empty($data->reset_pcast_views)) {
-//        $params[] = 'pcast_episode';
-        $DB->delete_records_select('pcast_views',"episodeid IN ($allepisodessql) ", $params);
-//        $DB->delete_records_select('pcast_views', "itemid IN ($allepisodessql) AND commentarea= ? ", $params);
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallviews','pcast'), 'error'=>false);
+        $DB->delete_records_select('pcast_views', "episodeid IN ($allepisodessql) ", $params);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallviews', 'pcast'), 'error'=>false);
     }
     /// updating dates - shift may be negative too
     if ($data->timeshift) {
@@ -1185,12 +1176,11 @@ function pcast_rating_validate($params) {
         throw new rating_exception('nopermissiontorate');
     }
 
-
     $pcastsql = "SELECT p.id as pcastid, p.scale, p.course, e.userid as userid, e.approved, e.timecreated, p.assesstimestart, p.assesstimefinish
                       FROM {pcast_episodes} e
                       JOIN {pcast} p ON e.pcastid = p.id
                      WHERE e.id = :itemid";
-    
+
     $pcastparams = array('itemid'=>$params['itemid']);
     $info = $DB->get_record_sql($pcastsql, $pcastparams);
     if (!$info) {
@@ -1220,7 +1210,7 @@ function pcast_rating_validate($params) {
     } else if ($params['rating'] > $info->scale) {
         //if its numeric and submitted rating is above maximum
         throw new rating_exception('invalidnum');
-    }    
+    }
 
     if (!$info->approved) {
         //item isnt approved

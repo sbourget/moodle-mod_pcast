@@ -38,11 +38,11 @@ class mod_pcast_mod_form extends moodleform_mod {
         global $COURSE, $CFG, $DB;
         $mform =& $this->_form;
 
-//-------------------------------------------------------------------------------
-    /// Adding the "general" fieldset, where all the common settings are showed
+        //-------------------------------------------------------------------------------
+        // Adding the "general" fieldset, where all the common settings are showed
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-    /// Adding the standard "name" field
+        // Adding the standard "name" field
         $mform->addElement('text', 'name', get_string('pcastname', 'pcast'), array('size'=>'64'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -52,28 +52,28 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-    /// Adding the standard "intro" and "introformat" fields
+        // Adding the standard "intro" and "introformat" fields
         $this->add_intro_editor();
         
-    /// Adding the max upload size of episodes    
+        // Adding the max upload size of episodes    
         $choices = get_max_upload_sizes($CFG->maxbytes, $COURSE->maxbytes);
         $choices[0] = get_string('courseuploadlimit') . ' ('.display_size($COURSE->maxbytes).')';
         $mform->addElement('select', 'maxbytes', get_string('maxattachmentsize', 'pcast'), $choices);
         $mform->addHelpButton('maxbytes', 'maxattachmentsize', 'pcast');
         $mform->setDefault('maxbytes', $COURSE->maxbytes);
         
-//-------------------------------------------------------------------------------
-/// RSS Settings
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
+        /// RSS Settings
+        //-------------------------------------------------------------------------------
         if ($CFG->enablerssfeeds && isset($CFG->pcast_enablerssfeeds) && $CFG->pcast_enablerssfeeds) {
 
             $mform->addElement('header', 'rss', get_string('rss'));
 
-        /// RSS enabled
+            // RSS enabled
             $mform->addElement('selectyesno', 'enablerssfeed', get_string('enablerssfeed', 'pcast'));
             $mform->addHelpButton('enablerssfeed', 'enablerssfeed', 'pcast');
 
-        /// RSS Entries per feed
+            // RSS Entries per feed
             $choices = array();
             $choices[1] = '1';
             $choices[2] = '2';
@@ -92,11 +92,10 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->disabledIf('rssepisodes', 'enablerssfeed', 'eq', 0);
             $mform->setDefault('rssepisodes', 10);
 
-
-        /// RSS Sort Order
+            // RSS Sort Order
             $sortorder = array();
-            $sortorder[0] = get_string('createasc','pcast');
-            $sortorder[1] = get_string('createdesc','pcast');
+            $sortorder[0] = get_string('createasc', 'pcast');
+            $sortorder[1] = get_string('createdesc', 'pcast');
             $mform->addElement('select', 'rsssortorder', get_string('rsssortorder','pcast'), $sortorder);
             $mform->addHelpButton('rsssortorder', 'rsssortorder', 'pcast');
             $mform->setDefault('rsssortorder', 2);
@@ -104,28 +103,27 @@ class mod_pcast_mod_form extends moodleform_mod {
 
         }
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         if ($CFG->enablerssfeeds && isset($CFG->pcast_enablerssitunes) && $CFG->pcast_enablerssitunes) {
 
-            /// Itunes Tags
+            // Itunes Tags
             $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));
 
-            /// Enable Itunes Tags
+            // Enable Itunes Tags
             $mform->addElement('selectyesno', 'enablerssitunes', get_string('enablerssitunes', 'pcast'));
             $mform->addHelpButton('enablerssitunes', 'enablerssitunes', 'pcast');
             $mform->setDefault('enablerssitunes', 0);
 
-            /// Subtitle
+            // Subtitle
             $mform->addElement('text', 'subtitle', get_string('subtitle', 'pcast'), array('size'=>'64'));
             $mform->setType('subtitle', PARAM_NOTAGS);
             $mform->addHelpButton('subtitle', 'subtitle', 'pcast');
             $mform->disabledIf('subtitle', 'enablerssitunes', 'eq', 0);
 
-
             // Owner
             $ownerlist = array();
             $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
-            if($owners = get_users_by_capability($context, 'mod/pcast:manage', 'u.*', 'u.lastaccess')) {
+            if ($owners = get_users_by_capability($context, 'mod/pcast:manage', 'u.*', 'u.lastaccess')) {
                 foreach ($owners as $owner) {
                     $ownerlist[$owner->id] = $owner->firstname . ' ' . $owner->lastname;
                 }
@@ -134,17 +132,15 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->addHelpButton('userid', 'author', 'pcast');
             $mform->disabledIf('userid', 'enablerssitunes', 'eq', 0);
 
-
             /// Keywords
             $mform->addElement('text', 'keywords', get_string('keywords', 'pcast'), array('size'=>'64'));
             $mform->setType('keywords', PARAM_NOTAGS);
             $mform->addHelpButton('keywords', 'keywords', 'pcast');
             $mform->disabledIf('keywords', 'enablerssitunes', 'eq', 0);
 
-
             // Generate Top Categorys;
             $newoptions = array();
-            if($topcategories = $DB->get_records("pcast_itunes_categories")) {
+            if ($topcategories = $DB->get_records("pcast_itunes_categories")) {
                 foreach ($topcategories as $topcategory) {
                     $value = (int)$topcategory->id * 1000;
                     $newoptions[(int)$value] = $topcategory->name;
@@ -152,7 +148,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             }
 
             // Generate Secondary Category
-            if($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
+            if ($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
                 foreach ($nestedcategories as $nestedcategory) {
                     $value = (int)$nestedcategory->topcategoryid * 1000;
                     $value = $value + (int)$nestedcategory->id;
@@ -175,53 +171,53 @@ class mod_pcast_mod_form extends moodleform_mod {
             $explicit=array();
             $explicit[0]  = get_string('yes');
             $explicit[1]  = get_string('no');
-            $explicit[2]  = get_string('clean','pcast');
+            $explicit[2]  = get_string('clean', 'pcast');
             $mform->addElement('select', 'explicit', get_string('explicit', 'pcast'),$explicit);
             $mform->addHelpButton('explicit', 'explicit', 'pcast');
             $mform->disabledIf('explicit', 'enablerssitunes', 'eq', 0);
             $mform->setDefault('explicit', 2);
         }
 
-    /// General Podcast settings
-    //-------------------------------------------------------------------------------
+        // General Podcast settings
+        //-------------------------------------------------------------------------------
         $mform->addElement('header', 'posting', get_string('setupposting','pcast'));
 
-    /// Allow comments
+        // Allow comments
         if($CFG->usecomments) {
             $mform->addElement('selectyesno', 'userscancomment', get_string('userscancomment', 'pcast'));
             $mform->addHelpButton('userscancomment', 'userscancomment', 'pcast');
             $mform->setDefault('userscancomment', 0);
         }
 
-    /// Allow users to post episodes
+        // Allow users to post episodes
         $mform->addElement('selectyesno', 'userscanpost', get_string('userscanpost', 'pcast'));
         $mform->addHelpButton('userscanpost', 'userscanpost', 'pcast');
         $mform->setDefault('userscanpost', 1);
 
-    /// Require approval for posts
+        // Require approval for posts
         $mform->addElement('selectyesno', 'requireapproval', get_string('requireapproval', 'pcast'));
         $mform->addHelpButton('requireapproval', 'requireapproval', 'pcast');
         $mform->setDefault('requireapproval', 1);
 
-    /// Allow Display authors names
+        // Allow Display authors names
         $mform->addElement('selectyesno', 'displayauthor', get_string('displayauthor', 'pcast'));
         $mform->addHelpButton('displayauthor', 'displayauthor', 'pcast');
         $mform->setDefault('displayauthor', 0);
 
-    /// Allow Display of viewers names
+        // Allow Display of viewers names
         $mform->addElement('selectyesno', 'displayviews', get_string('displayviews', 'pcast'));
         $mform->addHelpButton('displayviews', 'displayviews', 'pcast');
         $mform->setDefault('displayviews', 0);
 
-    /// Allow users to select categories
+        // Allow users to select categories
         $mform->addElement('selectyesno', 'userscancategorize', get_string('userscancategorize', 'pcast'));
         $mform->addHelpButton('userscancategorize', 'userscancategorize', 'pcast');
         $mform->setDefault('userscancategorize', 0);
         $mform->disabledIf('userscancategorize', 'enablerssitunes', 'eq', 0);
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
 
-        /// Images
+        // Images
         $mform->addElement('header', 'images', get_string('image', 'pcast'));
         $mform->setAdvanced('images');
 
@@ -252,10 +248,10 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addHelpButton('imagewidth', 'imagewidth', 'pcast');
         $mform->setDefault('imagewidth', 144);
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         // add standard elements, common to all modules
         $this->standard_coursemodule_elements();
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         // add standard buttons, common to all modules
         $this->add_action_buttons();
 
@@ -263,16 +259,16 @@ class mod_pcast_mod_form extends moodleform_mod {
 
     function data_preprocessing(&$default_values) {
         parent::data_preprocessing($default_values);
-        
+
         if ($this->current->instance) {
             // editing existing instance - copy existing files into draft area
             $draftitemid = file_get_submitted_draft_itemid('id');
-            file_prepare_draft_area($draftitemid, $this->context->id, 'mod_pcast','logo', 0, array('subdirs'=>false));
+            file_prepare_draft_area($draftitemid, $this->context->id, 'mod_pcast', 'logo', 0, array('subdirs'=>false));
             $default_values['image'] = $draftitemid;
 
             // convert topcategory and nested to a single category
             $default_values['category'] = (int)$default_values['topcategory'] *1000 + (int)$default_values['nestedcategory'];
-            
+
         }
     }
 }

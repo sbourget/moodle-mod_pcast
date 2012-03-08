@@ -57,7 +57,7 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $ratings = new backup_nested_element('ratings');
 
         $rating = new backup_nested_element('rating', array('id'), array(
-            'component', 'ratingarea','scaleid', 'value', 'userid', 'timecreated', 'timemodified'));
+            'component', 'ratingarea', 'scaleid', 'value', 'userid', 'timecreated', 'timemodified'));
 
         // Build the tree
 

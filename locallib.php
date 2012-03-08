@@ -61,7 +61,7 @@ function pcast_get_media_information($filename) {
  **/
 function pcast_file_path_lookup ($filehash) {
     global $CFG;
-    if (!empty($filehash)){
+    if (!empty($filehash)) {
         $hash1 = substr($filehash, 0, 2);
         $hash2 = substr($filehash, 2, 2);
         $filepath = $CFG->dataroot . '/filedir/' . $hash1 .'/' .$hash2 . '/' . $filehash;
@@ -83,15 +83,14 @@ function pcast_file_path_lookup ($filehash) {
  */
 function pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sortorder = '') {
 
-    echo html_writer::start_tag('div',array('class'=>'pcast-links')). "\n";
+    echo html_writer::start_tag('div', array('class'=>'pcast-links')). "\n";
     echo html_writer::tag('div', get_string("explainalphabet", "pcast"), array('class' => 'pcastexplain'));
     echo html_writer::empty_tag('br');
-    
+
     pcast_print_special_links($cm, $pcast, $mode, $hook);
-    pcast_print_alphabet_links($cm, $pcast, $mode, $hook,$sortkey, $sortorder);
+    pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
     pcast_print_all_links($cm, $pcast, $mode, $hook);
     pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder, $hook);
-    
     echo html_writer::end_tag('div'). "\n";
 }
 
@@ -105,10 +104,10 @@ function pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey = '', $so
  */
 function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorder = '') {
 
-    echo html_writer::start_tag('div',array('class'=>'pcast-links')). "\n";
+    echo html_writer::start_tag('div', array('class'=>'pcast-links')). "\n";
     echo html_writer::tag('div', get_string("explainalphabet", "pcast"), array('class' => 'pcastexplain'));
     echo html_writer::empty_tag('br');
-    
+
     pcast_print_special_links($cm, $pcast, $mode, $hook);
     pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
     pcast_print_all_links($cm, $pcast, $mode, $hook);
@@ -138,16 +137,16 @@ function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorde
  * @param string $sortkey
  * @param string $sortorder
  */
-function pcast_print_author_menu($cm, $pcast,$mode, $hook, $sortkey = '', $sortorder = '') {
+function pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sortorder = '') {
 
-    echo html_writer::start_tag('div',array('class'=>'pcast-links')). "\n";
+    echo html_writer::start_tag('div', array('class'=>'pcast-links')). "\n";
     echo html_writer::tag('div', get_string("explainalphabet", "pcast"), array('class' => 'pcastexplain'));
     echo html_writer::empty_tag('br');
 
-    if(empty($sortkey)) {
+    if (empty($sortkey)) {
         $sortkey = PCAST_AUTHOR_LNAME;
     }
-    if(empty($sortorder)) {
+    if (empty($sortorder)) {
         $sortkey = 'asc';
     }
     pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
@@ -187,7 +186,7 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
      $menu[PCAST_SHOW_NOT_CATEGORISED] = get_string("notcategorised", "pcast");
 
     // Generate Top Categorys;
-    if($topcategories = $DB->get_records("pcast_itunes_categories")) {
+    if ($topcategories = $DB->get_records("pcast_itunes_categories")) {
         foreach ($topcategories as $topcategory) {
             $value = (int)$topcategory->id * 1000;
             $menu[(int)$value] = $topcategory->name;
@@ -195,7 +194,7 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
     }
 
     // Generate Secondary Category
-    if($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
+    if ($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
         foreach ($nestedcategories as $nestedcategory) {
             $value = (int)$nestedcategory->topcategoryid * 1000;
             $value = $value + (int)$nestedcategory->id;
@@ -214,7 +213,7 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
         // Lookup the category name by 4 digit ID
         $category->category = $hook;
         $category = pcast_get_itunes_categories($category, $pcast);
-        
+
         // Print the category names in the format top: nested
         if($category->nestedcategory == 0) {
             echo $menu[(int)$hook];
@@ -223,7 +222,7 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
             echo $menu[(int)$category->topcategory*1000].': '.$menu[(int)$hook];
         }
     }
-     
+
      echo '</span></td>';
      echo '<td class="pcast-menu20">';
 
@@ -249,11 +248,11 @@ function pcast_print_all_links($cm, $pcast, $mode, $hook) {
     global $CFG;
     $strallentries = get_string("allentries", "pcast");
     if ( $hook == 'ALL' ) {
-      echo html_writer::tag('span', $strallentries, array('class' => 'pcast-bold'));
+        echo html_writer::tag('span', $strallentries, array('class' => 'pcast-bold'));
     } else {
-      $strexplainall = strip_tags(get_string("explainall","pcast"));
-      $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>'ALL'));
-      echo html_writer::tag('a', $strallentries, array('title'=>$strexplainall,'href'=>$url));
+        $strexplainall = strip_tags(get_string("explainall", "pcast"));
+        $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>'ALL'));
+      echo html_writer::tag('a', $strallentries, array('title'=>$strexplainall, 'href'=>$url));
     }
      
 }
@@ -267,20 +266,20 @@ function pcast_print_all_links($cm, $pcast, $mode, $hook) {
  * @param string $hook
  */
 function pcast_print_special_links($cm, $pcast, $mode, $hook) {
-    
+
     global $CFG;
 
     $strspecial = get_string("special", "pcast");
     if ( $hook == 'SPECIAL' ) {
-      echo html_writer::tag('span', $strspecial, array('class' => 'pcast-bold'));
-      echo "  | ";
+        echo html_writer::tag('span', $strspecial, array('class' => 'pcast-bold'));
+        echo "  | ";
     } else {
-      $strexplainspecial = strip_tags(get_string("explainspecial", "pcast"));
-      $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>'SPECIAL'));
-      echo html_writer::tag('a', $strspecial, array('title'=>$strexplainspecial,'href'=>$url));
-      echo "  | ";
+        $strexplainspecial = strip_tags(get_string("explainspecial", "pcast"));
+        $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>'SPECIAL'));
+        echo html_writer::tag('a', $strspecial, array('title'=>$strexplainspecial, 'href'=>$url));
+        echo "  | ";
     }
-     
+
 }
 
 /**
@@ -293,7 +292,7 @@ function pcast_print_special_links($cm, $pcast, $mode, $hook) {
  * @param string $sortorder
  */
 function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder) {
-global $CFG;
+    global $CFG;
 
     $alphabet = explode(",", get_string('alphabet', 'langconfig'));
     $letters_by_line = 26;
@@ -313,7 +312,7 @@ global $CFG;
             echo html_writer::empty_tag('br');
         }
     }
-     
+
 }
 
 /**
@@ -325,15 +324,15 @@ global $CFG;
  * @param string $sortkey
  * @param string $sortorder
  */
-function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $hook='') {
+function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $hook='') {
     global $CFG, $OUTPUT;
-    
+
     //Get our strings
     $asc    = get_string("ascending", "pcast");
     $desc   = get_string("descending", "pcast");
     $strsortcreation = get_string("sortbycreation", "pcast");
     $strsortlastupdate = get_string("sortbylastupdate", "pcast");
-    $strsortfname = get_string("firstname");;
+    $strsortfname = get_string("firstname");
     $strsortlname = get_string("lastname");
     $strsortby = get_string("sortby", "pcast");
     $strsep = get_string('labelsep', 'langconfig');
@@ -365,7 +364,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
                 case PCAST_DATE_UPDATED:
                 case PCAST_DATE_CREATED:
                 case PCAST_AUTHOR_FNAME:
-                case PCAST_AUTHOR_LNAME:                    
+                case PCAST_AUTHOR_LNAME:
                     $strchangeto = get_string('changeto', 'pcast', $asc);
                     $neworder = 'asc';
                     $icon = html_writer::empty_tag('img', array('src'=>$OUTPUT->pix_url('asc', 'pcast'),
@@ -383,8 +382,8 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
                     break;
             }
 
-        }        
-        
+        }
+
     switch ($sortkey) {
         case PCAST_DATE_UPDATED:
 
@@ -412,8 +411,8 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
         case PCAST_DATE_CREATED:
 
             //URLs
-            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_UPDATED));
-            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_DATE_CREATED));
+            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>$hook, 'sortkey'=>PCAST_DATE_UPDATED));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>$hook, 'sortkey'=>PCAST_DATE_CREATED));
 
             if ($neworder != '') {
                 $url2->param('sortorder', $neworder);
@@ -429,14 +428,14 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
             $html .= $strsortby.$strsep;
             $html .= $link1 . ' | ';
             $html .= html_writer::tag('span', $link2, array('class'=>'pcast-bold'));
-            
+
             break;
 
         case PCAST_AUTHOR_FNAME:
 
             //URLs
-            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_LNAME));
-            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME));
+            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_LNAME));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME));
 
             if ($neworder != '') {
                 $url2->param('sortorder', $neworder);
@@ -452,15 +451,14 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
             $html .= $strsortby.$strsep;
             $html .= $link1 . ' | ';
             $html .= html_writer::tag('span', $link2, array('class'=>'pcast-bold'));
-            
 
             break;
 
         case PCAST_AUTHOR_LNAME:
 
             //URLs
-            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_LNAME));
-            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id,'mode'=>$mode,'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME));
+            $url1 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_LNAME));
+            $url2 = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>$hook, 'sortkey'=>PCAST_AUTHOR_FNAME));
 
             if ($neworder != '') {
                 $url1->param('sortorder', $neworder);
@@ -476,7 +474,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '',$sortorder = '', $h
             $html .= $strsortby.$strsep;
             $html .= $link1 . ' | ';
             $html .= html_writer::tag('span', $link2, array('class'=>'pcast-bold'));
-            
+
             break;
             
         default:

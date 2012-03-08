@@ -119,8 +119,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         if (empty($data->ratingarea)) {
             $data->ratingarea = 'episode';
         }
-        
-        
+
         $newitemid = $DB->insert_record('rating', $data);
 
     }

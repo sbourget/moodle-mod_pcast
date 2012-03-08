@@ -83,12 +83,10 @@ if ($id) { // if entry is specified
         if (!has_capability('mod/pcast:write', $context)) {
             //No permissions
             print_error('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
-        }
-        else if ($episode->userid != $USER->id) {
+        } else if ($episode->userid != $USER->id) {
             // Not the origional author
             print_error('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
-        }
-        else if (!$ineditperiod) {
+        } else if (!$ineditperiod) {
             // After the editing period
             print_error('erredittimeexpired', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         }
@@ -103,7 +101,8 @@ if ($id) { // if entry is specified
 }
 
 $draftitemid = file_get_submitted_draft_itemid('mediafile');
-file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$pcast->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
+file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $episode->id, 
+                        array('subdirs' => 0, 'maxbytes'=>$pcast->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
 $episode->mediafile = $draftitemid;
 
 $episode->cmid = $cm->id;
@@ -158,7 +157,8 @@ if ($mform->is_cancelled()) {
                    $episode->id, $cm->id);
     }
 
-    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id, array('subdirs' => 0, 'maxbytes'=>$pcast->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
+    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id, 
+                               array('subdirs' => 0, 'maxbytes'=>$pcast->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
 
     //Get the duration if an MP3 file
     $fs = get_file_storage();
@@ -167,8 +167,6 @@ if ($mform->is_cancelled()) {
             $hash = $file->get_contenthash();
             $mime = $file->get_mimetype();
             if ($mime == 'audio/mp3') {
-                // $mp3info=pcast_get_mp3_info(pcast_file_path_lookup ($hash));
-                // $episode->duration = $mp3info->length;
                 $mediainfo=pcast_get_media_information(pcast_file_path_lookup ($hash));;
                 $episode->duration = $mediainfo['playtime_string'];
 
@@ -181,7 +179,7 @@ if ($mform->is_cancelled()) {
 
     //refetch complete entry
     $episode = $DB->get_record('pcast_episodes', array('id'=>$episode->id));
-    
+
     redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id");
 }
 

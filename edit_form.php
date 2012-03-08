@@ -42,10 +42,10 @@ class mod_pcast_entry_form extends moodleform {
         $cm = $this->_customdata['cm'];
         $currententry = $this->_customdata['current'];
 
-//-------------------------------------------------------------------------------
-        /// Adding the "general" fieldset, where all the common settings are showed
+        //-------------------------------------------------------------------------------
+        // Adding the "general" fieldset, where all the common settings are showed
         $mform->addElement('header', 'general', get_string('general', 'form'));
-        /// Adding the standard "name" field
+        // Adding the standard "name" field
         $mform->addElement('text', 'name', get_string('name', 'pcast'), array('size'=>'64'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -55,14 +55,13 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        //$mform->addElement('textarea', 'summary', get_string("summary", "pcast"), 'wrap="virtual" rows="20" cols="50"');
         $mform->addElement('editor', 'summary', get_string('summary', 'pcast'), null);
         $mform->setType('summary', PARAM_RAW);
         $mform->addRule('summary', get_string('required'), 'required', null, 'client');
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
 
-        /// iTunes Settings
+        // iTunes Settings
         $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));
 
         // Subtitle
@@ -110,7 +109,7 @@ class mod_pcast_entry_form extends moodleform {
         $explicit=array();
         $explicit[0]  = get_string('yes');
         $explicit[1]  = get_string('no');
-        $explicit[2]  = get_string('clean','pcast');
+        $explicit[2]  = get_string('clean', 'pcast');
         $mform->addElement('select', 'explicit', get_string('explicit', 'pcast'), $explicit);
         $mform->addHelpButton('explicit', 'explicit', 'pcast');
         $mform->setDefault('explicit', 2);
@@ -121,23 +120,23 @@ class mod_pcast_entry_form extends moodleform {
             array('subdirs'=>0,
                 'maxfiles'=>1,
                 'maxbytes'=>$pcast->maxbytes,
-                'filetypes' => array('audio','video'),
+                'filetypes' => array('audio', 'video'),
                 'returnvalue'=>'ref_id'
             ));
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
 
-        /// hidden
+        // hidden
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
 
-//-------------------------------------------------------------------------------
-        /// add standard buttons, common to all modules
+        //-------------------------------------------------------------------------------
+        // add standard buttons, common to all modules
         $this->add_action_buttons();
 
-//-------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------------
         $this->set_data($currententry);
 
     }

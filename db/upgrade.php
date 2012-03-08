@@ -45,7 +45,7 @@ function xmldb_pcast_upgrade($oldversion=0) {
     global $CFG, $THEME, $DB;
     $dbman = $DB->get_manager();
 
-/// RatingArea Upgrade
+    // RatingArea Upgrade
     if ($oldversion < 2011080700) {
 
         // rating.component and rating.ratingarea have now been added as mandatory fields.
@@ -69,9 +69,8 @@ function xmldb_pcast_upgrade($oldversion=0) {
 
         upgrade_mod_savepoint(true, 2011080700, 'pcast');
 
-    }        
+    }
 
-    
     if ($oldversion < 2012022900) {
         //Add support for file limit on attachments used with pcast episodes
 
@@ -84,13 +83,11 @@ function xmldb_pcast_upgrade($oldversion=0) {
             $dbman->add_field($table, $field);
         }
 
-
         // pcast savepoint reached
         upgrade_mod_savepoint(true, 2012022900, 'pcast');
     }
 
-    
-/// Final return of upgrade result (true/false) to Moodle. Must be
-/// always the last line in the script
+    // Final return of upgrade result (true/false) to Moodle. Must be
+    // always the last line in the script
     return true;
 }
