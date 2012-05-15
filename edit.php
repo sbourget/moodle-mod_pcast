@@ -170,8 +170,9 @@ if ($mform->is_cancelled()) {
                 // $mp3info=pcast_get_mp3_info(pcast_file_path_lookup ($hash));
                 // $episode->duration = $mp3info->length;
                 $mediainfo=pcast_get_media_information(pcast_file_path_lookup ($hash));;
-                $episode->duration = $mediainfo['playtime_string'];
-
+                if (!empty($mediainfo['playtime_string'])) {
+                    $episode->duration = $mediainfo['playtime_string'];
+                }
             }
         }
     }
@@ -181,7 +182,7 @@ if ($mform->is_cancelled()) {
 
     //refetch complete entry
     $episode = $DB->get_record('pcast_episodes', array('id'=>$episode->id));
-    
+
     redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id");
 }
 
