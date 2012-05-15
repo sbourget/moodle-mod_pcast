@@ -55,9 +55,9 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $data->assesstimefinish = $this->apply_date_offset($data->assesstimefinish);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
-        // insert the pcast record.
+        // Insert the pcast record.
         $newitemid = $DB->insert_record('pcast', $data);
-        // immediately after inserting "activity" record, call this.
+        // Immediately after inserting "activity" record, call this.
         $this->apply_activity_instance($newitemid);
         $this->set_mapping('pcast', $oldid, $newitemid);
     }
@@ -85,7 +85,6 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
         $data->episodeid = $this->get_mappingid('pcast_episode', $oldid);
         $data->userid = $this->get_mappingid('user', $data->userid);
-        //$data->lastview = $this->apply_date_offset($data->lastview);
 
         $newitemid = $DB->insert_record('pcast_views', $data);
         $this->set_mapping('pcast_views', $oldid, $newitemid, false); // No files attached.
@@ -102,7 +101,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $data->contextid = $this->task->get_contextid();
         $data->itemid    = $this->get_new_parentid('pcast_episode');
 
-        if ($data->scaleid < 0) { // scale found, get mapping
+        if ($data->scaleid < 0) { // Scale found, get the mapping.
             $data->scaleid = -($this->get_mappingid('scale', abs($data->scaleid)));
         }
         $data->rating = $data->value;
