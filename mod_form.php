@@ -119,6 +119,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->setType('subtitle', PARAM_NOTAGS);
             $mform->addHelpButton('subtitle', 'subtitle', 'pcast');
             $mform->disabledIf('subtitle', 'enablerssitunes', 'eq', 0);
+            $mform->addRule('subtitle', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
             // Owner
             $ownerlist = array();
@@ -137,6 +138,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->setType('keywords', PARAM_NOTAGS);
             $mform->addHelpButton('keywords', 'keywords', 'pcast');
             $mform->disabledIf('keywords', 'enablerssitunes', 'eq', 0);
+            $mform->addRule('keywords', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
             // Generate Top Categorys;
             $newoptions = array();
@@ -166,7 +168,6 @@ class mod_pcast_mod_form extends moodleform_mod {
             $this->init_javascript_enhancement('category', 'smartselect',
                     array('selectablecategories' => false, 'mode' => 'compact'));
 
-            
             // Content
             $explicit=array();
             $explicit[0]  = get_string('yes');
