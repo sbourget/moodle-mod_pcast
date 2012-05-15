@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,9 +26,9 @@
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
-$id       = required_param('id', PARAM_INT);          // course module ID
-$confirm  = optional_param('confirm', 0, PARAM_INT);  // commit the operation?
-$episode    = optional_param('episode', 0, PARAM_INT);    // episode id
+$id       = required_param('id', PARAM_INT);          // Course module ID.
+$confirm  = optional_param('confirm', 0, PARAM_INT);  // Commit the operation?
+$episode    = optional_param('episode', 0, PARAM_INT);    // Episode id.
 $prevmode = required_param('prevmode', PARAM_ALPHA);
 $hook     = optional_param('hook', '', PARAM_CLEAN);
 

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,7 +22,7 @@
  */
 
 
-require_once($CFG->dirroot . '/mod/pcast/backup/moodle2/backup_pcast_stepslib.php'); // Because it exists (must)
+require_once($CFG->dirroot . '/mod/pcast/backup/moodle2/backup_pcast_stepslib.php'); // Because it exists (must).
 
 /**
  * pcast backup task that provides all the settings and steps to perform one
@@ -35,14 +34,14 @@ class backup_pcast_activity_task extends backup_activity_task {
      * Define (add) particular settings this activity can have
      */
     protected function define_my_settings() {
-        // No particular settings for this activity
+        // No particular settings for this activity.
     }
 
     /**
      * Define (add) particular steps this activity can have
      */
     protected function define_my_steps() {
-        // pcast only has one structure step
+        // pcast only has one structure step.
         $this->add_step(new backup_pcast_activity_structure_step('pcast_structure', 'pcast.xml'));
     }
 
@@ -55,11 +54,11 @@ class backup_pcast_activity_task extends backup_activity_task {
 
         $base = preg_quote($CFG->wwwroot, "/");
 
-        // Link to the list of pcasts
+        // Link to the list of pcasts.
         $search="/(".$base."\/mod\/pcast\/index.php\?id\=)([0-9]+)/";
         $content= preg_replace($search, '$@PCASTINDEX*$2@$', $content);
 
-        // Link to pcast view by moduleid
+        // Link to pcast view by moduleid.
         $search="/(".$base."\/mod\/pcast\/view.php\?id\=)([0-9]+)/";
         $content= preg_replace($search, '$@PCASTVIEWBYID*$2@$', $content);
 

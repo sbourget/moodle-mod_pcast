@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -29,10 +28,10 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
 
     protected function define_structure() {
 
-        // To know if we are including userinfo
+        // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 
-        // Define each element separated
+        // Define each element separated.
 
         $pcast = new backup_nested_element('pcast', array('id'), array(
             'userid', 'name', 'intro', 'introformat', 'userscancomment',
@@ -59,7 +58,7 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $rating = new backup_nested_element('rating', array('id'), array(
             'component', 'ratingarea', 'scaleid', 'value', 'userid', 'timecreated', 'timemodified'));
 
-        // Build the tree
+        // Build the tree.
 
         $pcast->add_child($episodes);
         $episodes->add_child($episode);
@@ -70,11 +69,11 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $episode->add_child($ratings);
         $ratings->add_child($rating);
 
-        // Define sources
+        // Define sources.
 
         $pcast->set_source_table('pcast', array('id' => backup::VAR_ACTIVITYID));
 
-        // All the rest of elements only happen if we are including user info
+        // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
 
             $episode->set_source_sql('
@@ -97,7 +96,7 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
             
         }
 
-        // Define id annotations
+        // Define id annotations.
 
         $pcast->annotate_ids('user', 'userid');
         $episode->annotate_ids('user', 'userid');
@@ -106,14 +105,14 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $rating->annotate_ids('scale', 'scaleid');
         $rating->annotate_ids('user', 'userid');
 
-        // Define file annotations
+        // Define file annotations.
 
-        $pcast->annotate_files('mod_pcast', 'intro', null); // This file area hasn't itemid
+        $pcast->annotate_files('mod_pcast', 'intro', null); // This file area hasn't itemid.
         $pcast->annotate_files('mod_pcast', 'logo', null);
 
         $episode->annotate_files('mod_pcast', 'episode', 'id');
 
-        // Return the root element (pcast), wrapped into standard activity structure
+        // Return the root element (pcast), wrapped into standard activity structure.
         return $this->prepare_activity_structure($pcast);
 
     }

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -27,7 +26,7 @@ require_once(dirname(__FILE__) . '/../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
-$eid = required_param('eid', PARAM_INT);    // Episode ID
+$eid = required_param('eid', PARAM_INT);    // Episode ID.
 
 $mode = optional_param('mode', PCAST_APPROVAL_VIEW, PARAM_ALPHANUM);
 $hook = optional_param('hook', 'ALL', PARAM_CLEAN);

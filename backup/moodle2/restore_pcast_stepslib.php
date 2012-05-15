@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -23,7 +22,7 @@
  */
 
 /**
- * Structure step to restore one pcast activity
+ * Structure step to restore one pcast activity.
  */
 class restore_pcast_activity_structure_step extends restore_activity_structure_step {
 
@@ -40,7 +39,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
         }
 
-        // Return the paths wrapped into standard activity structure
+        // Return the paths wrapped into standard activity structure.
         return $this->prepare_activity_structure($paths);
     }
 
@@ -56,9 +55,9 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $data->assesstimefinish = $this->apply_date_offset($data->assesstimefinish);
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
-        // insert the pcast record
+        // insert the pcast record.
         $newitemid = $DB->insert_record('pcast', $data);
-        // immediately after inserting "activity" record, call this
+        // immediately after inserting "activity" record, call this.
         $this->apply_activity_instance($newitemid);
         $this->set_mapping('pcast', $oldid, $newitemid);
     }
@@ -75,7 +74,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $data->timemodified = $this->apply_date_offset($data->timemodified);
 
         $newitemid = $DB->insert_record('pcast_episodes', $data);
-        $this->set_mapping('pcast_episode', $oldid, $newitemid, true); // files by this itemname
+        $this->set_mapping('pcast_episode', $oldid, $newitemid, true); // Files by this itemname.
     }
 
     protected function process_pcast_view($data) {
@@ -89,7 +88,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         //$data->lastview = $this->apply_date_offset($data->lastview);
 
         $newitemid = $DB->insert_record('pcast_views', $data);
-        $this->set_mapping('pcast_views', $oldid, $newitemid, false); // no files attached
+        $this->set_mapping('pcast_views', $oldid, $newitemid, false); // No files attached.
 
     }
 
@@ -99,7 +98,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $data = (object)$data;
         $oldid = $data->id;
 
-        // Cannot use ratings API, cause, it's missing the ability to specify times (modified/created)
+        // Cannot use ratings API, cause, it's missing the ability to specify times (modified/created).
         $data->contextid = $this->task->get_contextid();
         $data->itemid    = $this->get_new_parentid('pcast_episode');
 
@@ -126,11 +125,11 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
 
     protected function after_execute() {
-        // Add pcast related files, no need to match by itemname (just internally handled context)
+        // Add pcast related files, no need to match by itemname (just internally handled context).
         $this->add_related_files('mod_pcast', 'intro', null);
         $this->add_related_files('mod_pcast', 'logo', null);
 
-        // Add pcast related files, matching by itemname (pcast_episode)
+        // Add pcast related files, matching by itemname (pcast_episode).
 
         $this->add_related_files('mod_pcast', 'episode', 'pcast_episode');
     }

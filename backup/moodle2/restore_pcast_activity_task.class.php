@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -24,7 +23,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/mod/pcast/backup/moodle2/restore_pcast_stepslib.php'); // Because it exists (must)
+require_once($CFG->dirroot . '/mod/pcast/backup/moodle2/restore_pcast_stepslib.php'); // Because it exists (must).
 
 
 /**
@@ -109,7 +108,7 @@ class restore_pcast_activity_task extends restore_activity_task {
     static public function define_restore_log_rules_for_course() {
         $rules = array();
 
-        // Fix old wrong uses (missing extension)
+        // Fix old wrong uses (missing extension).
         $rules[] = new restore_log_rule('pcast', 'view all', 'index?id={course}', null,
                                         null, null, 'index.php?id={course}');
         $rules[] = new restore_log_rule('pcast', 'view all', 'index.php?id={course}', null);
