@@ -44,14 +44,14 @@ function xmldb_pcast_upgrade($oldversion=0) {
     global $CFG, $THEME, $DB;
     $dbman = $DB->get_manager();
 
-    // RatingArea Upgrade
+    // RatingArea Upgrade.
     if ($oldversion < 2011080700) {
 
         // rating.component and rating.ratingarea have now been added as mandatory fields.
-        // Presently you can only rate data entries so component = 'mod_pcast' and ratingarea = 'episode'
+        // Presently you can only rate data entries so component = 'mod_pcast' and ratingarea = 'episode'.
         // for all ratings with a pcast context.
         // We want to update all ratings that belong to a pcast context and don't already have a component set.
-        // This could take a while reset upgrade timeout to 5 min
+        // This could take a while reset upgrade timeout to 5 min.
 
         upgrade_set_timeout(60 * 20);
         $sql = "UPDATE {rating}
@@ -71,22 +71,21 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2012022900) {
-        //Add support for file limit on attachments used with pcast episodes
+        //Add support for file limit on attachments used with pcast episodes.
 
-        // Define field maxbytes to be added to pcast
+        // Define field maxbytes to be added to pcast.
         $table = new xmldb_table('pcast');
         $field = new xmldb_field('maxbytes', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'userscanpost');
 
-        // Conditionally launch add field maxbytes
+        // Conditionally launch add field maxbytes.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        // pcast savepoint reached
+        // pcast savepoint reached.
         upgrade_mod_savepoint(true, 2012022900, 'pcast');
     }
 
-    // Final return of upgrade result (true/false) to Moodle. Must be
-    // always the last line in the script
+    // Final return of upgrade result (true/false) to Moodle. Must be always the last line in the script.
     return true;
 }

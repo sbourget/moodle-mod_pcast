@@ -29,7 +29,7 @@
 function xmldb_pcast_install() {
     global $DB;
 
-    // Install default categories
+    // Install default categories.
 
     $dataobject = new stdClass();
     $dataobject->id = 1;
@@ -97,7 +97,7 @@ function xmldb_pcast_install() {
     $DB->insert_record('pcast_itunes_categories', $dataobject, $returnid=false, $bulk=false);
 
     unset($dataobject);
-    // Itunes Nested Categories
+    // Itunes Nested Categories.
 
     $dataobject = new stdClass();
     $dataobject->id =1;
@@ -125,7 +125,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Visual Arts';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #2
+    // Category #2.
     $dataobject->topcategoryid = 2;
 
     $dataobject->id++;
@@ -148,7 +148,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Shopping';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #4
+    // Category #4.
     $dataobject->topcategoryid = 4;
 
     $dataobject->id++;
@@ -171,7 +171,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Training';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #5
+    // Category #5.
     $dataobject->topcategoryid = 5;
 
     $dataobject->id++;
@@ -194,7 +194,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Video Games';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #6
+    // Category #6.
     $dataobject->topcategoryid = 6;
 
     $dataobject->id++;
@@ -213,7 +213,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Regional';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #7
+    // Category #7.
     $dataobject->topcategoryid = 7;
 
     $dataobject->id++;
@@ -232,7 +232,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Sexuality';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #11
+    // Category #11.
     $dataobject->topcategoryid = 11;
 
     $dataobject->id++;
@@ -259,7 +259,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Other';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #12
+    // Category #12.
     $dataobject->topcategoryid = 12;
 
     $dataobject->id++;
@@ -274,7 +274,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Social Sciences';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #13
+    // Category #13.
     $dataobject->topcategoryid = 13;
 
     $dataobject->id++;
@@ -293,7 +293,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Places & Travel';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #14
+    // Category #14.
     $dataobject->topcategoryid = 14;
 
     $dataobject->id++;
@@ -312,7 +312,7 @@ function xmldb_pcast_install() {
     $dataobject->name = 'Professional';
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, $returnid=false, $bulk=false);
 
-    // Category #15
+    // Category #15.
     $dataobject->topcategoryid = 15;
 
     $dataobject->id++;

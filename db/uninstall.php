@@ -38,7 +38,7 @@ function mod_pcast_uninstall() {
     global $DB;
 
     $fs = get_file_storage();
-    // Remove all files stored in the pcast filepool area from the database
+    // Remove all files stored in the pcast filepool area from the database.
     $files = $DB->get_records('files', array('component'=>'mod_pcast'), 'id');
     foreach ($files as $file) {
         $fs->get_file_instance($file)->delete();

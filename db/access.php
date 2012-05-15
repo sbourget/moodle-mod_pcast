@@ -60,8 +60,8 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         ),
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    ),    
-    
+    ),
+
     'mod/pcast:view' => array(
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
