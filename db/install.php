@@ -32,6 +32,7 @@ function xmldb_pcast_install() {
 
     // Install default categories
 
+    $dataobject = new stdClass();
     $dataobject->id = 1;
     $dataobject->name = 'Arts';
     $DB->insert_record('pcast_itunes_categories', $dataobject, $returnid=false, $bulk=false);
@@ -99,6 +100,7 @@ function xmldb_pcast_install() {
     unset($dataobject);
     // Itunes Nested Categories
 
+    $dataobject = new stdClass();
     $dataobject->id =1;
     $dataobject->topcategoryid = 1;
     $dataobject->name = 'Design';

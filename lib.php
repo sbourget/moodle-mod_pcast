@@ -127,6 +127,7 @@ function pcast_add_instance($pcast) {
     }
 
     // Get the episode category information
+    $defaults = new stdClass();
     $defaults->topcategory = 0;
     $defaults->nestedcategory = 0;
     $pcast = pcast_get_itunes_categories($pcast, $defaults);
