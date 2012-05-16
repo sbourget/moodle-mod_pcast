@@ -29,8 +29,8 @@ require_once(dirname(__FILE__).'/locallib.php');
 require_once(dirname(__FILE__).'/edit_form.php');
 
 
-$cmid = required_param('cmid', PARAM_INT);            // Course Module ID
-$id   = optional_param('id', 0, PARAM_INT);           // EntryID
+$cmid = required_param('cmid', PARAM_INT);            // Course Module ID.
+$id   = optional_param('id', 0, PARAM_INT);           // EntryID.
 
 
 // Check for required stuff
@@ -56,7 +56,7 @@ if (!empty($id)) {
 $PAGE->set_url($url);
 $PAGE->set_context($context);
 
-if ($id) { // if entry is specified
+if ($id) { // If the entry is specified.
     if (!has_capability('mod/pcast:write', $context)) {
 
         print_error('noeditprivlidges', 'pcast', new moodle_url('/mod/pcast/view.php', array('id'=>$cmid)));
@@ -66,33 +66,33 @@ if ($id) { // if entry is specified
         print_error('invalidentry', 'pcast');
     }
 
-    //Calculate editing period
+    // Calculate the editing period.
     $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
 
     if (has_capability('mod/pcast:manage', $context)) {
-        //Teacher
+        // Teacher.
         if (!has_capability('mod/pcast:write', $context)) {
-            //No permissions
+            // No permissions.
             print_error('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         }
 
     } else {
-        //Not Teacher
+        // Not Teacher.
         if (!has_capability('mod/pcast:write', $context)) {
-            //No permissions
+            // No permissions.
             print_error('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         } else if ($episode->userid != $USER->id) {
-            // Not the origional author
+            // Not the origional author.
             print_error('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         } else if (!$ineditperiod) {
-            // After the editing period
+            // After the editing period.
             print_error('erredittimeexpired', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         }
 
     }
 
 
-} else { // new entry
+} else { // A new entry.
     require_capability('mod/pcast:write', $context);
     $episode = new object();
     $episode->id = null;
@@ -107,7 +107,7 @@ $episode->cmid = $cm->id;
 if (isset($episode->summary)) {
     $episode->summary =array('text' => $episode->summary, 'format' => '1');
 }
-// create form and set initial data
+// Create the form and set the initial data.
 $mform = new mod_pcast_entry_form(null, array('current'=>$episode, 'cm'=>$cm, 'pcast'=>$pcast));
 
 if ($mform->is_cancelled()) {
@@ -120,7 +120,7 @@ if ($mform->is_cancelled()) {
 } else if ($episode = $mform->get_data()) {
     $timenow = time();
 
-    //Calculated settings
+    // Calculated settings.
     if (empty($episode->id)) {
         $episode->pcastid       = $pcast->id;
         $episode->timecreated   = $timenow;
@@ -132,23 +132,23 @@ if ($mform->is_cancelled()) {
     $episode->approved         = 0;
     $episode->name = clean_param($episode->name, PARAM_ALPHANUM);
 
-    // Get the episode category information
+    // Get the episode category information.
     $episode = pcast_get_itunes_categories($episode, $pcast);
 
-    // Episode approval
+    // Episode approval.
     if (!$pcast->requireapproval or has_capability('mod/pcast:approve', $context)) {
         $episode->approved = 1;
     }
 
     if (empty($episode->id)) {
-        //new entry
+        // A new entry.
         $episode->id = $DB->insert_record('pcast_episodes', $episode);
         add_to_log($course->id, "pcast", "add episode",
                    "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id",
                    $episode->id, $cm->id);
 
     } else {
-        //existing entry
+        // An existing entry.
         $DB->update_record('pcast_episodes', $episode);
         add_to_log($course->id, "pcast", "update episode",
                    "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id",
@@ -158,7 +158,7 @@ if ($mform->is_cancelled()) {
     file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id, 
                                array('subdirs' => 0, 'maxbytes'=>$pcast->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
 
-    //Get the duration if an MP3 file
+    // Get the duration if an MP3 file.
     $fs = get_file_storage();
     if ($files = $fs->get_area_files($context->id, 'mod_pcast', 'episode', $episode->id, "timemodified", false)) {
         foreach ($files as $file) {
@@ -174,10 +174,10 @@ if ($mform->is_cancelled()) {
         }
     }
 
-    // store the updated value values
+    // Store the updated value values.
     $DB->update_record('pcast_episodes', $episode);
 
-    //refetch complete entry
+    // Refetch the complete entry.
     $episode = $DB->get_record('pcast_episodes', array('id'=>$episode->id));
 
     redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id");

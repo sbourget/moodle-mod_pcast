@@ -29,7 +29,7 @@
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
-$id = required_param('id', PARAM_INT);   // course
+$id = required_param('id', PARAM_INT);   // Course.
 
 if (! $course = $DB->get_record('course', array('id' => $id))) {
     print_error('invalidcourse', 'pcast');
@@ -39,7 +39,7 @@ require_course_login($course);
 
 add_to_log($course->id, 'pcast', 'view all', "index.php?id=$course->id", '');
 
-/// Print the header
+// Print the header.
 
 $PAGE->set_url('/mod/pcast/view.php', array('id' => $id));
 $PAGE->set_title($course->fullname);
@@ -47,7 +47,7 @@ $PAGE->set_heading($course->shortname);
 
 echo $OUTPUT->header();
 
-/// Get all the appropriate data
+// Get all the appropriate data.
 
 if (!$pcasts = get_all_instances_in_course('pcast', $course)) {
     echo $OUTPUT->heading(get_string('nopcasts', 'pcast'), 2);
@@ -56,7 +56,7 @@ if (!$pcasts = get_all_instances_in_course('pcast', $course)) {
     die();
 }
 
-/// Print the list of instances (your module will probably extend this)
+// Print the list of instances (your module will probably extend this).
 
 $timenow  = time();
 $strname  = get_string('name');
@@ -78,11 +78,11 @@ if ($course->format == 'weeks') {
 
 foreach ($pcasts as $pcast) {
     if (!$pcast->visible) {
-        //Show dimmed if the mod is hidden
+        // Show dimmed if the mod is hidden.
         $url = new moodle_url('/mod/pcast/view.php', array('id'=>$pcast->coursemodule));
         $link = html_writer::tag('a', format_string($pcast->name) , array('href'=>$url, 'class'=>'dimmed'));
     } else {
-        //Show normal if the mod is visible
+        // Show normal if the mod is visible.
         $url = new moodle_url('/mod/pcast/view.php', array('id'=>$pcast->coursemodule));
         $link = html_writer::tag('a', format_string($pcast->name) , array('href'=>$url));
     }
@@ -98,6 +98,6 @@ echo $OUTPUT->heading(get_string('modulenameplural', 'pcast'), 2);
 echo html_writer::table($table);
 
 
-/// Finish the page
+// Finish the page.
 
 echo $OUTPUT->footer();

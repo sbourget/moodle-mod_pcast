@@ -152,6 +152,4 @@ $capabilities = array(
         ),
     ),
 
-
 );
-

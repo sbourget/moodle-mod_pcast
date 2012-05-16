@@ -66,14 +66,9 @@ $PAGE->set_context($context);
 
 $manageentries = has_capability('mod/pcast:manage', $context);
 
-//if (! $pcast = $DB->get_record("pcast", array("id"=>$cm->instance))) {
-//    print_error('invalidid', 'pcast');
-//}
-
-
 $strareyousuredelete = get_string("areyousuredelete", "pcast");
 
-if (($episode->userid != $USER->id) and !$manageentries) { // guest id is never matched, no need for special check here
+if (($episode->userid != $USER->id) and !$manageentries) { // Guest id is never matched, no need for special check here.
     print_error('nopermissiontodelepisode');
 }
 $ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
@@ -81,16 +76,16 @@ if (!$ineditperiod and !$manageentries) {
     print_error('errdeltimeexpired', 'pcast');
 }
 
-/// If data submitted, then process and store.
+/// If data is submitted, then process and store.
 
-if ($confirm and confirm_sesskey()) { // the operation was confirmed.
+if ($confirm and confirm_sesskey()) { // The operation was confirmed.
 
     $fs = get_file_storage();
     $fs->delete_area_files($context->id, 'pcast_episode', $episode->id);
     $DB->delete_records("comments", array('itemid'=>$episode->id, 'commentarea'=>'pcast_episode', 'contextid'=>$context->id));
     $DB->delete_records("pcast_episodes", array("id"=>$episode->id));
 
-    //delete pcast episode ratings
+    // Delete pcast episode ratings.
     require_once($CFG->dirroot.'/rating/lib.php');
     $delopt = new stdClass();
     $delopt->contextid = $context->id;
@@ -103,12 +98,12 @@ if ($confirm and confirm_sesskey()) { // the operation was confirmed.
     add_to_log($course->id, "pcast", "delete episode", "view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook", $episode->id, $cm->id);
     redirect("view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook");
 
-} else {        // the operation has not been confirmed yet so ask the user to do so
+} else {        // The operation has not been confirmed yet so ask the user to do so.
     $PAGE->navbar->add(get_string('delete'));
     $PAGE->set_title(format_string($pcast->name));
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
-    //TODO: Replace withg CSS
+    // TODO: Replace with CSS
     $areyousure = "<b>".format_string($episode->name)."</b><p>$strareyousuredelete</p>";
     $linkyes    = 'deleteepisode.php';
     $linkno     = 'view.php';

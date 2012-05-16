@@ -27,7 +27,7 @@
  */
 
 if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.');    ///  It must be included from a Moodle page.
+    die('Direct access to this script is forbidden.');    // It must be included from a Moodle page.
 }
 
 require_once($CFG->dirroot.'/lib/formslib.php');
@@ -41,10 +41,10 @@ class mod_pcast_entry_form extends moodleform {
         $cm = $this->_customdata['cm'];
         $currententry = $this->_customdata['current'];
 
-        //-------------------------------------------------------------------------------
-        // Adding the "general" fieldset, where all the common settings are showed
+        // -------------------------------------------------------------------------------
+        // Adding the "general" fieldset, where all the common settings are showed.
         $mform->addElement('header', 'general', get_string('general', 'form'));
-        // Adding the standard "name" field
+        // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('name', 'pcast'), array('size'=>'64'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -58,24 +58,24 @@ class mod_pcast_entry_form extends moodleform {
         $mform->setType('summary', PARAM_RAW);
         $mform->addRule('summary', get_string('required'), 'required', null, 'client');
 
-        //-------------------------------------------------------------------------------
+        // -------------------------------------------------------------------------------
 
-        // iTunes Settings
+        // iTunes Settings.
         $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));
 
-        // Subtitle
+        // Subtitle.
         $mform->addElement('text', 'subtitle', get_string('subtitle', 'pcast'), array('size'=>'64'));
         $mform->setType('subtitle', PARAM_NOTAGS);
         $mform->addHelpButton('subtitle', 'subtitle', 'pcast');
 
-        // Keywords
+        // Keywords.
         $mform->addElement('text', 'keywords', get_string('keywords', 'pcast'), array('size'=>'64'));
         $mform->setType('keywords', PARAM_NOTAGS);
         $mform->addHelpButton('keywords', 'keywords', 'pcast');
 
-        //Disable if turned off on module settings page
+        // Disable if turned off on module settings page.
         if ($pcast->userscancategorize) {
-            // Generate Top Categorys;
+            // Generate Top Categorys.
             $newoptions = array();
             if ($topcategories = $DB->get_records("pcast_itunes_categories")) {
                 foreach ($topcategories as $topcategory) {
@@ -84,7 +84,7 @@ class mod_pcast_entry_form extends moodleform {
                 }
             }
 
-            // Generate Secondary Category
+            // Generate Secondary Category.
             if ($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
                 foreach ($nestedcategories as $nestedcategory) {
                     $value = (int)$nestedcategory->topcategoryid * 1000;
@@ -94,7 +94,7 @@ class mod_pcast_entry_form extends moodleform {
             }
             ksort($newoptions);
 
-            // Category form element
+            // Category form element.
             $mform->addElement('select', 'category', get_string('category', 'pcast'),
                     $newoptions, array('size' => '1'));
             $mform->addHelpButton('category', 'category', 'pcast');
@@ -104,7 +104,7 @@ class mod_pcast_entry_form extends moodleform {
                     array('selectablecategories' => false, 'mode' => 'compact'));
         }
 
-        // Content
+        // Content.
         $explicit=array();
         $explicit[0]  = get_string('yes');
         $explicit[1]  = get_string('no');
@@ -113,7 +113,7 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addHelpButton('explicit', 'explicit', 'pcast');
         $mform->setDefault('explicit', 2);
 
-        // Attachment
+        // Attachment.
         $mform->addElement('header', 'attachments', get_string('attachment', 'pcast'));
         $mform->addElement('filemanager', 'mediafile', get_string('pcastmediafile', 'pcast'), null,
             array('subdirs'=>0,
@@ -125,14 +125,14 @@ class mod_pcast_entry_form extends moodleform {
 
         //-------------------------------------------------------------------------------
 
-        // hidden
+        // Hidden.
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
 
         //-------------------------------------------------------------------------------
-        // add standard buttons, common to all modules
+        // Add standard buttons, common to all modules.
         $this->add_action_buttons();
 
         //-------------------------------------------------------------------------------
