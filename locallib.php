@@ -911,6 +911,8 @@ function pcast_get_episode_sql() {
                 p.userid AS userid,
                 p.name AS name,
                 p.summary AS summary,
+                p.summaryformat AS summaryformat,
+                p.summarytrust AS summarytrust,
                 p.mediafile AS mediafile,
                 p.duration AS duration,
                 p.explicit AS explicit,
@@ -978,8 +980,15 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $table->align = array ("RIGHT", "LEFT");
     // Name of episode
     $table->data[] = array (get_string("name","pcast"),  format_text($episode->name, FORMAT_HTML, array('context'=>$context)));
+    
     // Description
-    $table->data[] = array (get_string("summary","pcast"),  format_text($episode->summary, FORMAT_HTML, array('context'=>$context)));
+    $summarytext = format_text($episode->summary, $episode->summaryformat, array('context'=>$context));
+    
+    $summarytext = file_rewrite_pluginfile_urls($summarytext, 'pluginfile.php',
+                                                $context->id, 'mod_pcast', 
+                                                'summary', $episode->id);
+    
+    $table->data[] = array (get_string("summary","pcast"),  $summarytext);
 
     // Category -Display only if enabled
     if ((isset($episode->userscancategorize))and ($episode->userscancategorize != '0')) {
@@ -1081,8 +1090,15 @@ function pcast_display_episode_full($episode, $cm, $course){
     $table->align = array ("RIGHT", "LEFT");
     // Name of episode
     $table->data[] = array (get_string("name","pcast"), $episode->name);
+    
     // Description
-    $table->data[] = array (get_string("summary","pcast"), $episode->summary);
+    $summarytext = format_text($episode->summary, $episode->summaryformat, array('context'=>$context));
+    
+    $summarytext = file_rewrite_pluginfile_urls($summarytext, 'pluginfile.php',
+                                                $context->id, 'mod_pcast', 
+                                                'summary', $episode->id);
+    
+    $table->data[] = array (get_string("summary","pcast"),  $summarytext);
 
     // Category -Display only if enabled
     if ((isset($episode->userscancategorize))and ($episode->userscancategorize != '0')) {

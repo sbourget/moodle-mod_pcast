@@ -483,7 +483,17 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
                 $result .= rss_full_tag('title',3,false,strip_tags($item->title));
                 $result .= rss_full_tag('link',3,false,$item->link);
                 $result .= rss_full_tag('pubDate',3,false,gmdate('D, d M Y H:i:s',$item->pubdate).' GMT');  # MDL-12563
-                $result .= rss_full_tag('description',3,false,$item->description);
+
+                // Rewrite the URLs for the description fields
+                if($CFG->pcast_allowhtmlinsummary) {
+                    // Re-write the url paths to be valid
+                    $description = file_rewrite_pluginfile_urls($item->description, 'pluginfile.php',$context->id, 'mod_pcast', 'summary', $item->id);
+                } else {
+                    // Strip out all HTML.
+                    $description = strip_tags($item->description);
+                }
+                
+                $result .= rss_full_tag('description',3,false,$description);
                 $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
 
                 //Include the author if exists

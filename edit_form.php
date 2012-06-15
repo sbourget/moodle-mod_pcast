@@ -40,7 +40,8 @@ class mod_pcast_entry_form extends moodleform {
         $mform =& $this->_form;
         $cm = $this->_customdata['cm'];
         $currententry = $this->_customdata['current'];
-
+        $context = $this->_customdata['context'];
+        
         // -------------------------------------------------------------------------------
         // Adding the "general" fieldset, where all the common settings are showed.
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -54,7 +55,8 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $mform->addElement('editor', 'summary', get_string('summary', 'pcast'), null);
+        $mform->addElement('editor', 'summary', get_string('summary', 'pcast'), null, 
+                           array('maxfiles' => EDITOR_UNLIMITED_FILES, 'context'=> $context));
         $mform->setType('summary', PARAM_RAW);
         $mform->addRule('summary', get_string('required'), 'required', null, 'client');
 

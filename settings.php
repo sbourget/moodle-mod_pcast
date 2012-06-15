@@ -49,5 +49,9 @@ $options = array(0=>get_string('no'), 1=>get_string('yes'));
 $settings->add(new admin_setting_configselect('pcast_usemediafilter', get_string('configusemediafilter2', 'pcast'),
                    get_string('configusemediafilter', 'pcast'), 0, $options));
 
+unset($options);
+$options = array(0=>get_string('no'), 1=>get_string('yes'));
+$settings->add(new admin_setting_configselect('pcast_allowhtmlinsummary', get_string('configallowhtmlinsummary2', 'pcast'),
+                   get_string('configallowhtmlinsummary', 'pcast'), 0, $options));
 
 ?>

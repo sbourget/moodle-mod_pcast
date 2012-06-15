@@ -182,6 +182,7 @@ function pcast_update_instance($pcast) {
     }
 
     // Get the episode category information
+    $defaults = new stdClass();
     $defaults->topcategory = 0;
     $defaults->nestedcategory = 0;
     $pcast = pcast_get_itunes_categories($pcast, $defaults);
@@ -665,7 +666,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         return false;
     }
 
-    if ($filearea === 'episode') {
+    if ($filearea === 'episode' or $filearea === 'summary') {
         $episodeid = (int)array_shift($args);
 
         if (!$episode = $DB->get_record('pcast_episodes', array('id'=>$episodeid))) {
@@ -737,6 +738,7 @@ function pcast_add_view_instance($pcast, $userid) {
     if (!$view = $DB->get_record("pcast_views", array("episodeid" => $pcast->id, "userid" => $userid))) {
         $view=null;
         unset($view);
+        $view = new stdClass();
         $view->userid=$userid;
         $view->views=1;
         $view->episodeid=$pcast->id;

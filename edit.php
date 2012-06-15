@@ -96,6 +96,9 @@ if ($id) { // If the entry is specified.
     require_capability('mod/pcast:write', $context);
     $episode = new object();
     $episode->id = null;
+    $episode->summary = '';                // This will be updated later.
+    $episode->summaryformat = FORMAT_HTML; // This will be updated later.
+    $episode->summarytrust = 0;            // This will be updated later.
 }
 
 $draftitemid = file_get_submitted_draft_itemid('mediafile');
@@ -104,11 +107,14 @@ file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $epi
 $episode->mediafile = $draftitemid;
 
 $episode->cmid = $cm->id;
-if (isset($episode->summary)) {
-    $episode->summary =array('text' => $episode->summary, 'format' => '1');
-}
+
+$draftid_editor = file_get_submitted_draft_itemid('summary');
+$currenttext = file_prepare_draft_area($draftid_editor, $context->id, 'mod_pcast', 'summary',
+                                       $episode->id, array('subdirs'=>true), $episode->summary);
+$episode->summary = array('text'=>$currenttext, 'format'=>$episode->summaryformat, 'itemid'=>$draftid_editor);
+
 // Create the form and set the initial data.
-$mform = new mod_pcast_entry_form(null, array('current'=>$episode, 'cm'=>$cm, 'pcast'=>$pcast));
+$mform = new mod_pcast_entry_form(null, array('current'=>$episode, 'cm'=>$cm, 'pcast'=>$pcast, 'context'=>$context));
 
 if ($mform->is_cancelled()) {
     if ($id) {
@@ -127,6 +133,7 @@ if ($mform->is_cancelled()) {
         $episode->userid        = $USER->id;
         $episode->course        = $COURSE->id;
     }
+    $episode->summaryformat    = $episode->summary['format'];
     $episode->summary          = $episode->summary['text'];
     $episode->timemodified     = $timenow;
     $episode->approved         = 0;
@@ -174,6 +181,10 @@ if ($mform->is_cancelled()) {
         }
     }
 
+    //Save files in summary field and re-write hyperlinks.
+    $episode->summary = file_save_draft_area_files($draftid_editor, $context->id, 'mod_pcast', 'summary',
+                                          $episode->id, array('subdirs'=>true), $episode->summary);
+    
     // Store the updated value values.
     $DB->update_record('pcast_episodes', $episode);
 
