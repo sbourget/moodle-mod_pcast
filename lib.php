@@ -428,28 +428,6 @@ function pcast_cron () {
 }
 
 /**
- * Must return an array of user records (all data) who are participants
- * for a given instance of pcast. Must include every user involved
- * in the instance, independient of his role (student, teacher, admin...)
- * See other modules as example.
- *
- * @param int $pcastid ID of an instance of this module
- * @return mixed boolean/array of students
- */
-function pcast_get_participants($pcastid) {
-    global $DB;
-
-    //Get participants
-    $participants = $DB->get_records_sql("SELECT DISTINCT u.id, u.id
-                                            FROM {user} u, {pcast_episodes} p
-                                           WHERE p.pcastid = ? AND u.id = p.userid", array($pcastid));
-
-    //Return participants array (it contains an array of unique users)
-
-    return $participants;
-}
-
-/**
  * This function returns if a scale is being used by one pcast
  * if it has support for grading and scales. Commented code should be
  * modified if necessary. See forum, glossary or journal modules
