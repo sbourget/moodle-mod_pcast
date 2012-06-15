@@ -29,8 +29,8 @@ require_once(dirname(__FILE__).'/lib.php');
 $id       = required_param('id', PARAM_INT);          // Course module ID.
 $confirm  = optional_param('confirm', 0, PARAM_INT);  // Commit the operation?
 $episode    = optional_param('episode', 0, PARAM_INT);    // Episode id.
-$prevmode = required_param('prevmode', PARAM_ALPHANUM);
-$hook     = optional_param('hook', '', PARAM_CLEAN);
+$prevmode = required_param('prevmode', PARAM_ALPHANUM);   // Display mode.
+$hook     = optional_param('hook', '', PARAM_ALPHANUM);   // Alphabet bar filter.
 
 $url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$id, 'prevmode'=>$prevmode));
 if ($confirm !== 0) {
@@ -41,6 +41,8 @@ if ($episode !== 0) {
 }
 if ($hook !== '') {
     $url->param('hook', $hook);
+} else {
+    $hook = 'ALL';
 }
 
 $strpcast   = get_string("modulename", "pcast");

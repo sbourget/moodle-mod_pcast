@@ -191,7 +191,9 @@ if ($mform->is_cancelled()) {
     // Refetch the complete entry.
     $episode = $DB->get_record('pcast_episodes', array('id'=>$episode->id));
 
-    redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id");
+    // Calculate hook.
+    $hook = textlib::substr($episode->name, 0, 1);
+    redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$hook");
 }
 
 if (!empty($id)) {

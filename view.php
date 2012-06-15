@@ -235,6 +235,10 @@ switch($mode) {
         pcast_display_approval_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
 
         break;
+    
+    case PCAST_ADDENTRY_VIEW:
+        pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
+        break;
 
     default:
 
