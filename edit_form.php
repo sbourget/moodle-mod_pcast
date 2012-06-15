@@ -122,6 +122,7 @@ class mod_pcast_entry_form extends moodleform {
                 'maxfiles'=>1,
                 'maxbytes'=>$pcast->maxbytes,
                 'filetypes' => array('audio', 'video'),
+                'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
                 'returnvalue'=>'ref_id'
             ));
         $mform->addRule('mediafile', get_string('required'), 'required', null, 'client');
