@@ -1119,10 +1119,12 @@ function pcast_display_episode_full($episode, $cm, $course){
     $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm, false));
 
     // Duration
+    $length = array();
+    $length2 = new stdClass();
     if (!empty($episode->duration)) {
         // Split up duration for printing
         $length = explode(":", $episode->duration);
-        if (count($length) == 2) {
+        if (count($length) == 2) {         
             $length2->hour = 0;
             $length2->min = $length[0];
             $length2->sec = $length[1];
