@@ -29,7 +29,7 @@ require_once(dirname(__FILE__).'/lib.php');
 $id       = required_param('id', PARAM_INT);          // Course module ID.
 $confirm  = optional_param('confirm', 0, PARAM_INT);  // Commit the operation?
 $episode    = optional_param('episode', 0, PARAM_INT);    // Episode id.
-$prevmode = required_param('prevmode', PARAM_ALPHA);
+$prevmode = required_param('prevmode', PARAM_ALPHANUM);
 $hook     = optional_param('hook', '', PARAM_CLEAN);
 
 $url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$id, 'prevmode'=>$prevmode));
