@@ -636,7 +636,7 @@ function pcast_get_itunes_categories($item, $pcast) {
  * @param bool $forcedownload
  * @return bool false if file not found, does not return if found - justsend the file
  */
-function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
+function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
 
     global $CFG, $DB, $USER;
 
@@ -679,7 +679,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         }
 
         // finally send the file
-        send_stored_file($file, 0, 0, $forcedownload); // download MUST be forced - security!
+        send_stored_file($file, 0, 0, $forcedownload, $options); // download MUST be forced - security!
 
     } else if ($filearea === 'logo') {
 
@@ -694,7 +694,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         }
 
         // finally send the file
-        send_stored_file($file, 0, 0, $forcedownload); // download MUST be forced - security!
+        send_stored_file($file, 0, 0, $forcedownload, $options); // download MUST be forced - security!
 
     }
 
