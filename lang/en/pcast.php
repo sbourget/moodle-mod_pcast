@@ -103,6 +103,13 @@ $string['itunes']='iTunes';
 $string['keywords_help']='Keywords describing this podcast';
 $string['keywords']='Keywords';
 $string['modulename'] = 'pcast';
+$string['modulename_help'] = 'The pcast activity module enables participants to create a podcast and and publish episodes consisting of video and / or audio files.
+
+Episodes can be browsed alphabetically or by category, date or author. Episodes can be approved by default or require approving by a teacher before they are viewable by everyone.
+
+A teacher can allow comments on episodes. Episodes can also be rated by teachers or students (peer evaluation). Ratings are aggregated to form a final grade which is recorded in the gradebook.
+
+Students can subscribe to the podcast using their favorite web browser or an Audio application such as iTunes, Winamp, or Windows Media Player, and listen to them on a portable MP3 player such as an iPod.';
 $string['modulenameplural'] = 'pcasts';
 $string['maxattachmentsize']='Maximum attachment size';
 $string['maxattachmentsize_help']='This setting specifies the largest size of file that can be attached as a pcast episode.';
