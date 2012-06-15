@@ -85,6 +85,38 @@ function xmldb_pcast_upgrade($oldversion=0) {
         // pcast savepoint reached.
         upgrade_mod_savepoint(true, 2012022900, 'pcast');
     }
+    
+        if ($oldversion < 2012061400) {
+
+        // Define field summaryformat to be added to pcast_episodes
+        $table = new xmldb_table('pcast_episodes');
+        $field = new xmldb_field('summaryformat', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'summary');
+
+        // Conditionally launch add field summaryformat
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // pcast savepoint reached
+        upgrade_mod_savepoint(true, 2012061400, 'pcast');
+    }
+    
+        if ($oldversion < 2012061401) {
+
+        // Define field summarytrust to be added to pcast_episodes
+        $table = new xmldb_table('pcast_episodes');
+        $field = new xmldb_field('summarytrust', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'summaryformat');
+
+        // Conditionally launch add field summarytrust
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // pcast savepoint reached
+        upgrade_mod_savepoint(true, 2012061401, 'pcast');
+    }
+
+
 
     // Final return of upgrade result (true/false) to Moodle. Must be always the last line in the script.
     return true;

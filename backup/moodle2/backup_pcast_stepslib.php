@@ -44,7 +44,7 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $episodes = new backup_nested_element('episodes');
 
         $episode = new backup_nested_element('episode', array('id'), array(
-            'userid', 'name', 'summary', 'mediafile', 'duration', 'explicit',
+            'userid', 'name', 'summary','summaryformat','summarytrust', 'mediafile', 'duration', 'explicit',
             'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'timecreated', 'timemodified',
             'approved', 'sequencenumber'));
 
