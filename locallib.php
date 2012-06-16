@@ -1195,7 +1195,7 @@ function pcast_display_episode_full($episode, $cm, $course){
     // Approve Link
     if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
 
-        $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW, 'hook'=>$hook, 'sesskey'=>sesskey()));
+        $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW, 'sesskey'=>sesskey()));
         $approve .= html_writer::tag('a', get_string('approve'), array('href'=>$url));
     }
 
@@ -1281,7 +1281,7 @@ function pcast_display_episode_comments($episode, $cm, $course) {
             }
         }
     } else {
-        $html = html_writer::tag('div',get_string("nocommentuntilapproved","pcast"), array('class'=> 'pcast-comments'));
+        $html = html_writer::tag('div',get_string("nocommentuntilapproved","pcast"), array('class'=> 'pcast-episode-notice'));
     }
     
     echo $html;
@@ -1302,37 +1302,41 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
 
     global $CFG, $USER, $DB, $OUTPUT;
 
-    $sql = pcast_get_episode_sql();
-    $sql .=  " WHERE p.id = ?";
-    $episodes = $DB->get_records_sql($sql,array('id'=>$episode->id));
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    if ($episode->approved) {
+        $sql = pcast_get_episode_sql();
+        $sql .=  " WHERE p.id = ?";
+        $episodes = $DB->get_records_sql($sql,array('id'=>$episode->id));
+        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
-    // load ratings
-    require_once($CFG->dirroot.'/rating/lib.php');
-    if ($episode->assessed!=RATING_AGGREGATE_NONE) {
-        
-        $ratingoptions = new stdClass();
-        // $ratingoptions->plugintype = 'mod';
-        // $ratingoptions->pluginname = 'pcast';
-        $ratingoptions->component = 'mod_pcast';
-        $ratingoptions->context = $context;
-        $ratingoptions->items = $episodes;
-        $ratingoptions->aggregate = $episode->assessed;//the aggregation method
-        $ratingoptions->scaleid = $episode->scale;
-        $ratingoptions->userid = $USER->id;
-        $ratingoptions->returnurl = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_COMMENT_AND_RATE));
-        $ratingoptions->assesstimestart = $episode->assesstimestart;
-        $ratingoptions->assesstimefinish = $episode->assesstimefinish;
-        $ratingoptions->ratingarea = 'episode';
+        // load ratings
+        require_once($CFG->dirroot.'/rating/lib.php');
+        if ($episode->assessed!=RATING_AGGREGATE_NONE) {
 
-        $rm = new rating_manager();
-        $allepisodes = $rm->get_ratings($ratingoptions);
-    }
-    foreach ($allepisodes as $thisepisode)
-    {
-        if (!empty($thisepisode->rating)) {
-            echo html_writer::tag('div', $OUTPUT->render($thisepisode->rating), array('class' => 'pcast-episode-rating'));
+            $ratingoptions = new stdClass();
+            // $ratingoptions->plugintype = 'mod';
+            // $ratingoptions->pluginname = 'pcast';
+            $ratingoptions->component = 'mod_pcast';
+            $ratingoptions->context = $context;
+            $ratingoptions->items = $episodes;
+            $ratingoptions->aggregate = $episode->assessed;//the aggregation method
+            $ratingoptions->scaleid = $episode->scale;
+            $ratingoptions->userid = $USER->id;
+            $ratingoptions->returnurl = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_COMMENT_AND_RATE));
+            $ratingoptions->assesstimestart = $episode->assesstimestart;
+            $ratingoptions->assesstimefinish = $episode->assesstimefinish;
+            $ratingoptions->ratingarea = 'episode';
+
+            $rm = new rating_manager();
+            $allepisodes = $rm->get_ratings($ratingoptions);
         }
+        foreach ($allepisodes as $thisepisode)
+        {
+            if (!empty($thisepisode->rating)) {
+                echo html_writer::tag('div', $OUTPUT->render($thisepisode->rating), array('class' => 'pcast-episode-rating'));
+            }
+        }
+    } else {
+        echo html_writer::tag('div',get_string("noratinguntilapproved","pcast"), array('class'=> 'pcast-episode-notice'));
     }
 
 }
