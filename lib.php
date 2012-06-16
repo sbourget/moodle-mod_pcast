@@ -480,10 +480,11 @@ function pcast_scale_used_anywhere($scaleid) {
  * @return array
  */
 function pcast_get_file_areas($course, $cm, $context) {
-    //$areas = array('pcast_episode','pcast_logo');
+
     $areas = array();
     $areas['logo']   = get_string('arealogo', 'pcast');
     $areas['episode'] = get_string('areaepisode', 'pcast');
+    $areas['summary'] = get_string('areasummary', 'pcast');
 
     return $areas;
 }
@@ -622,6 +623,81 @@ function pcast_get_itunes_categories($item, $pcast) {
     return $item;
 }
 
+
+ /**
++ * File browsing support for glossary module.
++ *
++ * @param file_browser $browser
++ * @param array $areas
++ * @param stdClass $course
++ * @param cm_info $cm
++ * @param context $context
++ * @param string $filearea
++ * @param int $itemid
++ * @param string $filepath
++ * @param string $filename
++ * @return file_info_stored file_info_stored instance or null if not found
++ */
+function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
+    global $CFG, $DB;
+
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return null;
+    }
+
+    if ($filearea === 'summary' or $filearea === 'episode') {
+    if (!$episode = $DB->get_record('pcast_episodes', array('id' => $itemid))) {
+            return null;
+        }
+
+        if (!$pcast = $DB->get_record('pcast', array('id' => $cm->instance))) {
+            return null;
+        }
+        
+        if ($pcast->requireapproval and !$episode->approved and !has_capability('mod/pcast:approve', $context)) {
+            return null;
+        }
+
+         if (is_null($itemid)) {
+            require_once($CFG->dirroot.'/mod/pcast/locallib.php');
+            return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
+        }
+        
+        $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+        
+        $fs = get_file_storage();
+        $filepath = is_null($filepath) ? '/' : $filepath;
+        $filename = is_null($filename) ? '.' : $filename;
+        if (!($storedfile = $fs->get_file($filecontext->id, 'mod_pcast', $filearea, $itemid, $filepath, $filename))) {
+            return null;
+        }
+        $urlbase = $CFG->wwwroot.'/pluginfile.php';
+        return new file_info_stored($browser, $filecontext, $storedfile, $urlbase, $filearea, $itemid, true, true, false, false);
+ 
+    } else if ($filearea === 'logo') {
+        
+        if (!$pcast = $DB->get_record('pcast', array('id' => $cm->instance))) {
+            return null;
+        }
+        if (is_null($itemid)) {
+            require_once($CFG->dirroot.'/mod/pcast/locallib.php');
+            return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
+        }
+        
+        $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $fs = get_file_storage();
+        $filepath = is_null($filepath) ? '/' : $filepath;
+        $filename = is_null($filename) ? '.' : $filename;
+        if (!($storedfile = $fs->get_file($filecontext->id, 'mod_pcast', $filearea, $itemid, $filepath, $filename))) {
+            return null;
+        }
+        $urlbase = $CFG->wwwroot.'/pluginfile.php';
+        return new file_info_stored($browser, $filecontext, $storedfile, $urlbase, $filearea, $itemid, true, true, false, false);        
+    }
+
+    return null;
+}
+
 /**
  * Serves all files for the pcast module.
  *
@@ -634,6 +710,7 @@ function pcast_get_itunes_categories($item, $pcast) {
  * @param string $filearea
  * @param array $args
  * @param bool $forcedownload
+ * @param array $options additional options affecting the file serving
  * @return bool false if file not found, does not return if found - justsend the file
  */
 function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {

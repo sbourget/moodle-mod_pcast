@@ -35,6 +35,7 @@ $string['allentries'] = 'ALL';
 $string['approvalview']='Approve entries';
 $string['areaepisode'] = 'Podcast episodes';
 $string['arealogo'] = 'Podcast RSS logo';
+$string['areasummary'] = 'Podcast episode summaries';
 $string['areyousuredelete']='Are you sure you want to delete this episode';
 $string['ascending']='Acsending';
 $string['attachment']='Attachment';
