@@ -1258,26 +1258,30 @@ function pcast_display_episode_comments($episode, $cm, $course) {
     global $CFG;
     $html = '';
 
-    if ($episode->userscancomment) {
-        //Get episode comments and display the comment box
-        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
-        $output = true;
+    if ($episode->approved) {
+        if ($episode->userscancomment) {
+            //Get episode comments and display the comment box
+            $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+            $output = true;
 
-        // Generate comment box using API
-        if (!empty($CFG->usecomments)) {
-            require_once($CFG->dirroot . '/comment/lib.php');
-            $cmt = new stdClass();
-            $cmt->component = 'pcast';
-            $cmt->context  = $context;
-            $cmt->course   = $course;
-            $cmt->cm       = $cm;
-            $cmt->area     = 'pcast_episode';
-            $cmt->itemid   = $episode->id;
-            $cmt->showcount = true;
-            $comment = new comment($cmt);
-            $html = html_writer::tag('div',$comment->output(true), array('class'=> 'pcast-comments'));
+            // Generate comment box using API
+            if (!empty($CFG->usecomments)) {
+                require_once($CFG->dirroot . '/comment/lib.php');
+                $cmt = new stdClass();
+                $cmt->component = 'pcast';
+                $cmt->context  = $context;
+                $cmt->course   = $course;
+                $cmt->cm       = $cm;
+                $cmt->area     = 'pcast_episode';
+                $cmt->itemid   = $episode->id;
+                $cmt->showcount = true;
+                $comment = new comment($cmt);
+                $html = html_writer::tag('div',$comment->output(true), array('class'=> 'pcast-comments'));
 
+            }
         }
+    } else {
+        $html = html_writer::tag('div',get_string("nocommentuntilapproved","pcast"), array('class'=> 'pcast-comments'));
     }
     
     echo $html;

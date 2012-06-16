@@ -123,6 +123,7 @@ $string['nopcastmediafile'] = 'No media file found';
 $string['nopermissiontodelepisode']='Error: You do not have permission to delete this episode';
 $string['noresize']='Do not resize';
 $string['notcategorised']='Not categorised';
+$string['nocommentuntilapproved'] ='Commenting is not available until the episode has been approved';
 $string['notingroup']='Error: You do not have access to episodes created by members of this group';
 $string['noviews']='No views';
 $string['noviews']='No views';
