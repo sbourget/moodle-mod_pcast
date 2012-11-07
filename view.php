@@ -65,7 +65,7 @@ $completion->set_module_viewed($cm);
 /// Print the page header
 
 $PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode'=>$mode));
-$PAGE->set_title($pcast->name);
+$PAGE->set_title(format_string($pcast->name),true, array('context' =>$context));
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 
@@ -235,7 +235,7 @@ switch($mode) {
         pcast_display_approval_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
 
         break;
-    
+
     case PCAST_ADDENTRY_VIEW:
         pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
         break;
