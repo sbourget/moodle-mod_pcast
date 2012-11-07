@@ -102,7 +102,7 @@ if ($id) { // If the entry is specified.
 }
 
 $draftitemid = file_get_submitted_draft_itemid('mediafile');
-file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $episode->id, 
+file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $episode->id,
                         array('subdirs' => 0, 'maxbytes'=>$pcast->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
 $episode->mediafile = $draftitemid;
 
@@ -137,7 +137,7 @@ if ($mform->is_cancelled()) {
     $episode->summary          = $episode->summary['text'];
     $episode->timemodified     = $timenow;
     $episode->approved         = 0;
-    $episode->name = clean_param($episode->name, PARAM_ALPHANUM);
+    $episode->name = clean_param($episode->name, PARAM_TEXT);
 
     // Get the episode category information.
     $episode = pcast_get_itunes_categories($episode, $pcast);
@@ -162,7 +162,7 @@ if ($mform->is_cancelled()) {
                    $episode->id, $cm->id);
     }
 
-    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id, 
+    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id,
                                array('subdirs' => 0, 'maxbytes'=>$pcast->maxbytes, 'maxfiles' => 1, 'filetypes' => array('audio', 'video')));
 
     // Get the duration if an MP3 file.
@@ -184,7 +184,7 @@ if ($mform->is_cancelled()) {
     //Save files in summary field and re-write hyperlinks.
     $episode->summary = file_save_draft_area_files($draftid_editor, $context->id, 'mod_pcast', 'summary',
                                           $episode->id, array('subdirs'=>true), $episode->summary);
-    
+
     // Store the updated value values.
     $DB->update_record('pcast_episodes', $episode);
 
