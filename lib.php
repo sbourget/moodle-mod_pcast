@@ -332,7 +332,7 @@ function pcast_user_complete($course, $user, $mod, $pcast) {
  * @param stdClass $course
  * @param bool $viewfullnames
  * @param int $timestart
- * @return bool 
+ * @return bool
  */
 
 function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
@@ -555,7 +555,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     $pcast = $DB->get_record('pcast', array("id" => $PAGE->cm->instance));
 
     if (!empty($CFG->enablerssfeeds) && !empty($CFG->pcast_enablerssfeeds)
-    && $pcast->rssepisodes) {
+    && $pcast->enablerssfeed) {
         require_once("$CFG->libdir/rsslib.php");
 
         $string = get_string('rsslink', 'pcast');
@@ -578,7 +578,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
         $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args));
         $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
 
-        if (!empty($CFG->pcast_enablerssitunes)) {
+        if (!empty($CFG->pcast_enablerssitunes) && $pcast->enablerssitunes) {
             $string = get_string('pcastlink', 'pcast');
             require_once("$CFG->dirroot/mod/pcast/rsslib.php");
             $url = pcast_rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args);
@@ -653,7 +653,7 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
         if (!$pcast = $DB->get_record('pcast', array('id' => $cm->instance))) {
             return null;
         }
-        
+
         if ($pcast->requireapproval and !$episode->approved and !has_capability('mod/pcast:approve', $context)) {
             return null;
         }
@@ -662,9 +662,9 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
             require_once($CFG->dirroot.'/mod/pcast/locallib.php');
             return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
         }
-        
+
         $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
-        
+
         $fs = get_file_storage();
         $filepath = is_null($filepath) ? '/' : $filepath;
         $filename = is_null($filename) ? '.' : $filename;
@@ -673,9 +673,9 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
         }
         $urlbase = $CFG->wwwroot.'/pluginfile.php';
         return new file_info_stored($browser, $filecontext, $storedfile, $urlbase, $filearea, $itemid, true, true, false, false);
- 
+
     } else if ($filearea === 'logo') {
-        
+
         if (!$pcast = $DB->get_record('pcast', array('id' => $cm->instance))) {
             return null;
         }
@@ -683,7 +683,7 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
             require_once($CFG->dirroot.'/mod/pcast/locallib.php');
             return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
         }
-        
+
         $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
         $fs = get_file_storage();
         $filepath = is_null($filepath) ? '/' : $filepath;
@@ -692,7 +692,7 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
             return null;
         }
         $urlbase = $CFG->wwwroot.'/pluginfile.php';
-        return new file_info_stored($browser, $filecontext, $storedfile, $urlbase, $filearea, $itemid, true, true, false, false);        
+        return new file_info_stored($browser, $filecontext, $storedfile, $urlbase, $filearea, $itemid, true, true, false, false);
     }
 
     return null;
@@ -946,10 +946,10 @@ function pcast_reset_userdata($data) {
 
         $status[] = array('component'=>$componentstr, 'item'=>get_string('resetpcastsall', 'pcast'), 'error'=>false);
 
-    
+
     } else if (!empty($data->reset_pcast_notenrolled)) {
         // remove entries by users not enrolled into course
-        
+
         $course_context = get_context_instance(CONTEXT_COURSE, $data->courseid);
         // Get list of enrolled users
         $people = get_enrolled_users($course_context);
