@@ -165,7 +165,7 @@ $cachedfilepath = pcast_rss_get_file_full_name('mod_pcast', $filename);
 
 
 // Figure out the URL for the podcast based on the user info
-$args = $pcast->id . '/'.$userid.'/'.$groupid;
+$args = $pcast->id . '/' . $groupid;
 $url = new moodle_url(rss_get_url($context->id, $userid, 'pcast', $args));
 
 // Build the .pcast file
