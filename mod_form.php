@@ -218,7 +218,6 @@ class mod_pcast_mod_form extends moodleform_mod {
 
         // Images
         $mform->addElement('header', 'images', get_string('image', 'pcast'));
-        $mform->setAdvanced('images');
 
         $mform->addElement('filemanager', 'image', get_string('imagefile', 'pcast'), null,
             array('subdirs'=>0,
