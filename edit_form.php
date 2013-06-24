@@ -62,6 +62,20 @@ class mod_pcast_entry_form extends moodleform {
 
         // -------------------------------------------------------------------------------
 
+        // Attachment.
+        $mform->addElement('header', 'attachments', get_string('attachment', 'pcast'));
+        $mform->addElement('filemanager', 'mediafile', get_string('pcastmediafile', 'pcast'), null,
+            array('subdirs'=>0,
+                'maxfiles'=>1,
+                'maxbytes'=>$pcast->maxbytes,
+                'filetypes' => array('audio', 'video'),
+                'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
+                'returnvalue'=>'ref_id'
+            ));
+        $mform->addRule('mediafile', get_string('required'), 'required', null, 'client');
+
+        //-------------------------------------------------------------------------------
+
         // iTunes Settings.
         $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));
 
@@ -114,19 +128,7 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addElement('select', 'explicit', get_string('explicit', 'pcast'), $explicit);
         $mform->addHelpButton('explicit', 'explicit', 'pcast');
         $mform->setDefault('explicit', 2);
-
-        // Attachment.
-        $mform->addElement('header', 'attachments', get_string('attachment', 'pcast'));
-        $mform->addElement('filemanager', 'mediafile', get_string('pcastmediafile', 'pcast'), null,
-            array('subdirs'=>0,
-                'maxfiles'=>1,
-                'maxbytes'=>$pcast->maxbytes,
-                'filetypes' => array('audio', 'video'),
-                'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
-                'returnvalue'=>'ref_id'
-            ));
-        $mform->addRule('mediafile', get_string('required'), 'required', null, 'client');
-
+        
         //-------------------------------------------------------------------------------
 
         // Hidden.
