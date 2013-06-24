@@ -111,6 +111,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->addElement('selectyesno', 'enablerssitunes', get_string('enablerssitunes', 'pcast'));
             $mform->addHelpButton('enablerssitunes', 'enablerssitunes', 'pcast');
             $mform->setDefault('enablerssitunes', 0);
+            $mform->disabledIf('enablerssitunes', 'enablerssfeed', 'eq', 0);
 
             // Subtitle
             $mform->addElement('text', 'subtitle', get_string('subtitle', 'pcast'), array('size'=>'64'));
