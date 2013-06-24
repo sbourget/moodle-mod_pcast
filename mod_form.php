@@ -53,14 +53,14 @@ class mod_pcast_mod_form extends moodleform_mod {
 
         // Adding the standard "intro" and "introformat" fields
         $this->add_intro_editor();
-        
-        // Adding the max upload size of episodes    
+
+        // Adding the max upload size of episodes
         $choices = get_max_upload_sizes($CFG->maxbytes, $COURSE->maxbytes);
         $choices[0] = get_string('courseuploadlimit') . ' ('.display_size($COURSE->maxbytes).')';
         $mform->addElement('select', 'maxbytes', get_string('maxattachmentsize', 'pcast'), $choices);
         $mform->addHelpButton('maxbytes', 'maxattachmentsize', 'pcast');
         $mform->setDefault('maxbytes', $COURSE->maxbytes);
-        
+
         //-------------------------------------------------------------------------------
         /// RSS Settings
         //-------------------------------------------------------------------------------
@@ -228,7 +228,7 @@ class mod_pcast_mod_form extends moodleform_mod {
                 'returnvalue'=>'ref_id'
             ));
 
-        // Image Size
+        // Image Size (Height)
         $size=array();
         $size[0]  = get_string('noresize','pcast');
         $size[16] = "16";
@@ -243,6 +243,17 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addElement('select', 'imageheight', get_string('imageheight', 'pcast'),$size);
         $mform->addHelpButton('imageheight', 'imageheight', 'pcast');
         $mform->setDefault('imageheight', 144);
+
+        // Image Size (Width)
+        unset($size);
+        $size=array();
+        $size[0]  = get_string('noresize','pcast');
+        $size[16] = "16";
+        $size[32] = "32";
+        $size[48] = "48";
+        $size[64] = "64";
+        $size[128] = "128";
+        $size[144] = "144";
 
         $mform->addElement('select', 'imagewidth', get_string('imagewidth', 'pcast'),$size);
         $mform->addHelpButton('imagewidth', 'imagewidth', 'pcast');
