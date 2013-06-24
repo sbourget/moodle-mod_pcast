@@ -122,7 +122,7 @@ class mod_pcast_mod_form extends moodleform_mod {
 
             // Owner
             $ownerlist = array();
-            $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
+            $context = context_course::instance($COURSE->id);
             if ($owners = get_users_by_capability($context, 'mod/pcast:manage', 'u.*', 'u.lastaccess')) {
                 foreach ($owners as $owner) {
                     $ownerlist[$owner->id] = $owner->firstname . ' ' . $owner->lastname;

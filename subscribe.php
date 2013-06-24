@@ -105,7 +105,7 @@ try {
 //Check capabilities.
 $cm = get_coursemodule_from_instance('pcast', $pcastid, 0, false, MUST_EXIST);
 if ($cm) {
-        $modcontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $modcontext = context_module::instance($cm->id);
 
     //Context id from db should match the submitted one.
     if ($context->id==$modcontext->id && has_capability('mod/pcast:view', $modcontext)) {

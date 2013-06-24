@@ -46,7 +46,7 @@ if ($cmid) {
 
 require_login($course, false, $cm);
 
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$context = context_module::instance($cm->id);
 
 
 $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id));

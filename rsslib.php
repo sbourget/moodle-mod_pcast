@@ -53,7 +53,7 @@ function pcast_rss_get_feed($context, $args) {
     //check capabilities
     $cm = get_coursemodule_from_instance('pcast', $pcastid, 0, false, MUST_EXIST);
     if ($cm) {
-            $modcontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+            $modcontext = context_module::instance($cm->id);
 
         //context id from db should match the submitted one
         if ($context->id==$modcontext->id && has_capability('mod/pcast:view', $modcontext)) {
@@ -373,7 +373,7 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
 
         //Custom image handling
         $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
-        if (!$context = get_context_instance(CONTEXT_MODULE, $cm->id)) {
+        if (!$context = context_module::instance($cm->id)) {
             return '';
         }
 
@@ -536,7 +536,7 @@ function pcast_rss_add_enclosure($item) {
 
     $pcast  = $DB->get_record('pcast', array('id' => $item->pcastid), '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
-    if (!$context = get_context_instance(CONTEXT_MODULE, $cm->id)) {
+    if (!$context = context_module::instance($cm->id)) {
         return '';
     }
 

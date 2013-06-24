@@ -169,7 +169,7 @@ function pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sort
 function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIES) {
      global $CFG, $DB, $OUTPUT;
 
-     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+     $context = context_module::instance($cm->id);
 
      echo '<table border="0" width="100%">';
      echo '<tr>';
@@ -254,7 +254,7 @@ function pcast_print_all_links($cm, $pcast, $mode, $hook) {
         $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>$mode, 'hook'=>'ALL'));
       echo html_writer::tag('a', $strallentries, array('title'=>$strexplainall, 'href'=>$url));
     }
-     
+
 }
 
 /**
@@ -476,7 +476,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
             $html .= html_writer::tag('span', $link2, array('class'=>'pcast-bold'));
 
             break;
-            
+
         default:
 
             $html ='';
@@ -506,7 +506,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
 function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
     global $CFG, $DB, $USER;
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
 
     // Get the current group
     if ($groupmode > 0) {
@@ -523,7 +523,7 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     }
     $sql = pcast_get_episode_sql();
     $sql .=    " WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
-        
+
     if (empty($hook) or ($hook == 'ALL')) {
 
         $sql .= " ORDER BY ". $sort;
@@ -547,7 +547,7 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
         $sql .= " and ". $DB->sql_like('p.name', '?',false)." ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
     }
-    
+
     //Get Group members
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
@@ -572,7 +572,7 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
  */
 function pcast_group_allowed_viewing($episode, $cm, $groupmode) {
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
     $currentgroup = 0;
 
     // Get the current group info
@@ -618,7 +618,7 @@ function pcast_group_allowed_viewing($episode, $cm, $groupmode) {
 function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAST_SHOW_ALL_CATEGORIES) {
     global $CFG, $DB, $USER;
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
 
     // Get the current group
     if ($groupmode > 0) {
@@ -630,7 +630,7 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAS
     // Get the episodes for this pcast
     $sql = pcast_get_episode_sql();
     $sql .=    " WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
-    
+
     if ($hook == PCAST_SHOW_ALL_CATEGORIES) {
         $sql .= " ORDER BY cat.name, ncat.name, p.name ASC";
         $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id));
@@ -688,7 +688,7 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAS
 function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey=PCAST_DATE_CREATED, $sortorder='desc') {
     global $CFG, $DB, $USER;
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
 
     // Get the current group
     if ($groupmode > 0) {
@@ -753,7 +753,7 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sor
 function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
     global $CFG, $DB, $USER;
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
 
     // Get the current group
     if ($groupmode > 0) {
@@ -793,7 +793,7 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
                 $sql .= " and ". $DB->sql_like('u.lastname', '?',false) . $order;
                 $episodes = $DB->get_records_sql($sql,array($pcast->id, '1', $USER->id, $hook.'%'));
             }
-        
+
             break;
 
         case PCAST_AUTHOR_FNAME:
@@ -842,7 +842,7 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
 function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc') {
     global $CFG, $DB, $USER;
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
 
     // Get the current group
     if($groupmode > 0) {
@@ -966,7 +966,7 @@ function pcast_get_episode_sql() {
 function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     global $CFG, $DB;
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
 
     $strsep = get_string('labelsep', 'langconfig');
     $html = html_writer::start_tag('div', array('class'=>'no-overflow')). "\n";
@@ -981,14 +981,14 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $table->align = array ("RIGHT", "LEFT");
     // Name of episode
     $table->data[] = array (get_string("name","pcast"),  format_text($episode->name, FORMAT_HTML, array('context'=>$context)));
-    
+
     // Description
     $summarytext = format_text($episode->summary, $episode->summaryformat, array('context'=>$context));
-    
+
     $summarytext = file_rewrite_pluginfile_urls($summarytext, 'pluginfile.php',
-                                                $context->id, 'mod_pcast', 
+                                                $context->id, 'mod_pcast',
                                                 'summary', $episode->id);
-    
+
     $table->data[] = array (get_string("summary","pcast"),  $summarytext);
 
     // Category -Display only if enabled
@@ -1008,14 +1008,14 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
 
     // Attachment
     $table->data[] = array (get_string("pcastmediafile","pcast"), pcast_display_mediafile_link($episode, $cm, true));
-    
+
     // Author
     // Only print author if allowed or has manage rights.
     if (((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
         $user = $DB->get_record("user", array("id" => $episode->userid));
         $table->data[] = array (get_string("author","pcast"), fullname($user));
     }
-    
+
     // Created
     $table->data[] = array (get_string("created","pcast"), userdate($episode->timecreated));
 
@@ -1056,7 +1056,7 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $table->data[] = array ('',$link);
 
 
-    
+
     echo $html;
     echo html_writer::table($table);
     echo html_writer::end_tag('div') . "\n";
@@ -1076,7 +1076,7 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
 function pcast_display_episode_full($episode, $cm, $course){
     global $CFG, $DB, $USER;
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
 
 
     $strsep = get_string('labelsep', 'langconfig');
@@ -1091,14 +1091,14 @@ function pcast_display_episode_full($episode, $cm, $course){
     $table->align = array ("RIGHT", "LEFT");
     // Name of episode
     $table->data[] = array (get_string("name","pcast"), $episode->name);
-    
+
     // Description
     $summarytext = format_text($episode->summary, $episode->summaryformat, array('context'=>$context));
-    
+
     $summarytext = file_rewrite_pluginfile_urls($summarytext, 'pluginfile.php',
-                                                $context->id, 'mod_pcast', 
+                                                $context->id, 'mod_pcast',
                                                 'summary', $episode->id);
-    
+
     $table->data[] = array (get_string("summary","pcast"),  $summarytext);
 
     // Category -Display only if enabled
@@ -1125,7 +1125,7 @@ function pcast_display_episode_full($episode, $cm, $course){
     if (!empty($episode->duration)) {
         // Split up duration for printing
         $length = explode(":", $episode->duration);
-        if (count($length) == 2) {         
+        if (count($length) == 2) {
             $length2->hour = 0;
             $length2->min = $length[0];
             $length2->sec = $length[1];
@@ -1261,7 +1261,7 @@ function pcast_display_episode_comments($episode, $cm, $course) {
     if ($episode->approved) {
         if ($episode->userscancomment) {
             //Get episode comments and display the comment box
-            $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+            $context = context_module::instance($cm->id);
             $output = true;
 
             // Generate comment box using API
@@ -1283,7 +1283,7 @@ function pcast_display_episode_comments($episode, $cm, $course) {
     } else {
         $html = html_writer::tag('div',get_string("nocommentuntilapproved","pcast"), array('class'=> 'pcast-episode-notice'));
     }
-    
+
     echo $html;
 
 }
@@ -1306,7 +1306,7 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
         $sql = pcast_get_episode_sql();
         $sql .=  " WHERE p.id = ?";
         $episodes = $DB->get_records_sql($sql,array('id'=>$episode->id));
-        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $context = context_module::instance($cm->id);
 
         // load ratings
         require_once($CFG->dirroot.'/rating/lib.php');
@@ -1374,7 +1374,7 @@ function pcast_get_episode_view_count($episode) {
  */
 function pcast_get_episode_comment_count($episode, $cm) {
     global $CFG, $DB;
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
     if ($count = $DB->count_records('comments', array('itemid'=>$episode->id,
                                                       'commentarea'=>'pcast_episode',
                                                       'contextid'=>$context->id))) {
@@ -1395,7 +1395,7 @@ function pcast_get_episode_comment_count($episode, $cm) {
 function pcast_get_episode_rating_count($episode, $cm) {
 
     global $CFG, $DB;
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
     if ($count = $DB->count_records('rating', array('itemid'=>$episode->id,
                                                     'scaleid'=>$episode->scale,
                                                     'contextid'=>$context->id))) {
@@ -1432,7 +1432,7 @@ function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
     global $CFG, $DB, $OUTPUT;
 
 
-    if (!$context = get_context_instance(CONTEXT_MODULE, $cm->id)) {
+    if (!$context = context_module::instance($cm->id)) {
         return '';
     }
 
@@ -1448,7 +1448,7 @@ function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
             $path = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/episode/'.$episode->id.'/'.$filename);
         }
     }
-    
+
     $templink = get_string('nopcastmediafile','pcast');
     // Make sure there is actually an attachment before trying to render the file link and player
     if(!empty($filename)) {
@@ -1462,7 +1462,7 @@ function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
         if(($CFG->pcast_usemediafilter)) {
 
             $templink = $out;
-            
+
         } else {
             //Add nolink tags to prevent autolinking.
             $templink = html_writer::start_tag('div',array('class'=>'nolink'));

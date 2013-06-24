@@ -138,7 +138,7 @@ function pcast_add_instance($pcast) {
     $cmid = $pcast->coursemodule;
     $draftitemid = $pcast->image;
     // we need to use context now, so we need to make sure all needed info is already in db
-    $context = get_context_instance(CONTEXT_MODULE, $cmid);
+    $context = context_module::instance($cmid);
     if ($draftitemid) {
         file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast', 'logo', 0, array('subdirs'=>false));
     }
@@ -194,7 +194,7 @@ function pcast_update_instance($pcast) {
     $cmid = $pcast->coursemodule;
     $draftitemid = $pcast->image;
     // we need to use context now, so we need to make sure all needed info is already in db
-    $context = get_context_instance(CONTEXT_MODULE, $cmid);
+    $context = context_module::instance($cmid);
     if ($draftitemid) {
         file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast', 'logo', 0, array('subdirs'=>false));
     }
@@ -222,7 +222,7 @@ function pcast_delete_instance($id) {
     if (!$cm = get_coursemodule_from_instance('pcast', $id)) {
         return false;
     }
-    if (!$context = get_context_instance(CONTEXT_MODULE, $cm->id)) {
+    if (!$context = context_module::instance($cm->id, IGNORE_MISSING)) {
         return false;
     }
 
@@ -376,7 +376,7 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
         }
 
         if (!isset($editor[$episode->pcastid])) {
-            $editor[$episode->pcastid] = has_capability('mod/pcast:approve', get_context_instance(CONTEXT_MODULE, $modinfo->instances['pcast'][$episode->pcastid]->id));
+            $editor[$episode->pcastid] = has_capability('mod/pcast:approve', context_module::instance($modinfo->instances['pcast'][$episode->pcastid]->id));
         }
 
         if (!$editor[$episode->pcastid]) {
@@ -663,7 +663,7 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
             return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
         }
 
-        $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $filecontext = context_module::instance($cm->id);
 
         $fs = get_file_storage();
         $filepath = is_null($filepath) ? '/' : $filepath;
@@ -684,7 +684,7 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
             return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
         }
 
-        $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $filecontext = context_module::instance($cm->id);
         $fs = get_file_storage();
         $filepath = is_null($filepath) ? '/' : $filepath;
         $filename = is_null($filename) ? '.' : $filename;
@@ -739,7 +739,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
             return false;
         }
         $relativepath = implode('/', $args);
-        $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $filecontext = context_module::instance($cm->id);
         $fullpath = "/$filecontext->id/mod_pcast/$filearea/$episodeid/$relativepath";
 
         $fs = get_file_storage();
@@ -761,7 +761,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
     } else if ($filearea === 'logo') {
 
         $relativepath = implode('/', $args);
-        $filecontext = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $filecontext = context_module::instance($cm->id);
         $fullpath = "/$filecontext->id/mod_pcast/$filearea/$relativepath";
 
         $fs = get_file_storage();
@@ -930,7 +930,7 @@ function pcast_reset_userdata($data) {
                 if (!$cm = get_coursemodule_from_instance('pcast', $pcastid)) {
                     continue;
                 }
-                $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+                $context = context_module::instance($cm->id);
                 $fs->delete_area_files($context->id, 'mod_pcast', 'episode');
 
                 //delete ratings
@@ -950,7 +950,7 @@ function pcast_reset_userdata($data) {
     } else if (!empty($data->reset_pcast_notenrolled)) {
         // remove entries by users not enrolled into course
 
-        $course_context = get_context_instance(CONTEXT_COURSE, $data->courseid);
+        $course_context = context_course::instance($data->courseid);
         // Get list of enrolled users
         $people = get_enrolled_users($course_context);
         $list ='';
@@ -976,7 +976,7 @@ function pcast_reset_userdata($data) {
                 if (!$cm = get_coursemodule_from_instance('pcast', $pcastid)) {
                     continue;
                 }
-                $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+                $context = context_module::instance($cm->id);
                 $fs->delete_area_files($context->id, 'mod_pcast', 'episode');
 
                 //delete ratings
@@ -1002,7 +1002,7 @@ function pcast_reset_userdata($data) {
                 if (!$cm = get_coursemodule_from_instance('pcast', $pcastid)) {
                     continue;
                 }
-                $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+                $context = context_module::instance($cm->id);
 
                 //delete ratings
                 $ratingdeloptions->contextid = $context->id;
@@ -1142,7 +1142,7 @@ function pcast_comment_validate($comment_param) {
     if (!$cm = get_coursemodule_from_instance('pcast', $pcast->id, $course->id)) {
         throw new comment_exception('invalidcoursemodule');
     }
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = context_module::instance($cm->id);
 
     if ($pcast->requireapproval and !$record->approved and !has_capability('mod/pcast:approve', $context)) {
         throw new comment_exception('notapproved', 'pcast');
@@ -1188,7 +1188,7 @@ function pcast_rating_permissions($contextid, $component, $ratingarea) {
         return null;
 
     }
-    $context = get_context_instance_by_id($contextid);
+    $context = context::instance_by_id($contextid);
 
     if (!$context) {
         print_error('invalidcontext');
@@ -1282,7 +1282,7 @@ function pcast_rating_validate($params) {
     }
 
     $cm = get_coursemodule_from_instance('pcast', $info->pcastid, $info->course, false, MUST_EXIST);
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id, MUST_EXIST);
+    $context = context_module::instance($cm->id, MUST_EXIST);
 
     //if the supplied context doesnt match the item's context
     if ($context->id != $params['context']->id) {
