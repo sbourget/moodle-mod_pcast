@@ -71,7 +71,7 @@ function pcast_rss_get_feed($context, $args) {
     if ($groupmode == SEPARATEGROUPS) {
         //User must have the capability to see all groups or be a member of that group
         $members = get_enrolled_users($context, 'mod/pcast:write', $groupid, 'u.id', 'u.id ASC');
-        
+
         // Is a member of the current group
         if(!isset($members[$userid]->id) or ($members[$userid]->id != $userid)){
 
@@ -87,7 +87,7 @@ function pcast_rss_get_feed($context, $args) {
                 $uservalidated = false;
             }
         }
-        
+
     }
 
     if (!$uservalidated) {
@@ -187,7 +187,7 @@ function pcast_rss_get_feed($context, $args) {
         //Now, if everything is ok, concatenate it
         if (!empty($header) && !empty($episodes) && !empty($footer)) {
             $rss = $header.$episodes.$footer;
-            
+
             //Save the XML contents to file.
             $status = rss_save_file('mod_pcast', $filename, $rss);
         }
@@ -220,7 +220,7 @@ function pcast_rss_get_sql($pcast, $time=0) {
     } else { // Oldest first
         $sort = "ORDER BY e.timecreated asc";
     }
-    
+
     if ($pcast->displayauthor == 1) {//With author
         $sql = "SELECT e.id AS episodeid,
                   e.pcastid AS pcastid,
@@ -398,8 +398,8 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         //write the image
         $result .= rss_start_tag('image', 2, true);
         $result .= rss_full_tag('url', 3, false, $rsspix);
-        $result .= rss_full_tag('title', 3, false, 'moodle');
-        $result .= rss_full_tag('link', 3, false, $CFG->wwwroot);
+        $result .= rss_full_tag('title', 3, false, strip_tags($title));
+        $result .= rss_full_tag('link', 3, false, $link);
         $result .= rss_full_tag('width', 3, false, $pcast->imagewidth);
         $result .= rss_full_tag('height', 3, false, $pcast->imageheight);
         $result .= rss_end_tag('image', 2, true);
@@ -409,7 +409,7 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
             if(isset($author)) {
                 $result .= rss_full_tag('itunes:author', 2, false, fullname($author));
             }
-            
+
             $result .= rss_full_tag('itunes:subtitle', 2, false, s($pcast->subtitle));
             //Implement summary from pcast intro
             $result .= rss_full_tag('itunes:summary', 2, false, s($pcast->intro));
@@ -492,7 +492,7 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
                     // Strip out all HTML.
                     $description = strip_tags($item->description);
                 }
-                
+
                 $result .= rss_full_tag('description',3,false,$description);
                 $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
 
