@@ -3,23 +3,34 @@
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
 /////////////////////////////////////////////////////////////////
-//                                                             //
-// changelog.txt - part of getID3()                            //
-// See readme.txt for more details                             //
-//                                                            ///
-/////////////////////////////////////////////////////////////////
 
-        This code is released under the GNU GPL:
-          http://www.gnu.org/copyleft/gpl.html
+*****************************************************************
+*****************************************************************
 
-     +---------------------------------------------+
-     | If you do use this code somewhere, send me  |
-     | an email and tell me how/where you used it. |
-     |                                             |
-     | If you want to donate, there is a link on   |
-     | http://www.getid3.org for PayPal donations. |
-     +---------------------------------------------+
+   getID3() is released under multiple licenses. You may choose
+   from the following licenses, and use getID3 according to the
+   terms of the license most suitable to your project.
 
+GNU GPL: https://gnu.org/licenses/gpl.html                   (v3)
+         https://gnu.org/licenses/old-licenses/gpl-2.0.html  (v2)
+         https://gnu.org/licenses/old-licenses/gpl-1.0.html  (v1)
+
+GNU LGPL: https://gnu.org/licenses/lgpl.html                 (v3)
+
+Mozilla MPL: http://www.mozilla.org/MPL/2.0/                 (v2)
+
+getID3 Commercial License: http://getid3.org/#gCL (payment required)
+
+*****************************************************************
+*****************************************************************
+Copies of each of the above licenses are included in the 'licenses'
+directory of the getID3 distribution.
+
+
+       +---------------------------------------------+
+       | If you want to donate, there is a link on   |
+       | http://www.getid3.org for PayPal donations. |
+       +---------------------------------------------+
 
 
 Quick Start
@@ -66,6 +77,7 @@ Reads & parses (to varying degrees):
   * MP3/MP2/MP1
   * MPC / Musepack
   * Ogg (Vorbis, OggFLAC, Speex)
+  * AAC / MP4
   * AC3
   * DTS
   * RealAudio
@@ -99,7 +111,7 @@ Reads & parses (to varying degrees):
   * Matroska (MKV)
   * MPEG-1 / MPEG-2
   * NSV (Nullsoft Streaming Video)
-  * Quicktime
+  * Quicktime (including MP4)
   * RealVideo
 
  ¤ still image:
@@ -132,10 +144,10 @@ Writes:
 Requirements
 ===========================================================================
 
-* PHP 4.2.0 (or higher) for getID3() 1.7.x (and earlier)
-* PHP 5.3.0 (or higher) for getID3() 1.8.x (and up)
-* PHP 5.0.0 (or higher) for getID3() 2.0.x (and up)
-* at least 4MB memory for PHP. 8MB is highly recommended.
+* PHP 4.2.0 up to 5.2.x for getID3() 1.7.x (and earlier)
+* PHP 5.0.5 (or higher) for getID3() 1.8.x (and up)
+* PHP 5.0.5 (or higher) for getID3() 2.0.x (and up)
+* at least 4MB memory for PHP. 8MB or more is highly recommended.
   12MB is required with all modules loaded.
 
 
@@ -279,6 +291,7 @@ could essentially write it today with a one-line function:
 
 Future Plans
 ===========================================================================
+http://www.getid3.org/phpBB3/viewforum.php?f=7
 
 * Better support for MP4 container format
 * Scan for appended ID3v2 tag at end of file per ID3v2.4 specs (Section 5.0)
@@ -360,6 +373,7 @@ Future Plans
 
 Known Bugs/Issues in getID3() that may be fixed eventually
 ===========================================================================
+http://www.getid3.org/phpBB3/viewtopic.php?t=25
 
 * Cannot determine bitrate for MPEG video with VBR video data
   (need documentation)
@@ -385,13 +399,16 @@ Known Bugs/Issues in getID3() that may be fixed eventually
 
 Known Bugs/Issues in getID3() that cannot be fixed
 --------------------------------------------------
+http://www.getid3.org/phpBB3/viewtopic.php?t=25
 
-* Files larger than 2GB cannot always be parsed fully by getID3()
-  due to limitations in the PHP filesystem functions.
+* 32-bit PHP installations only:
+  Files larger than 2GB cannot always be parsed fully by getID3()
+  due to limitations in the 32-bit PHP filesystem functions.
   NOTE: Since v1.7.8b3 there is partial support for larger-than-
   2GB files, most of which will parse OK, as long as no critical
   data is located beyond the 2GB offset.
   Known will-work:
+  * all file formats on 64-bit PHP
   * ZIP  (format doesn't support files >2GB)
   * FLAC (current encoders don't support files >2GB)
   Known will-not-work:
@@ -412,6 +429,7 @@ Known Bugs/Issues in getID3() that cannot be fixed
 
 Known Bugs/Issues in other programs
 -----------------------------------
+http://www.getid3.org/phpBB3/viewtopic.php?t=25
 
 * Windows Media Player (up to v11) and iTunes (up to v10+) do
     not correctly handle ID3v2.3 tags with UTF-16BE+BOM
@@ -481,6 +499,9 @@ Known Bugs/Issues in other programs
 * iTunes has been known to append a new ID3v1 tag on the end of an
   existing ID3v1 tag when ID3v2 tag is also present
   (detected by getID3())
+* MediaMonkey may write a blank RGAD ID3v2 frame but put actual
+  replay gain adjustments in a series of user-defined TXXX frames
+  (detected and handled by getID3() since v1.9.2)
 
 
 
@@ -579,3 +600,4 @@ Reference material:
 * http://cpansearch.perl.org/src/RGIBSON/Audio-DSS-0.02/lib/Audio/DSS.pm
 * http://trac.musepack.net/trac/wiki/SV8Specification
 * http://wyday.com/cuesharp/specification.php
+* http://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Nikon.html
