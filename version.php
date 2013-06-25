@@ -29,9 +29,9 @@
 defined('MOODLE_INTERNAL') || die();
 
 $module->version  = 2013062400;    // If version == 0 then module will not be installed
-$module->requires = 2012062500;    // Requires this Moodle version
+$module->requires = 2013050100;    // Requires this Moodle version
 $module->cron     = 0;             // Period for cron to check this module (secs)
 $module->component = 'mod_pcast';  // Full name of the plugin (used for diagnostics)
 
 $module->maturity = MATURITY_STABLE;
-$module->release = "2.3 (2012080601)";  // User-friendly version number
+$module->release = "2.5 (2013062400)";  // User-friendly version number
