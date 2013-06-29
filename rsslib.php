@@ -426,11 +426,11 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
 
             // Explicit
             if($pcast->explicit == 0) {
-                $result .= rss_full_tag('itunes:explicit',2,false,'FALSE');
+                $result .= rss_full_tag('itunes:explicit',2,false,'no');
             } else if ($pcast->explicit == 1) {
-                $result .= rss_full_tag('itunes:explicit',2,false,'TRUE');
+                $result .= rss_full_tag('itunes:explicit',2,false,'yes');
             } else {
-                $result .= rss_full_tag('itunes:explicit',2,false,'CLEAN');
+                $result .= rss_full_tag('itunes:explicit',2,false,'clean');
             }
 
             // Categories
