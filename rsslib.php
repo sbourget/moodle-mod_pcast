@@ -144,6 +144,7 @@ function pcast_rss_get_feed($context, $args) {
                 $user->lastname = $rec->userlastname;
 
                 $item->author = fullname($user);
+                $item->email = $rec->email; 
             }
 
             $item->keywords = $rec->keywords;
@@ -236,6 +237,7 @@ function pcast_rss_get_sql($pcast, $time=0) {
                   u.id AS userid,
                   u.firstname AS userfirstname,
                   u.lastname AS userlastname,
+                  u.email AS email,
                   p.course AS course
              FROM {pcast_episodes} e,
                   {user} u,
@@ -498,9 +500,9 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
                 $result .= rss_full_tag('description',3,false,$description);
                 $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
 
-                //Include the author if exists
-                if (isset($item->author)) {
-                    $result .= rss_full_tag('author',3,false,$item->author);
+                //Include the author's email if exists 
+                if (isset($item->email)) {
+                    $result .= rss_full_tag('author',3,false,$item->email);
                 }
                 $result .= rss_start_tag(pcast_rss_add_enclosure($item),3,true);
 
