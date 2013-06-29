@@ -171,12 +171,9 @@ if ($mform->is_cancelled()) {
         foreach ($files as $file) {
             $hash = $file->get_contenthash();
             $mime = $file->get_mimetype();
-            if ($mime == 'audio/mp3') {
-                $mediainfo=pcast_get_media_information(pcast_file_path_lookup ($hash));
-                if(!empty($mediainfo['playtime_string'])) {
-                    $episode->duration = $mediainfo['playtime_string'];
-                }
-
+            $mediainfo=pcast_get_media_information(pcast_file_path_lookup ($hash));
+            if(!empty($mediainfo['playtime_string'])) {
+                $episode->duration = $mediainfo['playtime_string'];
             }
         }
     }
