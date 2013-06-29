@@ -402,8 +402,10 @@ function pcast_rss_header($title = NULL, $link = NULL, $description = NULL, $pca
         $result .= rss_full_tag('url', 3, false, $rsspix);
         $result .= rss_full_tag('title', 3, false, strip_tags($title));
         $result .= rss_full_tag('link', 3, false, $link);
-        $result .= rss_full_tag('width', 3, false, $pcast->imagewidth);
-        $result .= rss_full_tag('height', 3, false, $pcast->imageheight);
+        if(($pcast->imagewidth > 0) && ($pcast->imageheight >0)) {
+            $result .= rss_full_tag('width', 3, false, $pcast->imagewidth);
+            $result .= rss_full_tag('height', 3, false, $pcast->imageheight);
+        }
         $result .= rss_end_tag('image', 2, true);
 
         // itunes tags
