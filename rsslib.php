@@ -500,9 +500,9 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
                 $result .= rss_full_tag('description',3,false,$description);
                 $result .= rss_full_tag('guid',3,false,$item->link,array('isPermaLink' => 'true'));
 
-                //Include the author's email if exists 
-                if (isset($item->email)) {
-                    $result .= rss_full_tag('author',3,false,$item->email);
+                //Include the author's name / email if exists
+                if (isset($item->email) && (isset($item->author))) {
+                    $result .= rss_full_tag('author',3,false,$item->email .'('.$item->author .')');
                 }
                 $result .= rss_start_tag(pcast_rss_add_enclosure($item),3,true);
 
