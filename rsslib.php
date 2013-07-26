@@ -167,7 +167,7 @@ function pcast_rss_get_feed($context, $args) {
 
         }
         //First all rss feeds common headers
-        $url = new moodle_url('/mod/pcast/view.php', array('id'=>$pcast->id));
+        $url = new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id));
         $header = pcast_rss_header(format_string($pcast->name,true), $url, format_string($pcast->intro,true), $pcast);
 
         // Do we need iTunes tags?
