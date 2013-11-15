@@ -983,11 +983,11 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
     $table->data[] = array (get_string("name","pcast"),  format_text($episode->name, FORMAT_HTML, array('context'=>$context)));
 
     // Description
-    $summarytext = format_text($episode->summary, $episode->summaryformat, array('context'=>$context));
-
-    $summarytext = file_rewrite_pluginfile_urls($summarytext, 'pluginfile.php',
+    $summarytext = file_rewrite_pluginfile_urls($episode->summary, 'pluginfile.php',
                                                 $context->id, 'mod_pcast',
                                                 'summary', $episode->id);
+
+    $summarytext = format_text($summarytext, $episode->summaryformat, array('context'=>$context));
 
     $table->data[] = array (get_string("summary","pcast"),  $summarytext);
 
@@ -1093,11 +1093,11 @@ function pcast_display_episode_full($episode, $cm, $course){
     $table->data[] = array (get_string("name","pcast"), $episode->name);
 
     // Description
-    $summarytext = format_text($episode->summary, $episode->summaryformat, array('context'=>$context));
-
-    $summarytext = file_rewrite_pluginfile_urls($summarytext, 'pluginfile.php',
+    $summarytext = file_rewrite_pluginfile_urls($episode->summary, 'pluginfile.php',
                                                 $context->id, 'mod_pcast',
                                                 'summary', $episode->id);
+
+    $summarytext = format_text($summarytext, $episode->summaryformat, array('context'=>$context));
 
     $table->data[] = array (get_string("summary","pcast"),  $summarytext);
 

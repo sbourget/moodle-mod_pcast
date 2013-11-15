@@ -152,8 +152,12 @@ function pcast_rss_get_feed($context, $args) {
             $item->duration = $rec->duration;
             $item->pubdate = $rec->episodetimecreated;
             $item->link = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$rec->episodeid));
-            $item->description = format_text($rec->episodesummary,'HTML',NULL,$pcast->course);
-            // $item->description = strip_tags($rec->episodesummary);
+
+            $item->description = file_rewrite_pluginfile_urls($rec->episodesummary, 'pluginfile.php',
+                                                $context->id, 'mod_pcast',
+                                                'summary', $rec->episodeid);
+
+            $item->description = format_text($item->description,'HTML',NULL,$pcast->course);
 
             if($pcast->userscancategorize) {
                 //TODO: This is very inefficient (this generates 2 DB queries per entry)
