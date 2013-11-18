@@ -539,8 +539,13 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
 
 function pcast_rss_add_enclosure($item) {
 
-    global $CFG, $DB, $OUTPUT;
+    global $CFG, $DB;
     $enclosure = new stdClass();
+
+    // Set some defaults to prevent notices whe the attachment is missing.
+    $enclosure->type = '';
+    $enclosure->size = '';
+    $enclosure->url = '';
 
     $pcast  = $DB->get_record('pcast', array('id' => $item->pcastid), '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
