@@ -571,13 +571,8 @@ function pcast_rss_add_enclosure($item) {
 //This function return all the common footers for every rss feeds
 function pcast_rss_footer($title = NULL, $link = NULL, $description = NULL) {
 
-    global $CFG, $USER;
-
-    $status = true;
-    $result = '';
-
     //Close the chanel
-    $result .= rss_end_tag('channel', 1, true);
+    $result = rss_end_tag('channel', 1, true);
     ////Close the rss tag
     $result .= '</rss>';
 
@@ -598,7 +593,7 @@ function pcast_rss_footer($title = NULL, $link = NULL, $description = NULL) {
  * @todo THIS WILL NOT WORK WITH SLASHARGS DISABLED
  */
 function pcast_rss_get_url($contextid, $userid, $componentname, $additionalargs) {
-    global $CFG, $USER, $PAGE;
+    global $CFG;
     require_once($CFG->libdir.'/rsslib.php');
     $usertoken = rss_get_token($userid);
     $args = '/'.$contextid.'/'.$usertoken.'/'.$componentname.'/'.$additionalargs.'/rss.pcast';
@@ -661,7 +656,6 @@ function pcast_build_pcast_file($pcast, $url) {
  * @param string $contents the data to be written to the file
  */
 function pcast_rss_save_file($componentname, $filename, $contents, $expandfilename=true) {
-    global $CFG;
 
     $status = true;
 
