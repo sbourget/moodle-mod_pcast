@@ -158,9 +158,11 @@ function pcast_rss_get_feed($context, $args) {
             if($pcast->userscancategorize) {
                 //TODO: This is very inefficient (this generates 2 DB queries per entry)
                 $category = pcast_rss_category_lookup($rec);
-                $item->topcategory = $category->top->name;
-                if(!empty($item->nestedcategory)) {
-                    $item->nestedcategory = $category->nested->name;
+                if(!empty($item->topcategory)) {
+                    $item->topcategory = $category->top->name;
+                    if(!empty($item->nestedcategory)) {
+                        $item->nestedcategory = $category->nested->name;
+                    }
                 }
             }
             $items[] = $item;
