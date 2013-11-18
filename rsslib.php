@@ -132,7 +132,6 @@ function pcast_rss_get_feed($context, $args) {
 
         foreach ($recs as $rec) {
             $item = new stdClass();
-            $user = new stdClass();
             $item->title = $rec->episodename;
             $item->pcastid = $rec->pcastid;
             $item->id = $rec->episodeid;
@@ -140,10 +139,7 @@ function pcast_rss_get_feed($context, $args) {
             $item->course = $rec->course;
 
             if ($pcast->displayauthor == 1) {//With author
-                $user->firstname = $rec->userfirstname;
-                $user->lastname = $rec->userlastname;
-
-                $item->author = fullname($user);
+                $item->author = fullname($rec);
                 $item->email = $rec->email;
             }
 
@@ -227,6 +223,7 @@ function pcast_rss_get_sql($pcast, $time=0) {
     }
 
     if ($pcast->displayauthor == 1) {//With author
+        $allnamefields = get_all_user_name_fields(true,'u');
         $sql = "SELECT e.id AS episodeid,
                   e.pcastid AS pcastid,
                   e.name AS episodename,
@@ -239,8 +236,7 @@ function pcast_rss_get_sql($pcast, $time=0) {
                   e.nestedcategory AS nestedcategory,
                   e.timecreated AS episodetimecreated,
                   u.id AS userid,
-                  u.firstname AS userfirstname,
-                  u.lastname AS userlastname,
+                  $allnamefields,
                   u.email AS email,
                   p.course AS course
              FROM {pcast_episodes} e,
