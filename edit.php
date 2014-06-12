@@ -150,16 +150,11 @@ if ($mform->is_cancelled()) {
     if (empty($episode->id)) {
         // A new entry.
         $episode->id = $DB->insert_record('pcast_episodes', $episode);
-        add_to_log($course->id, "pcast", "add episode",
-                   "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id",
-                   $episode->id, $cm->id);
-
+        $isnewentry = true;
     } else {
         // An existing entry.
         $DB->update_record('pcast_episodes', $episode);
-        add_to_log($course->id, "pcast", "update episode",
-                   "view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$episode->id",
-                   $episode->id, $cm->id);
+        $isnewentry = false;
     }
 
     file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id,
@@ -188,6 +183,22 @@ if ($mform->is_cancelled()) {
     // Refetch the complete entry.
     $episode = $DB->get_record('pcast_episodes', array('id'=>$episode->id));
 
+    // Trigger event and update completion (if entry was created).
+    $eventparams = array(
+        'context' => $context,
+        'objectid' => $episode->id,
+        'other' => array('name' => $episode->name)
+    );
+
+    if ($isnewentry) {
+        $event = \mod_pcast\event\episode_created::create($eventparams);
+    } else {
+        $event = \mod_pcast\event\episode_updated::create($eventparams);
+    }
+
+    $event->add_record_snapshot('pcast_episodes', $episode);
+    $event->trigger();
+    
     // Calculate hook.
     $hook = textlib::substr($episode->name, 0, 1);
     redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$hook");

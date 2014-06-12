@@ -752,7 +752,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         $pcast->URL = $CFG->wwwroot . '/pluginfile.php' . $fullpath;
         $pcast->filename = implode('/', $args);
         if (!empty($USER->id)) {
-            pcast_add_view_instance($pcast, $USER->id);
+            pcast_add_view_instance($pcast, $episode, $USER->id, $context);
         }
 
         // finally send the file
@@ -786,7 +786,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
  * @param string $userid
  * @return bool false if error else true
  */
-function pcast_add_view_instance($pcast, $userid) {
+function pcast_add_view_instance($pcast, $episode, $userid, $context) {
     global $DB;
 
     //lookup the user add add to the view count
@@ -810,8 +810,14 @@ function pcast_add_view_instance($pcast, $userid) {
             print_error('databaseerror', 'pcast');
         }
     }
+    
+        $event = \mod_pcast\event\episode_viewed::create(array(
+            'objectid' => $view->episodeid,
+            'context' => $context
+        ));
 
-    add_to_log($pcast->course, "pcast", "view", $pcast->URL, $pcast->filename, 0, $userid);
+        $event->add_record_snapshot('pcast_episodes', $episode);
+        $event->trigger();
 
     return $result;
 }

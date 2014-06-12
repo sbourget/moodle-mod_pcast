@@ -54,8 +54,17 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/pcast:view', $context);
 
+// Trigger module viewed event.
+$event = \mod_pcast\event\course_module_viewed::create(array(
+    'objectid' => $pcast->id,
+    'context' => $context,
+    'other' => array('mode' => $mode)
+));
 
-add_to_log($course->id, 'pcast', 'view', "view.php?id=$cm->id", $pcast->name, $cm->id);
+$event->add_record_snapshot('course', $course);
+$event->add_record_snapshot('course_modules', $cm);
+$event->add_record_snapshot('pcast', $pcast);
+$event->trigger();
 
 
 /// Mark as viewed

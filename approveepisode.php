@@ -48,12 +48,20 @@ $PAGE->set_url($url);
 $PAGE->set_context($context);
 
 if (!$episode->approved and confirm_sesskey()) {
-    $newepisode = new object();
+    $newepisode = new stdClass();
     $newepisode->id           = $episode->id;
     $newepisode->approved     = 1;
     $newepisode->timemodified = time();
     $DB->update_record("pcast_episodes", $newepisode);
-    add_to_log($course->id, "pcast", "approve episode", "showepisode.php?eid=$eid", "$eid", $cm->id);
+    
+    // Trigger event about entry approval/disapproval.
+    $params = array(
+        'context' => $context,
+        'objectid' => $episode->id
+    );
+    $event = \mod_pcast\event\episode_approved::create($params);
+    $event->add_record_snapshot('pcast_episodes', $episode);
+    $event->trigger();
 }
 
 redirect("view.php?id=$cm->id&amp;mode=$mode&amp;hook=$hook");

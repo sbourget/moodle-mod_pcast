@@ -82,6 +82,7 @@ if (!$ineditperiod and !$manageentries) {
 
 if ($confirm and confirm_sesskey()) { // The operation was confirmed.
 
+    $origionalepisode = fullclone($episode);
     $fs = get_file_storage();
     $fs->delete_area_files($context->id, 'pcast_episode', $episode->id);
     $DB->delete_records("comments", array('itemid'=>$episode->id, 'commentarea'=>'pcast_episode', 'contextid'=>$context->id));
@@ -97,7 +98,19 @@ if ($confirm and confirm_sesskey()) { // The operation was confirmed.
     $rm = new rating_manager();
     $rm->delete_ratings($delopt);
 
-    add_to_log($course->id, "pcast", "delete episode", "view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook", $episode->id, $cm->id);
+    $event = \mod_pcast\event\episode_deleted::create(array(
+        'context' => $context,
+        'objectid' => $origionalepisode->id,
+        'other' => array(
+            'mode' => $prevmode,
+            'hook' => $hook,
+            'name' => $origionalepisode->name
+        )
+    ));
+
+    $event->add_record_snapshot('pcast_episodes', $origionalepisode);
+    $event->trigger();
+    
     redirect("view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook");
 
 } else {        // The operation has not been confirmed yet so ask the user to do so.
