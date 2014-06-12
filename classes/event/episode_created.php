@@ -26,7 +26,7 @@ namespace mod_pcast\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_pcast entry created event class.
+ * The mod_pcast episode created event class.
  *
  * @property-read array $other {
  *      Extra information about event.

@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * The mod_pcast entry viewed event class.
  *
- * Triggered when pcast entry is autolinked and viewed by user from another context.
+ * Triggered when the pcast episode (media file) is viewed by a user.
  *
  * @package    mod_pcast
  * @since      Moodle 2.7

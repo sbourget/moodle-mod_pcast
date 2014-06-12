@@ -26,7 +26,7 @@ namespace mod_pcast\event;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The mod_pcast entry approved event class.
+ * The mod_pcast episode approved event class.
  *
  * @package    mod_pcast
  * @since      Moodle 2.7
