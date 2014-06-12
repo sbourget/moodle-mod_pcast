@@ -64,8 +64,8 @@ class episode_updated extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has updated the pcast episode with id '$this->objectid' for " .
-            "the pcast activity with course module id '$this->contextinstanceid'.";
+        return "The user with id '$this->userid' has updated the podcast episode with id '$this->objectid' for " .
+            "the podcast activity with course module id '$this->contextinstanceid'.";
     }
 
     /**

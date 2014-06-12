@@ -60,8 +60,8 @@ class episode_viewed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has viewed the pcast episode with id '$this->objectid' in " .
-            "the pcast activity with course module id '$this->contextinstanceid'.";
+        return "The user with id '$this->userid' has viewed the podcast episode with id '$this->objectid' in " .
+            "the podcast activity with course module id '$this->contextinstanceid'.";
     }
 
     /**

@@ -66,8 +66,8 @@ class episode_deleted extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has deleted the pcast entry with id '$this->objectid' in " .
-            "the pcast activity with course module id '$this->contextinstanceid'.";
+        return "The user with id '$this->userid' has deleted the podcast entry with id '$this->objectid' in " .
+            "the podcast activity with course module id '$this->contextinstanceid'.";
     }
 
     /**
