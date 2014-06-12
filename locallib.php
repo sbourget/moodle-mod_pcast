@@ -1217,15 +1217,15 @@ function pcast_display_episode_full($episode, $cm, $course){
  * Displays all views for a single episode
  * @global stdClass $DB
  * @param object $episode
+ * @param object $cm
  */
-function pcast_display_episode_views($episode){
+function pcast_display_episode_views($episode, $cm){
 
     global $DB;
 
     if (!$views = $DB->get_records("pcast_views", array( "episodeid" => $episode->id))) {
         echo get_string('noviews','pcast',get_string('modulename','pcast'));
     } else {
-        $timenow = time();
         $strviews  = get_string("views","pcast");
         $struser = get_string("user","pcast");
         $strdate = get_string("date");
@@ -1244,6 +1244,16 @@ function pcast_display_episode_views($episode){
         echo html_writer::empty_tag('br');
         echo html_writer::table($table);
     }
+
+    // Trigger view list has been viewed event.
+    $params = array(
+            'context' => context_module::instance($cm->id),
+            'objectid' => $episode->id
+            );
+
+    $event = \mod_pcast\event\episode_views_viewed::create($params);
+    $event->add_record_snapshot('pcast_episodes', $episode);
+    $event->trigger();
 }
 
 /**
@@ -1262,7 +1272,6 @@ function pcast_display_episode_comments($episode, $cm, $course) {
         if ($episode->userscancomment) {
             //Get episode comments and display the comment box
             $context = context_module::instance($cm->id);
-            $output = true;
 
             // Generate comment box using API
             if (!empty($CFG->usecomments)) {
@@ -1279,6 +1288,15 @@ function pcast_display_episode_comments($episode, $cm, $course) {
                 $html = html_writer::tag('div',$comment->output(true), array('class'=> 'pcast-comments'));
 
             }
+            // Trigger comment viewed event.
+            $params = array(
+                    'context' => $context,
+                    'objectid' => $episode->id
+                    );
+ 
+            $event = \mod_pcast\event\comments_viewed::create($params);
+            $event->add_record_snapshot('pcast_episodes', $episode);
+            $event->trigger();
         }
     } else {
         $html = html_writer::tag('div',get_string("nocommentuntilapproved","pcast"), array('class'=> 'pcast-episode-notice'));
@@ -1335,6 +1353,18 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
                 echo html_writer::tag('div', $OUTPUT->render($thisepisode->rating), array('class' => 'pcast-episode-rating'));
             }
         }
+        
+        // Trigger ratings viewed event.
+        $params = array(
+                'context' => $context,
+                'objectid' => $episode->id
+                );
+
+        $event = \mod_pcast\event\ratings_viewed::create($params);
+        $event->add_record_snapshot('pcast_episodes', $episode);
+        $event->trigger();
+        
+        
     } else {
         echo html_writer::tag('div',get_string("noratinguntilapproved","pcast"), array('class'=> 'pcast-episode-notice'));
     }
