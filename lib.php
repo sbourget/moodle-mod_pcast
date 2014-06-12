@@ -357,10 +357,12 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
         return false;
     }
 
-    $plist = implode(',', $ids); // there should not be hundreds of glossaries in one course, right?
-
+    $plist = implode(',', $ids); // there should not be hundreds of podcasts in one course, right?
+    
+    $allnamefields = get_all_user_name_fields(true,'u');
+    
     if (!$episodes = $DB->get_records_sql("SELECT e.id, e.name, e.approved, e.timemodified, e.pcastid,
-                                                 e.userid, u.firstname, u.lastname, u.email, u.picture
+                                                 e.userid, $allnamefields
                                             FROM {pcast_episodes} e
                                             JOIN {user} u ON u.id = e.userid
                                            WHERE e.pcastid IN ($plist) AND e.timemodified > ?
