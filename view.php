@@ -74,7 +74,7 @@ $completion->set_module_viewed($cm);
 /// Print the page header
 
 $PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode'=>$mode));
-$PAGE->set_title(format_string($pcast->name),true, array('context' =>$context));
+$PAGE->set_title($pcast->name);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 

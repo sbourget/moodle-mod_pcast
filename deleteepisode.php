@@ -115,7 +115,7 @@ if ($confirm and confirm_sesskey()) { // The operation was confirmed.
 
 } else {        // The operation has not been confirmed yet so ask the user to do so.
     $PAGE->navbar->add(get_string('delete'));
-    $PAGE->set_title(format_string($pcast->name));
+    $PAGE->set_title($pcast->name);
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
     // TODO: Replace with CSS
