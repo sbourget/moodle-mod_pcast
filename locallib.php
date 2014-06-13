@@ -1044,18 +1044,23 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
         $url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id));
         $link .= html_writer::tag('a', get_string('view'), array('href'=>$url));
 
-
-    // Approve Link
-    if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
-        $link .= ' | '."\n";
-        $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW, 'hook'=>$hook, 'sesskey'=>sesskey()));
-        $link .= html_writer::tag('a', get_string('approve'), array('href'=>$url));
+    // Approve / Disapprove Link
+    if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval)) {
+        if(!$episode->approved) {
+            // Approve link
+            $link .= ' | '."\n";
+            $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW, 'sesskey'=>sesskey()));
+            $link .= html_writer::tag('a', get_string('approve'), array('href'=>$url));
+        } else {
+            //Disapprove link
+            $link .= ' | '."\n";
+            $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'newstate'=>PCAST_EPISODE_DISAPPROVE, 'sesskey'=>sesskey()));
+            $link .= html_writer::tag('a', get_string('disapprove','pcast'), array('href'=>$url));
+        }
     }
 
     // Construct links
     $table->data[] = array ('',$link);
-
-
 
     echo $html;
     echo html_writer::table($table);
@@ -1191,12 +1196,17 @@ function pcast_display_episode_full($episode, $cm, $course){
 
     }
 
-
-    // Approve Link
-    if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval) and (!$episode->approved)) {
-
-        $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW, 'sesskey'=>sesskey()));
-        $approve .= html_writer::tag('a', get_string('approve'), array('href'=>$url));
+    // Approve / Disapprove Link
+    if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval)) {
+        if(!$episode->approved) {
+            // Approve link
+            $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW, 'sesskey'=>sesskey()));
+            $approve .= html_writer::tag('a', get_string('approve'), array('href'=>$url));
+        } else {
+            //Disapprove link
+            $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'newstate'=>PCAST_EPISODE_DISAPPROVE, 'sesskey'=>sesskey()));
+            $approve .= html_writer::tag('a', get_string('disapprove','pcast'), array('href'=>$url));
+        }
     }
 
     // Construct links

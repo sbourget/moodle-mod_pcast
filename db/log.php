@@ -34,6 +34,7 @@ $logs = array(
     array('module'=>'pcast', 'action'=>'add episode', 'mtable'=>'pcast', 'field'=>'name'),
     array('module'=>'pcast', 'action'=>'update episode', 'mtable'=>'pcast', 'field'=>'name'),
     array('module'=>'pcast', 'action'=>'approve episode', 'mtable'=>'pcast', 'field'=>'name'),
+    array('module'=>'pcast', 'action'=>'disapprove episode', 'mtable'=>'pcast', 'field'=>'name'),
     array('module'=>'pcast', 'action'=>'view episode', 'mtable'=>'pcast_episodes', 'field'=>'name'),
 );
 

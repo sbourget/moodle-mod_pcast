@@ -91,7 +91,7 @@ class restore_pcast_activity_task extends restore_activity_task {
         $rules[] = new restore_log_rule('pcast', 'delete episode', 'view.php?id={course_module}&mode=episode&hook={pcast_episode}', '{pcast_episode}');
         $rules[] = new restore_log_rule('pcast', 'approve episode', 'showepisode.php?eid={pcast_episode}', '{pcast_episode}');
         $rules[] = new restore_log_rule('pcast', 'view episode', 'showepisode.php?eid={pcast_episode}', '{pcast_episode}');
-
+        $rules[] = new restore_log_rule('pcast', 'disapprove episode', 'showepisode.php?eid={pcast_episode}', '{pcast_episode}');
         return $rules;
     }
 

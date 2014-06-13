@@ -51,6 +51,8 @@ define("PCAST_AUTHOR_FNAME", 201);
 define("PCAST_EPISODE_VIEW", 300);
 define("PCAST_EPISODE_COMMENT_AND_RATE", 301);
 define("PCAST_EPISODE_VIEWS", 302);
+define("PCAST_EPISODE_APPROVE", 1);
+define("PCAST_EPISODE_DISAPPROVE", 0);
 
 /**
  * If you for some reason need to use global variables instead of constants, do not forget to make them
