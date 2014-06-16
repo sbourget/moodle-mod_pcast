@@ -492,7 +492,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
 
 /**
  * Function to display Pcast episodes
- * @global stdClass $CFG
+ * @global stdClass $OUTPUT
  * @global stdClass $DB
  * @global stdClass $USER
  * @param object $pcast
@@ -501,6 +501,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
  * @param string $hook
  * @param string $sortkey
  * @param string $sortorder
+ * @param int $page
  * @return boolean
  */
 
@@ -577,7 +578,9 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
         // Print a paging bar here
         $url = new moodle_url('/mod/pcast/view.php', 
                 array('id'=>$cm->id, 'mode'=>PCAST_STANDARD_VIEW, 'hook'=>$hook, 'sortkey'=>$sortkey, 'sortorder'=>$sortorder));
+        echo html_writer::start_tag('div', array('class'=>'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
+        echo html_writer::end_tag('div');
     }
     return true;
 }
@@ -626,13 +629,14 @@ function pcast_group_allowed_viewing($episode, $cm, $groupmode) {
 
 /**
  * Function to display episodes by category
- * @global stdClass $CFG
+ * @global stdClass $OUTPUT
  * @global stdClass $DB
  * @global stdClass $USER
  * @param object $pcast
  * @param object $cm
  * @param int $groupmode
  * @param string $hook
+ * @param int $page
  */
 function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAST_SHOW_ALL_CATEGORIES, $page = 0) {
     global $DB, $USER, $OUTPUT;
@@ -709,13 +713,15 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAS
         // Print a paging bar here
         $url = new moodle_url('/mod/pcast/view.php', 
                 array('id'=>$cm->id, 'mode'=>PCAST_CATEGORY_VIEW, 'hook'=>$hook));
+        echo html_writer::start_tag('div', array('class'=>'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
+        echo html_writer::end_tag('div');
     }
 }
 
 /**
  * Display all episodes that sorted by date
- * @global stdClass $CFG
+ * @global stdClass $OUTPUT
  * @global stdClass $DB
  * @global stdClass $USER
  * @param object $pcast
@@ -724,6 +730,7 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook=PCAS
  * @param string $hook
  * @param string $sortkey
  * @param string $sortorder
+ * @param int $page
  */
 function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey=PCAST_DATE_CREATED, $sortorder='desc', $page=0) {
     global $DB, $USER, $OUTPUT;
@@ -794,13 +801,15 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sor
         // Print a paging bar here.
         $url = new moodle_url('/mod/pcast/view.php', 
                 array('id'=>$cm->id, 'mode'=>PCAST_DATE_VIEW, 'hook'=>$hook, 'sortkey'=>$sortkey, 'sortorder'=>$sortorder));
+        echo html_writer::start_tag('div', array('class'=>'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
+        echo html_writer::end_tag('div');
     }
 }
 
 /**
  * Display all episodes that sorted by author
- * @global stdClass $CFG
+ * @global stdClass $OUTPUT
  * @global stdClass $DB
  * @global stdClass $USER
  * @param object $pcast
@@ -809,6 +818,7 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='', $sor
  * @param string $hook
  * @param string $sortkey
  * @param string $sortorder
+ * @param int $page
  */
 function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc', $page = 0) {
     global $DB, $USER, $OUTPUT;
@@ -903,13 +913,15 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
         // Print a paging bar here
         $url = new moodle_url('/mod/pcast/view.php', 
                 array('id'=>$cm->id, 'mode'=>PCAST_AUTHOR_VIEW, 'hook'=>$hook, 'sortkey'=>$sortkey, 'sortorder'=>$sortorder));
+        echo html_writer::start_tag('div', array('class'=>'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
+        echo html_writer::end_tag('div');
     }
 }
 
 /**
  * Display all episodes that have not yet been approved
- * @global stdClass $CFG
+ * @global stdClass $OUTPUT
  * @global stdClass $DB
  * @global stdClass $USER
  * @param object $pcast
@@ -918,6 +930,7 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
  * @param string $hook
  * @param string $sortkey
  * @param string $sortorder
+ * @param int $page
  */
 function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc', $page = 0) {
     global $DB, $USER, $OUTPUT;
@@ -995,7 +1008,9 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
         // Print a paging bar here
         $url = new moodle_url('/mod/pcast/view.php', 
                 array('id'=>$cm->id, 'mode'=>PCAST_APPROVAL_VIEW, 'hook'=>$hook, 'sortkey'=>$sortkey, 'sortorder'=>$sortorder));
+        echo html_writer::start_tag('div', array('class'=>'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
+        echo html_writer::end_tag('div');
     }
 
 }
