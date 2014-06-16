@@ -38,7 +38,4 @@ List of features:
     * RSS Support
 
 
-Known issues, please do not file tracker reports:
-    * paging of large podcasts
-
 -Steve
