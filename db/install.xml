@@ -1,107 +1,108 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/pcast/db" VERSION="20130624" COMMENT="XMLDB file for Moodle mod/pcast"
+<XMLDB PATH="mod/pcast/db" VERSION="20140613" COMMENT="XMLDB file for Moodle mod/pcast"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
   <TABLES>
-    <TABLE NAME="pcast" COMMENT="pcast" NEXT="pcast_episodes">
+    <TABLE NAME="pcast" COMMENT="pcast">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="course" NEXT="name"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="userid" NEXT="intro"/>
-        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="introformat"/>
-        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false" PREVIOUS="intro" NEXT="userscancomment"/>
-        <FIELD NAME="userscancomment" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="introformat" NEXT="userscancategorize"/>
-        <FIELD NAME="userscancategorize" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="allow uses to set the category for their episodes" PREVIOUS="userscancomment" NEXT="userscanpost"/>
-        <FIELD NAME="userscanpost" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userscancategorize" NEXT="maxbytes"/>
-        <FIELD NAME="maxbytes" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userscanpost" NEXT="requireapproval"/>
-        <FIELD NAME="requireapproval" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="maxbytes" NEXT="displayauthor"/>
-        <FIELD NAME="displayauthor" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Display author names" PREVIOUS="requireapproval" NEXT="displayviews"/>
-        <FIELD NAME="displayviews" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Display views" PREVIOUS="displayauthor" NEXT="image"/>
-        <FIELD NAME="image" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="displayviews" NEXT="imageheight"/>
-        <FIELD NAME="imageheight" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="144" SEQUENCE="false" PREVIOUS="image" NEXT="imagewidth"/>
-        <FIELD NAME="imagewidth" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="144" SEQUENCE="false" PREVIOUS="imageheight" NEXT="rssepisodes"/>
-        <FIELD NAME="rssepisodes" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="imagewidth" NEXT="rsssortorder"/>
-        <FIELD NAME="rsssortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="rssepisodes" NEXT="enablerssfeed"/>
-        <FIELD NAME="enablerssfeed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="rsssortorder" NEXT="enablerssitunes"/>
-        <FIELD NAME="enablerssitunes" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="enablerssfeed" NEXT="visible"/>
-        <FIELD NAME="visible" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="enablerssitunes" NEXT="explicit"/>
-        <FIELD NAME="explicit" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="visible" NEXT="subtitle"/>
-        <FIELD NAME="subtitle" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="explicit" NEXT="keywords"/>
-        <FIELD NAME="keywords" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="subtitle" NEXT="topcategory"/>
-        <FIELD NAME="topcategory" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="keywords" NEXT="nestedcategory"/>
-        <FIELD NAME="nestedcategory" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="topcategory" NEXT="assessed"/>
-        <FIELD NAME="assessed" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="nestedcategory" NEXT="assesstimestart"/>
-        <FIELD NAME="assesstimestart" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="assessed" NEXT="assesstimefinish"/>
-        <FIELD NAME="assesstimefinish" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="assesstimestart" NEXT="scale"/>
-        <FIELD NAME="scale" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="assesstimefinish" NEXT="timecreated"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="scale" NEXT="timemodified"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="userscancomment" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="userscancategorize" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="allow uses to set the category for their episodes"/>
+        <FIELD NAME="userscanpost" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="maxbytes" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="episodesperpage" TYPE="int" LENGTH="4" NOTNULL="false" DEFAULT="10" SEQUENCE="false"/>
+        <FIELD NAME="requireapproval" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="displayauthor" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Display author names"/>
+        <FIELD NAME="displayviews" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Display views"/>
+        <FIELD NAME="image" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="imageheight" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="144" SEQUENCE="false"/>
+        <FIELD NAME="imagewidth" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="144" SEQUENCE="false"/>
+        <FIELD NAME="rssepisodes" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="rsssortorder" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="enablerssfeed" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="enablerssitunes" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="visible" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="explicit" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="subtitle" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="keywords" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="topcategory" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="nestedcategory" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="assessed" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="assesstimestart" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="assesstimefinish" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="scale" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="pcast_episodes" COMMENT="podcast episodes" PREVIOUS="pcast" NEXT="pcast_itunes_categories">
+    <TABLE NAME="pcast_episodes" COMMENT="podcast episodes">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="pcastid"/>
-        <FIELD NAME="pcastid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="course"/>
-        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="pcastid" NEXT="userid"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="course" NEXT="name"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="userid" NEXT="summary"/>
-        <FIELD NAME="summary" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="summaryformat"/>
-        <FIELD NAME="summaryformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="summary" NEXT="summarytrust"/>
-        <FIELD NAME="summarytrust" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="summaryformat" NEXT="mediafile"/>
-        <FIELD NAME="mediafile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="summarytrust" NEXT="duration"/>
-        <FIELD NAME="duration" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false" PREVIOUS="mediafile" NEXT="explicit"/>
-        <FIELD NAME="explicit" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="duration" NEXT="subtitle"/>
-        <FIELD NAME="subtitle" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="explicit" NEXT="keywords"/>
-        <FIELD NAME="keywords" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="subtitle" NEXT="topcategory"/>
-        <FIELD NAME="topcategory" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="keywords" NEXT="nestedcategory"/>
-        <FIELD NAME="nestedcategory" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="topcategory" NEXT="timecreated"/>
-        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="nestedcategory" NEXT="timemodified"/>
-        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timecreated" NEXT="approved"/>
-        <FIELD NAME="approved" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timemodified" NEXT="sequencenumber"/>
-        <FIELD NAME="sequencenumber" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Used for manual sorting" PREVIOUS="approved"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="pcastid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="summary" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="summaryformat" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="summarytrust" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="mediafile" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="duration" TYPE="char" LENGTH="50" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="explicit" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="subtitle" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="keywords" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="topcategory" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="nestedcategory" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="approved" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="sequencenumber" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Used for manual sorting"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="pcast_itunes_categories" COMMENT="iTunes top categories" PREVIOUS="pcast_episodes" NEXT="pcast_itunes_nested_cat">
+    <TABLE NAME="pcast_itunes_categories" COMMENT="iTunes top categories">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="name"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="id"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="pcast_itunes_nested_cat" COMMENT="itunes nested categories" PREVIOUS="pcast_itunes_categories" NEXT="pcast_views">
+    <TABLE NAME="pcast_itunes_nested_cat" COMMENT="itunes nested categories">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="name"/>
-        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="id" NEXT="topcategoryid"/>
-        <FIELD NAME="topcategoryid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="name"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="topcategoryid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
     </TABLE>
-    <TABLE NAME="pcast_views" COMMENT="Views of podcasts" PREVIOUS="pcast_itunes_nested_cat">
+    <TABLE NAME="pcast_views" COMMENT="Views of podcasts">
       <FIELDS>
-        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="episodeid"/>
-        <FIELD NAME="episodeid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
-        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="episodeid" NEXT="views"/>
-        <FIELD NAME="views" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="userid" NEXT="lastview"/>
-        <FIELD NAME="lastview" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="views"/>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="episodeid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="views" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="lastview" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
       <INDEXES>
-        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid" NEXT="episodeid"/>
-        <INDEX NAME="episodeid" UNIQUE="false" FIELDS="episodeid" PREVIOUS="userid"/>
+        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid"/>
+        <INDEX NAME="episodeid" UNIQUE="false" FIELDS="episodeid"/>
       </INDEXES>
     </TABLE>
   </TABLES>

@@ -129,6 +129,20 @@ function xmldb_pcast_upgrade($oldversion=0) {
         upgrade_mod_savepoint(true, 2013062400, 'pcast');
     }
 
+    if ($oldversion < 2014061600) {
+
+        // Define field episodesperpage to be added to pcast.
+        $table = new xmldb_table('pcast');
+        $field = new xmldb_field('episodesperpage', XMLDB_TYPE_INTEGER, '4', null, null, null, '10', 'maxbytes');
+
+        // Conditionally launch add field episodesperpage.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Pcast savepoint reached.
+        upgrade_mod_savepoint(true, 2014061600, 'pcast');
+    }
 
     // Final return of upgrade result (true/false) to Moodle. Must be always the last line in the script.
     return true;

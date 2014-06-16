@@ -214,6 +214,13 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addHelpButton('userscancategorize', 'userscancategorize', 'pcast');
         $mform->setDefault('userscancategorize', 0);
         $mform->disabledIf('userscancategorize', 'enablerssitunes', 'eq', 0);
+        
+        // Show X episodes per page
+        $mform->addElement('text', 'episodesperpage', get_string('episodesperpage', 'pcast'));
+        $mform->addHelpButton('episodesperpage', 'episodesperpage', 'pcast');
+        $mform->setDefault('episodesperpage', 10);
+        $mform->addRule('episodesperpage', null, 'numeric', null, 'client');
+        $mform->setType('episodesperpage', PARAM_INT);
 
         //-------------------------------------------------------------------------------
 

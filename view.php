@@ -222,36 +222,36 @@ echo html_writer::start_tag('div', array('class'=>'generalboxcontent')). "\n";
 switch($mode) {
     case PCAST_STANDARD_VIEW:
 
-        pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
+        pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder, $page);
         break;
 
     case PCAST_CATEGORY_VIEW:
 
-        pcast_display_category_episodes($pcast, $cm, $groupmode, $hook);
+        pcast_display_category_episodes($pcast, $cm, $groupmode, $hook, $page);
         break;
 
     case PCAST_DATE_VIEW:
 
-        pcast_display_date_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
+        pcast_display_date_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder, $page);
         break;
 
     case PCAST_AUTHOR_VIEW:
 
-        pcast_display_author_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
+        pcast_display_author_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder, $page);
         break;
 
     case PCAST_APPROVAL_VIEW:
-        pcast_display_approval_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
+        pcast_display_approval_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder, $page);
 
         break;
 
     case PCAST_ADDENTRY_VIEW:
-        pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
+        pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder, $page);
         break;
 
     default:
 
-        pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder);
+        pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder, $page);
         break;
 }
 
