@@ -200,7 +200,7 @@ if ($mform->is_cancelled()) {
     $event->trigger();
     
     // Calculate hook.
-    $hook = textlib::substr($episode->name, 0, 1);
+    $hook = core_text::substr($episode->name, 0, 1);
     redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$hook");
 }
 
