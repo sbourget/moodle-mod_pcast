@@ -1335,35 +1335,6 @@ function pcast_update_grades($pcast=null, $userid=0, $nullifnone=true) {
 }
 
 /**
- * Update all grades in gradebook.
- *
- * @global stdClass
- */
-function pcast_upgrade_grades() {
-    global $DB;
-
-    $sql = "SELECT COUNT('x')
-              FROM {pcast} g, {course_modules} cm, {modules} m
-             WHERE m.name='pcast' AND m.id=cm.module AND cm.instance=g.id";
-    $count = $DB->count_records_sql($sql);
-
-    $sql = "SELECT g.*, cm.idnumber AS cmidnumber, g.course AS courseid
-              FROM {pcast} g, {course_modules} cm, {modules} m
-             WHERE m.name='pcast' AND m.id=cm.module AND cm.instance=g.id";
-    if ($rs = $DB->get_recordset_sql($sql)) {
-        $pbar = new progress_bar('pcastupgradegrades', 500, true);
-        $i=0;
-        foreach ($rs as $pcast) {
-            $i++;
-            upgrade_set_timeout(60*5); // set up timeout, may also abort execution
-            pcast_update_grades($pcast, 0, false);
-            $pbar->update($i, $count, "Updating pcast grades ($i/$count).");
-        }
-        $rs->close();
-    }
-}
-
-/**
  * Create/update grade item for given pcast
  *
  * @global stdClass
