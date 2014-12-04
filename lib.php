@@ -144,6 +144,7 @@ function pcast_add_instance($pcast) {
         file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast', 'logo', 0, array('subdirs'=>false));
     }
 
+    pcast_grade_item_update($pcast);
     return $result;
 
 }
@@ -200,6 +201,7 @@ function pcast_update_instance($pcast) {
         file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast', 'logo', 0, array('subdirs'=>false));
     }
 
+    pcast_grade_item_update($pcast);
     return $result;
 }
 
@@ -249,6 +251,9 @@ function pcast_delete_instance($id) {
 
     //Delete Episodes
     $DB->delete_records('pcast_episodes', array('pcastid' => $pcast->id));
+
+    //Delete Grades.
+    pcast_grade_item_delete($pcast);
 
     //Delete Podcast
     $DB->delete_records('pcast', array('id' => $pcast->id));
