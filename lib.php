@@ -135,6 +135,7 @@ function pcast_add_instance($pcast) {
     # You may have to add extra stuff in here #
 
     $result = $DB->insert_record('pcast', $pcast);
+    $pcast->id = $result;
 
     $cmid = $pcast->coursemodule;
     $draftitemid = $pcast->image;
