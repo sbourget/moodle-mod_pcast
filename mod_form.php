@@ -52,7 +52,7 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         // Adding the standard "intro" and "introformat" fields
-        $this->add_intro_editor();
+        $this->standard_intro_elements() ;
 
         // Adding the max upload size of episodes
         $choices = get_max_upload_sizes($CFG->maxbytes, $COURSE->maxbytes, 0);
