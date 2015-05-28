@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // extension.cache.dbm.php - part of getID3()                  //
@@ -10,7 +11,7 @@
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 //                                                             //
-// This extension written by Allan Hansen <ahØartemis*dk>      //
+// This extension written by Allan Hansen <ahÃ˜artemis*dk>      //
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
@@ -135,7 +136,7 @@ class getID3_cached_dbm extends getID3
 			$this->clear_cache();
 		}
 
-		parent::getID3();
+		parent::__construct();
 	}
 
 

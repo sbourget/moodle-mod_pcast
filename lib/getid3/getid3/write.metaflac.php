@@ -3,6 +3,7 @@
 /// getID3() by James Heinrich <info@getid3.org>               //
 //  available at http://getid3.sourceforge.net                 //
 //            or http://www.getid3.org                         //
+//          also https://github.com/JamesHeinrich/getID3       //
 /////////////////////////////////////////////////////////////////
 // See readme.txt for more details                             //
 /////////////////////////////////////////////////////////////////
@@ -152,7 +153,7 @@ class getid3_write_metaflac
 		// 0x7A inclusive (a-z).
 
 		// replace invalid chars with a space, return uppercase text
-		// Thanks Chris Bolt <chris-getid3Øbolt*cx> for improving this function
+		// Thanks Chris Bolt <chris-getid3Ã˜bolt*cx> for improving this function
 		// note: *reg_replace() replaces nulls with empty string (not space)
 		return strtoupper(preg_replace('#[^ -<>-}]#', ' ', str_replace("\x00", ' ', $originalcommentname)));
 
