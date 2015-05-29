@@ -1,5 +1,5 @@
 Pcast module for Moodle
-Copyright (C) 2010-2014  Stephen Bourget and Jillaine Beeckman
+Copyright (C) 2010-2015  Stephen Bourget and Jillaine Beeckman
 
 
 This program is free software; you can redistribute it and/or modify
@@ -15,7 +15,7 @@ GNU General Public License for more details:
 http:www.gnu.org/copyleft/gpl.html
 
 
-Pcast module for Moodle - version 2.7+
+Pcast module for Moodle - version 2.9+
 ===============================================================================
 Created by:
       Stephen Bourget - most of the coding & design
@@ -26,7 +26,7 @@ Many ideas and code were taken from other Moodle modules and Moodle itself
 
 Installation:
     * see http://docs.moodle.org/en/Installing_contributed_modules_or_plugins
-    * Works only with Moodle 2.7 or Later
+    * Works only with Moodle 2.9 or Later
 
 List of features:
 
