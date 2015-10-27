@@ -109,7 +109,7 @@ class getID3
 	protected $startup_error   = '';
 	protected $startup_warning = '';
 
-	const VERSION           = '1.9.9-20150318';
+	const VERSION           = '1.9.10-201510111213';
 	const FREAD_BUFFER_SIZE = 32768;
 
 	const ATTACHMENTS_NONE   = false;
@@ -876,7 +876,7 @@ class getID3
 							'pattern'   => '^(RIFF|SDSS|FORM)',
 							'group'     => 'audio-video',
 							'module'    => 'riff',
-							'mime_type' => 'audio/x-wave',
+							'mime_type' => 'audio/x-wav',
 							'fail_ape'  => 'WARNING',
 						),
 
@@ -1234,6 +1234,29 @@ class getID3
 						$this->info['tags_html'][$tag_name][$tag_key] = getid3_lib::recursiveMultiByteCharString2HTML($valuearray, $encoding);
 					}
 				}
+
+				// ID3v1 encoding detection hack start
+				// ID3v1 is defined as always using ISO-8859-1 encoding, but it is not uncommon to find files tagged with ID3v1 using Windows-1251 or other character sets
+				// Since ID3v1 has no concept of character sets there is no certain way to know we have the correct non-ISO-8859-1 character set, but we can guess
+				if ($comment_name == 'id3v1') {
+					if ($encoding == 'ISO-8859-1') {
+						if (function_exists('iconv')) {
+							foreach ($this->info['tags'][$tag_name] as $tag_key => $valuearray) {
+								foreach ($valuearray as $key => $value) {
+									if (preg_match('#^[\\x80-\\xFF]+$#', $value)) {
+										foreach (array('windows-1251', 'KOI8-R') as $id3v1_bad_encoding) {
+											if (@iconv($id3v1_bad_encoding, $id3v1_bad_encoding, $value) === $value) {
+												$encoding = $id3v1_bad_encoding;
+												break 3;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				// ID3v1 encoding detection hack end
 
 				$this->CharConvert($this->info['tags'][$tag_name], $encoding);           // only copy gets converted!
 			}

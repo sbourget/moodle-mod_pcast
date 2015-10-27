@@ -514,6 +514,9 @@ class getid3_id3v2 extends getid3_handler
 		$genrestring = str_replace('Pop'."\x00".'Funk', 'Pop/Funk', $genrestring);
 		$genrestring = str_replace('Rock'."\x00".'Rock', 'Folk/Rock', $genrestring);
 
+		// some other taggers separate multiple genres with semicolon, e.g. "Heavy Metal;Thrash Metal;Metal"
+		$genrestring = str_replace(';', "\x00", $genrestring);
+
 		$genre_elements = explode("\x00", $genrestring);
 		foreach ($genre_elements as $element) {
 			$element = trim($element);
@@ -1625,7 +1628,7 @@ class getid3_id3v2 extends getid3_handler
 			$frame_terminatorpos = strpos($parsedFrame['data'], "\x00", $frame_offset);
 			$frame_ownerid = substr($parsedFrame['data'], $frame_offset, $frame_terminatorpos - $frame_offset);
 			if (ord($frame_ownerid) === 0) {
-				$frame_ownerid == '';
+				$frame_ownerid = '';
 			}
 			$frame_offset = $frame_terminatorpos + strlen("\x00");
 			$parsedFrame['ownerid'] = $frame_ownerid;
