@@ -80,7 +80,7 @@ class episode_viewed extends \core\event\base {
      * @return array|null
      */
     public function get_legacy_logdata() {
-        return array($this->courseid, 'pcast', 'view entry',
+        return array($this->courseid, 'pcast', 'view episode',
             "showepisode.php?eid={$this->objectid}",
             $this->objectid, $this->contextinstanceid);
     }

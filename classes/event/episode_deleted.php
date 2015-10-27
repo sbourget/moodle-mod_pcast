@@ -66,7 +66,7 @@ class episode_deleted extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has deleted the podcast entry with id '$this->objectid' in " .
+        return "The user with id '$this->userid' has deleted the podcast episode with id '$this->objectid' in " .
             "the podcast activity with course module id '$this->contextinstanceid'.";
     }
 
@@ -100,7 +100,7 @@ class episode_deleted extends \core\event\base {
         if (isset($this->other['mode'])) {
             $mode = $this->other['mode'];
         }
-        return array($this->courseid, 'pcast', 'delete entry',
+        return array($this->courseid, 'pcast', 'delete episode',
             "view.php?id={$this->contextinstanceid}&amp;mode={$mode}&amp;hook={$hook}",
             $this->objectid, $this->contextinstanceid);
     }
