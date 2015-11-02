@@ -56,4 +56,8 @@ class course_module_viewed extends \core\event\course_module_viewed {
         }
         return new \moodle_url("/mod/$this->objecttable/view.php", $params);
     }
+
+    public static function get_objectid_mapping() {
+        return array('db' => 'pcast', 'restore' => 'pcast');
+    }
 }

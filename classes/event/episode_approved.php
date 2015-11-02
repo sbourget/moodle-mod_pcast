@@ -96,5 +96,9 @@ class episode_approved extends \core\event\base {
             throw new \coding_exception('Context level must be CONTEXT_MODULE.');
         }
     }
+
+    public static function get_objectid_mapping() {
+        return array('db' => 'pcast_episodes', 'restore' => 'pcast_episode');
+    }
 }
 
