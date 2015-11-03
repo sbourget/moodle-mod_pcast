@@ -1145,18 +1145,18 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
 
         // Edit Link
         $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id, 'id'=>$episode->id));
-        $link .= html_writer::tag('a', get_string('edit'), array('href'=>$url));
+        $link .= html_writer::tag('a', get_string('edit'), array('href'=>$url, 'title'=>get_string('editthisepisode','pcast')));
         $link .= ' | '."\n";
 
         // Delete link
         $url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$cm->id, 'episode'=>$episode->id, 'prevmode'=>0));
-        $link .= html_writer::tag('a', get_string('delete'), array('href'=>$url));
+        $link .= html_writer::tag('a', get_string('delete'), array('href'=>$url, 'title'=>get_string('deletethisepisode','pcast')));
         $link .= ' | '."\n";
 
     }
         // View Link
         $url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id));
-        $link .= html_writer::tag('a', get_string('view'), array('href'=>$url));
+        $link .= html_writer::tag('a', get_string('view'), array('href'=>$url, 'title'=>get_string('viewepisode','pcast')));
 
     // Approve / Disapprove Link
     if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval)) {
@@ -1164,12 +1164,12 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL'){
             // Approve link
             $link .= ' | '."\n";
             $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW, 'sesskey'=>sesskey()));
-            $link .= html_writer::tag('a', get_string('approve'), array('href'=>$url));
+            $link .= html_writer::tag('a', get_string('approve'), array('href'=>$url, 'title'=>get_string('approvethisepisode','pcast')));
         } else {
             //Disapprove link
             $link .= ' | '."\n";
             $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'newstate'=>PCAST_EPISODE_DISAPPROVE, 'sesskey'=>sesskey()));
-            $link .= html_writer::tag('a', get_string('disapprove','pcast'), array('href'=>$url));
+            $link .= html_writer::tag('a', get_string('disapprove','pcast'), array('href'=>$url, 'title'=>get_string('disapprovethisepisode','pcast')));
         }
     }
 
@@ -1301,12 +1301,12 @@ function pcast_display_episode_full($episode, $cm, $course){
 
         // Edit Link
         $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id, 'id'=>$episode->id));
-        $manage .= html_writer::tag('a', get_string('edit'), array('href'=>$url));
+        $manage .= html_writer::tag('a', get_string('edit'), array('href'=>$url, 'title'=>get_string('editthisepisode','pcast')));
         $manage .= ' | '."\n";
 
         // Delete link
         $url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$cm->id, 'episode'=>$episode->id, 'prevmode'=>0));
-        $manage .= html_writer::tag('a', get_string('delete'), array('href'=>$url));
+        $manage .= html_writer::tag('a', get_string('delete'), array('href'=>$url, 'title'=>get_string('deletethisepisode','pcast')));
 
     }
 
@@ -1315,11 +1315,11 @@ function pcast_display_episode_full($episode, $cm, $course){
         if(!$episode->approved) {
             // Approve link
             $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_APPROVAL_VIEW, 'sesskey'=>sesskey()));
-            $approve .= html_writer::tag('a', get_string('approve'), array('href'=>$url));
+            $approve .= html_writer::tag('a', get_string('approve'), array('href'=>$url, 'title'=>get_string('approvethisepisode','pcast')));
         } else {
             //Disapprove link
             $url = new moodle_url('/mod/pcast/approveepisode.php', array('eid'=>$episode->id, 'newstate'=>PCAST_EPISODE_DISAPPROVE, 'sesskey'=>sesskey()));
-            $approve .= html_writer::tag('a', get_string('disapprove','pcast'), array('href'=>$url));
+            $approve .= html_writer::tag('a', get_string('disapprove','pcast'), array('href'=>$url, 'title'=>get_string('disapprovethisepisode','pcast')));
         }
     }
 
