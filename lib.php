@@ -535,9 +535,10 @@ function pcast_is_moddata_trusted() {
  */
 
 function pcast_extend_navigation($navigation, $course, $module, $cm) {
-    global $CFG;
     $navigation->add(get_string('standardview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_STANDARD_VIEW)));
-    $navigation->add(get_string('categoryview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_CATEGORY_VIEW)));
+    if($module->userscancategorize) {
+        $navigation->add(get_string('categoryview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_CATEGORY_VIEW)));
+    }
     $navigation->add(get_string('dateview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_DATE_VIEW)));
     $navigation->add(get_string('authorview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_AUTHOR_VIEW)));
 }
