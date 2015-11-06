@@ -54,6 +54,12 @@ if ($newstate != $episode->approved and confirm_sesskey()) {
     $newepisode->timemodified = time();
     $DB->update_record("pcast_episodes", $newepisode);
     
+    // Delete cached RSS feeds.
+    if (!empty($CFG->enablerssfeeds)) {
+        require_once($CFG->dirroot.'/mod/pcast/rsslib.php');
+        pcast_rss_delete_file($pcast);
+    }
+
     // Trigger event about entry approval/disapproval.
     $params = array(
         'context' => $context,
