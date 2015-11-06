@@ -32,7 +32,7 @@ $episode    = optional_param('episode', 0, PARAM_INT);    // Episode id.
 $prevmode = required_param('prevmode', PARAM_ALPHANUM);   // Display mode.
 $hook     = optional_param('hook', '', PARAM_ALPHANUM);   // Alphabet bar filter.
 
-$url = new moodle_url('/mod/pcast/deleteepisode.php', array('id'=>$id, 'prevmode'=>$prevmode));
+$url = new moodle_url('/mod/pcast/deleteepisode.php', array('id' => $id, 'prevmode' => $prevmode));
 if ($confirm !== 0) {
     $url->param('confirm', $confirm);
 }
@@ -73,20 +73,20 @@ $strareyousuredelete = get_string("areyousuredelete", "pcast");
 if (($episode->userid != $USER->id) and !$manageentries) { // Guest id is never matched, no need for special check here.
     print_error('nopermissiontodelepisode');
 }
-$ineditperiod = ((time() - $episode->timecreated <  $CFG->maxeditingtime));
+$ineditperiod = ((time() - $episode->timecreated < $CFG->maxeditingtime));
 if (!$ineditperiod and !$manageentries) {
     print_error('errdeltimeexpired', 'pcast');
 }
 
-/// If data is submitted, then process and store.
+// If data is submitted, then process and store.
 
 if ($confirm and confirm_sesskey()) { // The operation was confirmed.
 
     $origionalepisode = fullclone($episode);
     $fs = get_file_storage();
     $fs->delete_area_files($context->id, 'pcast_episode', $episode->id);
-    $DB->delete_records("comments", array('itemid'=>$episode->id, 'commentarea'=>'pcast_episode', 'contextid'=>$context->id));
-    $DB->delete_records("pcast_episodes", array("id"=>$episode->id));
+    $DB->delete_records("comments", array('itemid' => $episode->id, 'commentarea' => 'pcast_episode', 'contextid' => $context->id));
+    $DB->delete_records("pcast_episodes", array("id" => $episode->id));
 
     // Delete pcast episode ratings.
     require_once($CFG->dirroot.'/rating/lib.php');
@@ -116,7 +116,7 @@ if ($confirm and confirm_sesskey()) { // The operation was confirmed.
 
     $event->add_record_snapshot('pcast_episodes', $origionalepisode);
     $event->trigger();
-    
+
     redirect("view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook");
 
 } else {        // The operation has not been confirmed yet so ask the user to do so.
@@ -124,17 +124,17 @@ if ($confirm and confirm_sesskey()) { // The operation was confirmed.
     $PAGE->set_title($pcast->name);
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
-    // TODO: Replace with CSS
+    // TODO: Replace with CSS.
     $areyousure = "<b>".format_string($episode->name)."</b><p>$strareyousuredelete</p>";
     $linkyes    = 'deleteepisode.php';
     $linkno     = 'view.php';
-    $optionsyes = array('id'=>$cm->id,
-                        'episode'=>$episode->id,
-                        'confirm'=>1,
-                        'sesskey'=>sesskey(),
-                        'prevmode'=>$prevmode,
-                        'hook'=>$hook);
-    $optionsno  = array('id'=>$cm->id, 'mode'=>$prevmode, 'hook'=>$hook);
+    $optionsyes = array('id' => $cm->id,
+                        'episode' => $episode->id,
+                        'confirm' => 1,
+                        'sesskey' => sesskey(),
+                        'prevmode' => $prevmode,
+                        'hook' => $hook);
+    $optionsno  = array('id' => $cm->id, 'mode' => $prevmode, 'hook' => $hook);
 
     echo $OUTPUT->confirm($areyousure, new moodle_url($linkyes, $optionsyes), new moodle_url($linkno, $optionsno));
 

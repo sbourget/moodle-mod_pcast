@@ -27,15 +27,15 @@
 defined('MOODLE_INTERNAL') || die();
 
 $logs = array(
-    array('module'=>'pcast', 'action'=>'add', 'mtable'=>'pcast', 'field'=>'name'),
-    array('module'=>'pcast', 'action'=>'update', 'mtable'=>'pcast', 'field'=>'name'),
-    array('module'=>'pcast', 'action'=>'view', 'mtable'=>'pcast', 'field'=>'name'),
-    array('module'=>'pcast', 'action'=>'view all', 'mtable'=>'pcast', 'field'=>'name'),
-    array('module'=>'pcast', 'action'=>'add episode', 'mtable'=>'pcast', 'field'=>'name'),
-    array('module'=>'pcast', 'action'=>'update episode', 'mtable'=>'pcast', 'field'=>'name'),
-    array('module'=>'pcast', 'action'=>'approve episode', 'mtable'=>'pcast', 'field'=>'name'),
-    array('module'=>'pcast', 'action'=>'disapprove episode', 'mtable'=>'pcast', 'field'=>'name'),
-    array('module'=>'pcast', 'action'=>'view episode', 'mtable'=>'pcast_episodes', 'field'=>'name'),
+    array('module' => 'pcast', 'action' => 'add', 'mtable' => 'pcast', 'field' => 'name'),
+    array('module' => 'pcast', 'action' => 'update', 'mtable' => 'pcast', 'field' => 'name'),
+    array('module' => 'pcast', 'action' => 'view', 'mtable' => 'pcast', 'field' => 'name'),
+    array('module' => 'pcast', 'action' => 'view all', 'mtable' => 'pcast', 'field' => 'name'),
+    array('module' => 'pcast', 'action' => 'add episode', 'mtable' => 'pcast', 'field' => 'name'),
+    array('module' => 'pcast', 'action' => 'update episode', 'mtable' => 'pcast', 'field' => 'name'),
+    array('module' => 'pcast', 'action' => 'approve episode', 'mtable' => 'pcast', 'field' => 'name'),
+    array('module' => 'pcast', 'action' => 'disapprove episode', 'mtable' => 'pcast', 'field' => 'name'),
+    array('module' => 'pcast', 'action' => 'view episode', 'mtable' => 'pcast_episodes', 'field' => 'name'),
 );
 
 

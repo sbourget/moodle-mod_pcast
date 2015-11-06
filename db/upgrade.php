@@ -47,7 +47,7 @@ function xmldb_pcast_upgrade($oldversion=0) {
     // RatingArea Upgrade.
     if ($oldversion < 2011080700) {
 
-        // rating.component and rating.ratingarea have now been added as mandatory fields.
+        // Rating.component and rating.ratingarea have now been added as mandatory fields.
         // Presently you can only rate data entries so component = 'mod_pcast' and ratingarea = 'episode'.
         // for all ratings with a pcast context.
         // We want to update all ratings that belong to a pcast context and don't already have a component set.
@@ -71,7 +71,7 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2012022900) {
-        //Add support for file limit on attachments used with pcast episodes.
+        // Add support for file limit on attachments used with pcast episodes.
 
         // Define field maxbytes to be added to pcast.
         $table = new xmldb_table('pcast');
@@ -82,50 +82,50 @@ function xmldb_pcast_upgrade($oldversion=0) {
             $dbman->add_field($table, $field);
         }
 
-        // pcast savepoint reached.
+        // Pcast savepoint reached.
         upgrade_mod_savepoint(true, 2012022900, 'pcast');
     }
 
-        if ($oldversion < 2012061400) {
+    if ($oldversion < 2012061400) {
 
-        // Define field summaryformat to be added to pcast_episodes
+        // Define field summaryformat to be added to pcast_episodes.
         $table = new xmldb_table('pcast_episodes');
         $field = new xmldb_field('summaryformat', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'summary');
 
-        // Conditionally launch add field summaryformat
+        // Conditionally launch add field summaryformat.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        // pcast savepoint reached
+        // Pcast savepoint reached.
         upgrade_mod_savepoint(true, 2012061400, 'pcast');
     }
 
-        if ($oldversion < 2012061401) {
+    if ($oldversion < 2012061401) {
 
-        // Define field summarytrust to be added to pcast_episodes
+        // Define field summarytrust to be added to pcast_episodes.
         $table = new xmldb_table('pcast_episodes');
         $field = new xmldb_field('summarytrust', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'summaryformat');
 
-        // Conditionally launch add field summarytrust
+        // Conditionally launch add field summarytrust.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
-        // pcast savepoint reached
+        // Pcast savepoint reached.
         upgrade_mod_savepoint(true, 2012061401, 'pcast');
     }
 
     if ($oldversion < 2013062400) {
 
-        // Changing type of field intro on table pcast to text
+        // Changing type of field intro on table pcast to text.
         $table = new xmldb_table('pcast');
         $field = new xmldb_field('intro', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'name');
 
-        // Launch change of type for field intro
+        // Launch change of type for field intro.
         $dbman->change_field_type($table, $field);
 
-        // pcast savepoint reached
+        // Pcast savepoint reached.
         upgrade_mod_savepoint(true, 2013062400, 'pcast');
     }
 

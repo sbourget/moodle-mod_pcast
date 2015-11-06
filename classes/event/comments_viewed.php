@@ -72,6 +72,6 @@ class comments_viewed extends \core\event\comments_viewed {
      */
     public function get_url() {
         return new \moodle_url("/mod/pcast/showepisode.php",
-                array('eid' => $this->objectid,));
+                array('eid' => $this->objectid));
     }
 }
