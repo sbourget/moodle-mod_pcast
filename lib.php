@@ -108,10 +108,10 @@ function pcast_add_instance($pcast) {
 
     $pcast->timecreated = time();
 
-    // If it is a new instance time created is the same as modified
+    // If it is a new instance time created is the same as modified.
     $pcast->timemodified = $pcast->timecreated;
 
-    // Handle ratings
+    // Handle ratings.
     if (empty($pcast->assessed)) {
         $pcast->assessed = 0;
     }
@@ -128,23 +128,21 @@ function pcast_add_instance($pcast) {
         }
     }
 
-    // Get the episode category information
+    // Get the episode category information.
     $defaults = new stdClass();
     $defaults->topcategory = 0;
     $defaults->nestedcategory = 0;
     $pcast = pcast_get_itunes_categories($pcast, $defaults);
-
-    # You may have to add extra stuff in here #
 
     $result = $DB->insert_record('pcast', $pcast);
     $pcast->id = $result;
 
     $cmid = $pcast->coursemodule;
     $draftitemid = $pcast->image;
-    // we need to use context now, so we need to make sure all needed info is already in db
+    // We need to use context now, so we need to make sure all needed info is already in db.
     $context = context_module::instance($cmid);
     if ($draftitemid) {
-        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast', 'logo', 0, array('subdirs'=>false));
+        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast', 'logo', 0, array('subdirs' => false));
     }
 
     pcast_grade_item_update($pcast);
@@ -167,7 +165,7 @@ function pcast_update_instance($pcast) {
 
     $pcast->timemodified = time();
 
-    // Handle ratings
+    // Handle ratings.
     if (empty($pcast->assessed)) {
         $pcast->assessed = 0;
     }
@@ -186,22 +184,20 @@ function pcast_update_instance($pcast) {
         }
     }
 
-    // Get the episode category information
+    // Get the episode category information.
     $defaults = new stdClass();
     $defaults->topcategory = 0;
     $defaults->nestedcategory = 0;
     $pcast = pcast_get_itunes_categories($pcast, $defaults);
 
-    # You may have to add extra stuff in here #
-
     $result = $DB->update_record('pcast', $pcast);
 
     $cmid = $pcast->coursemodule;
     $draftitemid = $pcast->image;
-    // we need to use context now, so we need to make sure all needed info is already in db
+    // We need to use context now, so we need to make sure all needed info is already in db.
     $context = context_module::instance($cmid);
     if ($draftitemid) {
-        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast', 'logo', 0, array('subdirs'=>false));
+        file_save_draft_area_files($draftitemid, $context->id, 'mod_pcast', 'logo', 0, array('subdirs' => false));
     }
 
     pcast_grade_item_update($pcast);
@@ -232,33 +228,34 @@ function pcast_delete_instance($id) {
         return false;
     }
 
-    # Delete any dependent records here #
+    // Delete any dependent records here.
 
-    // Delete Comments
-    $episode_select = "SELECT id FROM {pcast_episodes} WHERE pcastid = ?";
-    $DB->delete_records_select('comments', "contextid=? AND commentarea=? AND itemid IN ($episode_select)", array($id, 'pcast_episode', $context->id));
+    // Delete Comments.
+    $episodeselect = "SELECT id FROM {pcast_episodes} WHERE pcastid = ?";
+    $DB->delete_records_select('comments', "contextid=? AND commentarea=? AND itemid IN ($episodeselect)",
+                               array($id, 'pcast_episode', $context->id));
 
-    // Delete all files
+    // Delete all files.
     $fs = get_file_storage();
     $fs->delete_area_files($context->id);
 
-    //delete ratings
+    // Delete ratings.
     $rm = new rating_manager();
     $ratingdeloptions = new stdClass();
     $ratingdeloptions->contextid = $context->id;
     $rm->delete_ratings($ratingdeloptions);
 
-    //Delete Views
-    $episode_select = "SELECT id FROM {pcast_episodes} WHERE pcastid = ?";
-    $DB->delete_records_select('pcast_views', "episodeid  IN ($episode_select)", array($pcast->id));
+    // Delete Views.
+    $episodeselect = "SELECT id FROM {pcast_episodes} WHERE pcastid = ?";
+    $DB->delete_records_select('pcast_views', "episodeid  IN ($episodeselect)", array($pcast->id));
 
-    //Delete Episodes
+    // Delete Episodes.
     $DB->delete_records('pcast_episodes', array('pcastid' => $pcast->id));
 
-    //Delete Grades.
+    // Delete Grades.
     pcast_grade_item_delete($pcast);
 
-    //Delete Podcast
+    // Delete Podcast.
     $DB->delete_records('pcast', array('id' => $pcast->id));
 
     return true;
@@ -282,8 +279,8 @@ function pcast_user_outline($course, $user, $mod, $pcast) {
 
     global $DB;
 
-    if ($logs = $DB->get_records("log", array('userid'=>$user->id, 'module'=>'pcast',
-                                              'action'=>'view', 'info'=>$pcast->id), "time ASC")) {
+    if ($logs = $DB->get_records("log", array('userid' => $user->id, 'module' => 'pcast',
+                                              'action' => 'view', 'info' => $pcast->id), "time ASC")) {
 
         $numviews = count($logs);
         $lastlog = array_pop($logs);
@@ -313,8 +310,8 @@ function pcast_user_outline($course, $user, $mod, $pcast) {
 function pcast_user_complete($course, $user, $mod, $pcast) {
     global $CFG, $DB;
 
-    if ($logs = $DB->get_records("log", array('userid'=>$user->id, 'module'=>'pcast',
-                                              'action'=>'view', 'info'=>$pcast->id), "time ASC")) {
+    if ($logs = $DB->get_records("log", array('userid' => $user->id, 'module' => 'pcast',
+                                              'action' => 'view', 'info' => $pcast->id), "time ASC")) {
         $numviews = count($logs);
         $lastlog = array_pop($logs);
 
@@ -334,8 +331,6 @@ function pcast_user_complete($course, $user, $mod, $pcast) {
  * that has occurred in pcast activities and print it out.
  * Return true if there was output, or false is there was none.
  *
- * @global stdClass $CFG
- * @global stdClass $USER
  * @global stdClass $DB
  * @global stdClass $OUTPUT
  * @param stdClass $course
@@ -345,10 +340,7 @@ function pcast_user_complete($course, $user, $mod, $pcast) {
  */
 
 function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
-
-    // return false;  //  True if anything was printed, otherwise false
-
-    global $CFG, $USER, $DB, $OUTPUT;
+    global $DB, $OUTPUT;
 
     $modinfo = get_fast_modinfo($course);
     $ids = array();
@@ -366,10 +358,10 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
         return false;
     }
 
-    $plist = implode(',', $ids); // there should not be hundreds of podcasts in one course, right?
-    
-    $allnamefields = get_all_user_name_fields(true,'u');
-    
+    $plist = implode(',', $ids); // There should not be hundreds of podcasts in one course, right?
+
+    $allnamefields = get_all_user_name_fields(true, 'u');
+
     if (!$episodes = $DB->get_records_sql("SELECT e.id, e.name, e.approved, e.timemodified, e.pcastid,
                                                  e.userid, $allnamefields
                                             FROM {pcast_episodes} e
@@ -387,7 +379,8 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
         }
 
         if (!isset($editor[$episode->pcastid])) {
-            $editor[$episode->pcastid] = has_capability('mod/pcast:approve', context_module::instance($modinfo->instances['pcast'][$episode->pcastid]->id));
+            $editor[$episode->pcastid] = has_capability('mod/pcast:approve',
+                                         context_module::instance($modinfo->instances['pcast'][$episode->pcastid]->id));
         }
 
         if (!$editor[$episode->pcastid]) {
@@ -402,22 +395,22 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
 
     $strftimerecent = get_string('strftimerecent');
     foreach ($episodes as $episode) {
-        $link = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id));
+        $link = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $episode->id));
         if ($episode->approved) {
-            $out = html_writer::start_tag('div', array('class'=>'head')). "\n";
+            $out = html_writer::start_tag('div', array('class' => 'head')). "\n";
         } else {
-            $out = html_writer::start_tag('div', array('class'=>'head dimmed_text')). "\n";
+            $out = html_writer::start_tag('div', array('class' => 'head dimmed_text')). "\n";
         }
 
-        $out .= html_writer::start_tag('div', array('class'=>'date')). "\n";
+        $out .= html_writer::start_tag('div', array('class' => 'date')). "\n";
         $out .= userdate($episode->timemodified, $strftimerecent);
         $out .= html_writer::end_tag('div') . "\n";
-        $out .= html_writer::start_tag('div', array('class'=>'name')). "\n";
+        $out .= html_writer::start_tag('div', array('class' => 'name')). "\n";
         $out .= fullname($episode, $viewfullnames);
         $out .= html_writer::end_tag('div') . "\n";
         $out .= html_writer::end_tag('div') . "\n";
-        $out .= html_writer::start_tag('div', array('class'=>'info')). "\n";
-        $out .= html_writer::tag('a', format_text($episode->name, true), array('href'=>$link));
+        $out .= html_writer::start_tag('div', array('class' => 'info')). "\n";
+        $out .= html_writer::tag('a', format_text($episode->name, true), array('href' => $link));
         $out .= html_writer::end_tag('div') . "\n";
 
         echo $out;
@@ -474,7 +467,7 @@ function pcast_scale_used($pcastid, $scaleid) {
 function pcast_scale_used_anywhere($scaleid) {
     global $DB;
 
-    if ($scaleid and $DB->record_exists('pcast', array('scale'=>-$scaleid))) {
+    if ($scaleid and $DB->record_exists('pcast', array('scale' => -$scaleid))) {
         return true;
     } else {
         return false;
@@ -535,12 +528,16 @@ function pcast_is_moddata_trusted() {
  */
 
 function pcast_extend_navigation($navigation, $course, $module, $cm) {
-    $navigation->add(get_string('standardview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_STANDARD_VIEW)));
-    if($module->userscancategorize) {
-        $navigation->add(get_string('categoryview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_CATEGORY_VIEW)));
+    $navigation->add(get_string('standardview', 'pcast'),
+                     new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_STANDARD_VIEW)));
+    if ($module->userscancategorize) {
+        $navigation->add(get_string('categoryview', 'pcast'),
+                         new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_CATEGORY_VIEW)));
     }
-    $navigation->add(get_string('dateview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_DATE_VIEW)));
-    $navigation->add(get_string('authorview', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$cm->id, 'mode'=>PCAST_AUTHOR_VIEW)));
+    $navigation->add(get_string('dateview', 'pcast'),
+                     new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_DATE_VIEW)));
+    $navigation->add(get_string('authorview', 'pcast'),
+                     new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_AUTHOR_VIEW)));
 }
 
 /**
@@ -556,12 +553,14 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     $hook = optional_param('hook', 'ALL', PARAM_CLEAN);
     $group = optional_param('group', '', PARAM_ALPHANUM);
 
-    if (has_capability('mod/pcast:approve', $PAGE->cm->context) && ($hiddenentries = $DB->count_records('pcast_episodes', array('pcastid'=>$PAGE->cm->instance, 'approved'=>0)))) {
-        $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php', array('id'=>$PAGE->cm->id, 'mode'=>PCAST_APPROVAL_VIEW)));
+    if (has_capability('mod/pcast:approve', $PAGE->cm->context) && 
+       ($hiddenentries = $DB->count_records('pcast_episodes', array('pcastid' => $PAGE->cm->instance, 'approved' => 0)))) {
+        $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php',
+                array('id' => $PAGE->cm->id, 'mode' => PCAST_APPROVAL_VIEW)));
     }
 
     if (has_capability('mod/pcast:write', $PAGE->cm->context)) {
-        $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid'=>$PAGE->cm->id)));
+        $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid' => $PAGE->cm->id)));
     }
 
     $pcast = $DB->get_record('pcast', array("id" => $PAGE->cm->instance));
@@ -572,7 +571,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
 
         $string = get_string('rsslink', 'pcast');
 
-        //Sort out groups
+        // Sort out groups.
         if (is_numeric($group)) {
             $currentgroup = $group;
 
@@ -604,7 +603,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
 
 function pcast_get_itunes_categories($item, $pcast) {
 
-    // Split the category info into the top category and nested category
+    // Split the category info into the top category and nested category.
     if (isset($item->category)) {
         $length = strlen($item->category);
         switch ($length) {
@@ -622,13 +621,13 @@ function pcast_get_itunes_categories($item, $pcast) {
                 break;
 
             default:
-                // SHOULD NEVER HAPPEN
+                // SHOULD NEVER HAPPEN.
                 $item->topcategory = $pcast->topcategory;
                 $item->nestedcategory = $pcast->nestedcategory;
                 break;
         }
     } else {
-        // Will only happen if categories are disabled
+        // Will only happen if categories are disabled.
         $item->topcategory = $pcast->topcategory;
         $item->nestedcategory = $pcast->nestedcategory;
     }
@@ -637,7 +636,7 @@ function pcast_get_itunes_categories($item, $pcast) {
 
 
  /**
-+ * File browsing support for glossary module.
++ * File browsing support for pcast module.
 + *
 + * @param file_browser $browser
 + * @param array $areas
@@ -658,7 +657,7 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
     }
 
     if ($filearea === 'summary' or $filearea === 'episode') {
-    if (!$episode = $DB->get_record('pcast_episodes', array('id' => $itemid))) {
+        if (!$episode = $DB->get_record('pcast_episodes', array('id' => $itemid))) {
             return null;
         }
 
@@ -670,7 +669,7 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
             return null;
         }
 
-         if (is_null($itemid)) {
+        if (is_null($itemid)) {
             require_once($CFG->dirroot.'/mod/pcast/locallib.php');
             return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
         }
@@ -736,12 +735,12 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
     if ($filearea === 'episode' or $filearea === 'summary') {
         $episodeid = (int)array_shift($args);
 
-        if (!$episode = $DB->get_record('pcast_episodes', array('id'=>$episodeid))) {
+        if (!$episode = $DB->get_record('pcast_episodes', array('id' => $episodeid))) {
 
             return false;
         }
 
-        if (!$pcast = $DB->get_record('pcast', array('id'=>$cm->instance))) {
+        if (!$pcast = $DB->get_record('pcast', array('id' => $cm->instance))) {
 
             return false;
         }
@@ -760,15 +759,15 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
             return false;
         }
 
-        // Log the file as viewed
+        // Log the file as viewed.
         $pcast->URL = $CFG->wwwroot . '/pluginfile.php' . $fullpath;
         $pcast->filename = implode('/', $args);
         if (!empty($USER->id)) {
             pcast_add_view_instance($pcast, $episode, $USER->id, $context);
         }
 
-        // finally send the file
-        send_stored_file($file, 0, 0, $forcedownload, $options); // download MUST be forced - security!
+        // finally send the file.
+        send_stored_file($file, 0, 0, $forcedownload, $options); // Download MUST be forced - security!
 
     } else if ($filearea === 'logo') {
 
@@ -782,8 +781,8 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
             return false;
         }
 
-        // finally send the file
-        send_stored_file($file, 0, 0, $forcedownload, $options); // download MUST be forced - security!
+        // finally send the file.
+        send_stored_file($file, 0, 0, $forcedownload, $options); // Download MUST be forced - security!
 
     }
 
@@ -801,28 +800,28 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
 function pcast_add_view_instance($pcast, $episode, $userid, $context) {
     global $DB;
 
-    //lookup the user add add to the view count
+    // Lookup the user add add to the view count.
     if (!$view = $DB->get_record("pcast_views", array("episodeid" => $pcast->id, "userid" => $userid))) {
-        $view=null;
+        $view = null;
         unset($view);
         $view = new stdClass();
-        $view->userid=$userid;
-        $view->views=1;
-        $view->episodeid=$pcast->id;
+        $view->userid = $userid;
+        $view->views = 1;
+        $view->episodeid = $pcast->id;
         $view->lastview = time();
 
-        if (!$result=$DB->insert_record("pcast_views", $view, $returnid=false, $bulk=false)) {
+        if (!$result = $DB->insert_record("pcast_views", $view)) {
             print_error('databaseerror', 'pcast');
         }
-    } else { //Never viewed the file before
-        $temp_view = $view->views + 1;
-        $view->views = $temp_view;
-        $view->lastview=time();
-        if (!$result = $DB->update_record("pcast_views", $view, $bulk=false)) {
+
+    } else { // Never viewed the file before.
+        $view->views = $view->views + 1;
+        $view->lastview = time();
+        if (!$result = $DB->update_record("pcast_views", $view)) {
             print_error('databaseerror', 'pcast');
         }
     }
-    
+
         $event = \mod_pcast\event\episode_viewed::create(array(
             'objectid' => $view->episodeid,
             'context' => $context
@@ -850,7 +849,7 @@ function pcast_get_extra_capabilities() {
                  'moodle/site:accessallgroups');
 }
 
-// Course reset code
+// Course reset code.
 /**
  * Implementation of the function for printing the form elements that control
  * whether the course reset functionality affects the pcast.
@@ -878,7 +877,11 @@ function pcast_reset_course_form_definition(&$mform) {
  * @return array
  */
 function pcast_reset_course_form_defaults($course) {
-    return array('reset_pcast_all'=>0, 'reset_pcast_ratings'=>1, 'reset_pcast_comments'=>1, 'reset_pcast_notenrolled'=>0, 'reset_pcast_views'=>1);
+    return array('reset_pcast_all' => 0,
+                 'reset_pcast_ratings' => 1,
+                 'reset_pcast_comments' => 1,
+                 'reset_pcast_notenrolled' => 0,
+                 'reset_pcast_views' => 1);
 }
 
 /**
@@ -888,7 +891,7 @@ function pcast_reset_course_form_defaults($course) {
  * @param int $courseid
  * @param string optional type
  */
-// TODO LOOK AT AFTER GRADES ARE IMPLEMENTED
+// TODO: LOOK AT AFTER GRADES ARE IMPLEMENTED!
 function pcast_reset_gradebook($courseid, $type='') {
     global $DB;
 
@@ -935,14 +938,14 @@ function pcast_reset_userdata($data) {
     $ratingdeloptions->component = 'mod_pcast';
     $ratingdeloptions->ratingarea = 'episode';
 
-    // delete entries if requested
+    // Delete entries if requested.
     if (!empty($data->reset_pcast_all)) {
 
         $params[] = 'pcast_episode';
         $DB->delete_records_select('comments', "itemid IN ($allepisodessql) AND commentarea=?", $params);
         $DB->delete_records_select('pcast_episodes', "pcastid IN ($allpcastssql)", $params);
 
-        // now get rid of all attachments
+        // Now get rid of all attachments.
         if ($pcasts = $DB->get_records_sql($allpcastssql, $params)) {
             foreach ($pcasts as $pcastid => $unused) {
                 if (!$cm = get_coursemodule_from_instance('pcast', $pcastid)) {
@@ -951,35 +954,33 @@ function pcast_reset_userdata($data) {
                 $context = context_module::instance($cm->id);
                 $fs->delete_area_files($context->id, 'mod_pcast', 'episode');
 
-                //delete ratings
+                // Delete ratings.
                 $ratingdeloptions->contextid = $context->id;
                 $rm->delete_ratings($ratingdeloptions);
             }
         }
 
-        // remove all grades from gradebook
+        // Remove all grades from gradebook.
         if (empty($data->reset_gradebook_grades)) {
             pcast_reset_gradebook($data->courseid);
         }
 
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('resetpcastsall', 'pcast'), 'error'=>false);
-
+        $status[] = array('component' => $componentstr, 'item' => get_string('resetpcastsall', 'pcast'), 'error' => false);
 
     } else if (!empty($data->reset_pcast_notenrolled)) {
-        // remove entries by users not enrolled into course
+        // Remove entries by users not enrolled into course.
 
-        $course_context = context_course::instance($data->courseid);
-        // Get list of enrolled users
-        $people = get_enrolled_users($course_context);
-        $list ='';
-        $list2 ='';
+        // Get list of enrolled users.
+        $people = get_enrolled_users(context_course::instance($data->courseid));
+        $list = '';
+        $list2 = '';
         foreach ($people as $person) {
-            $list .=' AND e.userid != ?';
-            $list2 .=' AND userid != ?';
+            $list .= ' AND e.userid != ?';
+            $list2 .= ' AND userid != ?';
             $params[] = $person->id;
 
         }
-        // Construct SQL to episodes from users whe are no longer enrolled
+        // Construct SQL to episodes from users whe are no longer enrolled.
             $unenrolledepisodessql = "SELECT e.id
                                       FROM {pcast_episodes} e
                                       WHERE e.course = ? " . $list;
@@ -988,7 +989,7 @@ function pcast_reset_userdata($data) {
         $DB->delete_records_select('comments', "itemid IN ($unenrolledepisodessql) AND commentarea=?", $params);
         $DB->delete_records_select('pcast_episodes', "course =? ". $list2, $params);
 
-        // now get rid of all attachments
+        // Now get rid of all attachments.
         if ($pcasts = $DB->get_records_sql($unenrolledepisodessql, $params)) {
             foreach ($pcasts as $pcastid => $unused) {
                 if (!$cm = get_coursemodule_from_instance('pcast', $pcastid)) {
@@ -997,24 +998,24 @@ function pcast_reset_userdata($data) {
                 $context = context_module::instance($cm->id);
                 $fs->delete_area_files($context->id, 'mod_pcast', 'episode');
 
-                //delete ratings
+                // Delete ratings.
                 $ratingdeloptions->contextid = $context->id;
                 $rm->delete_ratings($ratingdeloptions);
             }
         }
 
-        // remove all grades from gradebook
+        // Remove all grades from gradebook.
         if (empty($data->reset_gradebook_grades)) {
             pcast_reset_gradebook($data->courseid);
         }
 
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deletenotenrolled', 'pcast'), 'error'=>false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deletenotenrolled', 'pcast'), 'error' => false);
 
     }
 
-    // remove all ratings
+    // Remove all ratings.
     if (!empty($data->reset_pcast_ratings)) {
-        //remove ratings
+        // Remove ratings.
         if ($pcasts = $DB->get_records_sql($allpcastssql, $params)) {
             foreach ($pcasts as $pcastid => $unused) {
                 if (!$cm = get_coursemodule_from_instance('pcast', $pcastid)) {
@@ -1022,35 +1023,35 @@ function pcast_reset_userdata($data) {
                 }
                 $context = context_module::instance($cm->id);
 
-                //delete ratings
+                // Delete ratings.
                 $ratingdeloptions->contextid = $context->id;
                 $rm->delete_ratings($ratingdeloptions);
             }
         }
 
-        // remove all grades from gradebook
+        // Remove all grades from gradebook.
         if (empty($data->reset_gradebook_grades)) {
             pcast_reset_gradebook($data->courseid);
         }
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallratings'), 'error'=>false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deleteallratings'), 'error' => false);
     }
 
-    // remove comments
+    // Remove comments.
     if (!empty($data->reset_pcast_comments)) {
         $params[] = 'pcast_episode';
         $DB->delete_records_select('comments', "itemid IN ($allepisodessql) AND commentarea= ? ", $params);
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallcomments'), 'error'=>false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deleteallcomments'), 'error' => false);
     }
 
-    // remove views
+    // Remove views.
     if (!empty($data->reset_pcast_views)) {
         $DB->delete_records_select('pcast_views', "episodeid IN ($allepisodessql) ", $params);
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallviews', 'pcast'), 'error'=>false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deleteallviews', 'pcast'), 'error' => false);
     }
-    /// updating dates - shift may be negative too
+    /// updating dates - shift may be negative too.
     if ($data->timeshift) {
         shift_course_mod_dates('pcast', array('assesstimestart', 'assesstimefinish'), $data->timeshift, $data->courseid);
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('datechanged'), 'error'=>false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('datechanged'), 'error' => false);
     }
 
     return $status;
@@ -1065,16 +1066,16 @@ function pcast_reset_userdata($data) {
  */
 
 function pcast_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array(
-        'mod-pcast-*'=>get_string('page-mod-pcast-x', 'pcast'),
-        'mod-pcast-view'=>get_string('page-mod-pcast-view', 'pcast'),
-        'mod-pcast-edit'=>get_string('page-mod-pcast-edit', 'pcast'));
-    return $module_pagetype;
+    $modulepagetype = array(
+        'mod-pcast-*' => get_string('page-mod-pcast-x', 'pcast'),
+        'mod-pcast-view' => get_string('page-mod-pcast-view', 'pcast'),
+        'mod-pcast-edit' => get_string('page-mod-pcast-edit', 'pcast'));
+    return $modulepagetype;
 
 }
 
 
-//TODO: RATINGS CODE -UNTESTED
+// TODO: RATINGS CODE -UNTESTED!
 
 /**
  * Return grade for given user or all users.
@@ -1084,7 +1085,7 @@ function pcast_page_type_list($pagetype, $parentcontext, $currentcontext) {
  * @param int $userid optional user id, 0 means all users
  * @return array array of grades, false if none
  */
-function pcast_get_user_grades($pcast, $userid=0) {
+function pcast_get_user_grades($pcast, $userid = 0) {
 
     global $CFG;
 
@@ -1093,7 +1094,7 @@ function pcast_get_user_grades($pcast, $userid=0) {
 
     $ratingoptions = new stdClass();
 
-    //need these to work backwards to get a context id. Is there a better way to get contextid from a module instance?
+    // Need these to work backwards to get a context id. Is there a better way to get contextid from a module instance?
     $ratingoptions->modulename = 'pcast';
     $ratingoptions->moduleid   = $pcast->id;
     $ratingoptions->component = 'mod_pcast';
@@ -1117,7 +1118,7 @@ function pcast_get_user_grades($pcast, $userid=0) {
  * Capability check has been done in comment->check_permissions(), we
  * don't need to do it again here.
  *
- * @param stdClass $comment_param {
+ * @param stdClass $commentparam {
  *              context  => context the context object
  *              courseid => int course id
  *              cm       => stdClass course module object
@@ -1126,14 +1127,14 @@ function pcast_get_user_grades($pcast, $userid=0) {
  * }
  * @return array
  */
-function pcast_comment_permissions($comment_param) {
-    return array('post'=>true, 'view'=>true);
+function pcast_comment_permissions($commentparam) {
+    return array('post' => true, 'view' => true);
 }
 
 /**
  * Validate comment parameter before perform other comments actions
  *
- * @param stdClass $comment_param {
+ * @param stdClass $commentparam {
  *              context  => context the context object
  *              courseid => int course id
  *              cm       => stdClass course module object
@@ -1142,19 +1143,19 @@ function pcast_comment_permissions($comment_param) {
  * }
  * @return boolean
  */
-function pcast_comment_validate($comment_param) {
+function pcast_comment_validate($commentparam) {
     global $DB;
-    // validate comment area
-    if ($comment_param->commentarea != 'pcast_episode') {
+    // Validate comment area.
+    if ($commentparam->commentarea != 'pcast_episode') {
         throw new comment_exception('invalidcommentarea');
     }
-    if (!$record = $DB->get_record('pcast_episodes', array('id'=>$comment_param->itemid))) {
+    if (!$record = $DB->get_record('pcast_episodes', array('id' => $commentparam->itemid))) {
         throw new comment_exception('invalidcommentitemid');
     }
-    if (!$pcast = $DB->get_record('pcast', array('id'=>$record->pcastid))) {
+    if (!$pcast = $DB->get_record('pcast', array('id' => $record->pcastid))) {
         throw new comment_exception('invalidid', 'data');
     }
-    if (!$course = $DB->get_record('course', array('id'=>$pcast->course))) {
+    if (!$course = $DB->get_record('course', array('id' => $pcast->course))) {
         throw new comment_exception('coursemisconf');
     }
     if (!$cm = get_coursemodule_from_instance('pcast', $pcast->id, $course->id)) {
@@ -1165,20 +1166,20 @@ function pcast_comment_validate($comment_param) {
     if ($pcast->requireapproval and !$record->approved and !has_capability('mod/pcast:approve', $context)) {
         throw new comment_exception('notapproved', 'pcast');
     }
-    // validate context id
-    if ($context->id != $comment_param->context->id) {
+    // Validate context id.
+    if ($context->id != $commentparam->context->id) {
         throw new comment_exception('invalidcontext');
     }
-    // validation for comment deletion
-    if (!empty($comment_param->commentid)) {
-        if ($comment = $DB->get_record('comments', array('id'=>$comment_param->commentid))) {
+    // Validation for comment deletion.
+    if (!empty($commentparam->commentid)) {
+        if ($comment = $DB->get_record('comments', array('id' => $commentparam->commentid))) {
             if ($comment->commentarea != 'pcast_episode') {
                 throw new comment_exception('invalidcommentarea');
             }
-            if ($comment->contextid != $comment_param->context->id) {
+            if ($comment->contextid != $commentparam->context->id) {
                 throw new comment_exception('invalidcontext');
             }
-            if ($comment->itemid != $comment_param->itemid) {
+            if ($comment->itemid != $commentparam->itemid) {
                 throw new comment_exception('invalidcommentitemid');
             }
         } else {
@@ -1187,10 +1188,6 @@ function pcast_comment_validate($comment_param) {
     }
     return true;
 }
-
-
-
-
 
 /**
  * Return rating related permissions
@@ -1212,10 +1209,10 @@ function pcast_rating_permissions($contextid, $component, $ratingarea) {
         print_error('invalidcontext');
         return null;
     } else {
-        return array('view'=>has_capability('mod/pcast:viewrating', $context),
-            'viewany'=>has_capability('mod/pcast:viewanyrating', $context),
-            'viewall'=>has_capability('mod/pcast:viewallratings', $context),
-            'rate'=>has_capability('mod/pcast:rate', $context));
+        return array('view' => has_capability('mod/pcast:viewrating', $context),
+                     'viewany' => has_capability('mod/pcast:viewanyrating', $context),
+                     'viewall' => has_capability('mod/pcast:viewallratings', $context),
+                     'rate' => has_capability('mod/pcast:rate', $context));
     }
 }
 
@@ -1234,19 +1231,19 @@ function pcast_rating_permissions($contextid, $component, $ratingarea) {
 function pcast_rating_validate($params) {
     global $DB, $USER;
 
-    // Check the component is mod_pcast
+    // Check the component is mod_pcast.
 
     if ($params['component'] != 'mod_pcast') {
         throw new rating_exception('invalidcomponent');
     }
 
-    // Check the ratingarea is episode (the only rating area in pcast)
+    // Check the ratingarea is episode (the only rating area in pcast).
 
     if ($params['ratingarea'] != 'episode') {
         throw new rating_exception('invalidratingarea');
     }
 
-    // Check the rateduserid is not the current user .. you can't rate your own posts
+    // Check the rateduserid is not the current user .. you can't rate your own posts.
     if ($params['rateduserid'] == $USER->id) {
         throw new rating_exception('nopermissiontorate');
     }
@@ -1256,23 +1253,23 @@ function pcast_rating_validate($params) {
                       JOIN {pcast} p ON e.pcastid = p.id
                      WHERE e.id = :itemid";
 
-    $pcastparams = array('itemid'=>$params['itemid']);
+    $pcastparams = array('itemid' => $params['itemid']);
     $info = $DB->get_record_sql($pcastsql, $pcastparams);
     if (!$info) {
-        //item doesn't exist
+        // Item doesn't exist.
         throw new rating_exception('invaliditemid');
     }
 
     if ($info->scale != $params['scaleid']) {
-        //the scale being submitted doesnt match the one in the database
+        // The scale being submitted doesnt match the one in the database.
         throw new rating_exception('invalidscaleid');
     }
 
-    //check that the submitted rating is valid for the scale
+    // Check that the submitted rating is valid for the scale.
     if ($params['rating'] < 0) {
         throw new rating_exception('invalidnum');
     } else if ($info->scale < 0) {
-        //its a custom scale
+        // Its a custom scale.
         $scalerecord = $DB->get_record('scale', array('id' => -$info->scale));
         if ($scalerecord) {
             $scalearray = explode(',', $scalerecord->scale);
@@ -1283,16 +1280,16 @@ function pcast_rating_validate($params) {
             throw new rating_exception('invalidscaleid');
         }
     } else if ($params['rating'] > $info->scale) {
-        //if its numeric and submitted rating is above maximum
+        // If its numeric and submitted rating is above maximum.
         throw new rating_exception('invalidnum');
     }
 
     if (!$info->approved) {
-        //item isnt approved
+        // Item isnt approved.
         throw new rating_exception('nopermissiontorate');
     }
 
-    //check the item we're rating was created in the assessable time window
+    // Check the item we're rating was created in the assessable time window.
     if (!empty($info->assesstimestart) && !empty($info->assesstimefinish)) {
         if ($info->timecreated < $info->assesstimestart || $info->timecreated > $info->assesstimefinish) {
             throw new rating_exception('notavailable');
@@ -1302,7 +1299,7 @@ function pcast_rating_validate($params) {
     $cm = get_coursemodule_from_instance('pcast', $info->pcastid, $info->course, false, MUST_EXIST);
     $context = context_module::instance($cm->id, MUST_EXIST);
 
-    //if the supplied context doesnt match the item's context
+    // If the supplied context doesnt match the item's context.
     if ($context->id != $params['context']->id) {
         throw new rating_exception('invalidcontext');
     }
@@ -1310,9 +1307,7 @@ function pcast_rating_validate($params) {
     return true;
 }
 
-
-
-// Gradebook functions (Based on mod_glossary) Not sure how these are called
+// Gradebook functions (Based on mod_glossary) Not sure how these are called.
 
 /**
  * Update activity grades
@@ -1355,7 +1350,7 @@ function pcast_grade_item_update($pcast, $grades=null) {
     global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
 
-    $params = array('itemname'=>$pcast->name, 'idnumber'=>$pcast->cmidnumber);
+    $params = array('itemname' => $pcast->name, 'idnumber' => $pcast->cmidnumber);
 
     if (!$pcast->assessed or $pcast->scale == 0) {
         $params['gradetype'] = GRADE_TYPE_NONE;
@@ -1370,7 +1365,7 @@ function pcast_grade_item_update($pcast, $grades=null) {
         $params['scaleid']   = -$pcast->scale;
     }
 
-    if ($grades  === 'reset') {
+    if ($grades === 'reset') {
         $params['reset'] = true;
         $grades = null;
     }
@@ -1388,5 +1383,5 @@ function pcast_grade_item_delete($pcast) {
     global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
 
-    return grade_update('mod/pcast', $pcast->course, 'mod', 'pcast', $pcast->id, 0, null, array('deleted'=>1));
+    return grade_update('mod/pcast', $pcast->course, 'mod', 'pcast', $pcast->id, 0, null, array('deleted' => 1));
 }

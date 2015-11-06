@@ -361,7 +361,6 @@ class pcast_event_testcase extends advanced_testcase {
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
 
-
         // Disapprove episode, trigger and validate event.
         $this->setUser($teacher);
         $newepisode = new stdClass();

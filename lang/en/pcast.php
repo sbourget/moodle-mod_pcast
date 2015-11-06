@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -138,8 +137,8 @@ $string['nopcastmediafile'] = 'No media file found';
 $string['nopermissiontodelepisode'] = 'Error: You do not have permission to delete this episode';
 $string['noresize'] = 'Do not resize';
 $string['notcategorised'] = 'Not categorised';
-$string['nocommentuntilapproved'] ='Comments are not available until the episode has been approved';
-$string['noratinguntilapproved'] ='Ratings are not available until the episode has been approved';
+$string['nocommentuntilapproved'] = 'Comments are not available until the episode has been approved';
+$string['noratinguntilapproved'] = 'Ratings are not available until the episode has been approved';
 $string['notingroup'] = 'Error: You do not have access to episodes created by members of this group';
 $string['noviews'] = 'No views';
 $string['noviews'] = 'No views';

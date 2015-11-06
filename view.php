@@ -33,14 +33,12 @@ require_once($CFG->libdir . '/completionlib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID.
 
-// COPIED FROM GLOSSARY
+// Get Parameters.
 $mode       = optional_param('mode', PCAST_STANDARD_VIEW, PARAM_ALPHANUM); // term entry cat date letter search author approval
 $hook       = optional_param('hook', 'ALL', PARAM_CLEAN);           // the term, entry, cat, etc... to look for based on mode
 $sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);        // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
 $sortorder  = optional_param('sortorder', 'asc', PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
 $page       = optional_param('page', 0, PARAM_INT);               // Page to show (for paging purposes)
-
-// END COPY
 
 if ($id) {
     $cm         = get_coursemodule_from_id('pcast', $id, 0, false, MUST_EXIST);
@@ -67,21 +65,20 @@ $event->add_record_snapshot('pcast', $pcast);
 $event->trigger();
 
 
-/// Mark as viewed
+// Mark as viewed.
 $completion=new completion_info($course);
 $completion->set_module_viewed($cm);
 
-/// Print the page header
-
+// Print the page header.
 $PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode'=>$mode));
 $PAGE->set_title($pcast->name);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
 
-// Output starts here
+// Output starts here.
 echo $OUTPUT->header();
 
-//Set Up Groups
+// Set Up Groups.
 $groupmode = groups_get_activity_groupmode($cm);
 
 if ($groupmode) {
@@ -91,14 +88,14 @@ if ($groupmode) {
 
 echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
 
-/// Show the add entry button if allowed (usercan post + write or manage caps)
+// Show the add entry button if allowed (usercan post + write or manage caps).
 if (((has_capability('mod/pcast:write', $context))and ($pcast->userscanpost)) or (has_capability('mod/pcast:manage', $context))) {
-    $url = new moodle_url('/mod/pcast/edit.php', array('cmid'=>$cm->id));
-    $out = html_writer::start_tag('div', array('class'=>'pcast-addentry')). "\n";
-    $out .= html_writer::start_tag('form', array('id'=>'newentryform', 'method'=>'get', 'action'=>$url)). "\n";
-    $out .= html_writer::start_tag('div', array('class'=>'singlebutton')). "\n";
-    $out .= html_writer::empty_tag('input', array('type'=>'hidden', 'name'=>'cmid', 'value'=>$cm->id)). "\n";
-    $out .= html_writer::empty_tag('input', array('type'=>'submit', 'value'=>get_string('addnewepisode', 'pcast'))). "\n";
+    $url = new moodle_url('/mod/pcast/edit.php', array('cmid' => $cm->id));
+    $out = html_writer::start_tag('div', array('class' => 'pcast-addentry')). "\n";
+    $out .= html_writer::start_tag('form', array('id' => 'newentryform', 'method' => 'get', 'action' => $url)). "\n";
+    $out .= html_writer::start_tag('div', array('class' => 'singlebutton')). "\n";
+    $out .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'cmid', 'value' => $cm->id)). "\n";
+    $out .= html_writer::empty_tag('input', array('type' => 'submit', 'value' => get_string('addnewepisode', 'pcast'))). "\n";
     $out .= html_writer::end_tag('div'). "\n";
     $out .= html_writer::end_tag('form'). "\n";
     $out .= html_writer::end_tag('div'). "\n";
@@ -106,9 +103,8 @@ if (((has_capability('mod/pcast:write', $context))and ($pcast->userscanpost)) or
     echo $out;
 }
 
-// Print heading and tabs
-// *************************************************************************
-//Sorting info
+// Print heading and tabs.
+// Sorting info.
 if (!isset($sortorder)) {
     $sortorder = '';
 }
@@ -116,40 +112,38 @@ if (!isset($sortkey)) {
     $sortkey = '';
 }
 
-//make sure variables are properly cleaned
+// Make sure variables are properly cleaned.
 $sortkey   = clean_param($sortkey, PARAM_ALPHANUM);// Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
-$sortorder = clean_param($sortorder, PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
+$sortorder = clean_param($sortorder, PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC).
 
 $tabrows = array();
 $browserow = array();
 
-$url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_STANDARD_VIEW));
+$url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_STANDARD_VIEW));
 $browserow[] = new tabobject(PCAST_STANDARD_VIEW, $url, get_string('standardview', 'pcast'));
 
 if ($pcast->userscancategorize) {
-    $url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_CATEGORY_VIEW));
+    $url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_CATEGORY_VIEW));
     $browserow[] = new tabobject(PCAST_CATEGORY_VIEW, $url, get_string('categoryview', 'pcast'));
 }
-$url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_DATE_VIEW));
+$url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_DATE_VIEW));
 $browserow[] = new tabobject(PCAST_DATE_VIEW, $url, get_string('dateview', 'pcast'));
 
 if ($pcast->displayauthor or has_capability('mod/pcast:manage', $context)) {
-    $url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_AUTHOR_VIEW));
+    $url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_AUTHOR_VIEW));
     $browserow[] = new tabobject(PCAST_AUTHOR_VIEW, $url, get_string('authorview', 'pcast'));
 }
 
-
 if (has_capability('mod/pcast:approve', $context)) {
-    $url = new moodle_url('/mod/pcast/view.php', array('id'=>$id, 'mode'=>PCAST_APPROVAL_VIEW));
+    $url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_APPROVAL_VIEW));
     $browserow[] = new tabobject(PCAST_APPROVAL_VIEW, $url, get_string('approvalview', 'pcast'));
 }
 
+// Put all this info together.
 
-/// Put all this info together
+$tabrows[] = $browserow;     // Always put these at the top.
 
-$tabrows[] = $browserow;     // Always put these at the top
-
-echo html_writer::start_tag('div', array('class'=>'pcastdisplay')). "\n";
+echo html_writer::start_tag('div', array('class' => 'pcastdisplay')). "\n";
 print_tabs($tabrows, $mode);
 echo html_writer::end_tag('div'). "\n";
 
@@ -157,7 +151,7 @@ if (!isset($category)) {
     $category = "";
 }
 
-// Check to see if any content should be displayed (prevents guessing of URLs)
+// Check to see if any content should be displayed (prevents guessing of URLs).
 if ((!$pcast->userscancategorize) and ($mode == PCAST_CATEGORY_VIEW)) {
     print_error('errorinvalidmode', 'pcast');
 } else if ((!$pcast->displayauthor and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_AUTHOR_VIEW)) {
@@ -165,8 +159,6 @@ if ((!$pcast->userscancategorize) and ($mode == PCAST_CATEGORY_VIEW)) {
 } else if ((!has_capability('mod/pcast:approve', $context)) and ($mode == PCAST_APPROVAL_VIEW)) {
     print_error('errorinvalidmode', 'pcast');
 }
-
-
 
 switch ($mode) {
 
@@ -214,10 +206,10 @@ echo html_writer::empty_tag('hr'). "\n";
 
 //**************************************************************************
 
-// Print the main part of the page (The content)
-echo html_writer::start_tag('div', array('id'=>'pcast-view', 'class'=>'generalbox')). "\n";
-echo html_writer::start_tag('div', array('class'=>'generalboxcontent')). "\n";
-/// Next print the list of episodes
+// Print the main part of the page (The content).
+echo html_writer::start_tag('div', array('id' => 'pcast-view', 'class' => 'generalbox')). "\n";
+echo html_writer::start_tag('div', array('class' => 'generalboxcontent')). "\n";
+// Next print the list of episodes
 
 switch($mode) {
     case PCAST_STANDARD_VIEW:
@@ -258,8 +250,5 @@ switch($mode) {
 echo html_writer::end_tag('div'). "\n";
 echo html_writer::end_tag('div'). "\n";
 
-
-// Finish the page
+// Finish the page.
 echo $OUTPUT->footer();
-
-

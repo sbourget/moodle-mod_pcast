@@ -93,26 +93,26 @@ class mod_pcast_generator extends testing_module_generator {
             'summary' => 'Description of pcast entry '.$this->episodecount,
             'summaryformat' => FORMAT_MOODLE
         );
-        // Media File
-        
-        
-        // Episode approval
+
+        // Media File.
+
+        // Episode approval.
         if (!isset($record['approved'])) {
-            if($pcast->requireapproval) {
+            if ($pcast->requireapproval) {
                 $context = context_module::instance($pcast->cmid);
-                if(has_capability('mod/pcast:approve', $context)) {
+                if (has_capability('mod/pcast:approve', $context)) {
                     // User can approve episodes so automatically approve theirs
                     $record['approved'] = 1;
                 } else {
                     // Episode needs approval.
                     $record['approved'] = 0;
                 }
-                
+
             } else {
                 // No approval required.
                 $record['approved'] = 1;
             }
-            
+
         }
 
         $id = $DB->insert_record('pcast_episodes', $record);

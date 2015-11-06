@@ -26,10 +26,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Disable moodle specific debug messages and any errors in output
-define('NO_DEBUG_DISPLAY', true);//comment this out to see any error messages during RSS generation
+// Disable moodle specific debug messages and any errors in output.
+define('NO_DEBUG_DISPLAY', true); // Comment this out to see any error messages during RSS generation.
 
-// Sessions not used here, we recreate $USER every time we are called
+// Sessions not used here, we recreate $USER every time we are called.
 define('NO_MOODLE_COOKIES', true);
 
 require_once('../../config.php');
@@ -77,7 +77,7 @@ if (!$userid) {
 }
 
 $user = get_complete_user_data('id', $userid);
-session_set_user($user); //For login and capability checks.
+session_set_user($user); // For login and capability checks.
 
 
 // Check the context actually exists.
@@ -107,19 +107,19 @@ $cm = get_coursemodule_from_instance('pcast', $pcastid, 0, false, MUST_EXIST);
 if ($cm) {
         $modcontext = context_module::instance($cm->id);
 
-    //Context id from db should match the submitted one.
-    if ($context->id==$modcontext->id && has_capability('mod/pcast:view', $modcontext)) {
+    // Context id from db should match the submitted one.
+    if ($context->id == $modcontext->id && has_capability('mod/pcast:view', $modcontext)) {
         $uservalidated = true;
     }
 }
 
 
-//Check group mode 0/1/2 (All participants)
+// Check group mode 0/1/2 (All participants).
 $groupmode = groups_get_activity_groupmode($cm);
 
-//Using Groups, check to see if user should see all participants.
+// Using Groups, check to see if user should see all participants.
 if ($groupmode == SEPARATEGROUPS) {
-    //User must have the capability to see all groups or be a member of that group.
+    // User must have the capability to see all groups or be a member of that group.
     $members = get_enrolled_users($context, 'mod/pcast:write', $groupid, 'u.id', 'u.id ASC');
 
     // Is a member of the current group.
@@ -158,7 +158,7 @@ $sql = pcast_rss_get_sql($pcast);
 
 $filename = rss_get_file_name($pcast, $sql);
 
-//Append the GroupID to the end of the filename
+// Append the GroupID to the end of the filename
 $filename .= '_'.$groupid;
 $cachedfilepath = pcast_rss_get_file_full_name('mod_pcast', $filename);
 
@@ -170,7 +170,7 @@ $url = new moodle_url(rss_get_url($context->id, $userid, 'pcast', $args));
 // Build the .pcast file.
 $rss = pcast_build_pcast_file($pcast, $url);
 
-//Save the XML contents to file.
+// Save the XML contents to file.
 $status = pcast_rss_save_file('mod_pcast', $filename, $rss);
 
 if (!$status) {
