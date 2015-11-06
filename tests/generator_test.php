@@ -60,7 +60,6 @@ class mod_pcast_generator_testcase extends advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
         $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course));
-        /** @var mod_pcast_generator $pcastgenerator */
         $pcastgenerator = $this->getDataGenerator()->get_plugin_generator('mod_pcast');
 
         $episode1 = $pcastgenerator->create_content($pcast);

@@ -101,7 +101,7 @@ class mod_pcast_generator extends testing_module_generator {
             if ($pcast->requireapproval) {
                 $context = context_module::instance($pcast->cmid);
                 if (has_capability('mod/pcast:approve', $context)) {
-                    // User can approve episodes so automatically approve theirs
+                    // User can approve episodes so automatically approve theirs.
                     $record['approved'] = 1;
                 } else {
                     // Episode needs approval.
