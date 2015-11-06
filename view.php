@@ -38,7 +38,7 @@ $mode       = optional_param('mode', PCAST_STANDARD_VIEW, PARAM_ALPHANUM); // te
 $hook       = optional_param('hook', 'ALL', PARAM_CLEAN);           // the term, entry, cat, etc... to look for based on mode
 $sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);        // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
 $sortorder  = optional_param('sortorder', 'asc', PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
-$page       = optional_param('page', 0, PARAM_INT);               // Page to show (for paging purposes)
+$page       = optional_param('page', 0, PARAM_INT);               // Page to show (for paging purposes).
 
 if ($id) {
     $cm         = get_coursemodule_from_id('pcast', $id, 0, false, MUST_EXIST);
@@ -66,11 +66,11 @@ $event->trigger();
 
 
 // Mark as viewed.
-$completion=new completion_info($course);
+$completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
 // Print the page header.
-$PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode'=>$mode));
+$PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => $mode));
 $PAGE->set_title($pcast->name);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
@@ -83,7 +83,7 @@ $groupmode = groups_get_activity_groupmode($cm);
 
 if ($groupmode) {
     groups_get_activity_group($cm, true);
-    groups_print_activity_menu($cm, new moodle_url('/mod/pcast/view.php', array('id'=>$id)));
+    groups_print_activity_menu($cm, new moodle_url('/mod/pcast/view.php', array('id' => $id)));
 }
 
 echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
@@ -204,12 +204,12 @@ switch ($mode) {
 }
 echo html_writer::empty_tag('hr'). "\n";
 
-//**************************************************************************
+// **************************************************************************
 
 // Print the main part of the page (The content).
 echo html_writer::start_tag('div', array('id' => 'pcast-view', 'class' => 'generalbox')). "\n";
 echo html_writer::start_tag('div', array('class' => 'generalboxcontent')). "\n";
-// Next print the list of episodes
+// Next print the list of episodes.
 
 switch($mode) {
     case PCAST_STANDARD_VIEW:

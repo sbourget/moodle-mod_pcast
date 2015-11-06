@@ -102,7 +102,7 @@ try {
 
 // Now that we know that the user is vaid, lets generate see if they can see the feed.
 
-//Check capabilities.
+// Check capabilities.
 $cm = get_coursemodule_from_instance('pcast', $pcastid, 0, false, MUST_EXIST);
 if ($cm) {
         $modcontext = context_module::instance($cm->id);
@@ -132,7 +132,7 @@ if ($groupmode == SEPARATEGROUPS) {
 
     } else {
         // Are a member of the current group.
-        // Is the group #0 (Group 0 is all users)
+        // Is the group #0 (Group 0 is all users).
         if ($groupid == 0 and !has_capability('moodle/site:accessallgroups', $context, $userid)) {
             $uservalidated = false;
         }
@@ -158,12 +158,12 @@ $sql = pcast_rss_get_sql($pcast);
 
 $filename = rss_get_file_name($pcast, $sql);
 
-// Append the GroupID to the end of the filename
+// Append the GroupID to the end of the filename.
 $filename .= '_'.$groupid;
 $cachedfilepath = pcast_rss_get_file_full_name('mod_pcast', $filename);
 
 
-// Figure out the URL for the podcast based on the user info,
+// Figure out the URL for the podcast based on the user info.
 $args = $pcast->id . '/' .$groupid;
 $url = new moodle_url(rss_get_url($context->id, $userid, 'pcast', $args));
 

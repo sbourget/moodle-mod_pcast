@@ -553,7 +553,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     $hook = optional_param('hook', 'ALL', PARAM_CLEAN);
     $group = optional_param('group', '', PARAM_ALPHANUM);
 
-    if (has_capability('mod/pcast:approve', $PAGE->cm->context) && 
+    if (has_capability('mod/pcast:approve', $PAGE->cm->context) &&
        ($hiddenentries = $DB->count_records('pcast_episodes', array('pcastid' => $PAGE->cm->instance, 'approved' => 0)))) {
         $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php',
                 array('id' => $PAGE->cm->id, 'mode' => PCAST_APPROVAL_VIEW)));
@@ -766,7 +766,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
             pcast_add_view_instance($pcast, $episode, $USER->id, $context);
         }
 
-        // finally send the file.
+        // Finally send the file.
         send_stored_file($file, 0, 0, $forcedownload, $options); // Download MUST be forced - security!
 
     } else if ($filearea === 'logo') {
@@ -781,7 +781,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
             return false;
         }
 
-        // finally send the file.
+        // Finally send the file.
         send_stored_file($file, 0, 0, $forcedownload, $options); // Download MUST be forced - security!
 
     }
@@ -1048,7 +1048,7 @@ function pcast_reset_userdata($data) {
         $DB->delete_records_select('pcast_views', "episodeid IN ($allepisodessql) ", $params);
         $status[] = array('component' => $componentstr, 'item' => get_string('deleteallviews', 'pcast'), 'error' => false);
     }
-    /// updating dates - shift may be negative too.
+    /// Updating dates - shift may be negative too.
     if ($data->timeshift) {
         shift_course_mod_dates('pcast', array('assesstimestart', 'assesstimefinish'), $data->timeshift, $data->courseid);
         $status[] = array('component' => $componentstr, 'item' => get_string('datechanged'), 'error' => false);

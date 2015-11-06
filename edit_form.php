@@ -42,8 +42,9 @@ class mod_pcast_entry_form extends moodleform {
         $currententry = $this->_customdata['current'];
         $context = $this->_customdata['context'];
 
-        // -------------------------------------------------------------------------------
-        // Adding the "general" fieldset, where all the common settings are showed.
+        /**
+         * Adding the "general" fieldset, where all the common settings are showed.
+         */
         $mform->addElement('header', 'general', get_string('general', 'form'));
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('name', 'pcast'), array('size' => '64'));
@@ -60,9 +61,9 @@ class mod_pcast_entry_form extends moodleform {
         $mform->setType('summary', PARAM_RAW);
         $mform->addRule('summary', get_string('required'), 'required', null, 'client');
 
-        // -------------------------------------------------------------------------------
-
-        // Attachment.
+        /*/**
+         * Attachment.
+         */
         $mform->addElement('header', 'attachments', get_string('attachment', 'pcast'));
         $mform->addElement('filemanager', 'mediafile', get_string('pcastmediafile', 'pcast'), null,
             array('subdirs' => 0,
@@ -74,9 +75,9 @@ class mod_pcast_entry_form extends moodleform {
             ));
         $mform->addRule('mediafile', get_string('required'), 'required', null, 'client');
 
-        // -------------------------------------------------------------------------------
-
-        // iTunes Settings.
+        /**
+         * iTunes Settings.
+         */
         $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));
 
         // Subtitle.
@@ -129,19 +130,18 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addHelpButton('explicit', 'explicit', 'pcast');
         $mform->setDefault('explicit', 2);
 
-        // -------------------------------------------------------------------------------
-
-        // Hidden.
+        /**
+         * Hidden.
+         */
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
 
-        // -------------------------------------------------------------------------------
-        // Add standard buttons, common to all modules.
+        /**
+         *  Add standard buttons, common to all modules.
+         */
         $this->add_action_buttons();
-
-        // -------------------------------------------------------------------------------
         $this->set_data($currententry);
 
     }

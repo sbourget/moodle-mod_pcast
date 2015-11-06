@@ -27,8 +27,8 @@ require_once(dirname(__FILE__) . '/../../config.php');
 require_once(dirname(__FILE__).'/lib.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
-$eid      = optional_param('eid', 0, PARAM_INT); // pcast episode id
-$mode      = optional_param('mode', PCAST_EPISODE_VIEW, PARAM_INT); // pcast episode id
+$eid      = optional_param('eid', 0, PARAM_INT); // Pcast episode id.
+$mode      = optional_param('mode', PCAST_EPISODE_VIEW, PARAM_INT); // Pcast episode display mode.
 
 $popup = optional_param('popup', 0, PARAM_INT);
 
@@ -39,11 +39,11 @@ $PAGE->set_url($url);
 
 if ($eid) {
     $sql = pcast_get_episode_sql();
-    $sql .=  " WHERE p.id = ?";
+    $sql .= " WHERE p.id = ?";
     $episode = $DB->get_record_sql($sql, array($eid), MUST_EXIST);
-    $pcast = $DB->get_record('pcast', array('id'=>$episode->pcastid), '*', MUST_EXIST);
+    $pcast = $DB->get_record('pcast', array('id' => $episode->pcastid), '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
+    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     require_course_login($course, true, $cm);
     $context = context_module::instance($cm->id);
     $episode->pcastname = $pcast->name;
@@ -66,7 +66,8 @@ if (!empty($episode->courseid)) {
     $PAGE->set_context($context);
     echo $OUTPUT->header();
 } else {
-    echo $OUTPUT->header();    // Needs to be something here to allow linking back to the whole pcast
+    // Needs to be something here to allow linking back to the whole pcast.
+    echo $OUTPUT->header();
 }
 
 if (!pcast_group_allowed_viewing($episode, $cm, groups_get_activity_groupmode($cm))) {
@@ -74,27 +75,29 @@ if (!pcast_group_allowed_viewing($episode, $cm, groups_get_activity_groupmode($c
 }
 echo $OUTPUT->heading(get_string("viewthisepisode", "pcast", $pcast->name));
 
-// Print the tabs
+// Print the tabs.
 $tabrows = array();
 $browserow = array();
 
-$url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_VIEW));
+$url = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $episode->id, 'mode' => PCAST_EPISODE_VIEW));
 $browserow[] = new tabobject(PCAST_EPISODE_VIEW, $url, get_string('episodeview', 'pcast'));
 
 $comment = false;
 $rate = false;
 $tabname = '';
 
-if (($episode->userscancomment) or ($episode->assessed)){
+if (($episode->userscancomment) or ($episode->assessed)) {
     // Can they use comments?
-    if(($CFG->usecomments) and ($episode->userscancomment) and ((has_capability('moodle/comment:post', $context)) or (has_capability('moodle/comment:view', $context)))) {
+    if (($CFG->usecomments) and ($episode->userscancomment) and ((has_capability('moodle/comment:post', $context))
+                                                             or (has_capability('moodle/comment:view', $context)))) {
+
         $tabname = get_string('episodecommentview', 'pcast');
         $comment = true;
     }
     // Can they use ratings?
     if (($episode->assessed) and
         ((has_capability('mod/pcast:rate', $context)) or
-         ((has_capability('mod/pcast:viewrating', $context)) and ($episode->userid == $USER->id)) or
+        ((has_capability('mod/pcast:viewrating', $context)) and ($episode->userid == $USER->id)) or
          (has_capability('mod/pcast:viewallratings', $context)) or
          (has_capability('mod/pcast:viewanyrating', $context)))) {
 
@@ -107,26 +110,26 @@ if (($episode->userscancomment) or ($episode->assessed)){
     }
 
     if (($comment) or ($rate)) {
-        $url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_COMMENT_AND_RATE));
+        $url = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $episode->id, 'mode' => PCAST_EPISODE_COMMENT_AND_RATE));
         $browserow[] = new tabobject(PCAST_EPISODE_COMMENT_AND_RATE, $url, $tabname);
     }
 }
 
 if (($episode->displayviews) or (has_capability('mod/pcast:manage', $context))) {
-    $url = new moodle_url('/mod/pcast/showepisode.php', array('eid'=>$episode->id, 'mode'=>PCAST_EPISODE_VIEWS));
+    $url = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $episode->id, 'mode' => PCAST_EPISODE_VIEWS));
     $browserow[] = new tabobject(PCAST_EPISODE_VIEWS, $url, get_string('episodeviews', 'pcast'));
 }
 
-$tabrows[] = $browserow;     // Needs to be an Array of Arrays (2D Array)
+$tabrows[] = $browserow;     // Needs to be an Array of Arrays (2D Array).
 
-// Check to see if any content should be displayed (prevents guessing of URLs)
+// Check to see if any content should be displayed (prevents guessing of URLs).
 if (((!$pcast->userscancomment) and (!$pcast->assessed)) and ($mode == PCAST_EPISODE_COMMENT_AND_RATE)) {
     print_error('errorinvalidmode', 'pcast');
-} else if((!$pcast->displayviews and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_EPISODE_VIEWS)) {
+} else if ((!$pcast->displayviews and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_EPISODE_VIEWS)) {
     print_error('errorinvalidmode', 'pcast');
 }
 
-echo html_writer::start_tag('div', array('class'=>'pcast-display')). "\n";
+echo html_writer::start_tag('div', array('class' => 'pcast-display')). "\n";
 print_tabs($tabrows, $mode);
 
 switch ($mode) {
@@ -138,14 +141,14 @@ switch ($mode) {
     case PCAST_EPISODE_COMMENT_AND_RATE:
 
 
-        // Load comment API
+        // Load comment API.
         if ($comment) {
             require_once($CFG->dirroot . '/comment/lib.php');
             comment::init();
             pcast_display_episode_comments($episode, $cm, $course);
         }
 
-        //Load rating API
+        // Load rating API.
         if ($rate) {
             pcast_display_episode_ratings($episode, $cm, $course);
         }
@@ -165,6 +168,6 @@ if ($popup) {
     echo $OUTPUT->close_window_button();
 }
 
-/// Show one reduced footer
+// Show one reduced footer.
 echo html_writer::end_tag('div') . "\n";
 echo $OUTPUT->footer();
