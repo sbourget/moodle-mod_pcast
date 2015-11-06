@@ -293,6 +293,18 @@ function pcast_rss_newstuff($pcast, $time) {
 }
 
 /**
+ * Given a pcast object, deletes all cached RSS files associated with it.
+ *
+ * @param stdClass $pcast
+ */
+function pcast_rss_delete_file($pcast) {
+    global $CFG;
+    require_once("$CFG->libdir/rsslib.php");
+
+    rss_delete_file('mod_pcast', $pcast);
+}
+
+/**
  * Looks up the author information from the id
  * @global object $DB
  * @param int $userid

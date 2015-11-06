@@ -98,6 +98,12 @@ if ($confirm and confirm_sesskey()) { // The operation was confirmed.
     $rm = new rating_manager();
     $rm->delete_ratings($delopt);
 
+    // Delete cached RSS feeds.
+    if (!empty($CFG->enablerssfeeds)) {
+        require_once($CFG->dirroot.'/mod/pcast/rsslib.php');
+        pcast_rss_delete_file($pcast);
+    }
+
     $event = \mod_pcast\event\episode_deleted::create(array(
         'context' => $context,
         'objectid' => $origionalepisode->id,
