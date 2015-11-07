@@ -81,7 +81,7 @@ function pcast_rss_get_feed($context, $args) {
         } else {
             // Are a member of the current group.
             // Is the group #0 (Group 0 is all users).
-            if ($groupid == 0 and !has_capability('moodle/site:accessallgroups', $context, $userid)){
+            if ($groupid == 0 and !has_capability('moodle/site:accessallgroups', $context, $userid)) {
                 $uservalidated = false;
             }
         }
@@ -547,7 +547,7 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
                 $result .= rss_start_tag(pcast_rss_add_enclosure($item), 3, true);
 
                 // Add iTunes tags.
-                if($itunes) {
+                if ($itunes) {
                     if (isset($item->author)) {
                         $result .= rss_full_tag('itunes:author', 3, false, $item->author);
                     }

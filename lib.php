@@ -1048,7 +1048,7 @@ function pcast_reset_userdata($data) {
         $DB->delete_records_select('pcast_views', "episodeid IN ($allepisodessql) ", $params);
         $status[] = array('component' => $componentstr, 'item' => get_string('deleteallviews', 'pcast'), 'error' => false);
     }
-    /// Updating dates - shift may be negative too.
+    // Updating dates - shift may be negative too.
     if ($data->timeshift) {
         shift_course_mod_dates('pcast', array('assesstimestart', 'assesstimefinish'), $data->timeshift, $data->courseid);
         $status[] = array('component' => $componentstr, 'item' => get_string('datechanged'), 'error' => false);
