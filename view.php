@@ -88,8 +88,10 @@ if ($groupmode) {
 
 echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
 
-// Show the add entry button if allowed (usercan post + write or manage caps).
-if (((has_capability('mod/pcast:write', $context))and ($pcast->userscanpost)) or (has_capability('mod/pcast:manage', $context))) {
+// Show the add entry button if allowed (usercan post + write or write + manage  or write + approve caps).
+if (((has_capability('mod/pcast:write', $context)) and ($pcast->userscanpost)) 
+        or (has_capability('mod/pcast:write', $context) and has_capability('mod/pcast:manage', $context))
+        or (has_capability('mod/pcast:write', $context) and has_capability('mod/pcast:approve', $context))) {
     $url = new moodle_url('/mod/pcast/edit.php', array('cmid' => $cm->id));
     $out = html_writer::start_tag('div', array('class' => 'pcast-addentry')). "\n";
     $out .= html_writer::start_tag('form', array('id' => 'newentryform', 'method' => 'get', 'action' => $url)). "\n";
@@ -113,7 +115,7 @@ if (!isset($sortkey)) {
 }
 
 // Make sure variables are properly cleaned.
-$sortkey   = clean_param($sortkey, PARAM_ALPHANUM);// Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
+$sortkey   = clean_param($sortkey, PARAM_ALPHANUM);  // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
 $sortorder = clean_param($sortorder, PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC).
 
 $tabrows = array();
@@ -134,7 +136,7 @@ if ($pcast->displayauthor or has_capability('mod/pcast:manage', $context)) {
     $browserow[] = new tabobject(PCAST_AUTHOR_VIEW, $url, get_string('authorview', 'pcast'));
 }
 
-if (has_capability('mod/pcast:approve', $context)) {
+if ($pcast->requireapproval and has_capability('mod/pcast:approve', $context)) {
     $url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_APPROVAL_VIEW));
     $browserow[] = new tabobject(PCAST_APPROVAL_VIEW, $url, get_string('approvalview', 'pcast'));
 }

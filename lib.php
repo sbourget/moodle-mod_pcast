@@ -549,21 +549,30 @@ function pcast_extend_navigation($navigation, $course, $module, $cm) {
 function pcast_extend_settings_navigation(settings_navigation $settings, navigation_node $pcastnode) {
     global $PAGE, $DB, $CFG, $USER;
 
-    $mode = optional_param('mode', '', PARAM_ALPHA);
-    $hook = optional_param('hook', 'ALL', PARAM_CLEAN);
     $group = optional_param('group', '', PARAM_ALPHANUM);
-
-    if (has_capability('mod/pcast:approve', $PAGE->cm->context) &&
-       ($hiddenentries = $DB->count_records('pcast_episodes', array('pcastid' => $PAGE->cm->instance, 'approved' => 0)))) {
-        $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php',
-                array('id' => $PAGE->cm->id, 'mode' => PCAST_APPROVAL_VIEW)));
-    }
-
-    if (has_capability('mod/pcast:write', $PAGE->cm->context)) {
-        $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid' => $PAGE->cm->id)));
-    }
-
+    
     $pcast = $DB->get_record('pcast', array("id" => $PAGE->cm->instance));
+        
+    // Display approval link only when required
+    if ($pcast->requireapproval) {    
+        if (has_capability('mod/pcast:approve', $PAGE->cm->context)) {
+            $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php',
+                    array('id' => $PAGE->cm->id, 'mode' => PCAST_APPROVAL_VIEW)));
+        }
+    }
+
+    // Display add new episode link. (Must have write + manage / approve as teacher or write + allow user episodes).
+    if (has_capability('mod/pcast:write', $PAGE->cm->context) and (has_capability('mod/pcast:manage', $PAGE->cm->context)
+                                                               or has_capability('mod/pcast:approve', $PAGE->cm->context))) {
+        // This is a teacher.
+        $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid' => $PAGE->cm->id)));
+    } else if (has_capability('mod/pcast:write', $PAGE->cm->context)) {
+        // See if the activity allows student posting
+        if($pcast->userscanpost == true) {
+            // Add a link to ad an episode
+            $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid' => $PAGE->cm->id)));
+        }
+    }
 
     if (!empty($CFG->enablerssfeeds) && !empty($CFG->pcast_enablerssfeeds)
     && $pcast->enablerssfeed) {
