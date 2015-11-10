@@ -224,18 +224,18 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
         }
     }
 
-     echo '</span></td>';
-     echo '<td class="pcast-menu20">';
+    echo '</span></td>';
+    echo '<td class="pcast-menu20">';
 
-     $select = new single_select(new moodle_url("/mod/pcast/view.php",
+    $select = new single_select(new moodle_url("/mod/pcast/view.php",
                                  array('id' => $cm->id, 'mode' => PCAST_CATEGORY_VIEW)),
                                  'hook', $menu, $hook, null, "catmenu");
+    $select->set_label(get_string('categories', 'pcast'), array('class' => 'accesshide'));
 
-     echo $OUTPUT->render($select);
-
-     echo '</td>';
-     echo '</tr>';
-     echo '</table>';
+    echo $OUTPUT->render($select);
+    echo '</td>';
+    echo '</tr>';
+    echo '</table>';
 }
 
 /**

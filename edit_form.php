@@ -106,7 +106,7 @@ class mod_pcast_entry_form extends moodleform {
                 foreach ($nestedcategories as $nestedcategory) {
                     $value = (int)$nestedcategory->topcategoryid * 1000;
                     $value = $value + (int)$nestedcategory->id;
-                    $newoptions[(int)$value] = '&nbsp;&nbsp;' .$nestedcategory->name;
+                    $newoptions[(int)$value] = '&nbsp; &nbsp; ' .$nestedcategory->name;
                 }
             }
             ksort($newoptions);

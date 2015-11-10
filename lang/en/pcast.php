@@ -42,6 +42,7 @@ $string['attachment'] = 'Attachment';
 $string['author_help'] = 'Author of this podcast';
 $string['author'] = 'Author';
 $string['authorview'] = 'Browse by author';
+$string['categories'] = 'Categories';
 $string['category_help'] = 'iTunes category';
 $string['category'] = 'Category';
 $string['categoryview'] = 'Browse by category';
