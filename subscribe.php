@@ -77,7 +77,7 @@ if (!$userid) {
 }
 
 $user = get_complete_user_data('id', $userid);
-session_set_user($user); // For login and capability checks.
+\core\session\manager::set_user($user); // For login and capability checks.
 
 
 // Check the context actually exists.
