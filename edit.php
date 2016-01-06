@@ -91,7 +91,7 @@ if ($id) { // If the entry is specified.
 
 } else { // A new entry.
     require_capability('mod/pcast:write', $context);
-    $episode = new object();
+    $episode = new stdClass();
     $episode->id = null;
     $episode->summary = '';                // This will be updated later.
     $episode->summaryformat = FORMAT_HTML; // This will be updated later.
