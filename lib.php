@@ -276,23 +276,55 @@ function pcast_delete_instance($id) {
  * @return object $result
  */
 function pcast_user_outline($course, $user, $mod, $pcast) {
-
-    global $DB;
-
-    if ($logs = $DB->get_records("log", array('userid' => $user->id, 'module' => 'pcast',
-                                              'action' => 'view', 'info' => $pcast->id), "time ASC")) {
-
-        $numviews = count($logs);
-        $lastlog = array_pop($logs);
-
-        $result = new object();
-        $result->info = get_string("numviews", "", $numviews);
-        $result->time = $lastlog->time;
-
+    global $CFG;
+    require_once("$CFG->libdir/gradelib.php");
+    $grades = grade_get_grades($course->id, 'mod', 'pcast', $pcast->id, $user->id);
+    if (empty($grades->items[0]->grades)) {
+        $grade = false;
+    } else {
+        $grade = reset($grades->items[0]->grades);
+    }
+    if ($entries = pcast_get_user_episodes($pcast->id, $user->id)) {
+        $result = new stdClass();
+        $result->info = get_string("episodes", "pcast", count($entries));
+        $lastentry = array_pop($entries);
+        $result->time = $lastentry->timemodified;
+        if ($grade) {
+            $result->info .= ', ' . get_string('grade') . ': ' . $grade->str_long_grade;
+        }
+        return $result;
+    } else if ($grade) {
+        $result = new stdClass();
+        $result->info = get_string('grade') . ': ' . $grade->str_long_grade;
+        // Datesubmitted == time created. dategraded == time modified or time overridden.
+        // If grade was last modified by the user themselves use date graded. Otherwise use date submitted.
+        // TODO: move this copied & pasted code somewhere in the grades API. See MDL-26704.
+        if ($grade->usermodified == $user->id || empty($grade->datesubmitted)) {
+            $result->time = $grade->dategraded;
+        } else {
+            $result->time = $grade->datesubmitted;
+        }
         return $result;
     }
     return null;
+}
 
+/**
+ * Get all the episodes for a user in a podcast.
+ * @global object
+ * @param int $pcastid
+ * @param int $userid
+ * @return array
+ */
+function pcast_get_user_episodes($pcastid, $userid) {
+    global $DB;
+    return $DB->get_records_sql("SELECT e.*, u.firstname, u.lastname, u.email, u.picture
+                                   FROM {pcast} g, {pcast_episodes} e, {user} u
+                                  WHERE g.id = ?
+                                    AND e.pcastid = g.id
+                                    AND e.userid = ?
+                                    AND e.userid = u.id
+                               ORDER BY e.timemodified ASC", array($pcastid, $userid));
 }
 
 /**

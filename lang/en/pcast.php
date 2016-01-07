@@ -86,6 +86,7 @@ $string['episodecommentandrateview'] = 'Comment / Rate';
 $string['episodecommentview'] = 'Comment';
 $string['episodedeleted'] = 'episode {$a} was sucessfully deleted';
 $string['episoderateview'] = 'Rate';
+$string['episodes'] = '{$a} episodes';
 $string['episodeswithoutcategory'] = 'Episodes without a category';
 $string['episodetitle'] = 'Episode';
 $string['episodeview'] = 'Episode';
