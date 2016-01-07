@@ -889,20 +889,21 @@ function pcast_add_view_instance($pcast, $episode, $userid, $context) {
     global $DB;
 
     // Lookup the user add add to the view count.
-    if (!$view = $DB->get_record("pcast_views", array("episodeid" => $pcast->id, "userid" => $userid))) {
-        $view = null;
-        unset($view);
+    if (!$view = $DB->get_record("pcast_views", array("episodeid" => $episode->id, "userid" => $userid))) {
+
+        // User has never seen the podcast episode.
         $view = new stdClass();
         $view->userid = $userid;
         $view->views = 1;
-        $view->episodeid = $pcast->id;
+        $view->episodeid = $episode->id;
         $view->lastview = time();
 
         if (!$result = $DB->insert_record("pcast_views", $view)) {
             print_error('databaseerror', 'pcast');
         }
 
-    } else { // Never viewed the file before.
+    } else {
+        // The user has viewed the episode before.
         $view->views = $view->views + 1;
         $view->lastview = time();
         if (!$result = $DB->update_record("pcast_views", $view)) {
@@ -916,6 +917,7 @@ function pcast_add_view_instance($pcast, $episode, $userid, $context) {
         ));
 
         $event->add_record_snapshot('pcast_episodes', $episode);
+        $event->add_record_snapshot('pcast', $pcast);
         $event->trigger();
 
     return $result;
