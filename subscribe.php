@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Library of interface functions and constants for module pcast
  *
@@ -26,13 +25,17 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-// Disable moodle specific debug messages and any errors in output.
-define('NO_DEBUG_DISPLAY', true); // Comment this out to see any error messages during RSS generation.
-
 // Sessions not used here, we recreate $USER every time we are called.
 define('NO_MOODLE_COOKIES', true);
 
 require_once('../../config.php');
+
+if(!debugging('', DEBUG_DEVELOPER)) {
+    // Disable moodle specific debug messages and any errors in output.
+    define('NO_DEBUG_DISPLAY', true);
+} else {
+    define('NO_DEBUG_DISPLAY', false);
+}
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/rsslib.php');
 require_once($CFG->dirroot.'/mod/pcast/rsslib.php');
