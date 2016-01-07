@@ -395,11 +395,11 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
     $allnamefields = get_all_user_name_fields(true, 'u');
 
     if (!$episodes = $DB->get_records_sql("SELECT e.id, e.name, e.approved, e.timemodified, e.pcastid,
-                                                 e.userid, $allnamefields
-                                            FROM {pcast_episodes} e
-                                            JOIN {user} u ON u.id = e.userid
-                                           WHERE e.pcastid IN ($plist) AND e.timemodified > ?
-                                        ORDER BY e.timemodified ASC", array($timestart))) {
+                                                  e.userid, $allnamefields
+                                             FROM {pcast_episodes} e
+                                             JOIN {user} u ON u.id = e.userid
+                                            WHERE e.pcastid IN ($plist) AND e.timemodified > ?
+                                         ORDER BY e.timemodified ASC", array($timestart))) {
         return false;
     }
 
@@ -582,11 +582,10 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     global $PAGE, $DB, $CFG, $USER;
 
     $group = optional_param('group', '', PARAM_ALPHANUM);
-    
     $pcast = $DB->get_record('pcast', array("id" => $PAGE->cm->instance));
-        
-    // Display approval link only when required
-    if ($pcast->requireapproval) {    
+
+    // Display approval link only when required.
+    if ($pcast->requireapproval) {
         if (has_capability('mod/pcast:approve', $PAGE->cm->context)) {
             $pcastnode->add(get_string('waitingapproval', 'pcast'), new moodle_url('/mod/pcast/view.php',
                     array('id' => $PAGE->cm->id, 'mode' => PCAST_APPROVAL_VIEW)));
@@ -599,9 +598,9 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
         // This is a teacher.
         $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid' => $PAGE->cm->id)));
     } else if (has_capability('mod/pcast:write', $PAGE->cm->context)) {
-        // See if the activity allows student posting
-        if($pcast->userscanpost == true) {
-            // Add a link to ad an episode
+        // See if the activity allows student posting.
+        if ($pcast->userscanpost == true) {
+            // Add a link to ad an episode.
             $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid' => $PAGE->cm->id)));
         }
     }

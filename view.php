@@ -89,7 +89,7 @@ if ($groupmode) {
 echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
 
 // Show the add entry button if allowed (usercan post + write or write + manage  or write + approve caps).
-if (((has_capability('mod/pcast:write', $context)) and ($pcast->userscanpost)) 
+if (((has_capability('mod/pcast:write', $context)) and ($pcast->userscanpost))
         or (has_capability('mod/pcast:write', $context) and has_capability('mod/pcast:manage', $context))
         or (has_capability('mod/pcast:write', $context) and has_capability('mod/pcast:approve', $context))) {
     $url = new moodle_url('/mod/pcast/edit.php', array('cmid' => $cm->id));

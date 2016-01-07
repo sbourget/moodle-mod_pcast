@@ -30,7 +30,7 @@ define('NO_MOODLE_COOKIES', true);
 
 require_once('../../config.php');
 
-if(!debugging('', DEBUG_DEVELOPER)) {
+if (!debugging('', DEBUG_DEVELOPER)) {
     // Disable moodle specific debug messages and any errors in output.
     define('NO_DEBUG_DISPLAY', true);
 } else {
