@@ -318,13 +318,55 @@ function pcast_user_outline($course, $user, $mod, $pcast) {
  */
 function pcast_get_user_episodes($pcastid, $userid) {
     global $DB;
-    return $DB->get_records_sql("SELECT e.*, u.firstname, u.lastname, u.email, u.picture
-                                   FROM {pcast} g, {pcast_episodes} e, {user} u
-                                  WHERE g.id = ?
-                                    AND e.pcastid = g.id
-                                    AND e.userid = ?
-                                    AND e.userid = u.id
-                               ORDER BY e.timemodified ASC", array($pcastid, $userid));
+    $allnamefields = get_all_user_name_fields(true, 'u');
+    $sql = "SELECT p.id AS id,
+                   p.pcastid AS pcastid,
+                   p.course AS course,
+                   p.userid AS userid,
+                   p.name AS name,
+                   p.summary AS summary,
+                   p.summaryformat AS summaryformat,
+                   p.summarytrust AS summarytrust,
+                   p.mediafile AS mediafile,
+                   p.duration AS duration,
+                   p.explicit AS explicit,
+                   p.subtitle AS subtitle,
+                   p.keywords AS keywords,
+                   p.topcategory as topcatid,
+                   p.nestedcategory as nestedcatid,
+                   p.timecreated as timecreated,
+                   p.timemodified as timemodified,
+                   p.approved as approved,
+                   p.sequencenumber as sequencenumber,
+                   pcast.userscancomment as userscancomment,
+                   pcast.userscancategorize as userscancategorize,
+                   pcast.userscanpost as userscanpost,
+                   pcast.requireapproval as requireapproval,
+                   pcast.displayauthor as displayauthor,
+                   pcast.displayviews as displayviews,
+                   pcast.assessed as assessed,
+                   pcast.assesstimestart as assesstimestart,
+                   pcast.assesstimefinish as assesstimefinish,
+                   pcast.scale as scale,
+                   cat.name as topcategory,
+                   ncat.name as nestedcategory,
+                   $allnamefields
+              FROM {pcast_episodes} p
+         LEFT JOIN {pcast} AS pcast ON
+                   p.pcastid = pcast.id
+         LEFT JOIN {user} AS u ON
+                   p.userid = u.id
+         LEFT JOIN {pcast_itunes_categories} AS cat ON
+                   p.topcategory = cat.id
+         LEFT JOIN {pcast_itunes_nested_cat} AS ncat ON
+                   p.nestedcategory = ncat.id
+             WHERE pcast.id = ?
+               AND p.pcastid = pcast.id
+               AND p.userid = ?
+               AND p.userid = u.id
+          ORDER BY p.timemodified ASC";
+    return $DB->get_records_sql($sql, array($pcastid, $userid));
+
 }
 
 /**
@@ -340,22 +382,28 @@ function pcast_get_user_episodes($pcastid, $userid) {
  * @return object $result
  */
 function pcast_user_complete($course, $user, $mod, $pcast) {
-    global $CFG, $DB;
+    global $CFG, $OUTPUT;
+    require_once("$CFG->libdir/gradelib.php");
+    require_once($CFG->dirroot.'/mod/pcast/locallib.php');
 
-    if ($logs = $DB->get_records("log", array('userid' => $user->id, 'module' => 'pcast',
-                                              'action' => 'view', 'info' => $pcast->id), "time ASC")) {
-        $numviews = count($logs);
-        $lastlog = array_pop($logs);
+    $cm = get_coursemodule_from_instance("pcast", $pcast->id, $course->id);
 
-        $strmostrecently = get_string("mostrecently");
-        $strnumviews = get_string("numviews", "", $numviews);
-
-        echo "$strnumviews - $strmostrecently ".userdate($lastlog->time);
-
-    } else {
-        print_string("noviews", "pcast");
+    $grades = grade_get_grades($course->id, 'mod', 'pcast', $pcast->id, $user->id);
+    if (!empty($grades->items[0]->grades)) {
+        $grade = reset($grades->items[0]->grades);
+        echo $OUTPUT->container(get_string('grade').': '.$grade->str_long_grade);
+        if ($grade->str_feedback) {
+            echo $OUTPUT->container(get_string('feedback').': '.$grade->str_feedback);
+        }
     }
-
+    if ($episodes = pcast_get_user_episodes($pcast->id, $user->id)) {
+        foreach ($episodes as $episode) {
+            pcast_display_episode_brief($episode, $cm, false, false);
+        }
+    } else {
+        // Not contributed to.
+        echo get_string('noepisodesposted','pcast');
+    }
 }
 
 /**

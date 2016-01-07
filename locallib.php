@@ -1113,11 +1113,13 @@ function pcast_get_episode_sql() {
 /**
  * Function to print overview of the episode
  * @global stdClass $CFG
- * @param object $episode
- * @param object $cm
- * @param string $hook
+ * @global stdClass $DB
+ * @param type $episode
+ * @param type $cm
+ * @param type $showmedia
+ * @param type $showlinks
  */
-function pcast_display_episode_brief($episode, $cm, $hook ='ALL') {
+function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks = true) {
     global $CFG, $DB;
 
     $context = context_module::instance($cm->id);
@@ -1160,8 +1162,9 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL') {
     }
 
     // Attachment.
-    $table->data[] = array (get_string("pcastmediafile", "pcast"), pcast_display_mediafile_link($episode, $cm, true));
-
+    if($showmedia) {
+        $table->data[] = array (get_string("pcastmediafile", "pcast"), pcast_display_mediafile_link($episode, $cm, true));
+    }
     // Author.
     // Only print author if allowed or has manage rights.
     if (((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
@@ -1179,7 +1182,7 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL') {
     $ineditingperiod = ((time() - $episode->timecreated < $CFG->maxeditingtime));
     $link = '';
 
-        // Management Links.
+    // Management Links.
     if ((has_capability('mod/pcast:manage', $context)) or ($ineditingperiod)) {
 
         // Edit Link.
@@ -1213,7 +1216,9 @@ function pcast_display_episode_brief($episode, $cm, $hook ='ALL') {
     }
 
     // Construct links.
-    $table->data[] = array ('', $link);
+    if($showlinks) {
+        $table->data[] = array ('', $link);
+    }
 
     echo $html;
     echo html_writer::table($table);
