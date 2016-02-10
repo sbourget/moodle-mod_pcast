@@ -206,8 +206,6 @@ switch ($mode) {
 }
 echo html_writer::empty_tag('hr'). "\n";
 
-// **************************************************************************
-
 // Print the main part of the page (The content).
 echo html_writer::start_tag('div', array('id' => 'pcast-view', 'class' => 'generalbox')). "\n";
 echo html_writer::start_tag('div', array('class' => 'generalboxcontent')). "\n";

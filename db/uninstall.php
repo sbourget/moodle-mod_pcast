@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Custom module uninstall code
- * 
+ *
  * @global stdClass $DB
  * @return bool
  */

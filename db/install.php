@@ -19,7 +19,7 @@
  * lib.php/modulename_install() post installation hook and partially defaults.php
  *
  * @package   mod_pcast
- * @copyright 2010 Stephen Bourget 
+ * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

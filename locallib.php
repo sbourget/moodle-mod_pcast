@@ -1041,7 +1041,7 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
 
     if ($count > $pcast->episodesperpage) {
         // Print a paging bar here.
-        $url = new moodle_url('/mod/pcast/view.php', 
+        $url = new moodle_url('/mod/pcast/view.php',
                 array('id' => $cm->id,
                       'mode' => PCAST_APPROVAL_VIEW,
                       'hook' => $hook,
@@ -1162,7 +1162,7 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
     }
 
     // Attachment.
-    if($showmedia) {
+    if ($showmedia) {
         $table->data[] = array (get_string("pcastmediafile", "pcast"), pcast_display_mediafile_link($episode, $cm, true));
     }
     // Author.
@@ -1216,7 +1216,7 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
     }
 
     // Construct links.
-    if($showlinks) {
+    if ($showlinks) {
         $table->data[] = array ('', $link);
     }
 
