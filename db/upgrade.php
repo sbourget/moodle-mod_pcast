@@ -41,7 +41,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_pcast_upgrade($oldversion=0) {
 
-    global $CFG, $THEME, $DB;
+    global $CFG, $DB;
     $dbman = $DB->get_manager();
 
     // RatingArea Upgrade.

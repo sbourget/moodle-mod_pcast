@@ -3,7 +3,6 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
   As a teacher
   I need to create a podcast and limit the file size
 
-  @javascript
   Scenario: Create a podcast and add an episode that is larger than the file limit
     Given the following "users" exist:
       | username | firstname | lastname | email |
@@ -43,8 +42,8 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
     When I add a "Podcast" to section "1" and I fill the form with:
       | Podcast name | Test podcast name |
       | Description | Test podcast description |
-      | Maximum attachment size | 5MB |
+      | Maximum attachment size | 2MB |
     And I follow "Test podcast name"
     And I press "Add a new episode"
-    Then I should see "Maximum size for new files: 5MB"
+    Then I should see "Maximum size for new files: 2MB"
     And I press "Cancel"

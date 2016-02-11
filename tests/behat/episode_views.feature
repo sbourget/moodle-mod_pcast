@@ -49,12 +49,12 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     When I log in as "student2"
     And I follow "Course 1"
     And I follow "Test podcast name"
-    And I follow "Course 1"
-    And I follow "Test podcast name"
+    And I follow "View"
     And I log out
     And I log in as "student3"
     And I follow "Course 1"
     And I follow "Test podcast name"
+    And I follow "View"
     And I log out
 
     Then I log in as "teacher1"
@@ -62,7 +62,7 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I follow "Test podcast name"
     And I follow "View"
     And I follow "Views"
-    And I should see "2" in the "Student 2" "table_row"
+    And I should see "1" in the "Student 2" "table_row"
     And I should see "1" in the "Student 3" "table_row"
     And I should see "1" in the "Teacher 1" "table_row"
     And I log out
@@ -71,9 +71,9 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I follow "Course 1"
     And I follow "Test podcast name"
     And I follow "View"
-    And I should see "5" in the "Total views" "table_row"
+    And I should see "4" in the "Total views" "table_row"
     And I follow "Views"
-    And I should see "2" in the "Student 2" "table_row"
+    And I should see "1" in the "Student 2" "table_row"
     And I should see "1" in the "Student 3" "table_row"
     And I should see "1" in the "Teacher 1" "table_row"
     And I log out
