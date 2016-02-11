@@ -9,7 +9,6 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
       | teacher1 | Teacher | 1 | teacher1@example.com |
       | student1 | Student | 1 | student1@example.com |
       | student2 | Student | 2 | student2@example.com |
-      | student3 | Student | 3 | student3@example.com |
     And the following "courses" exist:
       | fullname | shortname | category |
       | Course 1 | C1 | 0 |
@@ -18,7 +17,6 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
       | student2 | C1 | student |
-      | student3 | C1 | student |
     And I log in as "teacher1"
     And I follow "Course 1"
     And I turn editing mode on
@@ -46,12 +44,8 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I follow "View"
     And I should see "0 minutes 20 seconds"
     And I log out
+
     When I log in as "student2"
-    And I follow "Course 1"
-    And I follow "Test podcast name"
-    And I follow "View"
-    And I log out
-    And I log in as "student3"
     And I follow "Course 1"
     And I follow "Test podcast name"
     And I follow "View"
@@ -63,17 +57,12 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I follow "View"
     And I follow "Views"
     And I should see "1" in the "Student 2" "table_row"
-    And I should see "1" in the "Student 3" "table_row"
-    And I should see "1" in the "Teacher 1" "table_row"
+    And I should see "1" in the "Student 1" "table_row"
     And I log out
-
     And I log in as "student1"
     And I follow "Course 1"
     And I follow "Test podcast name"
     And I follow "View"
-    And I should see "4" in the "Total views" "table_row"
-    And I follow "Views"
-    And I should see "1" in the "Student 2" "table_row"
-    And I should see "1" in the "Student 3" "table_row"
-    And I should see "1" in the "Teacher 1" "table_row"
+    And I wait until the page is ready
+    And I should see "3" in the "Total views" "table_row"
     And I log out
