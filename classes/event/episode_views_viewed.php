@@ -61,8 +61,8 @@ class episode_views_viewed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has viewed the list of viewers for the podcast episode with id '$this->objectid' in " .
-            "the podcast activity with course module id '$this->contextinstanceid'.";
+        return "The user with id '$this->userid' has viewed the list of viewers for the podcast episode with id ".
+                "'$this->objectid' in the podcast activity with course module id '$this->contextinstanceid'.";
     }
 
     /**

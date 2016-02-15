@@ -652,12 +652,17 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     if (has_capability('mod/pcast:write', $PAGE->cm->context) and (has_capability('mod/pcast:manage', $PAGE->cm->context)
                                                                or has_capability('mod/pcast:approve', $PAGE->cm->context))) {
         // This is a teacher.
-        $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid' => $PAGE->cm->id)));
+        $pcastnode->add(get_string('addnewepisode', 'pcast'),
+                        new moodle_url('/mod/pcast/edit.php',
+                        array('cmid' => $PAGE->cm->id)));
+
     } else if (has_capability('mod/pcast:write', $PAGE->cm->context)) {
         // See if the activity allows student posting.
         if ($pcast->userscanpost == true) {
             // Add a link to ad an episode.
-            $pcastnode->add(get_string('addnewepisode', 'pcast'), new moodle_url('/mod/pcast/edit.php', array('cmid' => $PAGE->cm->id)));
+            $pcastnode->add(get_string('addnewepisode', 'pcast'),
+                        new moodle_url('/mod/pcast/edit.php',
+                        array('cmid' => $PAGE->cm->id)));
         }
     }
 
@@ -919,14 +924,14 @@ function pcast_add_view_instance($pcast, $episode, $userid, $context) {
         }
     }
 
-        $event = \mod_pcast\event\episode_viewed::create(array(
-            'objectid' => $view->episodeid,
-            'context' => $context
-        ));
+    $event = \mod_pcast\event\episode_viewed::create(array(
+        'objectid' => $view->episodeid,
+        'context' => $context
+    ));
 
-        $event->add_record_snapshot('pcast_episodes', $episode);
-        $event->add_record_snapshot('pcast', $pcast);
-        $event->trigger();
+    $event->add_record_snapshot('pcast_episodes', $episode);
+    $event->add_record_snapshot('pcast', $pcast);
+    $event->trigger();
 
     return $result;
 }
@@ -1322,7 +1327,8 @@ function pcast_rating_permissions($contextid, $component, $ratingarea) {
  *            itemid => int the ID of the object being rated
  *            scaleid => int the scale from which the user can select a rating. Used for bounds checking. [required]
  *            rating => int the submitted rating
- *            rateduserid => int the id of the user whose items have been rated. NOT the user who submitted the ratings. 0 to update all. [required]
+ *            rateduserid => int the id of the user whose items have been rated.
+ *                           NOT the user who submitted the ratings. 0 to update all. [required]
  *            aggregation => int the aggregation method to apply when calculating grades ie RATING_AGGREGATE_AVERAGE [optional]
  * @return boolean true if the rating is valid. Will throw rating_exception if not
  */
@@ -1346,7 +1352,14 @@ function pcast_rating_validate($params) {
         throw new rating_exception('nopermissiontorate');
     }
 
-    $pcastsql = "SELECT p.id as pcastid, p.scale, p.course, e.userid as userid, e.approved, e.timecreated, p.assesstimestart, p.assesstimefinish
+    $pcastsql = "SELECT p.id as pcastid,
+                        p.scale,
+                        p.course,
+                        e.userid as userid,
+                        e.approved,
+                        e.timecreated,
+                        p.assesstimestart,
+                        p.assesstimefinish
                       FROM {pcast_episodes} e
                       JOIN {pcast} p ON e.pcastid = p.id
                      WHERE e.id = :itemid";

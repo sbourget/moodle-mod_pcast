@@ -59,7 +59,7 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addHelpButton('maxbytes', 'maxattachmentsize', 'pcast');
         $mform->setDefault('maxbytes', $COURSE->maxbytes);
 
-        //  RSS Settings.
+        // RSS Settings.
 
         if ($CFG->enablerssfeeds && isset($CFG->pcast_enablerssfeeds) && $CFG->pcast_enablerssfeeds) {
 
@@ -227,8 +227,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             array('subdirs' => 0,
                 'maxfiles' => 1,
                 'filetypes' => array('jpeg', 'png'),
-                'returnvalue' => 'ref_id'
-            ));
+                'returnvalue' => 'ref_id'));
 
         // Image Size (Height).
         $size = array();

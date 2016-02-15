@@ -69,11 +69,12 @@ class mod_pcast_entry_form extends moodleform {
                 'maxbytes' => $pcast->maxbytes,
                 'filetypes' => array('audio', 'video'),
                 'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
-                'returnvalue' => 'ref_id'
-            ));
+                'returnvalue' => 'ref_id'));
+
+        // Media File.
         $mform->addRule('mediafile', get_string('required'), 'required', null, 'client');
 
-        // iTunes Settings.
+        // ITunes Settings.
 
         $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));
 
@@ -134,7 +135,7 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addElement('hidden', 'cmid');
         $mform->setType('cmid', PARAM_INT);
 
-        //  Add standard buttons, common to all modules.
+        // Add standard buttons, common to all modules.
 
         $this->add_action_buttons();
         $this->set_data($currententry);

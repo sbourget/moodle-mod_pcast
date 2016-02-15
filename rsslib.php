@@ -419,7 +419,8 @@ function pcast_rss_header($title = null, $link = null, $description = null, $pca
                 $image->filename = $file->get_filename();
                 $image->type = $file->get_mimetype();
                 $image->size = $file->get_filesize();
-                $image->url = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/logo/0/'.$image->filename);
+                $image->url = file_encode_url($CFG->wwwroot.'/pluginfile.php',
+                              '/'.$context->id.'/mod_pcast/logo/0/'.$image->filename);
             }
         }
         // Write the image info.
@@ -531,7 +532,8 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
                 // Rewrite the URLs for the description fields.
                 if ($CFG->pcast_allowhtmlinsummary) {
                     // Re-write the url paths to be valid.
-                    $description = file_rewrite_pluginfile_urls($item->description, 'pluginfile.php', $context->id, 'mod_pcast', 'summary', $item->id);
+                    $description = file_rewrite_pluginfile_urls($item->description,
+                                   'pluginfile.php', $context->id, 'mod_pcast', 'summary', $item->id);
                 } else {
                     // Strip out all HTML.
                     $description = strip_tags($item->description);
@@ -602,7 +604,8 @@ function pcast_rss_add_enclosure($item) {
             $enclosure->filename = $file->get_filename();
             $enclosure->type = $file->get_mimetype();
             $enclosure->size = $file->get_filesize();
-            $enclosure->url = file_encode_url($CFG->wwwroot.'/pluginfile.php', '/'.$context->id.'/mod_pcast/episode/'.$item->id.'/'.$enclosure->filename);
+            $enclosure->url = file_encode_url($CFG->wwwroot.'/pluginfile.php',
+                              '/'.$context->id.'/mod_pcast/episode/'.$item->id.'/'.$enclosure->filename);
         }
     }
 

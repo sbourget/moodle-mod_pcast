@@ -42,7 +42,11 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/pcast:approve', $context);
 
-$url = new moodle_url('/mod/pcast/approveepisode.php', array('eid' => $eid, 'mode' => $mode, 'hook' => $hook, 'newstate' => $newstate));
+$url = new moodle_url('/mod/pcast/approveepisode.php',
+        array('eid' => $eid,
+              'mode' => $mode,
+              'hook' => $hook,
+              'newstate' => $newstate));
 
 $PAGE->set_url($url);
 $PAGE->set_context($context);
