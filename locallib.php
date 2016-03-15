@@ -157,8 +157,8 @@ function pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sort
 
 /**
  * Prints the category menu
- * @global stdClass
- * @global stdClass
+ * @global stdClass $DB
+ * @global stdClass $OUTPUT
  * @param object $cm
  * @param object $pcast
  * @param string $hook
@@ -167,7 +167,7 @@ function pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sort
  * @todo These styles should not be hard coded
  */
 function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIES) {
-     global $CFG, $DB, $OUTPUT;
+     global $DB, $OUTPUT;
 
      $context = context_module::instance($cm->id);
 
@@ -240,7 +240,6 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
 
 /**
  * Prints the link to display all episodes.
- * @global stdClass $CFG
  * @param object $cm
  * @param object $pcast
  * @param string $mode
@@ -248,7 +247,6 @@ function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIE
  */
 function pcast_print_all_links($cm, $pcast, $mode, $hook) {
 
-    global $CFG;
     $strallentries = get_string("allentries", "pcast");
     if ( $hook == 'ALL' ) {
         echo html_writer::tag('span', $strallentries, array('class' => 'pcast-bold'));
@@ -262,15 +260,12 @@ function pcast_print_all_links($cm, $pcast, $mode, $hook) {
 
 /**
  * Prints the symbols links used to sort the episodes.
- * @global stdClass $CFG
  * @param object $cm
  * @param object $pcast
  * @param string $mode
  * @param string $hook
  */
 function pcast_print_special_links($cm, $pcast, $mode, $hook) {
-
-    global $CFG;
 
     $strspecial = get_string("special", "pcast");
     if ( $hook == 'SPECIAL' ) {
@@ -287,7 +282,6 @@ function pcast_print_special_links($cm, $pcast, $mode, $hook) {
 
 /**
  * Prints the individual letter links used to sort the episodes.
- * @global stdClass $CFG
  * @param object $pcast
  * @param string $mode
  * @param string $hook
@@ -295,7 +289,6 @@ function pcast_print_special_links($cm, $pcast, $mode, $hook) {
  * @param string $sortorder
  */
 function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder) {
-    global $CFG;
 
     $alphabet = explode(",", get_string('alphabet', 'langconfig'));
     $lettersbyline = 26;
@@ -303,7 +296,6 @@ function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortor
         if ( $hook == $alphabet[$i] and $hook) {
             echo html_writer::tag('span', $alphabet[$i], array('class' => 'pcast-bold'));
         } else {
-            $strexplainspecial = strip_tags(get_string("explainspecial", "pcast"));
             $url = new moodle_url('/mod/pcast/view.php',
                    array('id' => $cm->id,
                          'mode' => $mode,

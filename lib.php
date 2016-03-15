@@ -1429,7 +1429,7 @@ function pcast_rating_validate($params) {
  * @param int $userid specific user only, 0 means all
  */
 function pcast_update_grades($pcast=null, $userid=0, $nullifnone=true) {
-    global $CFG, $DB;
+    global $CFG;
     require_once($CFG->libdir.'/gradelib.php');
 
     if (!$pcast->assessed) {
