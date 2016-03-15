@@ -25,17 +25,14 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+// Disable moodle specific debug messages and any errors in output.
+// Comment this out to see any error messages during RSS generation.
+define('NO_DEBUG_DISPLAY', true);
+
 // Sessions not used here, we recreate $USER every time we are called.
 define('NO_MOODLE_COOKIES', true);
 
 require_once('../../config.php');
-
-if (!debugging('', DEBUG_DEVELOPER)) {
-    // Disable moodle specific debug messages and any errors in output.
-    define('NO_DEBUG_DISPLAY', true);
-} else {
-    define('NO_DEBUG_DISPLAY', false);
-}
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/rsslib.php');
 require_once($CFG->dirroot.'/mod/pcast/rsslib.php');
@@ -116,7 +113,6 @@ if ($cm) {
     }
 }
 
-
 // Check group mode 0/1/2 (All participants).
 $groupmode = groups_get_activity_groupmode($cm);
 
@@ -165,7 +161,6 @@ $filename = rss_get_file_name($pcast, $sql);
 $filename .= '_'.$groupid;
 $cachedfilepath = pcast_rss_get_file_full_name('mod_pcast', $filename);
 
-
 // Figure out the URL for the podcast based on the user info.
 $args = $pcast->id . '/' .$groupid;
 $url = new moodle_url(rss_get_url($context->id, $userid, 'pcast', $args));
@@ -180,7 +175,6 @@ if (!$status) {
     $cachedfilepath = null;
 }
 
-
 // Check that file exists.
 if (empty($cachedfilepath) || !file_exists($cachedfilepath)) {
     die($cachedfilepath);
@@ -189,7 +183,6 @@ if (empty($cachedfilepath) || !file_exists($cachedfilepath)) {
 
 // Send the .pcast file to the user!
 send_file($cachedfilepath, 'rss.pcast', 0, 0, 0, 1);   // DO NOT CACHE.
-
 
 
 /*
