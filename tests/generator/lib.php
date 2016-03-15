@@ -81,7 +81,7 @@ class mod_pcast_generator extends testing_module_generator {
     }
 
     public function create_content($pcast, $record = array()) {
-        global $DB, $USER, $CFG;
+        global $DB, $USER;
         $this->episodecount++;
         $now = time();
         $record = (array)$record + array(
