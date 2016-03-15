@@ -316,7 +316,6 @@ function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortor
 
 /**
  * Prints the sort by ASC / DSC links on the view page.
- * @global stdClass $CFG
  * @global stdClass $OUTPUT
  * @param object $cm
  * @param string $mode
@@ -324,7 +323,7 @@ function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortor
  * @param string $sortorder
  */
 function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $hook='') {
-    global $CFG, $OUTPUT;
+    global $OUTPUT;
 
     // Get our strings.
     $asc    = get_string("ascending", "pcast");
@@ -1158,7 +1157,7 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
 
     // Attachment.
     if ($showmedia) {
-        $table->data[] = array (get_string("pcastmediafile", "pcast"), pcast_display_mediafile_link($episode, $cm, true));
+        $table->data[] = array (get_string("pcastmediafile", "pcast"), pcast_display_mediafile_link($episode, $cm));
     }
     // Author.
     // Only print author if allowed or has manage rights.
@@ -1283,7 +1282,7 @@ function pcast_display_episode_full($episode, $cm, $course) {
     }
 
     // Attachment.
-    $table->data[] = array (get_string("pcastmediafile", "pcast"), pcast_display_mediafile_link($episode, $cm, false));
+    $table->data[] = array (get_string("pcastmediafile", "pcast"), pcast_display_mediafile_link($episode, $cm));
 
     // Duration.
     $length = array();
@@ -1620,7 +1619,7 @@ function pcast_get_episode_rating_count($episode, $cm) {
  * @return string image string or nothing depending on $type param
  */
 
-function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
+function pcast_display_mediafile_link($episode, $cm) {
 
     global $CFG, $OUTPUT;
 
@@ -1629,8 +1628,6 @@ function pcast_display_mediafile_link($episode, $cm, $audioonly=false) {
     }
 
     $fs = get_file_storage();
-
-    $imagereturn = '';
 
     if ($files = $fs->get_area_files($context->id, 'mod_pcast', 'episode', $episode->id, "timemodified", false)) {
         foreach ($files as $file) {
