@@ -46,7 +46,8 @@ $url = new moodle_url('/mod/pcast/approveepisode.php',
         array('eid' => $eid,
               'mode' => $mode,
               'hook' => $hook,
-              'newstate' => $newstate));
+              'newstate' => $newstate)
+        );
 
 $PAGE->set_url($url);
 $PAGE->set_context($context);

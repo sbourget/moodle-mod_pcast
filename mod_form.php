@@ -227,7 +227,8 @@ class mod_pcast_mod_form extends moodleform_mod {
             array('subdirs' => 0,
                 'maxfiles' => 1,
                 'filetypes' => array('jpeg', 'png'),
-                'returnvalue' => 'ref_id'));
+                'returnvalue' => 'ref_id')
+            );
 
         // Image Size (Height).
         $size = array();

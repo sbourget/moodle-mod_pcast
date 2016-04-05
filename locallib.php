@@ -301,7 +301,8 @@ function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortor
                          'mode' => $mode,
                          'hook' => urlencode($alphabet[$i]),
                          'sortkey' => $sortkey,
-                         'sortorder' => $sortorder));
+                         'sortorder' => $sortorder)
+                   );
 
             echo html_writer::tag('a', $alphabet[$i], array('href' => $url));
         }
@@ -596,7 +597,8 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
                       'mode' => PCAST_STANDARD_VIEW,
                       'hook' => $hook,
                       'sortkey' => $sortkey,
-                      'sortorder' => $sortorder));
+                      'sortorder' => $sortorder)
+                );
 
         echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
@@ -734,7 +736,9 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook = PC
         $url = new moodle_url('/mod/pcast/view.php',
                 array('id' => $cm->id,
                       'mode' => PCAST_CATEGORY_VIEW,
-                      'hook' => $hook));
+                      'hook' => $hook)
+                );
+
         echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
         echo html_writer::end_tag('div');
@@ -826,7 +830,8 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='',
                       'mode' => PCAST_DATE_VIEW,
                       'hook' => $hook,
                       'sortkey' => $sortkey,
-                      'sortorder' => $sortorder));
+                      'sortorder' => $sortorder)
+                );
 
         echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
@@ -942,7 +947,8 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
                       'mode' => PCAST_AUTHOR_VIEW,
                       'hook' => $hook,
                       'sortkey' => $sortkey,
-                      'sortorder' => $sortorder));
+                      'sortorder' => $sortorder)
+                );
 
         echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
@@ -1040,7 +1046,8 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
                       'mode' => PCAST_APPROVAL_VIEW,
                       'hook' => $hook,
                       'sortkey' => $sortkey,
-                      'sortorder' => $sortorder));
+                      'sortorder' => $sortorder)
+                );
 
         echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
