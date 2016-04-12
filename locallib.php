@@ -169,8 +169,6 @@ function pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sort
 function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIES) {
      global $DB, $OUTPUT;
 
-     $context = context_module::instance($cm->id);
-
      echo '<table border="0" width="100%">';
      echo '<tr>';
 

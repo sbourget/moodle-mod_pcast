@@ -35,7 +35,7 @@ require_once($CFG->dirroot.'/lib/formslib.php');
 class mod_pcast_entry_form extends moodleform {
 
     public function definition() {
-        global $DB, $CFG, $USER, $COURSE, $pcast;
+        global $DB, $CFG, $pcast;
 
         $mform =& $this->_form;
         $cm = $this->_customdata['cm'];
