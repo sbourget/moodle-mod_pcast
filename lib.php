@@ -479,7 +479,7 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
     if (!$episodes) {
         return false;
     }
-    echo $OUTPUT->heading(get_string('newepisodes', 'pcast').':');
+    echo $OUTPUT->heading(get_string('newepisodes', 'pcast').':', 3);
 
     $strftimerecent = get_string('strftimerecent');
     foreach ($episodes as $episode) {
