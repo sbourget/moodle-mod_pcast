@@ -34,7 +34,6 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I follow "View"
     And I follow "audio/mp3"
     And I press the "back" button in the browser
-    And I should see "0 minutes 20 seconds"
     And I log out
     # Student 2 view
     When I log in as "student2"
