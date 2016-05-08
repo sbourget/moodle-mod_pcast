@@ -13,16 +13,13 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
+    And the following "activities" exist:
+      | activity | course | idnumber | name              | intro                    | userscanpost | maxbytes |
+      | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 10240    |
     And I log in as "teacher1"
     And I follow "Course 1"
-    And I turn editing mode on
-    When I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
-      | Allow users to post episodes | Yes |
-      | Maximum attachment size | 10KB |
     And I follow "Test podcast name"
-    And I press "Add a new episode"
+    When I press "Add a new episode"
     Then I should see "Maximum size for new files: 10KB"
     And I press "Cancel"
 
@@ -36,14 +33,12 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
+    And the following "activities" exist:
+      | activity | course | idnumber | name              | intro                    | userscanpost | maxbytes   |
+      | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 2097152    |
     And I log in as "teacher1"
     And I follow "Course 1"
-    And I turn editing mode on
-    When I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
-      | Maximum attachment size | 2MB |
     And I follow "Test podcast name"
-    And I press "Add a new episode"
+    When I press "Add a new episode"
     Then I should see "Maximum size for new files: 2MB"
     And I press "Cancel"

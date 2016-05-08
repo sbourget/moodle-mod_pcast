@@ -18,15 +18,11 @@ Feature: A teacher can create a podcast activity and allow student comments
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
       | student2 | C1 | student |
+    And the following "activities" exist:
+      | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval |userscancomment |
+      | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 1               | 1              |
     And I log in as "teacher1"
     And I follow "Course 1"
-    And I turn editing mode on
-    When I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
-      | Allow users to post episodes | Yes |
-      | Require approval for episodes | No |
-      | Allow user comments | Yes |
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -35,7 +31,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    And I log in as "student1"
+    When I log in as "student1"
     And I follow "Course 1"
     And I follow "Test podcast name"
     And I should see "Test episode name"
@@ -45,7 +41,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     And I click on ".comment-link" "css_element"
     And I set the field "content" to "First student comment"
     And I follow "Save comment"
-    And I should see "First student comment"
+    Then I should see "First student comment"
     And I log out
 
     And I log in as "student2"

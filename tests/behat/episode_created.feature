@@ -14,13 +14,12 @@ Feature: A teacher can create a podcast activity and add, edit, and delete episo
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
+    And the following "activities" exist:
+      | activity | course | idnumber | name              | intro                    |
+      | pcast    | C1     | pcast    | Test podcast name | Test podcast description |
     And I log in as "teacher1"
     And I follow "Course 1"
-    And I turn editing mode on
-    When I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
-    And I follow "Test podcast name"
+    When I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -44,14 +43,13 @@ Feature: A teacher can create a podcast activity and add, edit, and delete episo
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
+    And the following "activities" exist:
+      | activity | course | idnumber | name              | intro                    |
+      | pcast    | C1     | pcast    | Test podcast name | Test podcast description |
     And I log in as "teacher1"
     And I follow "Course 1"
-    And I turn editing mode on
-    When I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
     And I follow "Test podcast name"
-    And I press "Add a new episode"
+    When I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
       | Summary | Test episode summary |
@@ -79,14 +77,13 @@ Feature: A teacher can create a podcast activity and add, edit, and delete episo
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
+    And the following "activities" exist:
+      | activity | course | idnumber | name              | intro                    |
+      | pcast    | C1     | pcast    | Test podcast name | Test podcast description |
     And I log in as "teacher1"
     And I follow "Course 1"
-    And I turn editing mode on
-    When I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
     And I follow "Test podcast name"
-    And I press "Add a new episode"
+    When I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
       | Summary | Test episode summary |

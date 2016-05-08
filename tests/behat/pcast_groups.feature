@@ -26,7 +26,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
       | name    | course | idnumber |
       | Group 1 | C1     | G1       |
       | Group 2 | C1     | G2       |
-    Given the following "group members" exist:
+    And the following "group members" exist:
       | user     | group   |
       | student1 | G1 |
       | student2 | G2 |
@@ -38,10 +38,10 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I add a "Podcast" to section "1" and I fill the form with:
       | Podcast name | Test podcast name |
       | Description | Test podcast description |
-      | Episodes shown per page | 5 |
       | Allow users to post episodes | Yes |
       | Require approval for episodes | No |
       | Group mode | Separate groups |
+      | Episodes shown per page | 5 |
     And I follow "Test podcast name"
     And I log out
     When I log in as "student1"

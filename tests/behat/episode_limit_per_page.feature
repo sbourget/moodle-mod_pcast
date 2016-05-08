@@ -14,13 +14,11 @@ Feature: A teacher can create a podcast activity and limit the number of episode
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
+    And the following "activities" exist:
+      | activity | course | idnumber | name              | intro                    | episodesperpage |
+      | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 5               |
     And I log in as "teacher1"
     And I follow "Course 1"
-    And I turn editing mode on
-    And I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
-      | Episodes shown per page | 5 |
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:

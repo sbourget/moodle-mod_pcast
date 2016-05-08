@@ -17,15 +17,11 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
       | student2 | C1 | student |
+    And the following "activities" exist:
+      | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval | episodesperpage |
+      | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 0               | 1               |
     And I log in as "teacher1"
     And I follow "Course 1"
-    And I turn editing mode on
-    And I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
-      | Episodes shown per page | 1 |
-      | Allow users to post episodes | Yes |
-      | Require approval for episodes | No |
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
