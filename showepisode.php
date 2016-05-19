@@ -70,9 +70,10 @@ if (!empty($episode->courseid)) {
     echo $OUTPUT->header();
 }
 
-if (!pcast_group_allowed_viewing($episode, $cm, groups_get_activity_groupmode($cm))) {
-    print_error('notingroup', 'pcast');
+if (!pcast_episode_allowed_viewing($episode, $cm, groups_get_activity_groupmode($cm))) {
+    print_error('cannotseeepisode', 'pcast');
 }
+
 echo $OUTPUT->heading(get_string("viewthisepisode", "pcast", $pcast->name));
 
 // Print the tabs.

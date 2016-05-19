@@ -607,15 +607,34 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
 
 /**
  * Determine if the user is able to view the specified episode.
+ * This takes in account group member access.
  * @param object $episode
  * @param object $cm
  * @param int $groupmode
  * @return bool (true if allowed, false if denied)
  */
-function pcast_group_allowed_viewing($episode, $cm, $groupmode) {
+function pcast_episode_allowed_viewing($episode, $cm, $groupmode) {
+    global $USER;
 
     $context = context_module::instance($cm->id);
     $currentgroup = 0;
+
+    // Does the user have the ability to view this episode?
+    if (!has_capability('mod/pcast:view', $context)) {
+        return false;
+    }
+
+    // Has the episode been approved? If not then should they be able to see it?
+    if ($episode->userid !== $USER->id) {
+        // Not the author, Is it approved?
+        if ($episode->approved == PCAST_EPISODE_DISAPPROVE) {
+            // Not Approved, Can they approve it?
+            if (!has_capability('mod/pcast:approve', $context)) {
+                // Cannot approve it, so they cannot see it.
+                return false;
+            }
+        }
+    }
 
     // Get the current group info.
     if ($groupmode > 0) {
