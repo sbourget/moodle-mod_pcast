@@ -1,5 +1,5 @@
 Pcast module for Moodle
-Copyright (C) 2010-2015  Stephen Bourget and Jillaine Beeckman
+Copyright (C) 2010-2016  Stephen Bourget and Jillaine Beeckman
 
 
 This program is free software; you can redistribute it and/or modify
@@ -31,11 +31,15 @@ Installation:
 List of features:
 
     * Users can post podcast episodes. These episodes can be moderated
-    * Support for ratings via the Rating API
-    * Support for commenting via the commenting API
-    * Support for events using the Moodle event API
-    * Itunes tag support
-    * RSS Support
+    * New episodes / episodes awaiting approval are listed on the dashboard
+    * Podcasts can have their own channel art (In compliance with the RSS specification)
+    * Episodes fully support commenting and rating
+    * All activities are logged using the Moodle event API
+    * Activities and episodes are fully searchable using global search
+    * Episodes can be tagged with iTunes tags / keywords
+    * Episodes can be categorized with iTunes categories
+    * Easy subscribe link for iTunes users
+    * Full RSS Support
 
-
--Steve
+Please report any bugs / feature requests to:
+https://tracker.moodle.org/browse/CONTRIB/component/11630/
