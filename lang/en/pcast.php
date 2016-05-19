@@ -175,6 +175,7 @@ $string['rsslink'] = 'RSS feed for this activity';
 $string['rsssortorder_help'] = 'This is the sort order for the episodes.  They can be sorted by date';
 $string['rsssortorder'] = 'RSS sort order';
 $string['search:activity'] = 'Podcast activities';
+$string['search:episode'] = 'Podcast episodes';
 $string['setupposting'] = 'Posting options';
 $string['sortby'] = 'Sort by';
 $string['sortbycreation'] = 'Date created';
