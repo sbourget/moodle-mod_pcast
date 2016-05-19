@@ -158,6 +158,7 @@ Feature: Pcast reset
     And I expand all fieldsets
     And I set the field "Aggregate type" to "Count of ratings" 
     And I set the field "id_scale_modgrade_type" to "Scale"
+    And I set the field "id_scale_modgrade_scale" to "Separate and Connected ways of knowing"
     And I press "Save and display"
     And I log out
     And I log in as "student"
