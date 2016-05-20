@@ -173,4 +173,41 @@ class episode extends \core_search\area\base_mod {
         }
         return $this->episodedata[$episodeid];
     }
+
+    /**
+     * Allows file indexing of attached files
+     * @return boolean
+     */
+    public function uses_file_indexing() {
+        return true;
+    }
+
+    /**
+     * Index attached media files.
+     * @param type $document
+     */
+    public function attach_files($document) {
+
+        $episodeid = $document->get('itemid');
+        try {
+            $episode = $this->get_episode($episodeid);
+        } catch (\dml_missing_record_exception $e) {
+            unset($this->postsdata[$episodeid]);
+            debugging('Could not get record to attach files to '.$document->get('id'), DEBUG_DEVELOPER);
+            return;
+        }
+
+        // Because this is used during indexing, we don't want to cache episodes. Would result in memory leak.
+        unset($this->episodedata[$episodeid]);
+        $cm = $this->get_cm('pcast', $episode->pcastid, $document->get('courseid'));
+        $context = \context_module::instance($cm->id);
+
+        // Get the files and attach them.
+        $fs = get_file_storage();
+        $files = $fs->get_area_files($context->id, 'mod_pcast', 'episode', $episode->id, "timemodified", false);
+
+        foreach ($files as $file) {
+            $document->add_stored_file($file);
+        }
+    }
 }
