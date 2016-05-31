@@ -280,5 +280,58 @@ class mod_pcast_mod_form extends moodleform_mod {
             $defaultvalues['category'] = (int)$defaultvalues['topcategory'] * 1000 + (int)$defaultvalues['nestedcategory'];
 
         }
+
+        // Set up the completion checkboxes which aren't part of standard data.
+        // We also make the default value (if you turn on the checkbox) for those
+        // numbers to be 1, this will not apply unless checkbox is ticked.
+        if (!empty($defaultvalues['completionepisodes'])) {
+            $defaultvalues['completionepisodesenabled'] = 1;
+        } else {
+            $defaultvalues['completionepisodesenabled'] = 0;
+        }
+        if (empty($defaultvalues['completionepisodes'])) {
+            $defaultvalues['completionepisodes'] = 1;
+        }
+    }
+
+    /**
+     * Add completion rules to form.
+     * @return array
+     */
+    public function add_completion_rules() {
+        $mform =& $this->_form;
+        $group = array();
+        $group[] =& $mform->createElement('checkbox', 'completionepisodesenabled', '',
+                get_string('completionepisodes', 'pcast'));
+        $group[] =& $mform->createElement('text', 'completionepisodes', '', array('size' => 3));
+        $mform->setType('completionepisodes', PARAM_INT);
+        $mform->addGroup($group, 'completionepisodesgroup',
+                get_string('completionepisodesgroup', 'pcast'), array(' '), false);
+        $mform->disabledIf('completionepisodes', 'completionepisodesenabled', 'notchecked');
+        return array('completionepisodesgroup');
+    }
+
+    /**
+     * Enable completion rules
+     * @param stdcalss $data
+     * @return array
+     */
+    public function completion_rule_enabled($data) {
+        return (!empty($data['completionepisodesenabled']) && $data['completionepisodes'] != 0);
+    }
+
+    public function get_data() {
+        $data = parent::get_data();
+        if (!$data) {
+            return false;
+        }
+        if (!empty($data->completionunlocked)) {
+            // Turn off completion settings if the checkboxes aren't ticked.
+            $autocompletion = !empty($data->completion) && $data->completion == COMPLETION_TRACKING_AUTOMATIC;
+            if (empty($data->completionepisodesenabled) || !$autocompletion) {
+                $data->completionepisodes = 0;
+            }
+        }
+        return $data;
     }
 }

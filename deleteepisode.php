@@ -117,6 +117,12 @@ if ($confirm and confirm_sesskey()) { // The operation was confirmed.
     $event->add_record_snapshot('pcast_episodes', $origionalepisode);
     $event->trigger();
 
+    // Update completion state.
+    $completion = new completion_info($course);
+    if ($completion->is_enabled($cm) == COMPLETION_TRACKING_AUTOMATIC && $pcast->completionepisodes) {
+        $completion->update_state($cm, COMPLETION_COMPLETE, $episode->userid);
+    }
+
     redirect("view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook");
 
 } else {        // The operation has not been confirmed yet so ask the user to do so.

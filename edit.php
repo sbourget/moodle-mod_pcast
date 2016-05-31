@@ -200,6 +200,12 @@ if ($mform->is_cancelled()) {
     $event->add_record_snapshot('pcast_episodes', $episode);
     $event->trigger();
 
+    // Update completion state.
+    $completion = new completion_info($course);
+    if ($completion->is_enabled($cm) == COMPLETION_TRACKING_AUTOMATIC && $pcast->completionepisodes) {
+        $completion->update_state($cm, COMPLETION_COMPLETE, $episode->userid);
+    }
+
     // Calculate hook.
     $hook = core_text::substr($episode->name, 0, 1);
     redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$hook");

@@ -29,6 +29,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+require_once($CFG->libdir . '/completionlib.php');
+
 defined('MOODLE_INTERNAL') || die();
 
 define("PCAST_SHOW_ALL_CATEGORIES", 0);
@@ -85,6 +87,8 @@ function pcast_supports($feature) {
         case FEATURE_SHOW_DESCRIPTION:
             return true;
         case FEATURE_COMPLETION_TRACKS_VIEWS:
+            return true;
+        case FEATURE_COMPLETION_HAS_RULES:
             return true;
         case FEATURE_GRADE_HAS_GRADE:
             return true;
@@ -660,14 +664,49 @@ function pcast_get_post_actions() {
     return array('add', 'update');
 }
 
- /**
-  * Tells if files in moddata are trusted and can be served without XSS protection.
-  *
-  * @return bool (true if file can be submitted by teacher only, otherwise false)
-  */
-
+/**
+ * Tells if files in moddata are trusted and can be served without XSS protection.
+ *
+ * @return bool (true if file can be submitted by teacher only, otherwise false)
+ */
 function pcast_is_moddata_trusted() {
     return false;
+}
+
+/**
+ * Obtains the automatic completion state for this pcast based on any conditions
+ * in pcast settings.
+ *
+ * @global object $DB
+ * @param object $course Course
+ * @param object $cm Course-module
+ * @param int $userid User ID
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not. (If no conditions, then return
+ *   value depends on comparison type)
+ */
+function pcast_get_completion_state($course, $cm, $userid, $type) {
+    global $DB;
+
+    // Get pcast details.
+    if (!($pcast = $DB->get_record('pcast', array('id' => $cm->instance)))) {
+        throw new Exception("Can't find podcast {$cm->instance}");
+    }
+
+    // Default return value.
+    $result = $type;
+
+    if ($pcast->completionepisodes) {
+        $value = $pcast->completionepisodes <= $DB->count_records('pcast_episodes',
+                array('pcastid' => $pcast->id, 'userid' => $userid, 'approved' => PCAST_EPISODE_APPROVE));
+        if ($type == COMPLETION_AND) {
+            $result = $result && $value;
+        } else {
+            $result = $result || $value;
+        }
+    }
+
+    return $result;
 }
 
 /**

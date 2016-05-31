@@ -144,6 +144,21 @@ function xmldb_pcast_upgrade($oldversion=0) {
         upgrade_mod_savepoint(true, 2014061600, 'pcast');
     }
 
+    if ($oldversion < 2016053100) {
+
+        // Define field completionepisodes to be added to pcast.
+        $table = new xmldb_table('pcast');
+        $field = new xmldb_field('completionepisodes', XMLDB_TYPE_INTEGER, '9', null, null, null, '0', 'timemodified');
+
+        // Conditionally launch add field completionepisodes.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Pcast savepoint reached.
+        upgrade_mod_savepoint(true, 2016053100, 'pcast');
+    }
+
     // Final return of upgrade result (true/false) to Moodle. Must be always the last line in the script.
     return true;
 }

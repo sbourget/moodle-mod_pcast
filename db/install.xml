@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="mod/pcast/db" VERSION="20140613" COMMENT="XMLDB file for Moodle mod/pcast"
+<XMLDB PATH="mod/pcast/db" VERSION="20160531" COMMENT="XMLDB file for Moodle mod/pcast"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
 >
@@ -39,6 +39,7 @@
         <FIELD NAME="scale" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+        <FIELD NAME="completionepisodes" TYPE="int" LENGTH="9" NOTNULL="false" DEFAULT="0" SEQUENCE="false" COMMENT="Non zero if a certain number of episodes are required to mark this pcast complete for a user."/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
