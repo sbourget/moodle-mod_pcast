@@ -14,6 +14,7 @@ GNU General Public License for more details:
 
 http:www.gnu.org/copyleft/gpl.html
 
+[![Build Status](https://travis-ci.org/sbourget/moodle-mod_pcast.svg?branch=master)](https://travis-ci.org/sbourget/moodle-mod_pcast)
 
 Pcast module for Moodle - version 2.9+
 ===============================================================================
