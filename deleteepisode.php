@@ -68,8 +68,6 @@ $PAGE->set_context($context);
 
 $manageentries = has_capability('mod/pcast:manage', $context);
 
-$strareyousuredelete = get_string("areyousuredelete", "pcast");
-
 if (($episode->userid != $USER->id) and !$manageentries) { // Guest id is never matched, no need for special check here.
     print_error('nopermissiontodelepisode');
 }
@@ -130,8 +128,13 @@ if ($confirm and confirm_sesskey()) { // The operation was confirmed.
     $PAGE->set_title($pcast->name);
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
-    // TODO: Replace with CSS.
-    $areyousure = "<b>".format_string($episode->name)."</b><p>$strareyousuredelete</p>";
+
+    $areyousure = html_writer::start_tag('div', array('class' => 'pcast-bold'));
+    $areyousure .= format_string($episode->name);
+    $areyousure .= html_writer::end_tag('div');
+    $areyousure .= html_writer::start_tag('div');
+    $areyousure .= get_string("areyousuredelete", "pcast");
+    $areyousure .= html_writer::end_tag('div');
     $linkyes    = 'deleteepisode.php';
     $linkno     = 'view.php';
     $optionsyes = array('id' => $cm->id,
