@@ -81,11 +81,13 @@ class mod_pcast_entry_form extends moodleform {
 
         // Subtitle.
         $mform->addElement('text', 'subtitle', get_string('subtitle', 'pcast'), array('size' => '64'));
+        $mform->addRule('subtitle', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->setType('subtitle', PARAM_NOTAGS);
         $mform->addHelpButton('subtitle', 'subtitle', 'pcast');
 
         // Keywords.
         $mform->addElement('text', 'keywords', get_string('keywords', 'pcast'), array('size' => '64'));
+        $mform->addRule('keywords', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->setType('keywords', PARAM_NOTAGS);
         $mform->addHelpButton('keywords', 'keywords', 'pcast');
 
