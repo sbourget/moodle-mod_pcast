@@ -159,6 +159,19 @@ function xmldb_pcast_upgrade($oldversion=0) {
         upgrade_mod_savepoint(true, 2016053100, 'pcast');
     }
 
+    if ($oldversion < 2016060300) {
+
+        // Changing type of field summary on table pcast_episodes to text.
+        $table = new xmldb_table('pcast_episodes');
+        $field = new xmldb_field('summary', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'name');
+
+        // Launch change of type for field summary.
+        $dbman->change_field_type($table, $field);
+
+        // Pcast savepoint reached.
+        upgrade_mod_savepoint(true, 2016060300, 'pcast');
+    }
+
     // Final return of upgrade result (true/false) to Moodle. Must be always the last line in the script.
     return true;
 }
