@@ -37,7 +37,7 @@ require_once($CFG->dirroot . '/mod/pcast/lib.php');
  * @copyright 2016 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class episode extends \core_search\area\base_mod {
+class episode extends \core_search\base_mod {
 
     /**
      * @var array Internal quick static cache.
