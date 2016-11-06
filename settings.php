@@ -24,6 +24,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 if (empty($CFG->enablerssfeeds)) {
     $options = array(0 => get_string('rssglobaldisabled', 'admin'));
     $str = get_string('configenablerssfeeds', 'pcast').'<br />'.get_string('configenablerssfeedsdisabled2', 'admin');

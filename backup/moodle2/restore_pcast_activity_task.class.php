@@ -22,9 +22,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
 require_once($CFG->dirroot . '/mod/pcast/backup/moodle2/restore_pcast_stepslib.php'); // Because it exists (must).
-
 
 /**
  * pcast restore task that provides all the settings and steps to perform one

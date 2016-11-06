@@ -28,10 +28,9 @@
  * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/completionlib.php');
-
-defined('MOODLE_INTERNAL') || die();
 
 define("PCAST_SHOW_ALL_CATEGORIES", 0);
 define("PCAST_SHOW_NOT_CATEGORISED", -1);
