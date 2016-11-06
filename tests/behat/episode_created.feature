@@ -57,7 +57,7 @@ Feature: A teacher can create a podcast activity and add, edit, and delete episo
     And I press "Save changes"
     Then I should see "Test episode name"
     And I should see "Test episode summary"
-    And I follow "Edit"
+    And I follow "Edit this episode"
     And I set the following fields to these values:
       | Title | NEW episode name |
       | Summary | NEW episode summary |
