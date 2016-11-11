@@ -41,7 +41,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_pcast_upgrade($oldversion=0) {
 
-    global $DB;
+    global $DB, $CFG;
     $dbman = $DB->get_manager();
 
     // RatingArea Upgrade.
@@ -170,6 +170,16 @@ function xmldb_pcast_upgrade($oldversion=0) {
 
         // Pcast savepoint reached.
         upgrade_mod_savepoint(true, 2016060300, 'pcast');
+    }
+
+    if ($oldversion < 2016111000) {
+
+        if (isset($CFG->pcast_usemediafilter)) {
+            unset_config('pcast_usemediafilter');
+        }
+
+        // Pcast savepoint reached.
+        upgrade_mod_savepoint(true, 2016111000, 'pcast');
     }
 
     // Final return of upgrade result (true/false) to Moodle. Must be always the last line in the script.

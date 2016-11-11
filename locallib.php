@@ -1668,22 +1668,12 @@ function pcast_display_mediafile_link($episode, $cm) {
     // Make sure there is actually an attachment before trying to render the file link and player.
     if (!empty($filename)) {
 
-            $out = html_writer::start_tag('div');
+            $out = html_writer::start_tag('div', array('class' => 'pcast-media'));
             $out .= html_writer::tag('a', $iconimage, array('href' => $path)); // Icon.
             $out .= html_writer::tag('a', s($filename), array('href' => $path)); // File.
             $out .= html_writer::end_tag('div');
 
-        // Add Media player if enabled.
-        if (($CFG->pcast_usemediafilter)) {
-            $templink = $out;
-
-        } else {
-            // Add nolink tags to prevent autolinking.
-            $templink = html_writer::start_tag('div', array('class' => 'nolink'));
-            $templink .= $out;
-            $templink .= html_writer::end_tag('div');
-        }
-        $templink = format_text($templink, FORMAT_HTML, array('context' => $context));
+        $templink = format_text($out, FORMAT_HTML, array('context' => $context));
     }
 
     return $templink;
