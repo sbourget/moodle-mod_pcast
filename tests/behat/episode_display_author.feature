@@ -20,16 +20,9 @@ Feature: A teacher can set a podcast activity to display the names of the author
 
   @javascript
   Scenario: Create a podcast and do not display author names
-    Given I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
-    And I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
-      | Allow users to post episodes | Yes |
-      | Require approval for episodes | No |
-      | Display author names | No |
-    And I log out
+    Given the following "activities" exist:
+      | activity | name              | intro                    | course | idnumber |episodesperpage | requireapproval | userscanpost | displayauthor |
+      | pcast    | Test podcast name | Test podcast description | C1     | pcast1   | 5              | 0               | 1            | 0             |
     When I log in as "student1"
     And I follow "Course 1"
     And I follow "Test podcast name"
@@ -49,16 +42,9 @@ Feature: A teacher can set a podcast activity to display the names of the author
 
   @javascript
   Scenario: Create a podcast and do display author names
-    Given I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
-    And I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
-      | Allow users to post episodes | Yes |
-      | Require approval for episodes | No |
-      | Display author names | Yes |
-    And I log out
+    Given the following "activities" exist:
+      | activity | name              | intro                    | course | idnumber |episodesperpage | requireapproval | userscanpost | displayauthor |
+      | pcast    | Test podcast name | Test podcast description | C1     | pcast1   | 5              | 0               | 1            | 1             |
     When I log in as "student1"
     And I follow "Course 1"
     And I follow "Test podcast name"

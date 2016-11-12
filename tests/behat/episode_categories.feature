@@ -26,22 +26,9 @@ Feature: A teacher can create a podcast activity and users can assign categories
       | enablerssfeeds | 1 |
       | pcast_enablerssfeeds | 1 |
       | pcast_enablerssitunes | 1 |
-    And I log in as "teacher1"
-    And I follow "Course 1"
-    And I turn editing mode on
-    And I add a "Podcast" to section "1" and I fill the form with:
-      | Podcast name | Test podcast name |
-      | Description | Test podcast description |
-      | Episodes shown per page | 5 |
-      | Allow users to post episodes | Yes |
-      | Require approval for episodes | No |
-      | Enable RSS | Yes |
-      | Enable RSS for iTunes  | Yes |
-      | Category | Education |
-      | Explicit content | No |
-      | Allow episode categories | Yes |
-    And I follow "Test podcast name"
-    And I log out
+    And the following "activities" exist:
+      | activity | name              | intro                    | course | idnumber |episodesperpage | requireapproval | enablerssfeed | enablerssitunes | explicit | userscancategorize |
+      | pcast    | Test podcast name | Test podcast description | C1     | pcast1   | 5              | 0               | 1             | 1               | 1        | 1                  |
     When I log in as "student1"
     And I follow "Course 1"
     And I follow "Test podcast name"
