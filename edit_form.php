@@ -93,33 +93,35 @@ class mod_pcast_entry_form extends moodleform {
 
         // Disable if turned off on module settings page.
         if ($pcast->userscancategorize) {
-            // Generate Top Categorys.
-            $newoptions = array();
+
+            $selectelements = array();
+            $topcat = array();
+            // Get categories.
             if ($topcategories = $DB->get_records("pcast_itunes_categories")) {
+
+                // Construct an array of top categories.
                 foreach ($topcategories as $topcategory) {
                     $value = (int)$topcategory->id * 1000;
-                    $newoptions[(int)$value] = $topcategory->name;
+                    $topcat[(int)$value] = $topcategory->name;
+                    $selectelements[$topcategory->name] = array();
                 }
             }
-
-            // Generate Secondary Category.
             if ($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
                 foreach ($nestedcategories as $nestedcategory) {
                     $value = (int)$nestedcategory->topcategoryid * 1000;
+                    $topcatname = $topcat[$value];
                     $value = $value + (int)$nestedcategory->id;
-                    $newoptions[(int)$value] = '&nbsp; &nbsp; ' .$nestedcategory->name;
+                    
+                    $selectelements[$topcatname][$value] = $nestedcategory->name;
                 }
             }
-            ksort($newoptions);
 
-            // Category form element.
-            $mform->addElement('select', 'category', get_string('category', 'pcast'),
-                    $newoptions, array('size' => '1'));
+            // Category form element, Set the default to the podcast category.
+            $mform->addElement('selectgroups', 'category', get_string('category', 'pcast'), $selectelements);
+            $mform->setDefault('category', (($pcast->topcategory * 1000) + $pcast->nestedcategory));
             $mform->addHelpButton('category', 'category', 'pcast');
             $mform->disabledIf('category', 'enablerssitunes', 'eq', 0);
 
-            $this->init_javascript_enhancement('category', 'smartselect',
-                    array('selectablecategories' => false, 'mode' => 'compact'));
         }
 
         // Content.
