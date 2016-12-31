@@ -72,7 +72,7 @@ Feature: Teachers can use activity completion to track student progress
     And I log in as "teacher1"
     And I follow "Course 1"
     And I follow "Test podcast name"
-    And I navigate to "Approve episodes" node in "Podcast administration"
+    And I navigate to "Approve episodes" in current page administration
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "Approve this episode"

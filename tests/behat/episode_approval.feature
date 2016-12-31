@@ -48,7 +48,7 @@ Feature: A teacher can create a podcast activity and require episodes to be appr
     And I follow "Test podcast name"
     And I should not see "Test episode name"
     And I should not see "Test episode summary"
-    And I navigate to "Approve episodes" node in "Podcast administration"
+    And I navigate to "Approve episodes" in current page administration
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "Approve this episode"

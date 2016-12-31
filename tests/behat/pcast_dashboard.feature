@@ -58,7 +58,7 @@ Feature: Users can review the status of a podcast in the course overview block
     And I should see "You have Podcasts that need attention"
     And I click on ".collapsibleregioncaption" "css_element"
     And I follow "Test podcast name"
-    And I navigate to "Approve episodes" node in "Podcast administration"
+    And I navigate to "Approve episodes" in current page administration
     And I should see "Test episode name"
     And I follow "Approve this episode"
     And I log out

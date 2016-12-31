@@ -148,13 +148,13 @@ Feature: Pcast reset
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
-    And I should see "0" in the "Total views" "table_row"
+    And I should see "1" in the "Total views" "table_row"
 
   Scenario: Use course reset to remove all episode ratings
     Given I log in as "teacher"
     And I follow "Course 1"
     And I follow "Test podcast name"
-    And I navigate to "Edit settings" node in "Podcast administration"
+    And I navigate to "Edit settings" in current page administration
     And I expand all fieldsets
     And I set the field "Aggregate type" to "Count of ratings" 
     And I set the field "id_scale_modgrade_type" to "Scale"

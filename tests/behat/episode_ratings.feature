@@ -24,7 +24,7 @@ Feature: Pcast reset
     Given I log in as "teacher"
     And I follow "Course 1"
     And I follow "Test podcast name"
-    And I navigate to "Edit settings" node in "Podcast administration"
+    And I navigate to "Edit settings" in current page administration
     And I expand all fieldsets
     And I set the field "Aggregate type" to "Count of ratings" 
     And I set the field "id_scale_modgrade_type" to "Scale"
