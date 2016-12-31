@@ -98,7 +98,8 @@ if (((has_capability('mod/pcast:write', $context)) and ($pcast->userscanpost))
     $out .= html_writer::start_tag('form', array('id' => 'newentryform', 'method' => 'get', 'action' => $url)). "\n";
     $out .= html_writer::start_tag('div', array('class' => 'singlebutton')). "\n";
     $out .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'cmid', 'value' => $cm->id)). "\n";
-    $out .= html_writer::empty_tag('input', array('type' => 'submit', 'class' => 'btn btn-secondary', 'value' => get_string('addnewepisode', 'pcast'))). "\n";
+    $out .= html_writer::empty_tag('input', array('type' => 'submit', 'class' => 'btn btn-secondary',
+                                                  'value' => get_string('addnewepisode', 'pcast'))). "\n";
     $out .= html_writer::end_tag('div'). "\n";
     $out .= html_writer::end_tag('form'). "\n";
     $out .= html_writer::end_tag('div'). "\n";

@@ -111,7 +111,7 @@ class mod_pcast_entry_form extends moodleform {
                     $value = (int)$nestedcategory->topcategoryid * 1000;
                     $topcatname = $topcat[$value];
                     $value = $value + (int)$nestedcategory->id;
-                    
+
                     $selectelements[$topcatname][$value] = $nestedcategory->name;
                 }
             }
