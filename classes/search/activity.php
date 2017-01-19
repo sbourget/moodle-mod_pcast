@@ -29,5 +29,5 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2016 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class activity extends \core_search\area\base_activity {
+class activity extends \core_search\base_activity {
 }
