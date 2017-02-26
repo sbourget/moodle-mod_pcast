@@ -12,8 +12,6 @@ php:
  - 7.1
 
 env:
- global:
-  - IGNORE_PATHS=lib/getid3
  matrix:
   - DB=pgsql MOODLE_BRANCH=master
   - DB=mysqli MOODLE_BRANCH=master
