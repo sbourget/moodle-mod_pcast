@@ -340,9 +340,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
             $currentorder = $desc;
             $neworder = 'asc';
             $strchangeto = get_string('changeto', 'pcast', $asc);
-            $icon = html_writer::empty_tag('img', array('src' => $OUTPUT->pix_url($sortorder, 'pcast'),
-                                                        'class' => 'icon',
-                                                        'alt' => $strchangeto));
+            $icon = " " . $OUTPUT->pix_icon($sortorder, $strchangeto, 'pcast');
 
             break;
 
@@ -350,9 +348,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
             $currentorder = $asc;
             $neworder = 'desc';
             $strchangeto = get_string('changeto', 'pcast', $desc);
-            $icon = html_writer::empty_tag('img', array('src' => $OUTPUT->pix_url($sortorder, 'pcast'),
-                                                        'class' => 'icon',
-                                                        'alt' => $strchangeto));
+            $icon = " " . $OUTPUT->pix_icon($sortorder, $strchangeto, 'pcast');
 
             break;
         default:
@@ -364,9 +360,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
                 case PCAST_AUTHOR_LNAME:
                     $strchangeto = get_string('changeto', 'pcast', $asc);
                     $neworder = 'asc';
-                    $icon = html_writer::empty_tag('img', array('src' => $OUTPUT->pix_url('asc', 'pcast'),
-                                                                'class' => 'icon',
-                                                                'alt' => $strchangeto));
+                    $icon = " " . $OUTPUT->pix_icon($neworder, $strchangeto, 'pcast');
                     $currentorder = '';
                     break;
 
@@ -1657,8 +1651,7 @@ function pcast_display_mediafile_link($episode, $cm) {
         foreach ($files as $file) {
             $filename = $file->get_filename();
             $mimetype = $file->get_mimetype();
-            $iconimage = html_writer::empty_tag('img', array('src' => $OUTPUT->pix_url(file_mimetype_icon($mimetype)),
-                                                'class' => 'icon', 'alt' => $mimetype));
+            $iconimage = $OUTPUT->image_icon(file_mimetype_icon($mimetype), $mimetype);
             $path = file_encode_url($CFG->wwwroot.'/pluginfile.php',
                                     '/'.$context->id.'/mod_pcast/episode/'.$episode->id.'/'.$filename);
         }

@@ -429,7 +429,7 @@ function pcast_rss_header($title = null, $link = null, $description = null, $pca
         if (isset($image->url)) {
             $rsspix = $image->url;
         } else {
-            $rsspix = $OUTPUT->pix_url('i/rsssitelogo');
+            $rsspix = $OUTPUT->image_url('i/rsssitelogo');
         }
 
         // Write the image.
