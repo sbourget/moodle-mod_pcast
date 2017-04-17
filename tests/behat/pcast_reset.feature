@@ -22,7 +22,7 @@ Feature: Pcast reset
 
   Scenario: Use course reset to remove all episode comments
     Given I log in as "teacher"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -32,7 +32,7 @@ Feature: Pcast reset
     And I press "Save changes"
     And I log out
     And I log in as "student"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should see "Test episode name"
     And I should see "Test episode summary"
@@ -44,7 +44,7 @@ Feature: Pcast reset
     And I should see "First student comment"
     And I log out
     And I log in as "teacher"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     When I navigate to "Reset" node in "Course administration"
     And I set the following fields to these values:
         | id_reset_pcast_comments | 1 |
@@ -62,7 +62,7 @@ Feature: Pcast reset
 
   Scenario: Use course reset to delete all episodes
     Given I log in as "teacher"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -84,7 +84,7 @@ Feature: Pcast reset
 
   Scenario: Use course reset to remove episodes of non-enrolled users
     Given I log in as "teacher"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -118,7 +118,7 @@ Feature: Pcast reset
 
   Scenario: Use course reset to remove the episode view history
     Given I log in as "teacher"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -152,7 +152,7 @@ Feature: Pcast reset
 
   Scenario: Use course reset to remove all episode ratings
     Given I log in as "teacher"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I navigate to "Edit settings" in current page administration
     And I expand all fieldsets
@@ -162,7 +162,7 @@ Feature: Pcast reset
     And I press "Save and display"
     And I log out
     And I log in as "student"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -172,7 +172,7 @@ Feature: Pcast reset
     And I press "Save changes"
     And I log out
     And I log in as "teacher"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I follow "View"
     And I follow "Rate"

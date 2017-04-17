@@ -26,7 +26,7 @@ Feature: Users can review the status of a podcast in the course overview block
   @javascript
   Scenario: A student uploads an episode
     Given I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -45,7 +45,7 @@ Feature: Users can review the status of a podcast in the course overview block
   @javascript
   Scenario: A student uploads an episode which is approved
     Given I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:

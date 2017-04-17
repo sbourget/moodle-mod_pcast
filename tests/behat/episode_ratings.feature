@@ -22,7 +22,7 @@ Feature: Pcast reset
 
   Scenario: Use ratings to rate student episodes
     Given I log in as "teacher"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I navigate to "Edit settings" in current page administration
     And I expand all fieldsets
@@ -32,7 +32,7 @@ Feature: Pcast reset
     And I press "Save and display"
     And I log out
     And I log in as "student"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -42,14 +42,14 @@ Feature: Pcast reset
     And I press "Save changes"
     And I log out
     When I log in as "teacher"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I follow "View"
     And I follow "Rate"
     And I set the field "rating" to "Mostly connected knowing"
     And I log out
     And I log in as "student"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I follow "View"
     Then I should see "1" in the "Total ratings" "table_row"

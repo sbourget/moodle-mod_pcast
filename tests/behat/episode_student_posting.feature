@@ -20,7 +20,7 @@ Feature: A teacher can create a podcast activity which allow students to post
       | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 1               |
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -51,7 +51,7 @@ Feature: A teacher can create a podcast activity which allow students to post
       | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 0            | 1               |
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     Then I should not see "Add a new episode"
     And I log out

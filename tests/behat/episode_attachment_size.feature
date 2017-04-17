@@ -17,7 +17,7 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
       | activity | course | idnumber | name              | intro                    | userscanpost | maxbytes |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 10240    |
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     When I press "Add a new episode"
     Then I should see "Maximum size for new files: 10KB"
@@ -37,7 +37,7 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
       | activity | course | idnumber | name              | intro                    | userscanpost | maxbytes   |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 2097152    |
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     When I press "Add a new episode"
     Then I should see "Maximum size for new files: 2MB"

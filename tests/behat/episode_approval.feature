@@ -22,7 +22,7 @@ Feature: A teacher can create a podcast activity and require episodes to be appr
       | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 1               |
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -37,14 +37,14 @@ Feature: A teacher can create a podcast activity and require episodes to be appr
     And I log out
 
     Then I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should not see "Test episode name"
     And I should not see "Test episode summary"
     And I log out
 
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should not see "Test episode name"
     And I should not see "Test episode summary"
@@ -55,14 +55,14 @@ Feature: A teacher can create a podcast activity and require episodes to be appr
     And I log out
 
     Then I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I log out
 
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should see "Test episode name"
     And I should see "Test episode summary"
@@ -70,7 +70,7 @@ Feature: A teacher can create a podcast activity and require episodes to be appr
     And I log out
 
     Then I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should not see "Test episode name"
     And I should not see "Test episode summary"

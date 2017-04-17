@@ -24,7 +24,7 @@ Feature: A teacher can set a podcast activity to display the names of the author
       | activity | name              | intro                    | course | idnumber |episodesperpage | requireapproval | userscanpost | displayauthor |
       | pcast    | Test podcast name | Test podcast description | C1     | pcast1   | 5              | 0               | 1            | 0             |
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -34,7 +34,7 @@ Feature: A teacher can set a podcast activity to display the names of the author
     And I press "Save changes"
     And I log out
     Then I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should see "Test episode name"
     And I should not see "Student One"
@@ -46,7 +46,7 @@ Feature: A teacher can set a podcast activity to display the names of the author
       | activity | name              | intro                    | course | idnumber |episodesperpage | requireapproval | userscanpost | displayauthor |
       | pcast    | Test podcast name | Test podcast description | C1     | pcast1   | 5              | 0               | 1            | 1             |
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -56,7 +56,7 @@ Feature: A teacher can set a podcast activity to display the names of the author
     And I press "Save changes"
     And I log out
     Then I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should see "Test episode name"
     And I should see "Student One"

@@ -21,7 +21,7 @@ Feature: Teachers can review student progress on all podcasts in a course by vie
 
   Scenario: A student does not upload anything
     Given I log in as "teacher1"
-    When I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Participants"
     And I follow "Student 1"
     And I follow "Complete report"
@@ -30,7 +30,7 @@ Feature: Teachers can review student progress on all podcasts in a course by vie
   @javascript
   Scenario: A student uploads an episode
     Given I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -42,7 +42,7 @@ Feature: Teachers can review student progress on all podcasts in a course by vie
     And I should see "Test episode summary"
     And I log out
     When I log in as "teacher1"
-    When I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Participants"
     And I follow "Student 1"
     And I follow "Complete report"

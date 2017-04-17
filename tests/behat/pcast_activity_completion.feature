@@ -16,7 +16,7 @@ Feature: Teachers can use activity completion to track student progress
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I turn editing mode on
 
   @javascript
@@ -37,7 +37,7 @@ Feature: Teachers can use activity completion to track student progress
     And I press "Save changes"
     And I log out
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And the "Test podcast name" "pcast" activity with "auto" completion should be marked as not complete
     Then I follow "Test podcast name"
     And I follow "Course 1"
@@ -56,7 +56,7 @@ Feature: Teachers can use activity completion to track student progress
     And I log out
 
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And the "Test podcast name" "pcast" activity with "auto" completion should be marked as not complete
     And I follow "Test podcast name"
     And I press "Add a new episode"
@@ -70,7 +70,7 @@ Feature: Teachers can use activity completion to track student progress
     And I log out
 
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I navigate to "Approve episodes" in current page administration
     And I should see "Test episode name"
@@ -79,5 +79,5 @@ Feature: Teachers can use activity completion to track student progress
     And I log out
 
     Then I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And the "Test podcast name" "pcast" activity with "auto" completion should be marked as complete

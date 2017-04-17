@@ -33,7 +33,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
       | student3 | G1 |
       | student4 | G2 |
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I turn editing mode on
     And I add a "Podcast" to section "1" and I fill the form with:
       | Podcast name | Test podcast name |
@@ -45,7 +45,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I follow "Test podcast name"
     And I log out
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -55,7 +55,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I press "Save changes"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -65,7 +65,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I press "Save changes"
     And I log out
     And I log in as "student3"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -75,7 +75,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I press "Save changes"
     And I log out
     And I log in as "student4"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -91,7 +91,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I should see "Student 4 Episode"
     And I log out
     And I log in as "student3"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should see "Student 1 Episode"
     And I should not see "Student 2 Episode"
@@ -101,7 +101,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
 
     # Teacher (All groups)
     And I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I should see "Student 1 Episode"
     And I should see "Student 2 Episode"

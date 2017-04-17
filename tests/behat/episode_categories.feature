@@ -30,7 +30,7 @@ Feature: A teacher can create a podcast activity and users can assign categories
       | activity | name              | intro                    | course | idnumber |episodesperpage | requireapproval | enablerssfeed | enablerssitunes | explicit | userscancategorize |
       | pcast    | Test podcast name | Test podcast description | C1     | pcast1   | 5              | 0               | 1             | 1               | 1        | 1                  |
     When I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -41,7 +41,7 @@ Feature: A teacher can create a podcast activity and users can assign categories
     And I press "Save changes"
     And I log out
     And I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -52,7 +52,7 @@ Feature: A teacher can create a podcast activity and users can assign categories
     And I press "Save changes"
     And I log out
     And I log in as "student3"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -63,7 +63,7 @@ Feature: A teacher can create a podcast activity and users can assign categories
     And I press "Save changes"
     And I log out
     And I log in as "student4"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:

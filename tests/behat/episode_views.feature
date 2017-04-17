@@ -21,7 +21,7 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
       | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval | displayviews |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 0               | 1            |
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -37,14 +37,14 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I log out
     # Student 2 view
     When I log in as "student2"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I follow "View"
     And I follow "audio/mp3"
     And I press the "back" button in the browser
     And I log out
     Then I log in as "teacher1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I follow "View"
     And I follow "Views"
@@ -55,7 +55,7 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I press the "back" button in the browser
     And I log out
     And I log in as "student1"
-    And I follow "Course 1"
+    And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I follow "View"
     And I should see "4" in the "Total views" "table_row"
