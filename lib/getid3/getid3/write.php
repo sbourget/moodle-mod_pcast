@@ -414,7 +414,7 @@ class getid3_writetags
 		if ($this->overwrite_tags) {
 			// do nothing - ignore previous data
 		} else {
-throw new Exception('$this->overwrite_tags=false is known to be buggy in this version of getID3. Will be fixed in the near future, check www.getid3.org for a newer version.');
+throw new Exception('$this->overwrite_tags=false is known to be buggy in this version of getID3. Check http://github.com/JamesHeinrich/getID3 for a newer version.');
 			if (!isset($this->ThisFileInfo['tags'][$TagFormat])) {
 				return false;
 			}
@@ -492,6 +492,51 @@ throw new Exception('$this->overwrite_tags=false is known to be buggy in this ve
 								$tag_data_id3v2['APIC'][] = $apic_data_array;
 						} else {
 							$this->errors[] = 'ID3v2 APIC data is not properly structured';
+							return false;
+						}
+					}
+					break;
+
+				case 'POPM':
+					if (isset($valuearray['email']) &&
+						isset($valuearray['rating']) &&
+						isset($valuearray['data'])) {
+							$tag_data_id3v2['POPM'][] = $valuearray;
+					} else {
+						$this->errors[] = 'ID3v2 POPM data is not properly structured';
+						return false;
+					}
+					break;
+
+				case 'GRID':
+					if (
+						isset($valuearray['groupsymbol']) &&
+						isset($valuearray['ownerid']) &&
+						isset($valuearray['data'])
+					) {
+							$tag_data_id3v2['GRID'][] = $valuearray;
+					} else {
+						$this->errors[] = 'ID3v2 GRID data is not properly structured';
+						return false;
+					}
+					break;
+
+				case 'UFID':
+					if (isset($valuearray['ownerid']) &&
+						isset($valuearray['data'])) {
+							$tag_data_id3v2['UFID'][] = $valuearray;
+					} else {
+						$this->errors[] = 'ID3v2 UFID data is not properly structured';
+						return false;
+					}
+					break;
+
+				case 'TXXX':
+					foreach ($valuearray as $key => $txxx_data_array) {
+						if (isset($txxx_data_array['description']) && isset($txxx_data_array['data'])) {
+							$tag_data_id3v2['TXXX'][] = $txxx_data_array;
+						} else {
+							$this->errors[] = 'ID3v2 TXXX data is not properly structured';
 							return false;
 						}
 					}

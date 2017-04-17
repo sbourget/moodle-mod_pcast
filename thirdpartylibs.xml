@@ -3,7 +3,7 @@
   <library>
     <location>lib/getid3</location>
     <name>getid3</name>
-    <version>1.9.12</version>
+    <version>1.9.14</version>
     <license>GPL</license>
     <licenseversion>3</licenseversion>
   </library>
