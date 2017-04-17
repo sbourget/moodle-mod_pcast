@@ -161,13 +161,13 @@ if ($mform->is_cancelled()) {
                                   'maxfiles' => 1, 'filetypes' => array('audio', 'video'))
                             );
 
-    // Get the duration if an MP3 file.
+    // Get the duration if possible.
     $fs = get_file_storage();
     if ($files = $fs->get_area_files($context->id, 'mod_pcast', 'episode', $episode->id, "timemodified", false)) {
         foreach ($files as $file) {
-            $hash = $file->get_contenthash();
-            $mime = $file->get_mimetype();
-            $mediainfo = pcast_get_media_information(pcast_file_path_lookup ($hash));
+
+            $target = $file->copy_content_to_temp();
+            $mediainfo = pcast_get_media_information($target);
             if (!empty($mediainfo['playtime_string'])) {
                 $episode->duration = $mediainfo['playtime_string'];
             }

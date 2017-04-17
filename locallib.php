@@ -53,26 +53,6 @@ function pcast_get_media_information($filename) {
 
 
 /**
- * Get the complete file path based on the SHA1 hash
- *
- * @global stdClass $CFG
- * @param object $filehash (This is the content hash)
- * @return path to file in dataroot, false on error
- **/
-function pcast_file_path_lookup ($filehash) {
-    global $CFG;
-    if (!empty($filehash)) {
-        $hash1 = substr($filehash, 0, 2);
-        $hash2 = substr($filehash, 2, 2);
-        $filepath = $CFG->dataroot . '/filedir/' . $hash1 .'/' .$hash2 . '/' . $filehash;
-        return $filepath;
-
-    } else {
-        return false;
-    }
-}
-
-/**
  * Prints the approval menu
  * @param object $cm
  * @param object $pcast
