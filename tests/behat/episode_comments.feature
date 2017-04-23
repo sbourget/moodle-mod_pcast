@@ -55,7 +55,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     And I set the field "content" to "Second student BROKEN comment"
     And I follow "Save comment"
     And I should see "Second student BROKEN comment"
-    And I follow "Delete this comment"
+    And I follow "Delete comment"
     # Wait for the animation to finish.
     And I wait "2" seconds
     And I should not see "Second student BROKEN comment"
