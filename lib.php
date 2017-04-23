@@ -157,6 +157,12 @@ function pcast_add_instance($pcast) {
     }
 
     pcast_grade_item_update($pcast);
+
+    // Add action event for dashboard.
+    $completiontimeexpected = !empty($pcast->completionexpected) ? $pcast->completionexpected : null;
+    \core_completion\api::update_completion_date_event($pcast->coursemodule,
+        'pcast', $pcast->id, $completiontimeexpected);
+
     return $result;
 
 }
@@ -212,6 +218,12 @@ function pcast_update_instance($pcast) {
     }
 
     pcast_grade_item_update($pcast);
+
+    // Update action event for dashboard.
+    $completiontimeexpected = !empty($pcast->completionexpected) ? $pcast->completionexpected : null;
+    \core_completion\api::update_completion_date_event($pcast->coursemodule,
+        'pcast', $pcast->id, $completiontimeexpected);
+
     return $result;
 }
 
@@ -268,6 +280,9 @@ function pcast_delete_instance($id) {
 
     // Delete Podcast.
     $DB->delete_records('pcast', array('id' => $pcast->id));
+
+    // Delete action events.
+    \core_completion\api::update_completion_date_event($cm->id, 'pcast', $pcast->id, null);
 
     return true;
 }
@@ -1518,6 +1533,98 @@ function pcast_rating_validate($params) {
     }
 
     return true;
+}
+
+/**
+ * This function receives a calendar event and returns the action associated with it, or null if there is none.
+ *
+ * This is used by block_myoverview in order to display the event appropriately. If null is returned then the event
+ * is not displayed on the block.
+ *
+ * @param calendar_event $event
+ * @param \core_calendar\action_factory $factory
+ * @return \core_calendar\local\event\entities\action_interface|null
+ */
+function mod_pcast_core_calendar_provide_event_action(calendar_event $event,
+                                                      \core_calendar\action_factory $factory) {
+    $cm = get_fast_modinfo($event->courseid)->instances['pcast'][$event->instance];
+
+    $course = new stdClass();
+    $course->id = $event->courseid;
+    $completion = new \completion_info($course);
+
+    $completiondata = $completion->get_data($cm, false);
+
+    if ($completiondata->completionstate != COMPLETION_INCOMPLETE) {
+        return null;
+    }
+
+    return $factory->create_instance(
+        get_string('view'),
+        new \moodle_url('/mod/pcast/view.php', ['id' => $cm->id]),
+        1,
+        true
+    );
+}
+
+/**
+ * Add a get_coursemodule_info function in case any pcast type wants to add 'extra' information
+ * for the course (see resource).
+ *
+ * Given a course_module object, this function returns any "extra" information that may be needed
+ * when printing this activity in a course listing.  See get_array_of_activities() in course/lib.php.
+ *
+ * @param stdClass $coursemodule The coursemodule object (record).
+ * @return cached_cm_info An object on information that the courses
+ *                        will know about (most noticeably, an icon).
+ */
+function pcast_get_coursemodule_info($coursemodule) {
+    global $DB;
+
+    $dbparams = ['id' => $coursemodule->instance];
+    $fields = 'id, name, completionepisodes';
+    if (!$pcast = $DB->get_record('pcast', $dbparams, $fields)) {
+        return false;
+    }
+
+    $result = new cached_cm_info();
+    $result->name = $pcast->name;
+
+    // Populate the custom completion rules as key => value pairs, but only if the completion mode is 'automatic'.
+    if ($coursemodule->completion == COMPLETION_TRACKING_AUTOMATIC) {
+        $result->customdata['customcompletionrules']['completionepisodes'] = $pcast->completionepisodes;
+    }
+
+    return $result;
+}
+
+/**
+ * Callback which returns human-readable strings describing the active completion custom rules for the module instance.
+ *
+ * @param object $cm the cm_info object.
+ * @return array $descriptions the array of descriptions for the custom rules.
+ */
+function mod_pcast_get_completion_active_rule_descriptions($cm) {
+    // Values will be present in cm_info, and we assume these are up to date.
+    if (!$cm instanceof cm_info || !isset($cm->customdata['customcompletionrules'])
+        || $cm->completion != COMPLETION_TRACKING_AUTOMATIC) {
+        return [];
+    }
+
+    $descriptions = [];
+    foreach ($cm->customdata['customcompletionrules'] as $key => $val) {
+        switch ($key) {
+            case 'completionepisodes':
+                if (empty($val)) {
+                    continue;
+                }
+                $descriptions[] = get_string('completionepisodes', 'pcast', $val);
+                break;
+            default:
+                break;
+        }
+    }
+    return $descriptions;
 }
 
 // Gradebook functions (Based on mod_glossary) Not sure how these are called.
