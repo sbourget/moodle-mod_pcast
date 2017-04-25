@@ -34,4 +34,4 @@ $plugin->cron     = 0;             // Period for cron to check this module (secs
 $plugin->component = 'mod_pcast';  // Full name of the plugin (used for diagnostics).
 
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = "3.2 (2017011900)";  // User-friendly version number.
+$plugin->release = "3.3 (2017042100)";  // User-friendly version number.
