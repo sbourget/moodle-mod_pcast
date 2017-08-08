@@ -73,7 +73,6 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $data->course = $this->get_courseid();
         $data->pcastid = $this->get_new_parentid('pcast');
         $data->userid = $this->get_mappingid('user', $data->userid);
-        $data->timemodified = $this->apply_date_offset($data->timemodified);
 
         $newitemid = $DB->insert_record('pcast_episodes', $data);
         $this->set_mapping('pcast_episode', $oldid, $newitemid, true); // Files by this itemname.
