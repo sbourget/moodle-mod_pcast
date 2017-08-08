@@ -278,11 +278,11 @@ function pcast_delete_instance($id) {
     // Delete Grades.
     pcast_grade_item_delete($pcast);
 
-    // Delete Podcast.
-    $DB->delete_records('pcast', array('id' => $pcast->id));
-
     // Delete action events.
     \core_completion\api::update_completion_date_event($cm->id, 'pcast', $pcast->id, null);
+
+    // Delete Podcast.
+    $DB->delete_records('pcast', array('id' => $pcast->id));
 
     return true;
 }
