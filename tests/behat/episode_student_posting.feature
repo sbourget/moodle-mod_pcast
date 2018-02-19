@@ -2,7 +2,7 @@
 Feature: A teacher can create a podcast activity which allow students to post
   As a teacher
   I need to create a podcast and allow users to post episodes
-    
+
   @javascript
   Scenario: Create a podcast and do allow users to post episodes
     Given the following "users" exist:

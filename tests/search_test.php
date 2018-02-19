@@ -139,7 +139,6 @@ class mod_pcast_search_testcase extends advanced_testcase {
      * @return void
      */
     public function test_entries_document() {
-        global $DB;
 
         $searcharea = \core_search\manager::get_search_area($this->episodeareaid);
 

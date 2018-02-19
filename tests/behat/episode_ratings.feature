@@ -1,5 +1,5 @@
 @mod @mod_pcast @file_upload @javascript
-Feature: Pcast reset
+Feature: Pcast ratings
   In order to rate past podcast activities
   As a teacher
   I need to enable ratings.
@@ -26,7 +26,7 @@ Feature: Pcast reset
     And I follow "Test podcast name"
     And I navigate to "Edit settings" in current page administration
     And I expand all fieldsets
-    And I set the field "Aggregate type" to "Count of ratings" 
+    And I set the field "Aggregate type" to "Count of ratings"
     And I set the field "id_scale_modgrade_type" to "Scale"
     And I set the field "id_scale_modgrade_scale" to "Separate and Connected ways of knowing"
     And I press "Save and display"

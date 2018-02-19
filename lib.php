@@ -879,10 +879,12 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
             return null;
         }
 
+        // Make sure the podcast exists.
         if (!$pcast = $DB->get_record('pcast', array('id' => $cm->instance))) {
             return null;
         }
 
+        // Has it been approved?
         if ($pcast->requireapproval and !$episode->approved and !has_capability('mod/pcast:approve', $context)) {
             return null;
         }
@@ -893,7 +895,6 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
         }
 
         $filecontext = context_module::instance($cm->id);
-
         $fs = get_file_storage();
         $filepath = is_null($filepath) ? '/' : $filepath;
         $filename = is_null($filename) ? '.' : $filename;
@@ -905,14 +906,17 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
 
     } else if ($filearea === 'logo') {
 
+        // Make sure the episode exists.
         if (!$pcast = $DB->get_record('pcast', array('id' => $cm->instance))) {
             return null;
         }
+
         if (is_null($itemid)) {
             require_once($CFG->dirroot.'/mod/pcast/locallib.php');
             return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
         }
 
+        // Serve out the file
         $filecontext = context_module::instance($cm->id);
         $fs = get_file_storage();
         $filepath = is_null($filepath) ? '/' : $filepath;
