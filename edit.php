@@ -101,7 +101,7 @@ if ($id) { // If the entry is specified.
 $draftitemid = file_get_submitted_draft_itemid('mediafile');
 file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $episode->id,
                         array('subdirs' => 0, 'maxbytes' => $pcast->maxbytes, 'maxfiles' => 1,
-                              'filetypes' => array('audio', 'video'))
+                              'accepted_types' => pcast_get_supported_file_types($pcast))
                         );
 
 $episode->mediafile = $draftitemid;
@@ -158,7 +158,7 @@ if ($mform->is_cancelled()) {
 
     file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id,
                             array('subdirs' => 0, 'maxbytes' => $pcast->maxbytes,
-                                  'maxfiles' => 1, 'filetypes' => array('audio', 'video'))
+                                  'maxfiles' => 1, 'accepted_types' => pcast_get_supported_file_types($pcast))
                             );
 
     // Get the duration if possible.

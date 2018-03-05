@@ -28,6 +28,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['allowedfiletypes'] = 'Allowed file formats';
+$string['allowedfiletypes_help'] = 'Accepted file types can be restricted by entering a list of file extensions. If the field is left empty, then all file types are allowed.';
 $string['addnewepisode'] = 'Add a new episode';
 $string['allcategories'] = 'All categories';
 $string['allentries'] = 'ALL';

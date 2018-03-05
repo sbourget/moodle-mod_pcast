@@ -41,7 +41,8 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
             'displayviews', 'image', 'imageheight', 'imagewidth', 'rssepisodes',
             'rsssortorder', 'enablerssfeed', 'enableitunes', 'visible', 'explicit',
             'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'assessed',
-            'assesstimestart', 'assesstimefinish', 'scale', 'timecreated', 'timemodified', 'completionepisodes'));
+            'assesstimestart', 'assesstimefinish', 'scale', 'timecreated', 'timemodified',
+            'completionepisodes', 'allowedfiletypes'));
 
         $episodes = new backup_nested_element('episodes');
 

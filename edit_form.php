@@ -61,18 +61,18 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addRule('summary', get_string('required'), 'required', null, 'client');
 
         // Attachment.
-
         $mform->addElement('header', 'attachments', get_string('attachment', 'pcast'));
+
+        // Media File.
         $mform->addElement('filemanager', 'mediafile', get_string('pcastmediafile', 'pcast'), null,
             array('subdirs' => 0,
                 'maxfiles' => 1,
                 'maxbytes' => $pcast->maxbytes,
-                'filetypes' => array('audio', 'video'),
+                'accepted_types' => pcast_get_supported_file_types($pcast),
                 'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
                 'returnvalue' => 'ref_id')
             );
 
-        // Media File.
         $mform->addRule('mediafile', get_string('required'), 'required', null, 'client');
 
         // ITunes Settings.

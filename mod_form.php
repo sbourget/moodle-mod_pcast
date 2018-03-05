@@ -59,6 +59,11 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addHelpButton('maxbytes', 'maxattachmentsize', 'pcast');
         $mform->setDefault('maxbytes', $COURSE->maxbytes);
 
+        $mform->addElement('filetypes', 'allowedfiletypes', get_string('allowedfiletypes', 'pcast'),
+             ['onlytypes' => ['html_audio', 'web_audio', 'html_video', 'web_video'], 'allowunknown' => true]);
+        $mform->addHelpButton('allowedfiletypes', 'allowedfiletypes', 'pcast');
+        $mform->setDefault('allowedfiletypes', 'web_audio,web_video,html_video,html_audio');
+
         // RSS Settings.
 
         if ($CFG->enablerssfeeds && isset($CFG->pcast_enablerssfeeds) && $CFG->pcast_enablerssfeeds) {

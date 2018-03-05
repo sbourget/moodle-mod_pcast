@@ -1652,7 +1652,23 @@ function pcast_display_mediafile_link($episode, $cm) {
     return $templink;
 }
 
+/**
+ * Helper function used to generate allowed file types.
+ * @param object $pcast
+ * @return array
+ */
+function pcast_get_supported_file_types($pcast) {
+    $defaultallowed = array('html_audio', 'web_audio', 'html_video', 'web_video');
+    $filetypesutil = new \core_form\filetypes_util();
+    
+    if (empty($pcast->allowedfiletypes)) {
+            // If not configured, limit to audio / video only.
+        return $filetypesutil->normalize_file_types($defaultallowed);
+    }
+    // Use the teachers list.
+    return $filetypesutil->normalize_file_types($pcast->allowedfiletypes);
 
+}
 
 /**
  * Class representing the virtual node with all itemids in the file browser
