@@ -107,8 +107,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         }
         $data->rating = $data->value;
         $data->userid = $this->get_mappingid('user', $data->userid);
-        $data->timecreated = $this->apply_date_offset($data->timecreated);
-        $data->timemodified = $this->apply_date_offset($data->timemodified);
+        // Any changes to the list of dates that needs to be rolled should be same during course restore and course reset.
 
         // Make sure that we have both component and ratingarea set. These were added in 2.1.
         // Prior to that all ratings were for entries so we know what to set them too.
