@@ -36,6 +36,7 @@ require_once('../../config.php');
 require_once($CFG->libdir.'/filelib.php');
 require_once($CFG->libdir.'/rsslib.php');
 require_once($CFG->dirroot.'/mod/pcast/rsslib.php');
+$pcastconfig = get_config('mod_pcast');
 
 // RSS feeds must be enabled site-wide.
 if (empty($CFG->enablerssfeeds)) {
@@ -44,7 +45,7 @@ if (empty($CFG->enablerssfeeds)) {
 }
 
 // RSS must be enabled for the module.
-if (empty($CFG->pcast_enablerssfeeds)) {
+if (empty($pcastconfig->enablerssfeeds)) {
     debugging("DISABLED (module configuration)");
     pcast_rss_error();
 }

@@ -756,6 +756,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
 
     $group = optional_param('group', '', PARAM_ALPHANUM);
     $pcast = $DB->get_record('pcast', array("id" => $PAGE->cm->instance));
+    $pcastconfig = get_config('mod_pcast');
 
     // Display approval link only when required.
     if ($pcast->requireapproval) {
@@ -783,7 +784,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
         }
     }
 
-    if (!empty($CFG->enablerssfeeds) && !empty($CFG->pcast_enablerssfeeds)
+    if (!empty($CFG->enablerssfeeds) && !empty($pcastconfig->enablerssfeeds)
     && $pcast->enablerssfeed) {
         require_once("$CFG->libdir/rsslib.php");
 
@@ -807,7 +808,7 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
         $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args));
         $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
 
-        if (!empty($CFG->pcast_enablerssitunes) && $pcast->enablerssitunes) {
+        if (!empty($pcastconfig->enablerssitunes) && $pcast->enablerssitunes) {
             $string = get_string('pcastlink', 'pcast');
             require_once("$CFG->dirroot/mod/pcast/rsslib.php");
             $url = pcast_rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args);

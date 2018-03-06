@@ -196,6 +196,26 @@ function xmldb_pcast_upgrade($oldversion=0) {
         // Pcast savepoint reached.
         upgrade_mod_savepoint(true, 2018030500, 'pcast');
     }
+    
+    if ($oldversion < 2018030501) {
+        // Convert lesson settings to use config_plugins instead of $CFG.
+        // Pcast_enablerssfeeds=> mod_pcast/enablerssfeeds.
+        if (isset($CFG->pcast_enablerssfeeds)) {
+            set_config('enablerssfeeds', $CFG->pcast_enablerssfeeds, 'mod_pcast');
+            unset_config('pcast_enablerssfeeds');
+        }
+        if (isset($CFG->pcast_enablerssitunes)) {
+            set_config('enablerssitunes', $CFG->pcast_enablerssitunes, 'mod_pcast');
+            unset_config('pcast_enablerssitunes');
+        }
+        if (isset($CFG->pcast_allowhtmlinsummary)) {
+            set_config('enablerssitunes', $CFG->pcast_allowhtmlinsummary, 'mod_pcast');
+            unset_config('pcast_allowhtmlinsummary');
+        }
+        // Pcast savepoint reached.
+        upgrade_mod_savepoint(true, 2018030501, 'pcast');
+    }
+        
 
     // Final return of upgrade result (true/false) to Moodle. Must be always the last line in the script.
     return true;

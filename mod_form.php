@@ -37,6 +37,7 @@ class mod_pcast_mod_form extends moodleform_mod {
 
         global $COURSE, $CFG, $DB;
         $mform =& $this->_form;
+        $pcastconfig = get_config('mod_pcast');
 
         // Adding the "general" fieldset, where all the common settings are showed.
         $mform->addElement('header', 'general', get_string('general', 'form'));
@@ -67,7 +68,7 @@ class mod_pcast_mod_form extends moodleform_mod {
 
         // RSS Settings.
 
-        if ($CFG->enablerssfeeds && isset($CFG->pcast_enablerssfeeds) && $CFG->pcast_enablerssfeeds) {
+        if ($CFG->enablerssfeeds && isset($pcastconfig->enablerssfeeds) && $pcastconfig->enablerssfeeds) {
 
             $mform->addElement('header', 'rss', get_string('rss'));
 
@@ -106,7 +107,7 @@ class mod_pcast_mod_form extends moodleform_mod {
         }
 
         // Itunes.
-        if ($CFG->enablerssfeeds && isset($CFG->pcast_enablerssitunes) && $CFG->pcast_enablerssitunes) {
+        if ($CFG->enablerssfeeds && isset($pcastconfig->enablerssitunes) && $pcastconfig->enablerssitunes) {
 
             // Itunes Tags.
             $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));

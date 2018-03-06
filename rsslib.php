@@ -39,7 +39,9 @@ defined('MOODLE_INTERNAL') || die();
 function pcast_rss_get_feed($context, $args) {
     global $CFG, $DB;
 
-    if (empty($CFG->pcast_enablerssfeeds)) {
+    $pcastconfig = get_config('mod_pcast');
+    
+    if (empty($pcastconfig->enablerssfeeds)) {
         debugging("DISABLED (module configuration)");
         return null;
     }
@@ -508,6 +510,7 @@ function pcast_rss_header($title = null, $link = null, $description = null, $pca
 function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) {
 
     global $CFG;
+    $pcastconfig = get_config('mod_pcast');
 
     $result = '';
 
@@ -532,7 +535,7 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
                 $result .= rss_full_tag('pubDate', 3, false, gmdate('D, d M Y H:i:s', $item->pubdate).' GMT');  // MDL-12563.
 
                 // Rewrite the URLs for the description fields.
-                if ($CFG->pcast_allowhtmlinsummary) {
+                if ($pcastconfig->allowhtmlinsummary) {
                     // Re-write the url paths to be valid.
                     $description = file_rewrite_pluginfile_urls($item->description,
                                    'pluginfile.php', $context->id, 'mod_pcast', 'summary', $item->id);
