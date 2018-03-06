@@ -874,7 +874,7 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
         return null;
     }
 
-    if ($filearea === 'summary' or $filearea === 'episode') {
+    if ($filearea === 'summary' or $filearea === 'episode' or $filearea === 'logo') {
         if (!$episode = $DB->get_record('pcast_episodes', array('id' => $itemid))) {
             return null;
         }
@@ -884,39 +884,17 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
             return null;
         }
 
-        // Has it been approved?
-        if ($pcast->requireapproval and !$episode->approved and !has_capability('mod/pcast:approve', $context)) {
-            return null;
-        }
-
         if (is_null($itemid)) {
             require_once($CFG->dirroot.'/mod/pcast/locallib.php');
             return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
         }
 
-        $filecontext = context_module::instance($cm->id);
-        $fs = get_file_storage();
-        $filepath = is_null($filepath) ? '/' : $filepath;
-        $filename = is_null($filename) ? '.' : $filename;
-        if (!($storedfile = $fs->get_file($filecontext->id, 'mod_pcast', $filearea, $itemid, $filepath, $filename))) {
-            return null;
-        }
-        $urlbase = $CFG->wwwroot.'/pluginfile.php';
-        return new file_info_stored($browser, $filecontext, $storedfile, $urlbase, $filearea, $itemid, true, true, false, false);
-
-    } else if ($filearea === 'logo') {
-
-        // Make sure the episode exists.
-        if (!$pcast = $DB->get_record('pcast', array('id' => $cm->instance))) {
+        // Is it ann episode, and has it been approved?
+        if ($filearea === 'episode' and $pcast->requireapproval and !$episode->approved and !has_capability('mod/pcast:approve', $context)) {
             return null;
         }
 
-        if (is_null($itemid)) {
-            require_once($CFG->dirroot.'/mod/pcast/locallib.php');
-            return new pcast_file_info_container($browser, $course, $cm, $context, $areas, $filearea);
-        }
-
-        // Serve out the file
+        // Everything is OK, so serve the file.
         $filecontext = context_module::instance($cm->id);
         $fs = get_file_storage();
         $filepath = is_null($filepath) ? '/' : $filepath;
