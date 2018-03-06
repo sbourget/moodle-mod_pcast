@@ -561,21 +561,7 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
             $count++;
         }
     }
-
-    if ($count > $pcast->episodesperpage) {
-        // Print a paging bar here.
-        $url = new moodle_url('/mod/pcast/view.php',
-                array('id' => $cm->id,
-                      'mode' => PCAST_STANDARD_VIEW,
-                      'hook' => $hook,
-                      'sortkey' => $sortkey,
-                      'sortorder' => $sortorder)
-                );
-
-        echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
-        echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
-        echo html_writer::end_tag('div');
-    }
+    pcast_display_paging_bar($pcast, $cm, $count, $page, PCAST_STANDARD_VIEW, $hook, $sortkey, $sortorder);
     return true;
 }
 
@@ -722,18 +708,8 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook = PC
         }
     }
 
-    if ($count > $pcast->episodesperpage) {
-        // Print a paging bar here.
-        $url = new moodle_url('/mod/pcast/view.php',
-                array('id' => $cm->id,
-                      'mode' => PCAST_CATEGORY_VIEW,
-                      'hook' => $hook)
-                );
+    pcast_display_paging_bar($pcast, $cm, $count, $page, PCAST_CATEGORY_VIEW, $hook);
 
-        echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
-        echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
-        echo html_writer::end_tag('div');
-    }
 }
 
 /**
@@ -814,20 +790,7 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='',
         }
     }
 
-    if ($count > $pcast->episodesperpage) {
-        // Print a paging bar here.
-        $url = new moodle_url('/mod/pcast/view.php',
-                array('id' => $cm->id,
-                      'mode' => PCAST_DATE_VIEW,
-                      'hook' => $hook,
-                      'sortkey' => $sortkey,
-                      'sortorder' => $sortorder)
-                );
-
-        echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
-        echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
-        echo html_writer::end_tag('div');
-    }
+    pcast_display_paging_bar($pcast, $cm, $count, $page, PCAST_DATE_VIEW, $hook, $sortkey, $sortorder);
 }
 
 /**
@@ -931,20 +894,7 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
         }
     }
 
-    if ($count > $pcast->episodesperpage) {
-        // Print a paging bar here.
-        $url = new moodle_url('/mod/pcast/view.php',
-                array('id' => $cm->id,
-                      'mode' => PCAST_AUTHOR_VIEW,
-                      'hook' => $hook,
-                      'sortkey' => $sortkey,
-                      'sortorder' => $sortorder)
-                );
-
-        echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
-        echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
-        echo html_writer::end_tag('div');
-    }
+    pcast_display_paging_bar($pcast, $cm, $count, $page, PCAST_AUTHOR_VIEW, $hook, $sortkey, $sortorder);
 }
 
 /**
@@ -1030,20 +980,7 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
         }
     }
 
-    if ($count > $pcast->episodesperpage) {
-        // Print a paging bar here.
-        $url = new moodle_url('/mod/pcast/view.php',
-                array('id' => $cm->id,
-                      'mode' => PCAST_APPROVAL_VIEW,
-                      'hook' => $hook,
-                      'sortkey' => $sortkey,
-                      'sortorder' => $sortorder)
-                );
-
-        echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
-        echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
-        echo html_writer::end_tag('div');
-    }
+    pcast_display_paging_bar($pcast, $cm, $count, $page, PCAST_APPROVAL_VIEW, $hook, $sortkey, $sortorder);
 
 }
 
@@ -1700,6 +1637,36 @@ function pcast_get_categories() {
         }
     }
     return $selectelements;
+}
+
+/**
+ * Helper function used to create paging bars.
+ * @global stdClass $OUTPUT
+ * @param object $pcast
+ * @param object $cm
+ * @param int $count
+ * @param int $page
+ * @param int $mode
+ * @param string $hook
+ * @param string $sortkey
+ * @param string $sortorder
+ */
+function pcast_display_paging_bar($pcast, $cm, $count, $page, $mode, $hook, $sortkey='', $sortorder='') {
+    global $OUTPUT;
+    if ($count > $pcast->episodesperpage) {
+        // Print a paging bar here.
+        $url = new moodle_url('/mod/pcast/view.php',
+                array('id' => $cm->id,
+                      'mode' => $mode,
+                      'hook' => $hook,
+                      'sortkey' => $sortkey,
+                      'sortorder' => $sortorder)
+                );
+
+        echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
+        echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
+        echo html_writer::end_tag('div');
+    }
 }
 
 /**
