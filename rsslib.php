@@ -40,7 +40,7 @@ function pcast_rss_get_feed($context, $args) {
     global $CFG, $DB;
 
     $pcastconfig = get_config('mod_pcast');
-    
+
     if (empty($pcastconfig->enablerssfeeds)) {
         debugging("DISABLED (module configuration)");
         return null;
