@@ -29,6 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
+require_once(dirname(__FILE__).'/locallib.php');
 
 class mod_pcast_mod_form extends moodleform_mod {
 
@@ -142,30 +143,8 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->disabledIf('keywords', 'enablerssitunes', 'eq', 0);
             $mform->addRule('keywords', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-            $selectelements = array();
-            $topcat = array();
-            // Get categories.
-            if ($topcategories = $DB->get_records("pcast_itunes_categories")) {
-
-                // Construct an array of top categories.
-                foreach ($topcategories as $topcategory) {
-                    $value = (int)$topcategory->id * 1000;
-                    $topcat[(int)$value] = $topcategory->name;
-                    $selectelements[$topcategory->name] = array();
-                }
-            }
-            if ($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
-                foreach ($nestedcategories as $nestedcategory) {
-                    $value = (int)$nestedcategory->topcategoryid * 1000;
-                    $topcatname = $topcat[$value];
-                    $value = $value + (int)$nestedcategory->id;
-
-                    $selectelements[$topcatname][$value] = $nestedcategory->name;
-                }
-            }
-
             // Category form element.
-            $mform->addElement('selectgroups', 'category', get_string('category', 'pcast'), $selectelements);
+            $mform->addElement('selectgroups', 'category', get_string('category', 'pcast'), pcast_get_categories());
             $mform->addHelpButton('category', 'category', 'pcast');
             $mform->disabledIf('category', 'enablerssitunes', 'eq', 0);
 
