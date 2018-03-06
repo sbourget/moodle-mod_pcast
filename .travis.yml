@@ -18,6 +18,7 @@ cache:
 php:
  - 7.0
  - 7.1
+ - 7.2
 
 addons:
   postgresql: 9.3
@@ -49,4 +50,4 @@ script:
   - moodle-plugin-ci mustache
   - moodle-plugin-ci grunt  
   - moodle-plugin-ci phpunit
-  - moodle-plugin-ci behat
+  #- moodle-plugin-ci behat
