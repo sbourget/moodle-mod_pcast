@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2015 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class pcast_event_testcase extends advanced_testcase {
+class mod_pcast_events_testcase extends advanced_testcase {
 
     public function setUp() {
         $this->resetAfterTest();
@@ -52,19 +52,19 @@ class pcast_event_testcase extends advanced_testcase {
         $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course));
         $pcastgenerator = $this->getDataGenerator()->get_plugin_generator('mod_pcast');
 
-        $episode = $pcastgenerator->create_content($pcast);
+        $episode1 = $pcastgenerator->create_content($pcast);
 
         $context = context_module::instance($pcast->cmid);
         $cm = get_coursemodule_from_instance('pcast', $pcast->id, $course->id);
-        $cmt = new stdClass();
-        $cmt->component = 'mod_pcast';
-        $cmt->context = $context;
-        $cmt->course = $course;
-        $cmt->cm = $cm;
-        $cmt->area = 'pcast_episode';
-        $cmt->itemid = $episode->id;
-        $cmt->showcount = true;
-        $comment = new comment($cmt);
+        $commentinfo = new stdClass();
+        $commentinfo->component = 'mod_pcast';
+        $commentinfo->context = $context;
+        $commentinfo->course = $course;
+        $commentinfo->cm = $cm;
+        $commentinfo->area = 'pcast_episode';
+        $commentinfo->itemid = $episode1->id;
+        $commentinfo->showcount = true;
+        $comment = new comment($commentinfo);
 
         // Triggering and capturing the event.
         $sink = $this->redirectEvents();
