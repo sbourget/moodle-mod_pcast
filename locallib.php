@@ -1597,7 +1597,7 @@ function pcast_display_mediafile_link($episode, $cm) {
 function pcast_get_supported_file_types($pcast) {
     $defaultallowed = array('html_audio', 'web_audio', 'html_video', 'web_video');
     $filetypesutil = new \core_form\filetypes_util();
-    
+
     if (empty($pcast->allowedfiletypes)) {
             // If not configured, limit to audio / video only.
         return $filetypesutil->normalize_file_types($defaultallowed);
