@@ -36,7 +36,7 @@ require_once(dirname(__FILE__).'/locallib.php');
 class mod_pcast_entry_form extends moodleform {
 
     public function definition() {
-        global $DB, $CFG, $pcast;
+        global $CFG, $pcast;
 
         $mform =& $this->_form;
         $cm = $this->_customdata['cm'];
