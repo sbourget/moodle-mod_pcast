@@ -69,7 +69,7 @@ $PAGE->set_context($context);
 $manageentries = has_capability('mod/pcast:manage', $context);
 
 if (($episode->userid != $USER->id) and !$manageentries) { // Guest id is never matched, no need for special check here.
-    print_error('nopermissiontodelepisode');
+    print_error('nopermissiontodelepisode', 'pcast');
 }
 $ineditperiod = ((time() - $episode->timecreated < $CFG->maxeditingtime));
 if (!$ineditperiod and !$manageentries) {
