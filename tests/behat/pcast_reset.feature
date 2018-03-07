@@ -134,7 +134,7 @@ Feature: Pcast reset
     And I follow "Course 1"
     And I follow "Test podcast name"
     And I follow "View"
-    And I should see "1" in the "Total views" "table_row"
+    And I should see "2" in the "Total views" "table_row"
     When I navigate to "Reset" node in "Course administration"
     And I expand all fieldsets
     And I set the following fields to these values:
