@@ -36,6 +36,7 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $paths[] = new restore_path_element('pcast', '/activity/pcast');
         if ($userinfo) {
             $paths[] = new restore_path_element('pcast_episode', '/activity/pcast/episodes/episode');
+            $paths[] = new restore_path_element('pcast_tag', '/activity/pcast/episodes/episode/tags/tag');
             $paths[] = new restore_path_element('pcast_view', '/activity/pcast/episodes/episode/views/view');
             $paths[] = new restore_path_element('pcast_rating', '/activity/pcast/episodes/episode/ratings/rating');
 
@@ -121,6 +122,23 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
     }
 
+    protected function process_pcast_tag($data) {
+
+        $data = (object)$data;
+        if (!core_tag_tag::is_enabled('mod_pcast', 'pcast_episodes')) { // Tags disabled in server, nothing to process.
+            return;
+        }
+
+        $tag = $data->rawname;
+        debugging(print_r($data,true));
+        if (!$itemid = $this->get_mappingid('pcast_episode', $data->itemid)) {
+            // Some orphaned tag, we could not find the pcast episodes for it - ignore.
+            return;
+        }
+
+        $context = context_module::instance($this->task->get_moduleid());
+        core_tag_tag::add_item_tag('mod_pcast', 'pcast_episodes', $itemid, $context, $tag);
+    }
 
     protected function after_execute() {
         // Add pcast related files, no need to match by itemname (just internally handled context).

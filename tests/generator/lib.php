@@ -117,6 +117,14 @@ class mod_pcast_generator extends testing_module_generator {
 
         $id = $DB->insert_record('pcast_episodes', $record);
 
+        // Tags.
+        if (array_key_exists('tags', $record)) {
+            $tags = is_array($record['tags']) ? $record['tags'] : preg_split('/,/', $record['tags']);
+
+            core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $id,
+                context_module::instance($pcast->cmid), $tags);
+        }
+
         return $DB->get_record('pcast_episodes', array('id' => $id), '*', MUST_EXIST);
     }
 }

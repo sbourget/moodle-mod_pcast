@@ -181,6 +181,11 @@ if ($mform->is_cancelled()) {
     // Store the updated value values.
     $DB->update_record('pcast_episodes', $episode);
 
+    // Deal with tags.
+    if (core_tag_tag::is_enabled('mod_pcast', 'pcast_episodes') && isset($episode->tags)) {
+        core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $episode->id, $context, $episode->tags);
+    }
+
     // Refetch the complete entry.
     $episode = $DB->get_record('pcast_episodes', array('id' => $episode->id));
 
@@ -220,6 +225,9 @@ $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($pcast->name));
 
+$episode = new StdClass();
+$episode->tags = core_tag_tag::get_item_tags_array('mod_pcast', 'pcast_episodes', $id);
+$mform->set_data($episode);
 $mform->display();
 
 echo $OUTPUT->footer();

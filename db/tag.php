@@ -14,24 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
- * Defines the version of pcast
- *
- * This code fragment is called by moodle_needs_upgrading() and
- * /admin/index.php
+ * Tag areas in component mod_glossary
  *
  * @package   mod_pcast
- * @copyright 2010 Stephen Bourget
+ * @copyright 2018 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2018030502;    // If version == 0 then module will not be installed.
-$plugin->requires = 2017042100;    // Requires this Moodle version.
-$plugin->cron     = 0;             // Period for cron to check this module (secs).
-$plugin->component = 'mod_pcast';  // Full name of the plugin (used for diagnostics).
 
-$plugin->maturity = MATURITY_STABLE;
-$plugin->release = "3.3 (2017042100)";  // User-friendly version number.
+$tagareas = array(
+    array(
+        'itemtype' => 'pcast_episodes',
+        'component' => 'mod_pcast',
+        'callback' => 'mod_pcast_get_tagged_episodes',
+        'callbackfile' => '/mod/pcast/locallib.php',
+    ),
+);
+

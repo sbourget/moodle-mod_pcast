@@ -65,11 +65,14 @@ class mod_pcast_generator_testcase extends advanced_testcase {
         $pcastgenerator = $this->getDataGenerator()->get_plugin_generator('mod_pcast');
 
         $episode1 = $pcastgenerator->create_content($pcast);
-        $episode2 = $pcastgenerator->create_content($pcast, array('name' => 'Custom episode'));
+        $episode2 = $pcastgenerator->create_content($pcast, array('name' => 'Custom episode', 'tags' => array('Cats', 'mice')));
         $records = $DB->get_records('pcast_episodes', array('pcastid' => $pcast->id), 'id');
         $this->assertCount(2, $records);
         $this->assertEquals($episode1->id, $records[$episode1->id]->id);
         $this->assertEquals($episode2->id, $records[$episode2->id]->id);
         $this->assertEquals('Custom episode', $records[$episode2->id]->name);
+        $this->assertEquals(array('Cats', 'mice'),
+            array_values(core_tag_tag::get_item_tags_array('mod_pcast', 'pcast_episodes', $episode2->id)));
+
     }
 }

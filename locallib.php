@@ -1049,7 +1049,7 @@ function pcast_get_episode_sql() {
  * @param type $showlinks
  */
 function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks = true) {
-    global $CFG, $DB;
+    global $CFG, $DB, $OUTPUT;
 
     $context = context_module::instance($cm->id);
 
@@ -1106,6 +1106,12 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
 
     // Updated.
     $table->data[] = array (get_string("updated", "pcast"), userdate($episode->timemodified));
+
+    // Tags.
+    if (core_tag_tag::is_enabled('mod_pcast', 'pcast_episodes')) {
+        $tags = $OUTPUT->tag_list(core_tag_tag::get_item_tags('mod_pcast', 'pcast_episodes', $episode->id), null, 'pcast-tags');
+        $table->data[] = array (get_string("tags", "tag"),$tags);
+    }
 
     // Calculate editing period.
     $ineditingperiod = ((time() - $episode->timecreated < $CFG->maxeditingtime));
@@ -1176,7 +1182,7 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
  * @param object $course
  */
 function pcast_display_episode_full($episode, $cm, $course) {
-    global $CFG, $DB, $USER;
+    global $CFG, $DB, $USER, $OUTPUT;
 
     $context = context_module::instance($cm->id);
 
@@ -1272,6 +1278,12 @@ function pcast_display_episode_full($episode, $cm, $course) {
                              or (has_capability('moodle/rating:viewany', $context))) {
 
         $table->data[] = array (get_string("totalratings", "pcast"), pcast_get_episode_rating_count($episode, $cm));
+    }
+
+    // Tags.
+    if (core_tag_tag::is_enabled('mod_pcast', 'pcast_episodes')) {
+        $tags = $OUTPUT->tag_list(core_tag_tag::get_item_tags('mod_pcast', 'pcast_episodes', $episode->id), null, 'pcast-tags');
+        $table->data[] = array (get_string("tags", "tag"),$tags);
     }
 
     // Calculate editing period.
@@ -1666,6 +1678,122 @@ function pcast_display_paging_bar($pcast, $cm, $count, $page, $mode, $hook, $sor
         echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
         echo html_writer::end_tag('div');
+    }
+}
+
+
+/**
+ * Returns pcast episodes tagged with a specified tag.
+ *
+ * This is a callback used by the tag area mod_pcast/pcast_episodes to search for pcast episodes
+ * tagged with a specific tag.
+ *
+ * @param core_tag_tag $tag
+ * @param bool $exclusivemode if set to true it means that no other entities tagged with this tag
+ *             are displayed on the page and the per-page limit may be bigger
+ * @param int $fromctx context id where the link was displayed, may be used by callbacks
+ *            to display items in the same context first
+ * @param int $ctx context id where to search for records
+ * @param bool $rec search in subcontexts as well
+ * @param int $page 0-based number of page being displayed
+ * @return \core_tag\output\tagindex
+ */
+function mod_pcast_get_tagged_episodes($tag, $exclusivemode = false, $fromctx = 0, $ctx = 0, $rec = 1, $page = 0) {
+    global $OUTPUT;
+    $perpage = $exclusivemode ? 20 : 5;
+
+    // Build the SQL query.
+    $ctxselect = context_helper::get_preload_record_columns_sql('ctx');
+    $query = "SELECT pe.id, pe.name, pe.pcastid, pe.approved,
+                    cm.id AS cmid, c.id AS courseid, c.shortname, c.fullname, $ctxselect
+                FROM {pcast_episodes} pe
+                JOIN {pcast} p ON p.id = pe.pcastid
+                JOIN {modules} m ON m.name='pcast'
+                JOIN {course_modules} cm ON cm.module = m.id AND cm.instance = p.id
+                JOIN {tag_instance} tt ON pe.id = tt.itemid
+                JOIN {course} c ON cm.course = c.id
+                JOIN {context} ctx ON ctx.instanceid = cm.id AND ctx.contextlevel = :coursemodulecontextlevel
+               WHERE tt.itemtype = :itemtype AND tt.tagid = :tagid AND tt.component = :component
+                 AND cm.deletioninprogress = 0
+                 AND pe.id %ITEMFILTER% AND c.id %COURSEFILTER%";
+
+    $params = array('itemtype' => 'pcast_episodes', 'tagid' => $tag->id, 'component' => 'mod_pcast',
+                    'coursemodulecontextlevel' => CONTEXT_MODULE);
+
+    if ($ctx) {
+        $context = $ctx ? context::instance_by_id($ctx) : context_system::instance();
+        $query .= $rec ? ' AND (ctx.id = :contextid OR ctx.path LIKE :path)' : ' AND ctx.id = :contextid';
+        $params['contextid'] = $context->id;
+        $params['path'] = $context->path.'/%';
+    }
+
+    $query .= " ORDER BY ";
+    if ($fromctx) {
+        // In order-clause specify that modules from inside "fromctx" context should be returned first.
+        $fromcontext = context::instance_by_id($fromctx);
+        $query .= ' (CASE WHEN ctx.id = :fromcontextid OR ctx.path LIKE :frompath THEN 0 ELSE 1 END),';
+        $params['fromcontextid'] = $fromcontext->id;
+        $params['frompath'] = $fromcontext->path.'/%';
+    }
+    $query .= ' c.sortorder, cm.id, pe.id';
+
+    $totalpages = $page + 1;
+
+    // Use core_tag_index_builder to build and filter the list of items.
+    $builder = new core_tag_index_builder('mod_pcast', 'pcast_episodes', $query, $params, $page * $perpage, $perpage + 1);
+    while ($item = $builder->has_item_that_needs_access_check()) {
+        context_helper::preload_from_record($item);
+        $courseid = $item->courseid;
+        if (!$builder->can_access_course($courseid)) {
+            $builder->set_accessible($item, false);
+            continue;
+        }
+        $modinfo = get_fast_modinfo($builder->get_course($courseid));
+        // Set accessibility of this item and all other items in the same course.
+        $builder->walk(function ($taggeditem) use ($courseid, $modinfo, $builder) {
+            if ($taggeditem->courseid == $courseid) {
+                $accessible = false;
+                if (($cm = $modinfo->get_cm($taggeditem->cmid)) && $cm->uservisible) {
+                    if ($taggeditem->approved) {
+                        $accessible = true;
+                    } else {
+                        $accessible = has_capability('mod/pcast:approve', context_module::instance($cm->id));
+                    }
+                }
+                $builder->set_accessible($taggeditem, $accessible);
+            }
+        });
+    }
+
+    $items = $builder->get_items();
+    if (count($items) > $perpage) {
+        $totalpages = $page + 2; // We don't need exact page count, just indicate that the next page exists.
+        array_pop($items);
+    }
+
+    // Build the display contents.
+    if ($items) {
+        $tagfeed = new core_tag\output\tagfeed();
+        foreach ($items as $item) {
+            context_helper::preload_from_record($item);
+            $modinfo = get_fast_modinfo($item->courseid);
+            $cm = $modinfo->get_cm($item->cmid);
+            $pageurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $item->id));
+            $pagename = format_string($item->name, true, array('context' => context_module::instance($item->cmid)));
+            $pagename = html_writer::link($pageurl, $pagename);
+            $courseurl = course_get_url($item->courseid, $cm->sectionnum);
+            $cmname = html_writer::link($cm->url, $cm->get_formatted_name());
+            $coursename = format_string($item->fullname, true, array('context' => context_course::instance($item->courseid)));
+            $coursename = html_writer::link($courseurl, $coursename);
+            $icon = html_writer::link($pageurl, html_writer::empty_tag('img', array('src' => $cm->get_icon_url())));
+            $tagfeed->add($icon, $pagename, $cmname.'<br>'.$coursename);
+        }
+
+        $content = $OUTPUT->render_from_template('core_tag/tagfeed',
+            $tagfeed->export_for_template($OUTPUT));
+
+        return new core_tag\output\tagindex($tag, 'mod_pcast', 'pcast_episodes', $content,
+            $exclusivemode, $fromctx, $ctx, $rec, $page, $totalpages);
     }
 }
 

@@ -258,6 +258,9 @@ function pcast_delete_instance($id) {
     $DB->delete_records_select('comments', "contextid=? AND commentarea=? AND itemid IN ($episodeselect)",
                                array($id, 'pcast_episode', $context->id));
 
+    // Delete Tags.
+    core_tag_tag::delete_instances('mod_pcast', 'pcast_episodes', $context->id);
+
     // Delete all files.
     $fs = get_file_storage();
     $fs->delete_area_files($context->id);
@@ -1073,6 +1076,10 @@ function pcast_reset_course_form_definition(&$mform) {
 
     $mform->addElement('checkbox', 'reset_pcast_views', get_string('deleteallviews', 'pcast'));
     $mform->disabledIf('reset_pcast_views', 'reset_pcast_all', 'checked');
+    
+    $mform->addElement('checkbox', 'reset_pcast_tags', get_string('removeallpcasttags', 'pcast'));
+    $mform->disabledIf('reset_pcast_tags', 'reset_pcast_all', 'checked');
+
 }
 
 /**
@@ -1084,6 +1091,7 @@ function pcast_reset_course_form_defaults($course) {
                  'reset_pcast_ratings' => 1,
                  'reset_pcast_comments' => 1,
                  'reset_pcast_notenrolled' => 0,
+                 'reset_pcast_tags' => 1,
                  'reset_pcast_views' => 1);
 }
 
@@ -1160,6 +1168,9 @@ function pcast_reset_userdata($data) {
                 // Delete ratings.
                 $ratingdeloptions->contextid = $context->id;
                 $rm->delete_ratings($ratingdeloptions);
+                
+                // Remove tags
+                core_tag_tag::delete_instances('mod_pcast', 'pcast_episodes', $context->id);
             }
         }
 
@@ -1237,6 +1248,24 @@ function pcast_reset_userdata($data) {
             pcast_reset_gradebook($data->courseid);
         }
         $status[] = array('component' => $componentstr, 'item' => get_string('deleteallratings'), 'error' => false);
+    }
+    
+    // Remove tags.
+    if (!empty($data->reset_pcast_tags)) {
+        // Loop through the podcasts and remove the tags from the episodes.
+        if ($pcasts = $DB->get_records('pcast', array('course' => $data->courseid))) {
+            foreach ($pcasts as $pcast) {
+                if (!$cm = get_coursemodule_from_instance('pcast', $pcast->id)) {
+                    continue;
+                }
+ 
+                $context = context_module::instance($cm->id);
+                core_tag_tag::delete_instances('mod_pcast', 'pcast_episodes', $context->id);
+            }
+        }
+ 
+        $status[] = array('component' => $componentstr, 'item' => get_string('tagsdeleted', 'pcast'), 'error' => false);
+
     }
 
     // Remove comments.
