@@ -109,7 +109,7 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addElement('select', 'explicit', get_string('explicit', 'pcast'), $explicit);
         $mform->addHelpButton('explicit', 'explicit', 'pcast');
         $mform->setDefault('explicit', 2);
-        
+
         // Tags.
         if (core_tag_tag::is_enabled('mod_pcast', 'pcast_episodes')) {
             $mform->addElement('header', 'tagshdr', get_string('tags', 'tag'));

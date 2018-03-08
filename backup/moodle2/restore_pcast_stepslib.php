@@ -130,7 +130,6 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         }
 
         $tag = $data->rawname;
-        debugging(print_r($data,true));
         if (!$itemid = $this->get_mappingid('pcast_episode', $data->itemid)) {
             // Some orphaned tag, we could not find the pcast episodes for it - ignore.
             return;

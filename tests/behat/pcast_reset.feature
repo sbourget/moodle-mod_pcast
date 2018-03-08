@@ -193,3 +193,31 @@ Feature: Pcast reset
     And I should see "Test episode summary"
     And I follow "View"
     And I should see "0" in the "Total ratings" "table_row"
+
+  Scenario: Use course reset to remove all episode tags
+    Given I log in as "teacher"
+    And I am on "Course 1" course homepage
+    And I follow "Test podcast name"
+    And I press "Add a new episode"
+    And I set the following fields to these values:
+      | Title | Test episode name |
+      | Summary | Test episode summary |
+      | Tags | Example, Entry, Cool |
+    And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
+    And I press "Save changes"
+    Then I should see "Test episode name"
+    And I should see "Example" in the ".pcast-tags" "css_element"
+    When I navigate to "Reset" node in "Course administration"
+    And I expand all fieldsets
+    And I set the following fields to these values:
+        | id_reset_pcast_tags | 1 |
+    And I press "Reset course"
+    And I should see "Delete episode tags"
+    Then I should see "OK"
+    And I press "Continue"
+    And I follow "Course 1"
+    And I follow "Test podcast name"
+    And I should see "Test episode name"
+    And I should not see "Example" in the ".lastcol" "css_element"
+    And I should not see "Entry" in the ".lastcol" "css_element"
+    And I should not see "Cool" in the ".lastcol" "css_element"

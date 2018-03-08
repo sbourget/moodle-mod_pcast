@@ -1110,7 +1110,7 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
     // Tags.
     if (core_tag_tag::is_enabled('mod_pcast', 'pcast_episodes')) {
         $tags = $OUTPUT->tag_list(core_tag_tag::get_item_tags('mod_pcast', 'pcast_episodes', $episode->id), null, 'pcast-tags');
-        $table->data[] = array (get_string("tags", "tag"),$tags);
+        $table->data[] = array (get_string("tags", "tag"), $tags);
     }
 
     // Calculate editing period.
@@ -1283,7 +1283,7 @@ function pcast_display_episode_full($episode, $cm, $course) {
     // Tags.
     if (core_tag_tag::is_enabled('mod_pcast', 'pcast_episodes')) {
         $tags = $OUTPUT->tag_list(core_tag_tag::get_item_tags('mod_pcast', 'pcast_episodes', $episode->id), null, 'pcast-tags');
-        $table->data[] = array (get_string("tags", "tag"),$tags);
+        $table->data[] = array (get_string("tags", "tag"), $tags);
     }
 
     // Calculate editing period.
