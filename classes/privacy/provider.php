@@ -323,6 +323,9 @@ class provider implements
                     get_file_storage()->delete_area_files($context->id, 'mod_pcast', 'episode', $episode->id);
                     get_file_storage()->delete_area_files($context->id, 'mod_pcast', 'mediafile', $episode->id);
 
+                    // Delete related ratings.
+                    \core_rating\privacy\provider::delete_ratings($context, 'mod_pcast', 'episode', $episode->id);
+
                 }
                 // Delete comments.
                 \core_comment\privacy\provider::delete_comments_for_user($contextlist, 'mod_pcast', 'pcast_episode');
