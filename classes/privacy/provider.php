@@ -97,12 +97,9 @@ class provider implements
             'contextlevel' => CONTEXT_MODULE,
             'modname' => 'pcast',
             'commentarea' => 'pcast_episode',
-            'ratingcomponent1' => 'mod_pcast',
-            'ratingarea1' => 'episode',
-            'ratinguserid1' => $userid,
             'pcastepisodeuserid' => $userid,
             'commentuserid' => $userid,
-        ];
+        ] + $ratingquery->params;
 
         $contextlist = new contextlist();
         $contextlist->add_from_sql($sql, $params);
