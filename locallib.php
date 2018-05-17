@@ -73,6 +73,7 @@ function pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey = '', $so
  * Prints the alphabet menu
  * @param object $cm
  * @param object $pcast
+ * @param string $mode
  * @param string $hook
  * @param string $sortkey
  * @param string $sortorder
