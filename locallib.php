@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Internal library of functions for module pcast
  *
@@ -32,12 +31,9 @@ require_once($CFG->libdir . '/filelib.php');
 /**
  * Function to get information from media files
  * used for <itunes::duration>
- * @global stdClass $CFG
  * @param string $filename
  * @return array
  */
-
-
 function pcast_get_media_information($filename) {
     global $CFG;
     include_once($CFG->dirroot.'/mod/pcast/lib/getid3/getid3/getid3.php');
@@ -50,7 +46,6 @@ function pcast_get_media_information($filename) {
     return $mp3info;  // Playtime in minutes:seconds, formatted string.
 
 }
-
 
 /**
  * Prints the approval menu
@@ -137,8 +132,6 @@ function pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sort
 
 /**
  * Prints the category menu
- * @global stdClass $DB
- * @global stdClass $OUTPUT
  * @param object $cm
  * @param object $pcast
  * @param string $hook
@@ -295,7 +288,6 @@ function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortor
 
 /**
  * Prints the sort by ASC / DSC links on the view page.
- * @global stdClass $OUTPUT
  * @param object $cm
  * @param string $mode
  * @param string $sortkey
@@ -475,12 +467,8 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
 
 }
 
-
 /**
  * Function to display Pcast episodes
- * @global stdClass $OUTPUT
- * @global stdClass $DB
- * @global stdClass $USER
  * @param object $pcast
  * @param object $cm
  * @param int $groupmode
@@ -490,7 +478,6 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
  * @param int $page
  * @return boolean
  */
-
 function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc', $page = 0) {
     global $DB, $USER, $OUTPUT;
 
@@ -628,9 +615,6 @@ function pcast_episode_allowed_viewing($episode, $cm, $groupmode) {
 
 /**
  * Function to display episodes by category
- * @global stdClass $OUTPUT
- * @global stdClass $DB
- * @global stdClass $USER
  * @param object $pcast
  * @param object $cm
  * @param int $groupmode
@@ -714,9 +698,6 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook = PC
 
 /**
  * Display all episodes that sorted by date
- * @global stdClass $OUTPUT
- * @global stdClass $DB
- * @global stdClass $USER
  * @param object $pcast
  * @param object $cm
  * @param int $groupmode
@@ -795,9 +776,6 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='',
 
 /**
  * Display all episodes that sorted by author
- * @global stdClass $OUTPUT
- * @global stdClass $DB
- * @global stdClass $USER
  * @param object $pcast
  * @param object $cm
  * @param int $groupmode
@@ -899,8 +877,6 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
 
 /**
  * Display all episodes that have not yet been approved
- * @global stdClass $OUTPUT
- * @global stdClass $DB
  * @param object $pcast
  * @param object $cm
  * @param int $groupmode
@@ -1041,8 +1017,6 @@ function pcast_get_episode_sql() {
 
 /**
  * Function to print overview of the episode
- * @global stdClass $CFG
- * @global stdClass $DB
  * @param type $episode
  * @param type $cm
  * @param type $showmedia
@@ -1174,9 +1148,6 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
 
 /**
  * Display the full pcast episode
- * @global stdClass $CFG
- * @global stdClass $DB
- * @global stdClass $USER
  * @param object $episode
  * @param object $cm
  * @param object $course
@@ -1342,7 +1313,6 @@ function pcast_display_episode_full($episode, $cm, $course) {
 
 /**
  * Displays all views for a single episode
- * @global stdClass $DB
  * @param object $episode
  * @param object $cm
  */
@@ -1385,7 +1355,6 @@ function pcast_display_episode_views($episode, $cm) {
 
 /**
  * Displays all comments for a single episode
- * @global stdClass $CFG
  * @param object $episode
  * @param object $cm
  * @param object $course
@@ -1435,10 +1404,6 @@ function pcast_display_episode_comments($episode, $cm, $course) {
 
 /**
  * Displays the ratingsfor a specific episode
- * @global stdClass $CFG
- * @global stdClass $USER
- * @global stdClass $DB
- * @global stdClass $OUTPUT
  * @param object $episode
  * @param object $cm
  * @param object $course
@@ -1497,7 +1462,6 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
 
 /**
  * Get the total number of views for a specific episode
- * @global stdClass $DB
  * @param object $episode
  * @return string
  */
@@ -1519,7 +1483,6 @@ function pcast_get_episode_view_count($episode) {
 
 /**
  * Get the total number of comments for a specific episode
- * @global stdClass $DB
  * @param object $episode
  * @param object $cm
  * @return string
@@ -1538,7 +1501,6 @@ function pcast_get_episode_comment_count($episode, $cm) {
 
 /**
  * Get the total number of ratings for a specific episode
- * @global stdClass $DB
  * @param object $episode
  * @param object $cm
  * @return string
@@ -1559,13 +1521,10 @@ function pcast_get_episode_rating_count($episode, $cm) {
 /**
  * Print the podcast attachment and the media player if appropriate
  *
- * @global stdClass $CFG
- * @global stdClass $OUTPUT
  * @param object $episode
  * @param object $cm
  * @return string image string or nothing depending on $type param
  */
-
 function pcast_display_mediafile_link($episode, $cm) {
 
     global $CFG, $OUTPUT;
@@ -1621,7 +1580,6 @@ function pcast_get_supported_file_types($pcast) {
 
 /**
  * Helper function, builds an array of categories.
- * @global stdClass $DB
  * @todo cache results using MUC.
  * @return array
  */
@@ -1653,7 +1611,6 @@ function pcast_get_categories() {
 
 /**
  * Helper function used to create paging bars.
- * @global stdClass $OUTPUT
  * @param object $pcast
  * @param object $cm
  * @param int $count
@@ -1804,7 +1761,6 @@ function mod_pcast_get_tagged_episodes($tag, $exclusivemode = false, $fromctx = 
  * @copyright 2012 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class pcast_file_info_container extends file_info {
     /** @var file_browser */
     protected $browser;
@@ -1843,6 +1799,7 @@ class pcast_file_info_container extends file_info {
     }
 
     /**
+     * Helper function that loads parameters.
      * @return array with keys contextid, filearea, itemid, filepath and filename
      */
     public function get_params() {

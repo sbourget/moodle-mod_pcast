@@ -31,8 +31,21 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot.'/course/moodleform_mod.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
+/**
+ * The main pcast configuration form
+ *
+ * It uses the standard core Moodle formslib. For more info about them, please
+ * visit: http://docs.moodle.org/en/Development:lib/formslib.php
+ *
+ * @package   mod_pcast
+ * @copyright 2010 Stephen Bourget
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_pcast_mod_form extends moodleform_mod {
 
+    /**
+     * The form definition.
+     */
     public function definition() {
 
         global $COURSE, $CFG, $DB;
@@ -251,6 +264,10 @@ class mod_pcast_mod_form extends moodleform_mod {
 
     }
 
+    /**
+     * Function used to edit user data before save.
+     * @param array $defaultvalues
+     */
     public function data_preprocessing(&$defaultvalues) {
         parent::data_preprocessing($defaultvalues);
 
@@ -296,7 +313,7 @@ class mod_pcast_mod_form extends moodleform_mod {
     }
 
     /**
-     * Enable completion rules
+     * Enable completion rules.
      * @param stdcalss $data
      * @return array
      */
@@ -304,6 +321,10 @@ class mod_pcast_mod_form extends moodleform_mod {
         return (!empty($data['completionepisodesenabled']) && $data['completionepisodes'] != 0);
     }
 
+    /**
+     * Used to load form data.
+     * @return object | boolean
+     */
     public function get_data() {
         $data = parent::get_data();
         if (!$data) {

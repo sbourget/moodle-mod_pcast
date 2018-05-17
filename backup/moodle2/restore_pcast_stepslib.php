@@ -15,7 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
+ * Structure step to restore one pcast activity.
+ * @package mod_pcast
  * @subpackage backup-moodle2
  * @copyright 2011 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,9 +26,17 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Structure step to restore one pcast activity.
+ *
+ * @package mod_pcast
+ * @subpackage backup-moodle2
+ * @copyright 2011 Stephen Bourget
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_pcast_activity_structure_step extends restore_activity_structure_step {
 
+    /**
+     * DB structure for a podcast.
+     */
     protected function define_structure() {
 
         $paths = array();
@@ -46,6 +55,10 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         return $this->prepare_activity_structure($paths);
     }
 
+    /**
+     * Function to restore Podcast activity
+     * @param class $data
+     */
     protected function process_pcast($data) {
         global $DB;
 
@@ -64,6 +77,10 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $this->set_mapping('pcast', $oldid, $newitemid);
     }
 
+    /**
+     * Function to restore a single episode
+     * @param class $data
+     */
     protected function process_pcast_episode($data) {
         global $DB;
 
@@ -78,6 +95,10 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         $this->set_mapping('pcast_episode', $oldid, $newitemid, true); // Files by this itemname.
     }
 
+    /**
+     * Function to restore a user view records for  single episode
+     * @param class $data
+     */
     protected function process_pcast_view($data) {
         global $DB;
 
@@ -92,6 +113,10 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
     }
 
+    /**
+     * Function to restore user ratings
+     * @param class $data
+     */
     protected function process_pcast_rating($data) {
         global $DB;
 
@@ -122,6 +147,10 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
     }
 
+    /**
+     * Function to restore user tags
+     * @param class $data
+     */
     protected function process_pcast_tag($data) {
 
         $data = (object)$data;
@@ -139,6 +168,9 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         core_tag_tag::add_item_tag('mod_pcast', 'pcast_episodes', $itemid, $context, $tag);
     }
 
+    /**
+     * After restore hook, process file attachments.
+     */
     protected function after_execute() {
         // Add pcast related files, no need to match by itemname (just internally handled context).
         $this->add_related_files('mod_pcast', 'intro', null);

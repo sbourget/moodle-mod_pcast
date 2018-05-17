@@ -100,6 +100,10 @@ class episode_views_viewed extends \core\event\base {
         }
     }
 
+    /**
+     * Used for mapping log data upon restore.
+     * @return array
+     */
     public static function get_objectid_mapping() {
         return array('db' => 'pcast_episodes', 'restore' => 'pcast_episode');
     }

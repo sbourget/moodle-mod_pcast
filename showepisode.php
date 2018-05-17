@@ -16,7 +16,7 @@
 
 
 /**
- *
+ * File used to display podcast episode.
  *
  * @package   mod_pcast
  * @copyright 2010 Stephen Bourget

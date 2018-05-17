@@ -15,7 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
+ * pcast restore task that provides all the settings and steps to perform one complete restore of the activity
+ *
+ * @package mod_pcast
  * @subpackage backup-moodle2
  * @copyright 2011 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,9 +27,14 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/pcast/backup/moodle2/restore_pcast_stepslib.php'); // Because it exists (must).
 
 /**
- * pcast restore task that provides all the settings and steps to perform one
- * complete restore of the activity
+ * pcast restore task that provides all the settings and steps to perform one complete restore of the activity
+ *
+ * @package mod_pcast
+ * @subpackage backup-moodle2
+ * @copyright 2011 Stephen Bourget
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 class restore_pcast_activity_task extends restore_activity_task {
 
     /**

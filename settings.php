@@ -19,7 +19,7 @@
  * The main module settings page (for the admin menu)
  *
  *
- * @package   mod-pcast
+ * @package   mod_pcast
  * @copyright 2010 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

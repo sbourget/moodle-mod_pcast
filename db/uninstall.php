@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Un-install script for this plugin.
  * @see uninstall_plugin()
- *
- * @package    mod
- * @subpackage pcast
+ * @package    mod_pcast
  * @copyright  2012 Stephen Bourget
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,10 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Custom module uninstall code
  *
- * @global stdClass $DB
  * @return bool
  */
-
 function mod_pcast_uninstall() {
     global $DB;
 

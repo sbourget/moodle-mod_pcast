@@ -110,8 +110,6 @@ function pcast_supports($feature) {
  * of the new instance.
  *
  * @param stdClass $pcast An object from the form in mod_form.php
- * @global stdClass $DB
- * @global stdClass $USER
  * @return int The id of the newly inserted pcast record
  */
 function pcast_add_instance($pcast) {
@@ -173,8 +171,6 @@ function pcast_add_instance($pcast) {
  * will update an existing instance with new data.
  *
  * @param stdClass $pcast An object from the form in mod_form.php
- * @global stdClass $DB
- * @global stdClass $USER
  * @return boolean Success/Fail
  */
 function pcast_update_instance($pcast) {
@@ -233,8 +229,6 @@ function pcast_update_instance($pcast) {
  * and any data that depends on it.
  *
  * @param int $id Id of the module instance
- * @global stdClass $DB
- * @global stdClass $USER
  * @return boolean Success/Failure
  */
 function pcast_delete_instance($id) {
@@ -297,7 +291,6 @@ function pcast_delete_instance($id) {
  * $return->time = the time they did it
  * $return->info = a short text description
  *
- * @global stdClass $DB
  * @param stdClass $course
  * @param stdClass $user
  * @param stdClass $mod
@@ -340,7 +333,6 @@ function pcast_user_outline($course, $user, $mod, $pcast) {
 
 /**
  * Get all the episodes for a user in a podcast.
- * @global object
  * @param int $pcastid
  * @param int $userid
  * @return array
@@ -402,8 +394,6 @@ function pcast_get_user_episodes($pcastid, $userid) {
  * Print a detailed representation of what a user has done with
  * a given particular instance of this module, for user activity reports.
  *
- * @global stdClass $DB
- * @global stdClass $CFG
  * @param stdClass $course
  * @param stdClass $user
  * @param stdClass $mod
@@ -440,14 +430,11 @@ function pcast_user_complete($course, $user, $mod, $pcast) {
  * that has occurred in pcast activities and print it out.
  * Return true if there was output, or false is there was none.
  *
- * @global stdClass $DB
- * @global stdClass $OUTPUT
  * @param stdClass $course
  * @param bool $viewfullnames
  * @param int $timestart
  * @return bool
  */
-
 function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
     global $DB, $OUTPUT;
 
@@ -531,8 +518,11 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
 
 /**
  * Function used to display updates in the course overview block
+ * 
+ * @param array $courses
+ * @param array $htmlarray
+ * @return none
  */
-
 function pcast_print_overview($courses, &$htmlarray) {
     global $DB, $OUTPUT;
 
@@ -612,7 +602,6 @@ function pcast_cron () {
  *
  * @param int $pcastid ID of an instance of this module
  * @param int $scaleid
- * @global $DB
  * @return mixed
  */
 function pcast_scale_used($pcastid, $scaleid) {
@@ -694,7 +683,6 @@ function pcast_is_moddata_trusted() {
  * Obtains the automatic completion state for this pcast based on any conditions
  * in pcast settings.
  *
- * @global object $DB
  * @param object $course Course
  * @param object $cm Course-module
  * @param int $userid User ID
@@ -728,13 +716,11 @@ function pcast_get_completion_state($course, $cm, $userid, $type) {
 
 /**
  * Adds module specific settings to the navigation block
- * @global stdClass $CFG
  * @param stdClass $navigation
  * @param stdClass $course
  * @param stdClass $module
  * @param stdClass $cm
  */
-
 function pcast_extend_navigation($navigation, $course, $module, $cm) {
     $navigation->add(get_string('standardview', 'pcast'),
                      new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_STANDARD_VIEW)));
@@ -919,9 +905,6 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
 /**
  * Serves all files for the pcast module.
  *
- * @global stdClass $CFG
- * @global stdClass $DB
- * @global stdClass $USER (used only for logging if available)
  * @param stdClass $course
  * @param stdClass $cm
  * @param stdClass $context
@@ -999,7 +982,6 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
 /**
  * logs the pcast files.
  *
- * @global stdClass $CFG
  * @param stdClass $pcast
  * @param string $userid
  * @return bool false if error else true
@@ -1101,7 +1083,6 @@ function pcast_reset_course_form_defaults($course) {
 /**
  * Removes all grades from gradebook
  *
- * @global stdClass
  * @param int $courseid
  * @param string optional type
  */
@@ -1123,7 +1104,6 @@ function pcast_reset_gradebook($courseid, $type='') {
  * Actual implementation of the rest coures functionality, delete all the
  * pcast responses for course $data->courseid.
  *
- * @global stdClass
  * @param $data the data submitted from the reset course.
  * @return array status array
  */
@@ -1316,7 +1296,6 @@ function pcast_page_type_list($pagetype, $parentcontext, $currentcontext) {
 /**
  * Return grade for given user or all users.
  *
- * @global stdClass
  * @param int $pcastid id of pcast
  * @param int $userid optional user id, 0 means all users
  * @return array array of grades, false if none
@@ -1651,8 +1630,6 @@ function mod_pcast_get_completion_active_rule_descriptions($cm) {
 /**
  * Update activity grades
  *
- * @global stdClass
- * @global stdClass
  * @param stdClass $pcast null means all glossaries (with extra cmidnumber property)
  * @param int $userid specific user only, 0 means all
  */
@@ -1680,7 +1657,6 @@ function pcast_update_grades($pcast=null, $userid=0, $nullifnone=true) {
 /**
  * Create/update grade item for given pcast
  *
- * @global stdClass
  * @param stdClass $pcast object with extra cmidnumber
  * @param mixed optional array/object of grade(s); 'reset' means reset grades in gradebook
  * @return int, 0 if ok, error code otherwise
@@ -1715,7 +1691,6 @@ function pcast_grade_item_update($pcast, $grades=null) {
 /**
  * Delete grade item for given pcast
  *
- * @global stdClass
  * @param stdClass $pcast object
  */
 function pcast_grade_item_delete($pcast) {

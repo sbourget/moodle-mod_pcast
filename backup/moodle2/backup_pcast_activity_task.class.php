@@ -15,18 +15,23 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * @package moodlecore
+ * pcast backup task that provides all the settings and steps to perform one complete backup of the activity
+ *
+ * @package mod_pcast
  * @subpackage backup-moodle2
  * @copyright 2011 Stephen Bourget
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/pcast/backup/moodle2/backup_pcast_stepslib.php'); // Because it exists (must).
 
 /**
- * pcast backup task that provides all the settings and steps to perform one
- * complete backup of the activity
+ * pcast backup task that provides all the settings and steps to perform one complete backup of the activity
+ * @package mod_pcast
+ * @subpackage backup-moodle2
+ * @copyright 2011 Stephen Bourget
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_pcast_activity_task extends backup_activity_task {
 
@@ -48,6 +53,8 @@ class backup_pcast_activity_task extends backup_activity_task {
     /**
      * Code the transformations to perform in the activity in
      * order to get transportable (encoded) links
+     * @param string $content
+     * @return string
      */
     static public function encode_content_links($content) {
         global $CFG;
