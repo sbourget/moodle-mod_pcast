@@ -30,6 +30,7 @@ Installation:
 
 List of features:
 
+    * This Module implements the Privacy API to meet GDPR requirements
     * Users can post podcast episodes. These episodes can be moderated
     * Episodes with activity completion enabled can be listed on the my overview block
     * Podcasts can have their own channel art (In compliance with the RSS specification)
