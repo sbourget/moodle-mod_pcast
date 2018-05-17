@@ -518,7 +518,7 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
 
 /**
  * Function used to display updates in the course overview block
- * 
+ *
  * @param array $courses
  * @param array $htmlarray
  * @return none
@@ -808,7 +808,12 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     }
 }
 
-
+/**
+ * Helper function to get the RSS category.
+ * @param class $item
+ * @param class $pcast
+ * @return stdclass
+ */
 function pcast_get_itunes_categories($item, $pcast) {
 
     // Split the category info into the top category and nested category.
