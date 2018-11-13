@@ -2,11 +2,10 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.audio.mp3.php                                        //
@@ -161,7 +160,11 @@ class getid3_mp3 extends getid3_handler
 
 		// Calculate playtime
 		if (!isset($info['playtime_seconds']) && isset($info['audio']['bitrate']) && ($info['audio']['bitrate'] > 0)) {
-			$info['playtime_seconds'] = ($info['avdataend'] - $info['avdataoffset']) * 8 / $info['audio']['bitrate'];
+			// https://github.com/JamesHeinrich/getID3/issues/161
+			// VBR header frame contains ~0.026s of silent audio data, but is not actually part of the original encoding and should be ignored
+			$xingVBRheaderFrameLength = ((isset($info['mpeg']['audio']['VBR_frames']) && isset($info['mpeg']['audio']['framelength'])) ? $info['mpeg']['audio']['framelength'] : 0);
+
+			$info['playtime_seconds'] = ($info['avdataend'] - $info['avdataoffset'] - $xingVBRheaderFrameLength) * 8 / $info['audio']['bitrate'];
 		}
 
 		$info['audio']['encoder_options'] = $this->GuessEncoderOptions();
@@ -479,7 +482,6 @@ class getid3_mp3 extends getid3_handler
 		}
 		$thisfile_mpeg_audio = &$info['mpeg']['audio'];
 
-
 		if ($MPEGaudioHeaderValidCache[$head4_key]) {
 			$thisfile_mpeg_audio['raw'] = $MPEGheaderRawArray;
 		} else {
@@ -583,7 +585,7 @@ class getid3_mp3 extends getid3_handler
 
 			$thisfile_mpeg_audio['bitrate_mode'] = 'vbr';
 			$thisfile_mpeg_audio['VBR_method']   = 'Fraunhofer';
-			$info['audio']['codec']                = 'Fraunhofer';
+			$info['audio']['codec']              = 'Fraunhofer';
 
 			$SideInfoData = substr($headerstring, 4 + 2, 32);
 
@@ -676,7 +678,7 @@ class getid3_mp3 extends getid3_handler
 						$used_filesize = $thisfile_mpeg_audio['VBR_bytes'];
 					} elseif (!empty($info['filesize'])) {
 						$used_filesize  = $info['filesize'];
-						$used_filesize -= intval(@$info['id3v2']['headerlength']);
+						$used_filesize -= (isset($info['id3v2']['headerlength']) ? intval($info['id3v2']['headerlength']) : 0);
 						$used_filesize -= (isset($info['id3v1']) ? 128 : 0);
 						$used_filesize -= (isset($info['tag_offset_end']) ? $info['tag_offset_end'] - $info['tag_offset_start'] : 0);
 						$this->warning('MP3.Xing header missing VBR_bytes, assuming MPEG audio portion of file is '.number_format($used_filesize).' bytes');
@@ -1565,7 +1567,7 @@ class getid3_mp3 extends getid3_handler
 								}
 							}
 							$synchstartoffset = $scan_start_offset[$current_segment];
-							while ($this->decodeMPEGaudioHeader($synchstartoffset, $dummy, false, false, $FastMode)) {
+							while (($synchstartoffset < $info['avdataend']) && $this->decodeMPEGaudioHeader($synchstartoffset, $dummy, false, false, $FastMode)) {
 								$FastMode = true;
 								$thisframebitrate = $MPEGaudioBitrateLookup[$MPEGaudioVersionLookup[$dummy['mpeg']['audio']['raw']['version']]][$MPEGaudioLayerLookup[$dummy['mpeg']['audio']['raw']['layer']]][$dummy['mpeg']['audio']['raw']['bitrate']];
 

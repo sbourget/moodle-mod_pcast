@@ -2,13 +2,12 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
 //                                                             //
 // getid3.lib.php - part of getID3()                           //
-// See readme.txt for more details                             //
+//  see readme.txt for more details                            //
 //                                                            ///
 /////////////////////////////////////////////////////////////////
 
@@ -1578,32 +1577,6 @@ class getid3_lib
 	public static function ImageExtFromMime($mime_type) {
 		// temporary way, works OK for now, but should be reworked in the future
 		return str_replace(array('image/', 'x-', 'jpeg'), array('', '', 'jpg'), $mime_type);
-	}
-
-	/**
-	 * @param int $imagetypeid
-	 *
-	 * @return string
-	 */
-	public static function ImageTypesLookup($imagetypeid) {
-		static $ImageTypesLookup = array();
-		if (empty($ImageTypesLookup)) {
-			$ImageTypesLookup[1]  = 'gif';
-			$ImageTypesLookup[2]  = 'jpeg';
-			$ImageTypesLookup[3]  = 'png';
-			$ImageTypesLookup[4]  = 'swf';
-			$ImageTypesLookup[5]  = 'psd';
-			$ImageTypesLookup[6]  = 'bmp';
-			$ImageTypesLookup[7]  = 'tiff (little-endian)';
-			$ImageTypesLookup[8]  = 'tiff (big-endian)';
-			$ImageTypesLookup[9]  = 'jpc';
-			$ImageTypesLookup[10] = 'jp2';
-			$ImageTypesLookup[11] = 'jpx';
-			$ImageTypesLookup[12] = 'jb2';
-			$ImageTypesLookup[13] = 'swc';
-			$ImageTypesLookup[14] = 'iff';
-		}
-		return (isset($ImageTypesLookup[$imagetypeid]) ? $ImageTypesLookup[$imagetypeid] : '');
 	}
 
 	/**

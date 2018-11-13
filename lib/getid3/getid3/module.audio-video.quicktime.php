@@ -2,11 +2,10 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
-// See readme.txt for more details                             //
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
+//  see readme.txt for more details                            //
 /////////////////////////////////////////////////////////////////
 //                                                             //
 // module.audio-video.quicktime.php                            //
@@ -223,7 +222,7 @@ class getid3_quicktime extends getid3_handler
 
 		$info = &$this->getid3->info;
 
-		$atom_parent = end($atomHierarchy); // not array_pop($atomHierarchy); see http://www.getid3.org/phpBB3/viewtopic.php?t=1717
+		$atom_parent = end($atomHierarchy); // not array_pop($atomHierarchy); see https://www.getid3.org/phpBB3/viewtopic.php?t=1717
 		array_push($atomHierarchy, $atomname);
 		$atom_structure['hierarchy'] = implode(' ', $atomHierarchy);
 		$atom_structure['name']      = $atomname;
@@ -819,7 +818,7 @@ class getid3_quicktime extends getid3_handler
 											$info['video']['fourcc_lookup'] = $this->QuicktimeVideoCodecLookup($info['video']['fourcc']);
 										}
 
-										// http://www.getid3.org/phpBB3/viewtopic.php?t=1550
+										// https://www.getid3.org/phpBB3/viewtopic.php?t=1550
 										//if ((!empty($atom_structure['sample_description_table'][$i]['width']) && !empty($atom_structure['sample_description_table'][$i]['width'])) && (empty($info['video']['resolution_x']) || empty($info['video']['resolution_y']) || (number_format($info['video']['resolution_x'], 6) != number_format(round($info['video']['resolution_x']), 6)) || (number_format($info['video']['resolution_y'], 6) != number_format(round($info['video']['resolution_y']), 6)))) { // ugly check for floating point numbers
 										if (!empty($atom_structure['sample_description_table'][$i]['width']) && !empty($atom_structure['sample_description_table'][$i]['height'])) {
 											// assume that values stored here are more important than values stored in [tkhd] atom
@@ -1311,17 +1310,30 @@ class getid3_quicktime extends getid3_handler
 					$atom_structure['creation_time_unix']  = getid3_lib::DateMac2Unix($atom_structure['creation_time']);
 					$atom_structure['modify_time_unix']    = getid3_lib::DateMac2Unix($atom_structure['modify_time']);
 
-					// http://www.getid3.org/phpBB3/viewtopic.php?t=1908
+					// https://www.getid3.org/phpBB3/viewtopic.php?t=1908
 					// attempt to compute rotation from matrix values
 					// 2017-Dec-28: uncertain if 90/270 are correctly oriented; values returned by FixedPoint16_16 should perhaps be -1 instead of 65535(?)
-					if (!isset($info['video']['rotate'])) {
-						switch ($atom_structure['matrix_a'].':'.$atom_structure['matrix_b'].':'.$atom_structure['matrix_c'].':'.$atom_structure['matrix_d']) {
-							case '1:0:0:1':         $info['quicktime']['video']['rotate'] = $info['video']['rotate'] =   0; break;
-							case '0:1:65535:0':     $info['quicktime']['video']['rotate'] = $info['video']['rotate'] =  90; break;
-							case '65535:0:0:65535': $info['quicktime']['video']['rotate'] = $info['video']['rotate'] = 180; break;
-							case '0:65535:1:0':     $info['quicktime']['video']['rotate'] = $info['video']['rotate'] = 270; break;
-							default: break;
-						}
+					$matrixRotation = 0;
+					switch ($atom_structure['matrix_a'].':'.$atom_structure['matrix_b'].':'.$atom_structure['matrix_c'].':'.$atom_structure['matrix_d']) {
+						case '1:0:0:1':         $matrixRotation =   0; break;
+						case '0:1:65535:0':     $matrixRotation =  90; break;
+						case '65535:0:0:65535': $matrixRotation = 180; break;
+						case '0:65535:1:0':     $matrixRotation = 270; break;
+						default: break;
+					}
+
+					// https://www.getid3.org/phpBB3/viewtopic.php?t=2468
+					// The rotation matrix can appear in the Quicktime file multiple times, at least once for each track,
+					// and it's possible that only the video track (or, in theory, one of the video tracks) is flagged as
+					// rotated while the other tracks (e.g. audio) is tagged as rotation=0 (behavior noted on iPhone 8 Plus)
+					// The correct solution would be to check if the TrackID associated with the rotation matrix is indeed
+					// a video track (or the main video track) and only set the rotation then, but since information about
+					// what track is what is not trivially there to be examined, the lazy solution is to set the rotation
+					// if it is found to be nonzero, on the assumption that tracks that don't need it will have rotation set
+					// to zero (and be effectively ignored) and the video track will have rotation set correctly, which will
+					// either be zero and automatically correct, or nonzero and be set correctly.
+					if (!isset($info['video']['rotate']) || (($info['video']['rotate'] == 0) && ($matrixRotation > 0))) {
+						$info['quicktime']['video']['rotate'] = $info['video']['rotate'] = $matrixRotation;
 					}
 
 					if ($atom_structure['flags']['enabled'] == 1) {
@@ -1334,7 +1346,7 @@ class getid3_quicktime extends getid3_handler
 						$info['quicktime']['video']['resolution_x'] = $info['video']['resolution_x'];
 						$info['quicktime']['video']['resolution_y'] = $info['video']['resolution_y'];
 					} else {
-						// see: http://www.getid3.org/phpBB3/viewtopic.php?t=1295
+						// see: https://www.getid3.org/phpBB3/viewtopic.php?t=1295
 						//if (isset($info['video']['resolution_x'])) { unset($info['video']['resolution_x']); }
 						//if (isset($info['video']['resolution_y'])) { unset($info['video']['resolution_y']); }
 						//if (isset($info['quicktime']['video']))    { unset($info['quicktime']['video']);    }
@@ -1529,7 +1541,7 @@ class getid3_quicktime extends getid3_handler
 				case 'code':
 				case 'FIEL': // this is NOT "fiel" (Field Ordering) as describe here: http://developer.apple.com/documentation/QuickTime/QTFF/QTFFChap3/chapter_4_section_2.html
 				case 'tapt': // TrackApertureModeDimensionsAID - http://developer.apple.com/documentation/QuickTime/Reference/QT7-1_Update_Reference/Constants/Constants.html
-							// tapt seems to be used to compute the video size [http://www.getid3.org/phpBB3/viewtopic.php?t=838]
+							// tapt seems to be used to compute the video size [https://www.getid3.org/phpBB3/viewtopic.php?t=838]
 							// * http://lists.apple.com/archives/quicktime-api/2006/Aug/msg00014.html
 							// * http://handbrake.fr/irclogs/handbrake-dev/handbrake-dev20080128_pg2.html
 				case 'ctts'://  STCompositionOffsetAID             - http://developer.apple.com/documentation/QuickTime/Reference/QTRef_Constants/Reference/reference.html
@@ -1692,9 +1704,9 @@ class getid3_quicktime extends getid3_handler
 									$minute = substr($GPS_this_GPRMC['raw']['timestamp'], 2, 2);
 									$second = substr($GPS_this_GPRMC['raw']['timestamp'], 4, 2);
 									$ms     = substr($GPS_this_GPRMC['raw']['timestamp'], 6);    // may contain decimal seconds
-									$day   = substr($GPS_this_GPRMC['raw']['datestamp'], 0, 2);
-									$month = substr($GPS_this_GPRMC['raw']['datestamp'], 2, 2);
-									$year  = substr($GPS_this_GPRMC['raw']['datestamp'], 4, 2);
+									$day    = substr($GPS_this_GPRMC['raw']['datestamp'], 0, 2);
+									$month  = substr($GPS_this_GPRMC['raw']['datestamp'], 2, 2);
+									$year   = substr($GPS_this_GPRMC['raw']['datestamp'], 4, 2);
 									$year += (($year > 90) ? 1900 : 2000); // complete lack of foresight: datestamps are stored with 2-digit years, take best guess
 									$GPS_this_GPRMC['timestamp'] = $year.'-'.$month.'-'.$day.' '.$hour.':'.$minute.':'.$second.$ms;
 
@@ -1719,10 +1731,10 @@ class getid3_quicktime extends getid3_handler
 									$atom_structure['gps_entries'][$key] = $GPS_this_GPRMC;
 
 									@$info['quicktime']['gps_track'][$GPS_this_GPRMC['timestamp']] = array(
-										'latitude'  => $GPS_this_GPRMC['latitude'],
-										'longitude' => $GPS_this_GPRMC['longitude'],
-										'speed_kmh' => $GPS_this_GPRMC['speed_kmh'],
-										'heading'   => $GPS_this_GPRMC['heading'],
+										'latitude'  => (float) $GPS_this_GPRMC['latitude'],
+										'longitude' => (float) $GPS_this_GPRMC['longitude'],
+										'speed_kmh' => (float) $GPS_this_GPRMC['speed_kmh'],
+										'heading'   => (float) $GPS_this_GPRMC['heading'],
 									);
 
 								} else {
@@ -1741,16 +1753,16 @@ class getid3_quicktime extends getid3_handler
 
 				case 'loci':// 3GP location (El Loco)
 					$loffset = 0;
-					$info['quicktime']['comments']['gps_flags']     =   getid3_lib::BigEndian2Int(substr($atom_data, 0, 4));
-					$info['quicktime']['comments']['gps_lang']      =   getid3_lib::BigEndian2Int(substr($atom_data, 4, 2));
-					$info['quicktime']['comments']['gps_location']  =           $this->LociString(substr($atom_data, 6), $loffset);
+					$info['quicktime']['comments']['gps_flags']     = array(  getid3_lib::BigEndian2Int(substr($atom_data, 0, 4)));
+					$info['quicktime']['comments']['gps_lang']      = array(  getid3_lib::BigEndian2Int(substr($atom_data, 4, 2)));
+					$info['quicktime']['comments']['gps_location']  = array(          $this->LociString(substr($atom_data, 6), $loffset));
 					$loci_data = substr($atom_data, 6 + $loffset);
-					$info['quicktime']['comments']['gps_role']      =   getid3_lib::BigEndian2Int(substr($loci_data, 0, 1));
-					$info['quicktime']['comments']['gps_longitude'] = getid3_lib::FixedPoint16_16(substr($loci_data, 1, 4));
-					$info['quicktime']['comments']['gps_latitude']  = getid3_lib::FixedPoint16_16(substr($loci_data, 5, 4));
-					$info['quicktime']['comments']['gps_altitude']  = getid3_lib::FixedPoint16_16(substr($loci_data, 9, 4));
-					$info['quicktime']['comments']['gps_body']      =           $this->LociString(substr($loci_data, 13           ), $loffset);
-					$info['quicktime']['comments']['gps_notes']     =           $this->LociString(substr($loci_data, 13 + $loffset), $loffset);
+					$info['quicktime']['comments']['gps_role']      = array(  getid3_lib::BigEndian2Int(substr($loci_data, 0, 1)));
+					$info['quicktime']['comments']['gps_longitude'] = array(getid3_lib::FixedPoint16_16(substr($loci_data, 1, 4)));
+					$info['quicktime']['comments']['gps_latitude']  = array(getid3_lib::FixedPoint16_16(substr($loci_data, 5, 4)));
+					$info['quicktime']['comments']['gps_altitude']  = array(getid3_lib::FixedPoint16_16(substr($loci_data, 9, 4)));
+					$info['quicktime']['comments']['gps_body']      = array(          $this->LociString(substr($loci_data, 13           ), $loffset));
+					$info['quicktime']['comments']['gps_notes']     = array(          $this->LociString(substr($loci_data, 13 + $loffset), $loffset));
 					break;
 
 				case 'chpl': // CHaPter List
@@ -1783,7 +1795,7 @@ class getid3_quicktime extends getid3_handler
 
 				case 'dscp':
 				case 'rcif':
-					// http://www.getid3.org/phpBB3/viewtopic.php?t=1908
+					// https://www.getid3.org/phpBB3/viewtopic.php?t=1908
 					if (substr($atom_data, 0, 7) == "\x00\x00\x00\x00\x55\xC4".'{') {
 						if ($json_decoded = @json_decode(rtrim(substr($atom_data, 6), "\x00"), true)) {
 							$info['quicktime']['camera'][$atomname] = $json_decoded;
@@ -1800,6 +1812,34 @@ class getid3_quicktime extends getid3_handler
 						$atom_structure['data'] = $atom_data;
 					}
 					break;
+
+				case 'frea':
+					// https://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Kodak.html#frea
+					// may contain "scra" (PreviewImage) and/or "thma" (ThumbnailImage)
+					$atom_structure['subatoms'] = $this->QuicktimeParseContainerAtom($atom_data, $baseoffset + 4, $atomHierarchy, $ParseAllPossibleAtoms);
+					break;
+				case 'tima': // subatom to "frea"
+					// no idea what this does, the one sample file I've seen has a value of 0x00000027
+					$atom_structure['data'] = $atom_data;
+					break;
+				case 'ver ': // subatom to "frea"
+					// some kind of version number, the one sample file I've seen has a value of "3.00.073"
+					$atom_structure['data'] = $atom_data;
+					break;
+				case 'thma': // subatom to "frea" -- "ThumbnailImage"
+					// https://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Kodak.html#frea
+					if (strlen($atom_data) > 0) {
+						$info['quicktime']['comments']['picture'][] = array('data'=>$atom_data, 'image_mime'=>'image/jpeg');
+					}
+					break;
+				case 'scra': // subatom to "frea" -- "PreviewImage"
+					// https://www.sno.phy.queensu.ca/~phil/exiftool/TagNames/Kodak.html#frea
+					// but the only sample file I've seen has no useful data here
+					if (strlen($atom_data) > 0) {
+						$info['quicktime']['comments']['picture'][] = array('data'=>$atom_data, 'image_mime'=>'image/jpeg');
+					}
+					break;
+
 
 				default:
 					$this->warning('Unknown QuickTime atom type: "'.preg_replace('#[^a-zA-Z0-9 _\\-]#', '?', $atomname).'" ('.trim(getid3_lib::PrintHexBytes($atomname)).'), '.$atomsize.' bytes at offset '.$baseoffset);
@@ -2667,8 +2707,8 @@ class getid3_quicktime extends getid3_handler
 			$handyatomtranslatorarray['MusicBrainz Disc Id']         = 'MusicBrainz Disc Id';
 
 			// http://age.hobba.nl/audio/tag_frame_reference.html
-			$handyatomtranslatorarray['PLAY_COUNTER']                = 'play_counter'; // Foobar2000 - http://www.getid3.org/phpBB3/viewtopic.php?t=1355
-			$handyatomtranslatorarray['MEDIATYPE']                   = 'mediatype';    // Foobar2000 - http://www.getid3.org/phpBB3/viewtopic.php?t=1355
+			$handyatomtranslatorarray['PLAY_COUNTER']                = 'play_counter'; // Foobar2000 - https://www.getid3.org/phpBB3/viewtopic.php?t=1355
+			$handyatomtranslatorarray['MEDIATYPE']                   = 'mediatype';    // Foobar2000 - https://www.getid3.org/phpBB3/viewtopic.php?t=1355
 			*/
 		}
 		$info = &$this->getid3->info;

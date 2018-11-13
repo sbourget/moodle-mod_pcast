@@ -2,10 +2,9 @@
 
 /////////////////////////////////////////////////////////////////
 /// getID3() by James Heinrich <info@getid3.org>               //
-//  available at http://getid3.sourceforge.net                 //
-//            or http://www.getid3.org                         //
-//          also https://github.com/JamesHeinrich/getID3       //
-/////////////////////////////////////////////////////////////////
+//  available at https://github.com/JamesHeinrich/getID3       //
+//            or https://www.getid3.org                        //
+//            or http://getid3.sourceforge.net                 //
 //                                                             //
 // Please see readme.txt for more information                  //
 //                                                            ///
@@ -28,7 +27,7 @@ if (!defined('ENT_SUBSTITUTE')) { // PHP5.3 adds ENT_IGNORE, PHP5.4 adds ENT_SUB
 }
 
 /*
-http://www.getid3.org/phpBB3/viewtopic.php?t=2114
+https://www.getid3.org/phpBB3/viewtopic.php?t=2114
 If you are running into a the problem where filenames with special characters are being handled
 incorrectly by external helper programs (e.g. metaflac), notably with the special characters removed,
 and you are passing in the filename in UTF8 (typically via a HTML form), try uncommenting this line:
@@ -252,7 +251,7 @@ class getID3
 	 */
 	protected $startup_warning = '';
 
-	const VERSION           = '1.9.15-201802151809';
+	const VERSION           = '1.9.16-201810171314';
 	const FREAD_BUFFER_SIZE = 32768;
 
 	const ATTACHMENTS_NONE   = false;
@@ -433,7 +432,7 @@ class getID3
 			//$filename = preg_replace('#(?<!gs:)('.preg_quote(DIRECTORY_SEPARATOR).'{2,})#', DIRECTORY_SEPARATOR, $filename);
 
 			// open local file
-			//if (is_readable($filename) && is_file($filename) && ($this->fp = fopen($filename, 'rb'))) { // see http://www.getid3.org/phpBB3/viewtopic.php?t=1720
+			//if (is_readable($filename) && is_file($filename) && ($this->fp = fopen($filename, 'rb'))) { // see https://www.getid3.org/phpBB3/viewtopic.php?t=1720
 			if ((is_readable($filename) || file_exists($filename)) && is_file($filename) && ($this->fp = fopen($filename, 'rb'))) {
 				// great
 			} else {
@@ -853,7 +852,7 @@ class getID3
 							'pattern'   => '^fLaC',
 							'group'     => 'audio',
 							'module'    => 'flac',
-							'mime_type' => 'audio/x-flac',
+							'mime_type' => 'audio/flac',
 						),
 
 				// LA   - audio       - Lossless Audio (LA)
@@ -1074,7 +1073,7 @@ class getID3
 							'pattern'   => '^(RIFF|SDSS|FORM)',
 							'group'     => 'audio-video',
 							'module'    => 'riff',
-							'mime_type' => 'audio/x-wav',
+							'mime_type' => 'audio/wav',
 							'fail_ape'  => 'WARNING',
 						),
 
@@ -1238,7 +1237,7 @@ class getID3
 							'pattern'   => '^\\x1F\\x8B\\x08',
 							'group'     => 'archive',
 							'module'    => 'gzip',
-							'mime_type' => 'application/x-gzip',
+							'mime_type' => 'application/gzip',
 							'fail_id3'  => 'ERROR',
 							'fail_ape'  => 'ERROR',
 						),
@@ -1969,7 +1968,7 @@ abstract class getid3_handler
 
 		//return fread($this->getid3->fp, $bytes);
 		/*
-		* http://www.getid3.org/phpBB3/viewtopic.php?t=1930
+		* https://www.getid3.org/phpBB3/viewtopic.php?t=1930
 		* "I found out that the root cause for the problem was how getID3 uses the PHP system function fread().
 		* It seems to assume that fread() would always return as many bytes as were requested.
 		* However, according the PHP manual (http://php.net/manual/en/function.fread.php), this is the case only with regular local files, but not e.g. with Linux pipes.
@@ -1977,6 +1976,9 @@ abstract class getid3_handler
 		*/
 		$contents = '';
 		do {
+			if (($this->getid3->memory_limit > 0) && ($bytes > $this->getid3->memory_limit)) {
+				throw new getid3_exception('cannot fread('.$bytes.' from '.$this->ftell().') that is more than available PHP memory ('.$this->getid3->memory_limit.')', 10);
+			}
 			$part = fread($this->getid3->fp, $bytes);
 			$partLength  = strlen($part);
 			$bytes      -= $partLength;
