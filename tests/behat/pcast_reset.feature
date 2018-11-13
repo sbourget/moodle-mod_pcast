@@ -45,7 +45,7 @@ Feature: Pcast reset
     And I log out
     And I log in as "teacher"
     And I am on "Course 1" course homepage
-    When I navigate to "Reset" node in "Course administration"
+    When I navigate to "Reset" in current page administration
     And I set the following fields to these values:
         | id_reset_pcast_comments | 1 |
     And I press "Reset course"
@@ -71,7 +71,7 @@ Feature: Pcast reset
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I follow "Course 1"
-    When I navigate to "Reset" node in "Course administration"
+    When I navigate to "Reset" in current page administration
     And I set the following fields to these values:
         | Delete episodes from all podcasts | 1 |
     And I press "Reset course"
@@ -104,7 +104,7 @@ Feature: Pcast reset
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I follow "Course 1"
-    When I navigate to "Reset" node in "Course administration"
+    When I navigate to "Reset" in current page administration
     And I set the following fields to these values:
         | Delete episodes by users not enrolled | 1 |
     And I press "Reset course"
@@ -135,7 +135,8 @@ Feature: Pcast reset
     And I follow "Test podcast name"
     And I follow "View"
     And I should see "2" in the "Total views" "table_row"
-    When I navigate to "Reset" node in "Course administration"
+    And I am on "Course 1" course homepage
+    When I navigate to "Reset" in current page administration
     And I expand all fieldsets
     And I set the following fields to these values:
         | Delete episode view history | 1 |
@@ -179,7 +180,8 @@ Feature: Pcast reset
     And I set the field "rating" to "Mostly connected knowing"
     And I follow "Episode"
     And I should see "1" in the "Total ratings" "table_row"
-    When I navigate to "Reset" node in "Course administration"
+    And I am on "Course 1" course homepage
+    When I navigate to "Reset" in current page administration
     And I expand all fieldsets
     And I set the following fields to these values:
         | id_reset_pcast_ratings | 1 |
@@ -207,7 +209,8 @@ Feature: Pcast reset
     And I press "Save changes"
     Then I should see "Test episode name"
     And I should see "Example" in the ".pcast-tags" "css_element"
-    When I navigate to "Reset" node in "Course administration"
+    And I am on "Course 1" course homepage
+    When I navigate to "Reset" in current page administration
     And I expand all fieldsets
     And I set the following fields to these values:
         | id_reset_pcast_tags | 1 |

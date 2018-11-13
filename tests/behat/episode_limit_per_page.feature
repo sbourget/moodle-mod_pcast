@@ -55,7 +55,7 @@ Feature: A teacher can create a podcast activity and limit the number of episode
     And I should see "Episode THREE"
     And I should see "Episode FOUR"
     And I should see "Episode FIVE"
-    And I navigate to "Edit settings" node in "Podcast administration"
+    And I navigate to "Edit settings" in current page administration
     And I set the following fields to these values:
     | Episodes shown per page | 2 |
     And I press "Save and display"
