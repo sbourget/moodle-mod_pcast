@@ -78,7 +78,7 @@ function pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey = '', $so
  * @param string $sortkey
  * @param string $sortorder
  */
-function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorder = '') {
+function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sortorder = '') {
 
     echo html_writer::start_tag('div', array('class' => 'pcast-links')). "\n";
     echo html_writer::tag('div', get_string("explainalphabet", "pcast"), array('class' => 'pcastexplain'));
@@ -100,7 +100,7 @@ function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey='', $sort
  * @param string $sortkey
  * @param string $sortorder
  */
-function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorder = '') {
+function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sortorder = '') {
     pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder, $hook);
 }
 
@@ -108,7 +108,7 @@ function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey='', $sortorde
  * Prints the author menu link
  * @param object $cm
  * @param object $pcast
- * @param string mode
+ * @param string $mode
  * @param string $hook
  * @param string $sortkey
  * @param string $sortorder
@@ -133,14 +133,14 @@ function pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sort
 
 /**
  * Prints the category menu
+ * @todo This should use html_writer::tag()
+ * @todo These styles should not be hard coded
  * @param object $cm
  * @param object $pcast
  * @param string $hook
  * @param object $category
- * @todo This should use html_writer::tag()
- * @todo These styles should not be hard coded
  */
-function pcast_print_categories_menu($cm, $pcast, $hook=PCAST_SHOW_ALL_CATEGORIES) {
+function pcast_print_categories_menu($cm, $pcast, $hook = PCAST_SHOW_ALL_CATEGORIES) {
      global $DB, $OUTPUT;
 
      echo '<table border="0" width="100%">';
@@ -254,6 +254,7 @@ function pcast_print_special_links($cm, $pcast, $mode, $hook) {
 
 /**
  * Prints the individual letter links used to sort the episodes.
+ * @param object $cm
  * @param object $pcast
  * @param string $mode
  * @param string $hook
@@ -293,6 +294,7 @@ function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortor
  * @param string $mode
  * @param string $sortkey
  * @param string $sortorder
+ * @param string $hook
  */
 function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $hook='') {
     global $OUTPUT;
@@ -1018,10 +1020,10 @@ function pcast_get_episode_sql() {
 
 /**
  * Function to print overview of the episode
- * @param type $episode
- * @param type $cm
- * @param type $showmedia
- * @param type $showlinks
+ * @param object $episode
+ * @param object $cm
+ * @param bool $showmedia
+ * @param bool $showlinks
  */
 function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks = true) {
     global $CFG, $DB, $OUTPUT;

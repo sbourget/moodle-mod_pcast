@@ -184,15 +184,3 @@ if (empty($cachedfilepath) || !file_exists($cachedfilepath)) {
 
 // Send the .pcast file to the user!
 send_file($cachedfilepath, 'rss.pcast', 0, 0, 0, 1);   // DO NOT CACHE.
-
-/*
- * Sends an error formatted as an rss file and then dies.
- *
- * @param string $error
- * @param string $filename
- * @param int $lifetime
- */
-function pcast_rss_error($error='rsserror', $filename='rss.xml', $lifetime=0) {
-    send_file(rss_geterrorxmlfile($error), $filename, $lifetime, false, true);
-    exit;
-}

@@ -184,7 +184,7 @@ class episode extends \core_search\base_mod {
 
     /**
      * Index attached media files.
-     * @param type $document
+     * @param object $document
      */
     public function attach_files($document) {
 

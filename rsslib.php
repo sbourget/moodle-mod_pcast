@@ -630,7 +630,7 @@ function pcast_rss_footer($title = null, $link = null, $description = null) {
  * @todo THIS WILL NOT WORK WITH SLASHARGS DISABLED
  * @param int contextid the course id
  * @param int userid the current user id
- * @param string modulename the name of the current module. For example "forum"
+ * @param string componentname the name of the current module.
  * @param string $additionalargs For modules, module instance id
  */
 function pcast_rss_get_url($contextid, $userid, $componentname, $additionalargs) {
@@ -692,7 +692,7 @@ function pcast_build_pcast_file($pcast, $url) {
  * @param string $componentname the module name ie forum. Used to create a cache directory.
  * @param string $filename the name of the file to be created ie "1234"
  * @param string $contents the data to be written to the file
- * @param bool $expandedfilename used to get the full file name.
+ * @param bool $expandfilename used to get the full file name.
  */
 function pcast_rss_save_file($componentname, $filename, $contents, $expandfilename=true) {
 
@@ -718,4 +718,16 @@ function pcast_rss_save_file($componentname, $filename, $contents, $expandfilena
         }
     }
     return $status;
+}
+
+/**
+ * Sends an error formatted as an rss file and then dies.
+ *
+ * @param string $error
+ * @param string $filename
+ * @param int $lifetime
+ */
+function pcast_rss_error($error = 'rsserror', $filename = 'rss.xml', $lifetime = 0) {
+    send_file(rss_geterrorxmlfile($error), $filename, $lifetime, false, true);
+    exit;
 }

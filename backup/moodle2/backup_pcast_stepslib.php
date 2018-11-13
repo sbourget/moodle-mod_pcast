@@ -35,6 +35,10 @@ defined('MOODLE_INTERNAL') || die();
  */
 class backup_pcast_activity_structure_step extends backup_activity_structure_step {
 
+    /**
+     * Defines structure for data backup.
+     * @return object
+     */
     protected function define_structure() {
 
         // To know if we are including userinfo.

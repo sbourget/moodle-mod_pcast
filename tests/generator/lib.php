@@ -50,6 +50,11 @@ class mod_pcast_generator extends testing_module_generator {
         parent::reset();
     }
 
+    /**
+     * Create an instance of mod_pcast with some default settings
+     * @param object $record
+     * @param array $options
+     */
     public function create_instance($record = null, array $options = null) {
         global $CFG;
 
@@ -80,6 +85,12 @@ class mod_pcast_generator extends testing_module_generator {
         return parent::create_instance($record, (array)$options);
     }
 
+    /**
+     * Create a pcast episode (without the attachment)
+     * @param object $pcast
+     * @param array $record
+     * @return type
+     */
     public function create_content($pcast, $record = array()) {
         global $DB, $USER;
         $this->episodecount++;

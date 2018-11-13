@@ -623,7 +623,7 @@ function pcast_scale_used($pcastid, $scaleid) {
  * This function was added in 1.9
  *
  * This is used to find out if scale used anywhere
- * @param $scaleid int
+ * @param int $scaleid
  * @return boolean True if the scale is used by any pcast
  */
 function pcast_scale_used_anywhere($scaleid) {
@@ -988,6 +988,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
  * logs the pcast files.
  *
  * @param stdClass $pcast
+ * @param stdClass $episode
  * @param string $userid
  * @return bool false if error else true
  */
@@ -1074,6 +1075,7 @@ function pcast_reset_course_form_definition(&$mform) {
 
 /**
  * Course reset form defaults.
+ * @param object $course
  * @return array
  */
 function pcast_reset_course_form_defaults($course) {
@@ -1091,7 +1093,6 @@ function pcast_reset_course_form_defaults($course) {
  * @param int $courseid
  * @param string optional type
  */
-// TODO: LOOK AT AFTER GRADES ARE IMPLEMENTED!
 function pcast_reset_gradebook($courseid, $type='') {
     global $DB;
 
@@ -1109,7 +1110,7 @@ function pcast_reset_gradebook($courseid, $type='') {
  * Actual implementation of the rest coures functionality, delete all the
  * pcast responses for course $data->courseid.
  *
- * @param $data the data submitted from the reset course.
+ * @param stdClass $data the data submitted from the reset course.
  * @return array status array
  */
 function pcast_reset_userdata($data) {
@@ -1285,7 +1286,6 @@ function pcast_reset_userdata($data) {
  * @param stdClass $parentcontext Block's parent context
  * @param stdClass $currentcontext Current context of block
  */
-
 function pcast_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $modulepagetype = array(
         'mod-pcast-*' => get_string('page-mod-pcast-x', 'pcast'),
@@ -1295,13 +1295,10 @@ function pcast_page_type_list($pagetype, $parentcontext, $currentcontext) {
 
 }
 
-
-// TODO: RATINGS CODE -UNTESTED!
-
 /**
  * Return grade for given user or all users.
  *
- * @param int $pcastid id of pcast
+ * @param stdClass $pcast the pcast instance
  * @param int $userid optional user id, 0 means all users
  * @return array array of grades, false if none
  */
@@ -1411,7 +1408,9 @@ function pcast_comment_validate($commentparam) {
 
 /**
  * Return rating related permissions
- * @param string $options the context id
+ * @param string $contextid the context id
+ * @param string $component the plugin name (eg mod_pcast)
+ * @param string $ratingarea the rating area (eg episode)
  * @return array an associative array of the user's rating permissions
  */
 function pcast_rating_permissions($contextid, $component, $ratingarea) {
@@ -1637,6 +1636,7 @@ function mod_pcast_get_completion_active_rule_descriptions($cm) {
  *
  * @param stdClass $pcast null means all glossaries (with extra cmidnumber property)
  * @param int $userid specific user only, 0 means all
+ * @param bool $nullifnone
  */
 function pcast_update_grades($pcast=null, $userid=0, $nullifnone=true) {
     global $CFG;
@@ -1663,7 +1663,7 @@ function pcast_update_grades($pcast=null, $userid=0, $nullifnone=true) {
  * Create/update grade item for given pcast
  *
  * @param stdClass $pcast object with extra cmidnumber
- * @param mixed optional array/object of grade(s); 'reset' means reset grades in gradebook
+ * @param array/object $grades optional array/object of grade(s); 'reset' means reset grades in gradebook
  * @return int, 0 if ok, error code otherwise
  */
 function pcast_grade_item_update($pcast, $grades=null) {
