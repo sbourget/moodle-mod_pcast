@@ -1549,7 +1549,7 @@ function mod_pcast_core_calendar_provide_event_action(calendar_event $event,
                                                       int $userid = 0) {
 
     global $USER;
-    
+
     if (!$userid) {
         $userid = $USER->id;
     }
@@ -1559,7 +1559,7 @@ function mod_pcast_core_calendar_provide_event_action(calendar_event $event,
     if (!$cm->uservisible) {
         // The module is not visible to the user.
         return null;
-        
+
     }
     $completion = new \completion_info($cm->get_course());
 

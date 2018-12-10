@@ -35,6 +35,9 @@ require_once($CFG->dirroot . '/mod/pcast/locallib.php');
  */
 class mod_pcast_lib_testcase extends advanced_testcase {
 
+    /**
+     * Test calendar event creation.
+     */
     public function test_pcast_core_calendar_provide_event_action() {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -56,6 +59,9 @@ class mod_pcast_lib_testcase extends advanced_testcase {
         $this->assertTrue($actionevent->is_actionable());
     }
 
+    /**
+     * Test calendar event read as a non-user.
+     */
     public function test_pcast_core_calendar_provide_event_action_as_non_user() {
         global $CFG;
         $this->resetAfterTest();
@@ -76,6 +82,10 @@ class mod_pcast_lib_testcase extends advanced_testcase {
         // Confirm the event is not shown at all.
         $this->assertNull($actionevent);
     }
+
+    /**
+     * Test calendar event read as a user.
+     */
     public function test_pcast_core_calendar_provide_event_action_for_user() {
         global $CFG;
         $this->resetAfterTest();
@@ -103,6 +113,10 @@ class mod_pcast_lib_testcase extends advanced_testcase {
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
     }
+
+    /**
+     * Test calendar event read for an activity in a hidden section.
+     */
     public function test_pcast_core_calendar_provide_event_action_in_hidden_section() {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -124,6 +138,10 @@ class mod_pcast_lib_testcase extends advanced_testcase {
         // Confirm the event is not shown at all.
         $this->assertNull($actionevent);
     }
+
+    /**
+     * Test calendar event read for an activity already completed.
+     */
     public function test_pcast_core_calendar_provide_event_action_already_completed() {
         global $CFG;
         $this->resetAfterTest();
@@ -148,6 +166,10 @@ class mod_pcast_lib_testcase extends advanced_testcase {
         // Ensure result was null.
         $this->assertNull($actionevent);
     }
+
+    /**
+     * Test calendar event read for an activity already completed by the user.
+     */
     public function test_pcast_core_calendar_provide_event_action_already_completed_for_user() {
         global $CFG;
         $this->resetAfterTest();
@@ -175,7 +197,8 @@ class mod_pcast_lib_testcase extends advanced_testcase {
         // Ensure result was null.
         $this->assertNull($actionevent);
     }
-/**
+
+    /**
      * Creates an action event.
      *
      * @param int $courseid The course id.
