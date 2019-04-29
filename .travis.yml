@@ -7,8 +7,7 @@ addons:
   postgresql: "9.4"
   apt:
     packages:
-      - oracle-java8-installer
-      - oracle-java8-set-default
+      - openjdk-8-jre-headless
 
 cache:
   directories:
@@ -16,7 +15,6 @@ cache:
     - $HOME/.npm
 
 php:
- - 7.0
  - 7.1
  - 7.2
 
@@ -50,4 +48,4 @@ script:
   - moodle-plugin-ci mustache
   - moodle-plugin-ci grunt  
   - moodle-plugin-ci phpunit
-  #- moodle-plugin-ci behat
+  - moodle-plugin-ci behat
