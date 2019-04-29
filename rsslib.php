@@ -627,10 +627,9 @@ function pcast_rss_footer($title = null, $link = null, $description = null) {
 /**
  * This function returns the URL for the RSS XML file.
  *
- * @todo THIS WILL NOT WORK WITH SLASHARGS DISABLED
- * @param int contextid the course id
- * @param int userid the current user id
- * @param string componentname the name of the current module.
+ * @param int $contextid the course id
+ * @param int $userid the current user id
+ * @param string $componentname the name of the current module.
  * @param string $additionalargs For modules, module instance id
  */
 function pcast_rss_get_url($contextid, $userid, $componentname, $additionalargs) {

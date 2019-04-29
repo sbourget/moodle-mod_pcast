@@ -990,6 +990,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
  * @param stdClass $pcast
  * @param stdClass $episode
  * @param string $userid
+ * @param stdClass $context Moodle Context.
  * @return bool false if error else true
  */
 function pcast_add_view_instance($pcast, $episode, $userid, $context) {
@@ -1088,10 +1089,10 @@ function pcast_reset_course_form_defaults($course) {
 }
 
 /**
- * Removes all grades from gradebook
+ * Removes all grades from grade book
  *
  * @param int $courseid
- * @param string optional type
+ * @param string $type (optional)
  */
 function pcast_reset_gradebook($courseid, $type='') {
     global $DB;
@@ -1542,6 +1543,7 @@ function pcast_rating_validate($params) {
  *
  * @param calendar_event $event
  * @param \core_calendar\action_factory $factory
+ * @param int $userid
  * @return \core_calendar\local\event\entities\action_interface|null
  */
 function mod_pcast_core_calendar_provide_event_action(calendar_event $event,
