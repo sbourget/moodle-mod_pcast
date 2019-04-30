@@ -89,7 +89,7 @@ class mod_pcast_generator extends testing_module_generator {
      * Create a pcast episode (without the attachment)
      * @param object $pcast podcast object
      * @param array $record podcast settings
-     * @return type
+     * @return object
      */
     public function create_content($pcast, $record = array()) {
         global $DB, $USER;
