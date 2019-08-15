@@ -2,13 +2,15 @@ language: php
 
 sudo: true
 
+services:
+  - mysql
+
 addons:
   firefox: "47.0.1"
   postgresql: "9.4"
   apt:
     packages:
       - openjdk-8-jre-headless
-      - chromium-chromedriver
 
 cache:
   directories:
@@ -19,9 +21,6 @@ php:
  - 7.1
  - 7.2
  - 7.3
-
-addons:
-  postgresql: 9.4
 
 env:
  matrix:
