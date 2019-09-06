@@ -1663,7 +1663,7 @@ function pcast_update_grades($pcast=null, $userid=0, $nullifnone=true) {
         pcast_grade_item_update($pcast, $grades);
 
     } else if ($userid and $nullifnone) {
-        $grade = new object();
+        $grade = new stdClass();
         $grade->userid   = $userid;
         $grade->rawgrade = null;
         pcast_grade_item_update($pcast, $grade);
