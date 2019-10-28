@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload
+@mod @mod_pcast @_file_upload
 Feature: A teacher can create a podcast activity with episodes and apply tags.
   As a teacher
   I need to create a podcast episode with tags

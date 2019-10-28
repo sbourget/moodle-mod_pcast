@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload @javascript
+@mod @mod_pcast @_file_upload @javascript
 Feature: Pcast reset
   In order to reuse past podcast activities
   As a teacher

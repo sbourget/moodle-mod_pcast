@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload
+@mod @mod_pcast @_file_upload
 Feature: Teachers can use activity completion to track student progress
   As a teacher
   I need to enable activity completion for podcasts.

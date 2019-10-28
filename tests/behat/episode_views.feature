@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload @javascript
+@mod @mod_pcast @_file_upload @javascript
 Feature: A teacher can create a podcast activity and see who has viewed the episodes.
   As a teacher
   I need to create a podcast and check the number of views

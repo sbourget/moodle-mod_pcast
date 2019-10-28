@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload
+@mod @mod_pcast @_file_upload
 Feature: A teacher can create a podcast activity and use it with groups of students
   As a teacher
   I need to create a podcast, add an episode, and view the RSS feed

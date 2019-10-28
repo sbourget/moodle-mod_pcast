@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload
+@mod @mod_pcast @_file_upload
 Feature: Teachers can review student progress on all podcasts in a course by viewing the outline report
   As a teacher
   I need to view the outline report for one of my students.

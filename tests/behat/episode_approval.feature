@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload
+@mod @mod_pcast @_file_upload
 Feature: A teacher can create a podcast activity and require episodes to be approved before viewing
   As a teacher
   I need to create a podcast and require episode approval

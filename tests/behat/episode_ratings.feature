@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload @javascript
+@mod @mod_pcast @_file_upload @javascript
 Feature: Pcast ratings
   In order to rate past podcast activities
   As a teacher

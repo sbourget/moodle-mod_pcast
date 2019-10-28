@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload
+@mod @mod_pcast @_file_upload
 Feature: A teacher can create a podcast activity and add, edit, and delete episodes
   As a teacher
   I need to create a podcast and add / update/ create episodes

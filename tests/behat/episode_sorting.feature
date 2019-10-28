@@ -1,4 +1,4 @@
-@mod @mod_pcast @file_upload
+@mod @mod_pcast @_file_upload
 Feature: A teacher can create a podcast activity and sort the episodes a variety of ways
   As a teacher
   I need to create a podcast, add an episode, and view the episodes
