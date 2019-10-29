@@ -33,6 +33,7 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I should see "Test episode summary"
     And I follow "View"
     And I follow "audio/mp3"
+    And I wait until the page is ready
     And I press the "back" button in the browser
     And I log out
     # Student 2 view
@@ -41,6 +42,7 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I follow "Test podcast name"
     And I follow "View"
     And I follow "audio/mp3"
+    And I wait until the page is ready
     And I press the "back" button in the browser
     And I log out
     Then I log in as "teacher1"
@@ -52,6 +54,7 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I should see "1" in the "Student 1" "table_row"
     And I follow "Episode"
     And I follow "audio/mp3"
+    And I wait until the page is ready
     And I press the "back" button in the browser
     And I log out
     And I log in as "student1"
