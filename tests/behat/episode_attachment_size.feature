@@ -20,7 +20,7 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
     And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     When I press "Add a new episode"
-    Then I should see "Maximum size for new files: 10KB"
+    Then I should see "Maximum file size: 10KB, maximum number of files: 1"
     And I press "Cancel"
 
   Scenario: Create a podcast and add an episode that is smaller than the limit
@@ -40,5 +40,5 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
     And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     When I press "Add a new episode"
-    Then I should see "Maximum size for new files: 2MB"
+    Then I should see "Maximum file size: 2MB, maximum number of files: 1"
     And I press "Cancel"

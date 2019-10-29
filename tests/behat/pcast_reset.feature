@@ -130,6 +130,7 @@ Feature: Pcast reset
     And I should see "Test episode summary"
     And I follow "View"
     And I follow "audio/mp3"
+    And I wait until the page is ready
     And I press the "back" button in the browser
     And I follow "Course 1"
     And I follow "Test podcast name"
