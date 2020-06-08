@@ -4,6 +4,7 @@ sudo: true
 
 services:
   - mysql
+  - postgresql
 
 addons:
   firefox: "47.0.1"
