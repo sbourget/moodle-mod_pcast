@@ -35,8 +35,8 @@ $id = optional_param('id', 0, PARAM_INT); // Course_module ID.
 
 // Get Parameters.
 $mode       = optional_param('mode', PCAST_STANDARD_VIEW, PARAM_ALPHANUM); // Episode entry cat date letter search author approval.
-$hook       = optional_param('hook', 'ALL', PARAM_CLEAN);                  // The Episode, entry, cat, etc... to look for based on mode.
-$sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);               // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
+$hook       = optional_param('hook', 'ALL', PARAM_CLEAN);                  // The Episode, cat, etc... to look for based on mode.
+$sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);               // Sorted view: CREATION | UPDATE | AUTHOR...
 $sortorder  = optional_param('sortorder', 'asc', PARAM_ALPHA);             // It defines the order of the sorting (ASC or DESC).
 $page       = optional_param('page', 0, PARAM_INT);                        // Page to show (for paging purposes).
 
