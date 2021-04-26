@@ -41,7 +41,7 @@ require_once($CFG->libdir . '/completionlib.php');
  * Class for unit testing mod_pcast/activity_custom_completion.
  *
  * @package   mod_pcast
- * @copyright @copyright 2021 Stephen Bourget
+ * @copyright 2021 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_pcast_custom_completion_testcase extends advanced_testcase {
