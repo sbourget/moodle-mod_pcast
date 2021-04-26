@@ -48,6 +48,7 @@ if ($id) {
     throw new moodle_exception('invalidcmorid', 'pcast');
 }
 
+$cm = cm_info::create($cm);
 require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/pcast:view', $context);
@@ -88,6 +89,11 @@ if ($groupmode) {
 }
 
 echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
+
+// Render the activity information.
+$completiondetails = \core_completion\cm_completion_details::get_instance($cm, $USER->id);
+$activitydates = \core\activity_dates::get_dates_for_module($cm, $USER->id);
+echo $OUTPUT->activity_information($cm, $completiondetails, $activitydates);
 
 // Show the add entry button if allowed (usercan post + write or write + manage  or write + approve caps).
 if (((has_capability('mod/pcast:write', $context)) and ($pcast->userscanpost))
