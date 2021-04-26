@@ -34,18 +34,18 @@ require_once($CFG->libdir . '/completionlib.php');
 $id = optional_param('id', 0, PARAM_INT); // Course_module ID.
 
 // Get Parameters.
-$mode       = optional_param('mode', PCAST_STANDARD_VIEW, PARAM_ALPHANUM); // term entry cat date letter search author approval
-$hook       = optional_param('hook', 'ALL', PARAM_CLEAN);           // the term, entry, cat, etc... to look for based on mode
-$sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);        // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
-$sortorder  = optional_param('sortorder', 'asc', PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC)
-$page       = optional_param('page', 0, PARAM_INT);               // Page to show (for paging purposes).
+$mode       = optional_param('mode', PCAST_STANDARD_VIEW, PARAM_ALPHANUM); // Episode entry cat date letter search author approval.
+$hook       = optional_param('hook', 'ALL', PARAM_CLEAN);                  // The Episode, entry, cat, etc... to look for based on mode.
+$sortkey    = optional_param('sortkey', '', PARAM_ALPHANUM);               // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
+$sortorder  = optional_param('sortorder', 'asc', PARAM_ALPHA);             // It defines the order of the sorting (ASC or DESC).
+$page       = optional_param('page', 0, PARAM_INT);                        // Page to show (for paging purposes).
 
 if ($id) {
     $cm         = get_coursemodule_from_id('pcast', $id, 0, false, MUST_EXIST);
     $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
     $pcast  = $DB->get_record('pcast', array('id' => $cm->instance), '*', MUST_EXIST);
 } else {
-    print_error('invalidcmorid', 'pcast');
+    throw new moodle_exception('invalidcmorid', 'pcast');
 }
 
 require_login($course, true, $cm);
@@ -118,7 +118,7 @@ if (!isset($sortkey)) {
 
 // Make sure variables are properly cleaned.
 $sortkey   = clean_param($sortkey, PARAM_ALPHANUM);  // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
-$sortorder = clean_param($sortorder, PARAM_ALPHA);   // it defines the order of the sorting (ASC or DESC).
+$sortorder = clean_param($sortorder, PARAM_ALPHA);   // It defines the order of the sorting (ASC or DESC).
 
 $tabrows = array();
 $browserow = array();
@@ -157,11 +157,11 @@ if (!isset($category)) {
 
 // Check to see if any content should be displayed (prevents guessing of URLs).
 if ((!$pcast->userscancategorize) and ($mode == PCAST_CATEGORY_VIEW)) {
-    print_error('errorinvalidmode', 'pcast');
+    throw new moodle_exception('errorinvalidmode', 'pcast');
 } else if ((!$pcast->displayauthor and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_AUTHOR_VIEW)) {
-    print_error('errorinvalidmode', 'pcast');
+    throw new moodle_exception('errorinvalidmode', 'pcast');
 } else if ((!has_capability('mod/pcast:approve', $context)) and ($mode == PCAST_APPROVAL_VIEW)) {
-    print_error('errorinvalidmode', 'pcast');
+    throw new moodle_exception('errorinvalidmode', 'pcast');
 }
 
 switch ($mode) {

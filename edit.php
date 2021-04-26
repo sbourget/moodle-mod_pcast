@@ -40,7 +40,7 @@ if ($cmid) {
     $pcast      = $DB->get_record('pcast', array('id' => $cm->instance), '*', MUST_EXIST);
 
 } else {
-    print_error('invalidcmorid', 'pcast');
+    throw new moodle_exception('invalidcmorid', 'pcast');
 }
 
 require_login($course, false, $cm);
@@ -57,11 +57,11 @@ $PAGE->set_context($context);
 if ($id) { // If the entry is specified.
     if (!has_capability('mod/pcast:write', $context)) {
 
-        print_error('noeditprivlidges', 'pcast', new moodle_url('/mod/pcast/view.php', array('id' => $cmid)));
+        throw new moodle_exception('noeditprivlidges', 'pcast', new moodle_url('/mod/pcast/view.php', array('id' => $cmid)));
     }
 
     if (!$episode = $DB->get_record('pcast_episodes', array('id' => $id, 'pcastid' => $pcast->id))) {
-        print_error('invalidentry', 'pcast');
+        throw new moodle_exception('invalidentry', 'pcast');
     }
 
     // Calculate the editing period.
@@ -71,20 +71,20 @@ if ($id) { // If the entry is specified.
         // Teacher.
         if (!has_capability('mod/pcast:write', $context)) {
             // No permissions.
-            print_error('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+            throw new moodle_exception('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         }
 
     } else {
         // Not A Teacher.
         if (!has_capability('mod/pcast:write', $context)) {
             // No permissions.
-            print_error('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+            throw new moodle_exception('errcannotedit', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         } else if ($episode->userid != $USER->id) {
             // Not the origional author.
-            print_error('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+            throw new moodle_exception('errcannoteditothers', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         } else if (!$ineditperiod) {
             // After the editing period.
-            print_error('erredittimeexpired', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+            throw new moodle_exception('erredittimeexpired', 'pcast', "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
         }
 
     }

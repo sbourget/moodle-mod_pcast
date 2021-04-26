@@ -52,7 +52,7 @@ if ($eid) {
     $episodes = array($episode);
 
 } else {
-    print_error('invalidelementid');
+    throw new moodle_exception('invalidelementid');
 }
 
 if (!empty($episode->courseid)) {
@@ -71,7 +71,7 @@ if (!empty($episode->courseid)) {
 }
 
 if (!pcast_episode_allowed_viewing($episode, $cm, groups_get_activity_groupmode($cm))) {
-    print_error('cannotseeepisode', 'pcast');
+    throw new moodle_exception('cannotseeepisode', 'pcast');
 }
 
 echo $OUTPUT->heading(get_string("viewthisepisode", "pcast", $pcast->name));
@@ -125,9 +125,9 @@ $tabrows[] = $browserow;     // Needs to be an Array of Arrays (2D Array).
 
 // Check to see if any content should be displayed (prevents guessing of URLs).
 if (((!$pcast->userscancomment) and (!$pcast->assessed)) and ($mode == PCAST_EPISODE_COMMENT_AND_RATE)) {
-    print_error('errorinvalidmode', 'pcast');
+    throw new moodle_exception('errorinvalidmode', 'pcast');
 } else if ((!$pcast->displayviews and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_EPISODE_VIEWS)) {
-    print_error('errorinvalidmode', 'pcast');
+    throw new moodle_exception('errorinvalidmode', 'pcast');
 }
 
 echo html_writer::start_tag('div', array('class' => 'pcast-display')). "\n";

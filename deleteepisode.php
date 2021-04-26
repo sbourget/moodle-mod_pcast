@@ -57,7 +57,7 @@ if ($id) {
     $pcast      = $DB->get_record('pcast', array('id' => $cm->instance), '*', MUST_EXIST);
 
 } else {
-    print_error('invalidcmorid', 'pcast');
+    throw new moodle_exception('invalidcmorid', 'pcast');
 }
 
 require_login($course->id, false, $cm);
@@ -69,11 +69,11 @@ $PAGE->set_context($context);
 $manageentries = has_capability('mod/pcast:manage', $context);
 
 if (($episode->userid != $USER->id) and !$manageentries) { // Guest id is never matched, no need for special check here.
-    print_error('nopermissiontodelepisode', 'pcast');
+    throw new moodle_exception('nopermissiontodelepisode', 'pcast');
 }
 $ineditperiod = ((time() - $episode->timecreated < $CFG->maxeditingtime));
 if (!$ineditperiod and !$manageentries) {
-    print_error('errdeltimeexpired', 'pcast');
+    throw new moodle_exception('errdeltimeexpired', 'pcast');
 }
 
 // If data is submitted, then process and store.

@@ -1007,7 +1007,7 @@ function pcast_add_view_instance($pcast, $episode, $userid, $context) {
         $view->lastview = time();
 
         if (!$result = $DB->insert_record("pcast_views", $view)) {
-            print_error('databaseerror', 'pcast');
+            throw new moodle_exception('databaseerror', 'pcast');
         }
 
     } else {
@@ -1015,7 +1015,7 @@ function pcast_add_view_instance($pcast, $episode, $userid, $context) {
         $view->views = $view->views + 1;
         $view->lastview = time();
         if (!$result = $DB->update_record("pcast_views", $view)) {
-            print_error('databaseerror', 'pcast');
+            throw new moodle_exception('databaseerror', 'pcast');
         }
     }
 
@@ -1426,7 +1426,7 @@ function pcast_rating_permissions($contextid, $component, $ratingarea) {
     $context = context::instance_by_id($contextid);
 
     if (!$context) {
-        print_error('invalidcontext');
+        throw new moodle_exception('invalidcontext');
         return null;
     } else {
         return array('view' => has_capability('mod/pcast:viewrating', $context),
