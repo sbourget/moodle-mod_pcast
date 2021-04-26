@@ -38,10 +38,12 @@ Feature: Teachers can use activity completion to track student progress
     And I log out
     When I log in as "student1"
     And I am on "Course 1" course homepage
-    And the "Test podcast name" "pcast" activity with "auto" completion should be marked as not complete
+    And the "View" completion condition of "Test podcast name" is displayed as "todo"
+#    And the "Test podcast name" "pcast" activity with "auto" completion should be marked as not complete
     Then I follow "Test podcast name"
     And I follow "Course 1"
-    And the "Test podcast name" "pcast" activity with "auto" completion should be marked as complete
+#    And the "Test podcast name" "pcast" activity with "auto" completion should be marked as complete
+    And the "View" completion condition of "Test podcast name" is displayed as "done"
 
   @javascript
   Scenario: Automatic completion upload 1 episodes
@@ -57,7 +59,8 @@ Feature: Teachers can use activity completion to track student progress
 
     When I log in as "student1"
     And I am on "Course 1" course homepage
-    And the "Test podcast name" "pcast" activity with "auto" completion should be marked as not complete
+    And the "Add 1 episode(s)" completion condition of "Test podcast name" is displayed as "todo"
+#    And the "Test podcast name" "pcast" activity with "auto" completion should be marked as not complete
     And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -66,7 +69,8 @@ Feature: Teachers can use activity completion to track student progress
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I follow "Course 1"
-    And the "Test podcast name" "pcast" activity with "auto" completion should be marked as not complete
+    And the "Add 1 episode(s)" completion condition of "Test podcast name" is displayed as "todo"
+    # And the "Test podcast name" "pcast" activity with "auto" completion should be marked as not complete
     And I log out
 
     And I log in as "teacher1"
@@ -80,4 +84,5 @@ Feature: Teachers can use activity completion to track student progress
 
     Then I log in as "student1"
     And I am on "Course 1" course homepage
-    And the "Test podcast name" "pcast" activity with "auto" completion should be marked as complete
+    # And the "Test podcast name" "pcast" activity with "auto" completion should be marked as complete
+    And the "Add 1 episode(s)" completion condition of "Test podcast name" is displayed as "done"
