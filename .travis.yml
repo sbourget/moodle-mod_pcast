@@ -1,17 +1,12 @@
 language: php
 
-sudo: true
-
 services:
   - mysql
   - postgresql
+  - docker
 
 addons:
-  firefox: "47.0.1"
-  postgresql: "9.5"
-  apt:
-    packages:
-      - openjdk-8-jre-headless
+  postgresql: "9.6"
 
 cache:
   directories:
@@ -21,6 +16,7 @@ cache:
 php:
  - 7.2
  - 7.3
+ - 7.4
 
 env:
  matrix:
@@ -29,10 +25,8 @@ env:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 14.0
-  - nvm use 14.0
   - cd ../..
-  - composer create-project -n --no-dev --prefer-dist blackboard-open-source/moodle-plugin-ci ci ^2
+  - composer create-project -n --no-dev --prefer-dist moodlehq/moodle-plugin-ci ci ^3
   - export PATH="$(cd ci/bin; pwd):$(cd ci/vendor/bin; pwd):$PATH"
 
 install:
