@@ -229,7 +229,8 @@ function pcast_rss_get_sql($pcast, $time=0) {
 
     if ($pcast->displayauthor == 1) {
         // Include author name.
-        $allnamefields = get_all_user_name_fields(true, 'u');
+        $userfieldsapi = \core\user_fields::for_name();
+        $allnamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
         $sql = "SELECT e.id AS episodeid,
                   e.pcastid AS pcastid,
                   e.name AS episodename,
