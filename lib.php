@@ -339,7 +339,7 @@ function pcast_user_outline($course, $user, $mod, $pcast) {
  */
 function pcast_get_user_episodes($pcastid, $userid) {
     global $DB;
-    $userfieldsapi = \core\user_fields::for_name();
+    $userfieldsapi = \core_user\fields::for_name();
     $allnamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
     $sql = "SELECT p.id AS id,
                    p.pcastid AS pcastid,
@@ -457,7 +457,7 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
 
     $plist = implode(',', $ids); // There should not be hundreds of podcasts in one course, right?
 
-    $userfieldsapi = \core\user_fields::for_name();
+    $userfieldsapi = \core_user\fields::for_name();
     $allnamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
 
     if (!$episodes = $DB->get_records_sql("SELECT e.id, e.name, e.approved, e.timemodified, e.pcastid,
