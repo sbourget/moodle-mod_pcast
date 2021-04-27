@@ -150,6 +150,9 @@ Feature: Pcast reset
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
+    And I follow "audio/mp3"
+    And I wait until the page is ready
+    And I press the "back" button in the browser
     And I should see "1" in the "Total views" "table_row"
 
   Scenario: Use course reset to remove all episode ratings
