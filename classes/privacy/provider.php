@@ -25,8 +25,10 @@
 namespace mod_pcast\privacy;
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\deletion_criteria;
+use core_privacy\local\request\userlist;
 use core_privacy\local\request\helper;
 use core_privacy\local\request\writer;
 
@@ -43,6 +45,8 @@ require_once($CFG->dirroot . '/comment/lib.php');
 class provider implements
     // This plugin stores personal data.
     \core_privacy\local\metadata\provider,
+    // This plugin is capable of determining which users have data within it.
+    \core_privacy\local\request\core_userlist_provider,
     // This plugin is a core_user_data_provider.
     \core_privacy\local\request\plugin\provider {
 
@@ -105,6 +109,58 @@ class provider implements
         $contextlist->add_from_sql($sql, $params);
 
         return $contextlist;
+    }
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     *
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+
+        if (!is_a($context, \context_module::class)) {
+            return;
+        }
+
+        // Find users with pcast pisodes.
+        $sql = "SELECT ge.userid
+                  FROM {context} c
+                  JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
+                  JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+                  JOIN {pcast} p ON g.id = cm.instance
+                  JOIN {pcast_episodes} pe ON pe.pcastid = p.id
+                 WHERE c.id = :contextid";
+
+        $params = [
+            'contextid' => $context->id,
+            'contextlevel' => CONTEXT_MODULE,
+            'modname' => 'pcast',
+        ];
+
+        $userlist->add_from_sql('userid', $sql, $params);
+
+        // Find users with pcast comments.
+        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_pcast', 'pcast_episode',
+                $context->id);
+
+        // Find users with pcast ratings.
+        $sql = "SELECT ge.id
+                  FROM {context} c
+                  JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
+                  JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+                  JOIN {pcast} p ON p.id = cm.instance
+                  JOIN {pcast_episodes} pe ON pe.pcastid = p.id
+                 WHERE c.id = :contextid";
+
+        $params = [
+            'contextid' => $context->id,
+            'contextlevel' => CONTEXT_MODULE,
+            'modname' => 'pcast',
+        ];
+
+        \core_rating\privacy\provider::get_users_in_context_from_sql($userlist, 'rat', 'mod_pcast', 'episode', $sql, $params);
     }
 
     /**
@@ -335,4 +391,60 @@ class provider implements
             }
         }
     }
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param   approved_userlist    $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+
+        $context = $userlist->get_context();
+        $userids = $userlist->get_userids();
+        $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
+        list($userinsql, $userinparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+
+        $pcastepisodeswhere = "pcastid = :instanceid AND userid {$userinsql}";
+        $userinstanceparams = $userinparams + ['instanceid' => $instanceid];
+
+        $episodesobject = $DB->get_recordset_select('pcast_episodes', $pcastepisodeswhere, $userinstanceparams, 'id', 'id');
+        $episodes = [];
+
+        foreach ($episodesobject as $episode) {
+            $episodes[] = $episode->id;
+        }
+
+        $episodesobject->close();
+
+        if (!$episodes) {
+            return;
+        }
+
+        list($insql, $inparams) = $DB->get_in_or_equal($episodes, SQL_PARAMS_NAMED);
+
+        // Delete related episode views.
+        $DB->delete_records_list('pcast_views', 'episodeid', $episodes);
+
+        // Delete related episode categories.
+        $DB->delete_records_list('pcast_episodes_categories', 'episodeid', $episodes);
+
+        // Delete related episode and attachment files.
+        get_file_storage()->delete_area_files_select($context->id, 'mod_pcast', 'episode', $insql, $inparams);
+        get_file_storage()->delete_area_files_select($context->id, 'mod_pcast', 'mediafile', $insql, $inparams);
+
+        // Delete user tags related to this pcast.
+        \core_tag\privacy\provider::delete_item_tags_select($context, 'mod_pcast', 'pcast_episodes', $insql, $inparams);
+
+        // Delete related ratings.
+        \core_rating\privacy\provider::delete_ratings_select($context, 'mod_pcast', 'episode', $insql, $inparams);
+
+        // Delete comments.
+        \core_comment\privacy\provider::delete_comments_for_users($userlist, 'mod_pcast', 'pcast_episode');
+
+        // Now delete all user related episodes.
+        $deletewhere = "pcastid = :instanceid AND userid {$userinsql}";
+        $DB->delete_records_select('pcast_episodes', $deletewhere, $userinstanceparams);
+    }
+
 }
