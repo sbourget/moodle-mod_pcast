@@ -15,8 +15,8 @@ Feature: A teacher can create a podcast activity and limit the number of episode
       | user | course | role |
       | teacher1 | C1 | editingteacher |
     And the following "activities" exist:
-      | activity | course | idnumber | name              | intro                    | episodesperpage |
-      | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 5               |
+      | activity | course | name              | intro                    | episodesperpage |
+      | pcast    | C1     | Test podcast name | Test podcast description | 5               |
     And I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:

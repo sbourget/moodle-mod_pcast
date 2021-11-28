@@ -16,8 +16,8 @@ Feature: Teachers can review student progress on all podcasts in a course by vie
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
     And the following "activities" exist:
-      | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval |
-      | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 0               |
+      | activity | course | name              | intro                    | userscanpost | requireapproval |
+      | pcast    | C1     | Test podcast name | Test podcast description | 1            | 0               |
 
   Scenario: A student does not upload anything
     Given I log in as "teacher1"

@@ -17,8 +17,8 @@ Feature: Pcast ratings
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
     And the following "activities" exist:
-      | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval |
-      | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 0               |
+      | activity | course | name              | intro                    | userscanpost | requireapproval |
+      | pcast    | C1     | Test podcast name | Test podcast description | 1            | 0               |
 
   Scenario: Use ratings to rate student episodes
     Given I am on the "Test podcast name" Activity page logged in as "teacher1"

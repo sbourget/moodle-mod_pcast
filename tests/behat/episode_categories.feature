@@ -27,8 +27,8 @@ Feature: A teacher can create a podcast activity and users can assign categories
       | pcast_enablerssfeeds | 1 |
       | pcast_enablerssitunes | 1 |
     And the following "activities" exist:
-      | activity | name              | intro                    | course | idnumber |episodesperpage | requireapproval | enablerssfeed | enablerssitunes | explicit | userscancategorize |
-      | pcast    | Test podcast name | Test podcast description | C1     | pcast1   | 5              | 0               | 1             | 1               | 1        | 1                  |
+      | activity | name              | intro                    | course | episodesperpage | requireapproval | enablerssfeed | enablerssitunes | explicit | userscancategorize |
+      | pcast    | Test podcast name | Test podcast description | C1     | 5               | 0               | 1             | 1               | 1        | 1                  |
     When I am on the "Test podcast name" Activity page logged in as "student1"
     And I press "Add a new episode"
     And I set the following fields to these values:
