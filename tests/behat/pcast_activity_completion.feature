@@ -28,7 +28,6 @@ Feature: Teachers can use activity completion to track student progress
       | Require approval for episodes | No |
       | Completion tracking | Show activity as complete when conditions are met |
       | id_completionview | 1 |
-    And I follow "Test podcast name"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |

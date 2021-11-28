@@ -21,7 +21,7 @@ Feature: A teacher can create a podcast activity and require episodes to be appr
     And the following "activities" exist:
       | activity | course | name              | intro                    | userscanpost | requireapproval |
       | pcast    | C1     | Test podcast name | Test podcast description | 1            | 1               |
-    When I am on the "Test podcast name" "pcast activity" page logged in as student1
+    When I am on the "Test podcast name" Activity page logged in as student1
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -34,16 +34,12 @@ Feature: A teacher can create a podcast activity and require episodes to be appr
     And I should see "0 minutes 20 seconds"
     And I log out
 
-    Then I log in as "student2"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    Then I am on the "Test podcast name" Activity page logged in as student2
     And I should not see "Test episode name"
     And I should not see "Test episode summary"
     And I log out
 
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page logged in as teacher1
     And I should not see "Test episode name"
     And I should not see "Test episode summary"
     And I navigate to "Approve episodes" in current page administration
@@ -52,24 +48,18 @@ Feature: A teacher can create a podcast activity and require episodes to be appr
     And I follow "Approve this episode"
     And I log out
 
-    Then I log in as "student2"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    Then I am on the "Test podcast name" Activity page logged in as student2
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I log out
 
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page logged in as teacher1
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "Disapprove this episode"
     And I log out
 
-    Then I log in as "student2"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    Then I am on the "Test podcast name" Activity page logged in as student2
     And I should not see "Test episode name"
     And I should not see "Test episode summary"
     And I log out

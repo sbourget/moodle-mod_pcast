@@ -42,7 +42,6 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
       | Require approval for episodes | No |
       | Group mode | Separate groups |
       | Episodes shown per page | 5 |
-    And I follow "Test podcast name"
     And I log out
 
     When I am on the "Test podcast name" Activity page logged in as "student1"

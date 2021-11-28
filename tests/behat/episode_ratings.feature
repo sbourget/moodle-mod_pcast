@@ -22,7 +22,7 @@ Feature: Pcast ratings
 
   Scenario: Use ratings to rate student episodes
     Given I am on the "Test podcast name" Activity page logged in as "teacher1"
-    And I navigate to "Edit settings" in current page administration
+    And I navigate to "Settings" in current page administration
     And I expand all fieldsets
     And I set the field "Aggregate type" to "Count of ratings"
     And I set the field "id_scale_modgrade_type" to "Scale"
