@@ -75,7 +75,6 @@ $PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => $mode));
 $PAGE->set_title($pcast->name);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
-$PAGE->force_settings_menu();
 
 // Output starts here.
 echo $OUTPUT->header();
