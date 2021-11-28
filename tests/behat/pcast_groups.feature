@@ -45,7 +45,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I follow "Test podcast name"
     And I log out
 
-    When I am on the "Test podcast name" "pcast activity" page logged in as "student1"
+    When I am on the "Test podcast name" Activity page logged in as "student1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 1 Episode |
@@ -54,7 +54,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I press "Save changes"
     And I log out
 
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student2"
+    And I am on the "Test podcast name" Activity page logged in as "student2"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 2 Episode |
@@ -63,7 +63,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I press "Save changes"
     And I log out
 
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student3"
+    And I am on the "Test podcast name" Activity page logged in as "student3"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 3 Episode |
@@ -72,7 +72,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I press "Save changes"
     And I log out
 
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student4"
+    And I am on the "Test podcast name" Activity page logged in as "student4"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 4 Episode |
@@ -87,7 +87,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I should see "Student 4 Episode"
     And I log out
 
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student3"
+    And I am on the "Test podcast name" Activity page logged in as "student3"
     And I should see "Student 1 Episode"
     And I should not see "Student 2 Episode"
     And I should see "Student 3 Episode"
@@ -95,7 +95,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I log out
 
     # Teacher (All groups)
-    And I am on the "Test podcast name" "pcast activity" page logged in as "taecher1"
+    And I am on the "Test podcast name" Activity page logged in as "taecher1"
     And I should see "Student 1 Episode"
     And I should see "Student 2 Episode"
     And I should see "Student 3 Episode"

@@ -17,7 +17,7 @@ Feature: A teacher can create a podcast activity and add, edit, and delete episo
     And the following "activities" exist:
       | activity | course | idnumber | name              | intro                    |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description |
-    When I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    When I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -44,7 +44,7 @@ Feature: A teacher can create a podcast activity and add, edit, and delete episo
     And the following "activities" exist:
       | activity | course | idnumber | name              | intro                    |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description |
-    When I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    When I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -76,7 +76,7 @@ Feature: A teacher can create a podcast activity and add, edit, and delete episo
     And the following "activities" exist:
       | activity | course | idnumber | name              | intro                    |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description |
-    When I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    When I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |

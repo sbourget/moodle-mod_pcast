@@ -21,7 +21,7 @@ Feature: Pcast reset
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1               | 1            | 1            | 0               |
 
   Scenario: Use course reset to remove all episode comments
-    Given I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    Given I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -30,7 +30,7 @@ Feature: Pcast reset
     And I press "Save changes"
     And I log out
 
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student1"
+    And I am on the "Test podcast name" Activity page logged in as "student1"
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
@@ -59,7 +59,7 @@ Feature: Pcast reset
     And I should not see "First student comment"
 
   Scenario: Use course reset to delete all episodes
-    Given I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    Given I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -79,7 +79,7 @@ Feature: Pcast reset
     And I should not see "Test episode name"
 
   Scenario: Use course reset to remove episodes of non-enrolled users
-    Given I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    Given I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -111,7 +111,7 @@ Feature: Pcast reset
     And I should not see "Test episode admin"
 
   Scenario: Use course reset to remove the episode view history
-    Given I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    Given I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -148,7 +148,7 @@ Feature: Pcast reset
     And I should see "0" in the "Total views" "table_row"
 
   Scenario: Use course reset to remove all episode ratings
-    Given I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    Given I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I navigate to "Edit settings" in current page administration
     And I expand all fieldsets
     And I set the field "Aggregate type" to "Count of ratings"
@@ -157,7 +157,7 @@ Feature: Pcast reset
     And I press "Save and display"
     And I log out
 
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student1"
+    And I am on the "Test podcast name" Activity page logged in as "student1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -166,7 +166,7 @@ Feature: Pcast reset
     And I press "Save changes"
     And I log out
 
-    And I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    And I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I am on "Course 1" course homepage
     And I follow "Test podcast name"
     And I follow "View"
@@ -191,7 +191,7 @@ Feature: Pcast reset
     And I should see "0" in the "Total ratings" "table_row"
 
   Scenario: Use course reset to remove all episode tags
-    Given I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    Given I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |

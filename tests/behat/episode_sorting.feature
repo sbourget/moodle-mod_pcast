@@ -20,7 +20,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
     And the following "activities" exist:
       | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval | episodesperpage |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 0               | 1               |
-    And I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    And I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | First Episode |
@@ -37,7 +37,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
 
   @javascript
   Scenario: Sort episodes alphabetically
-    When I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    When I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I follow "Browse by alphabet"
     Then I should see "First Episode"
     And I should not see "Next Episode"
@@ -50,7 +50,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
 
   @javascript
   Scenario: Sort episodes by date
-    When I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    When I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I follow "Browse by date"
     # Sort by oldest updated.
     Then I should see "First Episode"
@@ -70,7 +70,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
 
   @javascript
   Scenario: Sort episodes by author
-    When I am on the "Test podcast name" "pcast activity" page logged in as "student1"
+    When I am on the "Test podcast name" Activity page logged in as "student1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 1 Episode |
@@ -78,7 +78,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student2"
+    And I am on the "Test podcast name" Activity page logged in as "student2"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 2 Episode |
@@ -86,7 +86,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    Then I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    Then I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I follow "Browse by author"
     And I should see "Student 1 Episode"
     And I click on "O" "link" in the ".pcast-links" "css_element"

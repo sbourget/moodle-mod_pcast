@@ -21,7 +21,7 @@ Feature: Pcast ratings
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 0               |
 
   Scenario: Use ratings to rate student episodes
-    Given I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    Given I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I navigate to "Edit settings" in current page administration
     And I expand all fieldsets
     And I set the field "Aggregate type" to "Count of ratings"
@@ -30,7 +30,7 @@ Feature: Pcast ratings
     And I press "Save and display"
     And I log out
 
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student1"
+    And I am on the "Test podcast name" Activity page logged in as "student1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -39,7 +39,7 @@ Feature: Pcast ratings
     And I press "Save changes"
     And I log out
 
-    When I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
+    When I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I follow "View"
     And I follow "Rate"
     And I set the field "rating" to "Mostly connected knowing"

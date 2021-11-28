@@ -29,7 +29,7 @@ Feature: A teacher can create a podcast activity and users can assign categories
     And the following "activities" exist:
       | activity | name              | intro                    | course | idnumber |episodesperpage | requireapproval | enablerssfeed | enablerssitunes | explicit | userscancategorize |
       | pcast    | Test podcast name | Test podcast description | C1     | pcast1   | 5              | 0               | 1             | 1               | 1        | 1                  |
-    When I am on the "Test podcast name" "pcast activity" page logged in as "student1"
+    When I am on the "Test podcast name" Activity page logged in as "student1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 1 Episode |
@@ -38,7 +38,7 @@ Feature: A teacher can create a podcast activity and users can assign categories
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student2"
+    And I am on the "Test podcast name" Activity page logged in as "student2"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 2 Episode |
@@ -47,7 +47,7 @@ Feature: A teacher can create a podcast activity and users can assign categories
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student3"
+    And I am on the "Test podcast name" Activity page logged in as "student3"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 3 Episode |
@@ -56,7 +56,7 @@ Feature: A teacher can create a podcast activity and users can assign categories
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    And I am on the "Test podcast name" "pcast activity" page logged in as "student4"
+    And I am on the "Test podcast name" Activity page logged in as "student4"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 4 Episode |
