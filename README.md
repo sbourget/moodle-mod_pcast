@@ -14,7 +14,7 @@ GNU General Public License for more details:
 
 http:www.gnu.org/copyleft/gpl.html
 
-Pcast module for Moodle - version 3.5+
+Pcast module for Moodle - version 4.0 or Later
 ===============================================================================
 
 Created by:
@@ -26,7 +26,7 @@ Many ideas and code were taken from other Moodle modules and Moodle itself
 
 Installation:
     * see http://docs.moodle.org/en/Installing_contributed_modules_or_plugins
-    * This version works only with Moodle 3.11 or Later
+    * This version works only with Moodle 4.0 or Later
 
 List of features:
 
@@ -45,4 +45,4 @@ List of features:
     * Full RSS Support
 
 Please report any bugs / feature requests to:
-https://tracker.moodle.org/browse/CONTRIB/component/11630/
+https://github.com/sbourget/moodle-mod_pcast/issues
