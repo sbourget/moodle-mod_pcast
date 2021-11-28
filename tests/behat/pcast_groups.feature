@@ -37,6 +37,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I turn editing mode on
     And I add a "Podcast" to section "1" and I fill the form with:
       | Podcast name | Test podcast name |
+      | idnumber | Test podcast name |
       | Description | Test podcast description |
       | Allow users to post episodes | Yes |
       | Require approval for episodes | No |

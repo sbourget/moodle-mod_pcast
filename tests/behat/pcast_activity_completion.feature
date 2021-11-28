@@ -28,6 +28,7 @@ Feature: Teachers can use activity completion to track student progress
       | Require approval for episodes | No |
       | Completion tracking | Show activity as complete when conditions are met |
       | id_completionview | 1 |
+    And I am on the "Test podcast name" Activity page
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -54,10 +55,10 @@ Feature: Teachers can use activity completion to track student progress
       | id_completionepisodes | 1 |
     And I log out
 
-    When I log in as "student1"
+    And I log in as "student1"
     And I am on "Course 1" course homepage
     And the "Add 1 episode(s)" completion condition of "Test podcast name" is displayed as "todo"
-    And I follow "Test podcast name"
+    When I am on the "Test podcast name" Activity page
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |

@@ -50,7 +50,7 @@ Feature: Pcast reset
     And I should see "Delete all comments"
     Then I should see "OK"
     And I press "Continue"
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
@@ -73,7 +73,7 @@ Feature: Pcast reset
     And I should see "Delete episodes from all podcasts"
     Then I should see "OK"
     And I press "Continue"
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page
     And I should not see "Test episode name"
 
   Scenario: Use course reset to remove episodes of non-enrolled users
@@ -103,7 +103,7 @@ Feature: Pcast reset
     And I should see "Delete episodes by users not enrolled"
     Then I should see "OK"
     And I press "Continue"
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
     And I should not see "Test episode admin"
 

@@ -57,7 +57,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     And I follow "Save comment"
     And I log out
 
-    And I am on the "Test podcast name" Activity page logged in as "teacher1
+    And I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"

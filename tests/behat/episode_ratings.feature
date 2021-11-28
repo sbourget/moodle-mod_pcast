@@ -44,8 +44,6 @@ Feature: Pcast ratings
     And I follow "Rate"
     And I set the field "rating" to "Mostly connected knowing"
     And I log out
-    And I log in as "student"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page logged in as "student1"
     And I follow "View"
     Then I should see "1" in the "Total ratings" "table_row"
