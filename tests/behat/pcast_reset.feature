@@ -85,10 +85,8 @@ Feature: Pcast reset
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    And I log in as "admin"
-    And I am on site homepage
-    And I follow "Course 1"
-    And I follow "Test podcast name"
+
+    And I am on the "Test podcast name" Activity page logged in as "admin"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode admin |
@@ -122,7 +120,7 @@ Feature: Pcast reset
     And I wait until the page is ready
     And I press the "back" button in the browser
     And I follow "Course 1"
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page
     And I follow "View"
     And I should see "2" in the "Total views" "table_row"
     And I am on "Course 1" course homepage
@@ -134,7 +132,7 @@ Feature: Pcast reset
     And I should see "Delete episode view history"
     Then I should see "OK"
     And I press "Continue"
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
@@ -145,7 +143,7 @@ Feature: Pcast reset
 
   Scenario: Use course reset to remove all episode ratings
     Given I am on the "Test podcast name" Activity page logged in as "teacher1"
-    And I navigate to "Edit settings" in current page administration
+    And I navigate to "Settings" in current page administration
     And I expand all fieldsets
     And I set the field "Aggregate type" to "Count of ratings"
     And I set the field "id_scale_modgrade_type" to "Scale"
@@ -163,8 +161,6 @@ Feature: Pcast reset
     And I log out
 
     And I am on the "Test podcast name" Activity page logged in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
     And I follow "View"
     And I follow "Rate"
     And I set the field "rating" to "Mostly connected knowing"
@@ -179,7 +175,7 @@ Feature: Pcast reset
     And I should see "Delete all ratings"
     Then I should see "OK"
     And I press "Continue"
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
@@ -205,7 +201,7 @@ Feature: Pcast reset
     And I should see "Delete episode tags"
     Then I should see "OK"
     And I press "Continue"
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
     And I should not see "Example" in the ".lastcol" "css_element"
     And I should not see "Entry" in the ".lastcol" "css_element"

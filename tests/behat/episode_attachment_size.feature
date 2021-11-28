@@ -1,4 +1,4 @@
-@mod @mod_pcast @_file_upload
+@mod @mod_pcast
 Feature: A teacher can create a podcast activity and limit the size of the episodes
   As a teacher
   I need to create a podcast and limit the file size
@@ -20,11 +20,11 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
   Scenario: Create a podcast and add an episode that is larger than the file limit
     Given I am on the "Test podcast name" Activity page logged in as "teacher1"
     When I press "Add a new episode"
-    Then I should see "Maximum file size: 10KB, maximum number of files: 1"
+    Then I should see "Maximum file size: 10 KB, maximum number of files: 1"
     And I press "Cancel"
 
   Scenario: Create a podcast and add an episode that is smaller than the limit
     Given I am on the "Test podcast name" Activity page logged in as "teacher1"
     When I press "Add a new episode"
-    Then I should see "Maximum file size: 2MB, maximum number of files: 1"
+    Then I should see "Maximum file size: 2 MB, maximum number of files: 1"
     And I press "Cancel"
