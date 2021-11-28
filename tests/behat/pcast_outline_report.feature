@@ -29,9 +29,7 @@ Feature: Teachers can review student progress on all podcasts in a course by vie
 
   @javascript
   Scenario: A student uploads an episode
-    Given I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    Given I am on the "Test podcast name" "pcast activity" page logged in as "student1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -41,6 +39,7 @@ Feature: Teachers can review student progress on all podcasts in a course by vie
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I log out
+
     When I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I follow "Participants"

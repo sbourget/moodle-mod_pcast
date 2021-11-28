@@ -44,9 +44,8 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
       | Episodes shown per page | 5 |
     And I follow "Test podcast name"
     And I log out
-    When I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+
+    When I am on the "Test podcast name" "pcast activity" page logged in as "student1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 1 Episode |
@@ -54,9 +53,8 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    And I log in as "student2"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+
+    And I am on the "Test podcast name" "pcast activity" page logged in as "student2"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 2 Episode |
@@ -64,9 +62,8 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    And I log in as "student3"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+
+    And I am on the "Test podcast name" "pcast activity" page logged in as "student3"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 3 Episode |
@@ -74,9 +71,8 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    And I log in as "student4"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+
+    And I am on the "Test podcast name" "pcast activity" page logged in as "student4"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Student 4 Episode |
@@ -90,9 +86,8 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I should not see "Student 3 Episode"
     And I should see "Student 4 Episode"
     And I log out
-    And I log in as "student3"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+
+    And I am on the "Test podcast name" "pcast activity" page logged in as "student3"
     And I should see "Student 1 Episode"
     And I should not see "Student 2 Episode"
     And I should see "Student 3 Episode"
@@ -100,9 +95,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I log out
 
     # Teacher (All groups)
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" "pcast activity" page logged in as "taecher1"
     And I should see "Student 1 Episode"
     And I should see "Student 2 Episode"
     And I should see "Student 3 Episode"

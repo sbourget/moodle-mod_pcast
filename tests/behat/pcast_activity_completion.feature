@@ -73,9 +73,7 @@ Feature: Teachers can use activity completion to track student progress
     # And the "Test podcast name" "pcast" activity with "auto" completion should be marked as not complete
     And I log out
 
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
     And I navigate to "Approve episodes" in current page administration
     And I should see "Test episode name"
     And I should see "Test episode summary"

@@ -17,9 +17,7 @@ Feature: A teacher can create a podcast activity and limit the number of episode
     And the following "activities" exist:
       | activity | course | idnumber | name              | intro                    | episodesperpage |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 5               |
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Episode ONE |

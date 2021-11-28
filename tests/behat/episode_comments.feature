@@ -21,9 +21,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     And the following "activities" exist:
       | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval |userscancomment |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 1               | 1              |
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" "pcast activity" page logged in as "teacher1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -31,9 +29,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     And I log out
-    When I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    When I am on the "Test podcast name" "pcast activity" page logged in as "student1"
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
@@ -44,9 +40,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     Then I should see "First student comment"
     And I log out
 
-    And I log in as "student2"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" "pcast activity" page logged in as "student2"
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
@@ -63,9 +57,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     And I follow "Save comment"
     And I log out
 
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    And I am on the "Test podcast name" "pcast activity" page logged in as "teacher1
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"

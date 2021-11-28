@@ -21,9 +21,7 @@ Feature: A teacher can create a podcast activity and require episodes to be appr
     And the following "activities" exist:
       | activity | course | idnumber | name              | intro                    | userscanpost | requireapproval |
       | pcast    | C1     | pcast    | Test podcast name | Test podcast description | 1            | 1               |
-    When I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I follow "Test podcast name"
+    When I am on the "Test podcast name" "pcast activity" page logged in as "student1"
     And I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
