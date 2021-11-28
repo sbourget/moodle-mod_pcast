@@ -1,4 +1,4 @@
-m@od @mod_pcast @_file_upload
+@mod @mod_pcast @_file_upload
 Feature: A teacher can set a podcast activity to display the names of the authors
   As a teacher
   I need to create a podcast and set it to display author names
