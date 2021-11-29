@@ -38,7 +38,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
   @javascript
   Scenario: Sort episodes alphabetically
     When I am on the "Test podcast name" Activity page logged in as "teacher1"
-    And I follow "Browse by alphabet"
+    # Default tab is Browse by Alphabet.
     Then I should see "First Episode"
     And I should not see "Next Episode"
     And I click on "F" "link" in the ".pcast-links" "css_element"
