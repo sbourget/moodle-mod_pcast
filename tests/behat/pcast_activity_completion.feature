@@ -40,7 +40,7 @@ Feature: Teachers can use activity completion to track student progress
     When I log in as "student1"
     And I am on "Course 1" course homepage
     And the "View" completion condition of "Test podcast name" is displayed as "todo"
-    Then I follow "Test podcast name"
+    Then I am on the "Test podcast name" Activity page
     And I follow "Course 1"
     And the "View" completion condition of "Test podcast name" is displayed as "done"
 

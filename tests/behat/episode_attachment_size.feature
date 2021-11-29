@@ -21,7 +21,7 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
       | pcast    | C1     | Test podcast name | Test podcast description | 1            | 10240    |
     And I am on the "Test podcast name" Activity page logged in as "teacher1"
     When I press "Add a new episode"
-    Then I should see "Maximum file size: 10 KB, maximum number of files: 1"
+    Then I should see "Maximum file size: 10 KB"
     And I press "Cancel"
 
   @javascript
@@ -31,5 +31,5 @@ Feature: A teacher can create a podcast activity and limit the size of the episo
       | pcast    | C1     | Test podcast name | Test podcast description | 1            | 2097152  |
     And I am on the "Test podcast name" Activity page logged in as "teacher1"
     When I press "Add a new episode"
-    Then I should see "Maximum file size: 2 MB, maximum number of files: 1"
+    Then I should see "Maximum file size: 2 MB"
     And I press "Cancel"

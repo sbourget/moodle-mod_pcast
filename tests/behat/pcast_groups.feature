@@ -95,7 +95,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I log out
 
     # Teacher (All groups)
-    And I am on the "Test podcast name" Activity page logged in as "taecher1"
+    And I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I should see "Student 1 Episode"
     And I should see "Student 2 Episode"
     And I should see "Student 3 Episode"

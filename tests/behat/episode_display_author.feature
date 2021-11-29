@@ -17,13 +17,13 @@ Feature: A teacher can set a podcast activity to display the names of the author
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
       | student2 | C1 | student |
-    And the following "activities" exist:
-      | activity | name              | intro                    | course | episodesperpage | requireapproval | userscanpost | displayauthor |
-      | pcast    | Test podcast name | Test podcast description | C1     | 5               | 0               | 1            | 0             |
 
   @javascript
   Scenario: Create a podcast and do not display author names
-    Given I am on the "Test podcast name" Activity page logged in as "student1"
+    Given the following "activities" exist:
+      | activity | name              | intro                    | course | episodesperpage | requireapproval | userscanpost | displayauthor |
+      | pcast    | Test podcast name | Test podcast description | C1     | 5               | 0               | 1            | 0             |
+    And I am on the "Test podcast name" Activity page logged in as "student1"
     When I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
@@ -38,7 +38,10 @@ Feature: A teacher can set a podcast activity to display the names of the author
 
   @javascript
   Scenario: Create a podcast and do display author names
-    Given I am on the "Test podcast name" Activity page logged in as "student1"
+    Given the following "activities" exist:
+      | activity | name              | intro                    | course | episodesperpage | requireapproval | userscanpost | displayauthor |
+      | pcast    | Test podcast name | Test podcast description | C1     | 5               | 0               | 1            | 1             |
+    And I am on the "Test podcast name" Activity page logged in as "student1"
     When I press "Add a new episode"
     And I set the following fields to these values:
       | Title | Test episode name |
