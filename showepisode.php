@@ -73,8 +73,10 @@ if (!empty($episode->courseid)) {
 if (!pcast_episode_allowed_viewing($episode, $cm, groups_get_activity_groupmode($cm))) {
     throw new moodle_exception('cannotseeepisode', 'pcast');
 }
-
-echo $OUTPUT->heading(get_string("viewthisepisode", "pcast", $pcast->name));
+$hassecondary = $PAGE->has_secondary_navigation();
+if (!$hassecondary) {
+    echo $OUTPUT->heading(get_string("viewthisepisode", "pcast", $pcast->name));
+}
 
 // Print the tabs.
 $tabrows = array();
