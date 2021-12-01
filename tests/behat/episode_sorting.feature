@@ -38,7 +38,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
   @javascript
   Scenario: Sort episodes alphabetically
     When I am on the "Test podcast name" Activity page logged in as "teacher1"
-    # Default tab is Browse by Alphabet.
+    And I select "Browse by alphabet" from the "Browse the podcast using this index" singleselect
     Then I should see "First Episode"
     And I should not see "Next Episode"
     And I click on "F" "link" in the ".pcast-links" "css_element"
@@ -51,7 +51,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
   @javascript
   Scenario: Sort episodes by date
     When I am on the "Test podcast name" Activity page logged in as "teacher1"
-    And I follow "Browse by date"
+    And I select "Browse by date" from the "Browse the podcast using this index" singleselect
     # Sort by oldest updated.
     Then I should see "First Episode"
     And I should not see "Next Episode"
@@ -87,7 +87,7 @@ Feature: A teacher can create a podcast activity and sort the episodes a variety
     And I press "Save changes"
     And I log out
     Then I am on the "Test podcast name" Activity page logged in as "teacher1"
-    And I follow "Browse by author"
+    And I select "Browse by author" from the "Browse the podcast using this index" singleselect
     And I should see "Student 1 Episode"
     And I click on "O" "link" in the ".pcast-links" "css_element"
     And I should see "Student One"

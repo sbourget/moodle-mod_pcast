@@ -75,10 +75,13 @@ $PAGE->set_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => $mode));
 $PAGE->set_title($pcast->name);
 $PAGE->set_heading($course->fullname);
 $PAGE->set_context($context);
+$renderer = $PAGE->get_renderer('mod_pcast');
+$actionbar = new \mod_pcast\output\standard_action_bar($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
 $PAGE->force_settings_menu();
 
 // Output starts here.
 echo $OUTPUT->header();
+$hassecondary = $PAGE->has_secondary_navigation();
 
 // Set Up Groups.
 $groupmode = groups_get_activity_groupmode($cm);
@@ -87,79 +90,16 @@ if ($groupmode) {
     groups_get_activity_group($cm, true);
     groups_print_activity_menu($cm, new moodle_url('/mod/pcast/view.php', array('id' => $id)));
 }
-
-echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
+if(!$hassecondary) {
+    echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
+}
 
 // Render the activity information.
 $completiondetails = \core_completion\cm_completion_details::get_instance($cm, $USER->id);
 $activitydates = \core\activity_dates::get_dates_for_module($cm, $USER->id);
 echo $OUTPUT->activity_information($cm, $completiondetails, $activitydates);
 
-// Show the add entry button if allowed (usercan post + write or write + manage  or write + approve caps).
-if (((has_capability('mod/pcast:write', $context)) and ($pcast->userscanpost))
-        or (has_capability('mod/pcast:write', $context) and has_capability('mod/pcast:manage', $context))
-        or (has_capability('mod/pcast:write', $context) and has_capability('mod/pcast:approve', $context))) {
-    $url = new moodle_url('/mod/pcast/edit.php', array('cmid' => $cm->id));
-    $out = html_writer::start_tag('div', array('class' => 'pcast-addentry')). "\n";
-    $out .= html_writer::start_tag('form', array('id' => 'newentryform', 'method' => 'get', 'action' => $url)). "\n";
-    $out .= html_writer::start_tag('div', array('class' => 'singlebutton')). "\n";
-    $out .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'cmid', 'value' => $cm->id)). "\n";
-    $out .= html_writer::empty_tag('input', array('type' => 'submit', 'class' => 'btn btn-secondary',
-                                                  'value' => get_string('addnewepisode', 'pcast'))). "\n";
-    $out .= html_writer::end_tag('div'). "\n";
-    $out .= html_writer::end_tag('form'). "\n";
-    $out .= html_writer::end_tag('div'). "\n";
-    $out .= html_writer::empty_tag('br'). "\n";
-    echo $out;
-}
-
-// Print heading and tabs.
-// Sorting info.
-if (!isset($sortorder)) {
-    $sortorder = '';
-}
-if (!isset($sortkey)) {
-    $sortkey = '';
-}
-
-// Make sure variables are properly cleaned.
-$sortkey   = clean_param($sortkey, PARAM_ALPHANUM);  // Sorted view: CREATION | UPDATE | FIRSTNAME | LASTNAME...
-$sortorder = clean_param($sortorder, PARAM_ALPHA);   // It defines the order of the sorting (ASC or DESC).
-
-$tabrows = array();
-$browserow = array();
-
-$url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_STANDARD_VIEW));
-$browserow[] = new tabobject(PCAST_STANDARD_VIEW, $url, get_string('standardview', 'pcast'));
-
-if ($pcast->userscancategorize) {
-    $url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_CATEGORY_VIEW));
-    $browserow[] = new tabobject(PCAST_CATEGORY_VIEW, $url, get_string('categoryview', 'pcast'));
-}
-$url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_DATE_VIEW));
-$browserow[] = new tabobject(PCAST_DATE_VIEW, $url, get_string('dateview', 'pcast'));
-
-if ($pcast->displayauthor or has_capability('mod/pcast:manage', $context)) {
-    $url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_AUTHOR_VIEW));
-    $browserow[] = new tabobject(PCAST_AUTHOR_VIEW, $url, get_string('authorview', 'pcast'));
-}
-
-if ($pcast->requireapproval and has_capability('mod/pcast:approve', $context)) {
-    $url = new moodle_url('/mod/pcast/view.php', array('id' => $id, 'mode' => PCAST_APPROVAL_VIEW));
-    $browserow[] = new tabobject(PCAST_APPROVAL_VIEW, $url, get_string('approvalview', 'pcast'));
-}
-
-// Put all this info together.
-
-$tabrows[] = $browserow;     // Always put these at the top.
-
-echo html_writer::start_tag('div', array('class' => 'pcast-display')). "\n";
-print_tabs($tabrows, $mode);
-echo html_writer::end_tag('div'). "\n";
-
-if (!isset($category)) {
-    $category = "";
-}
+echo $renderer->main_action_bar($actionbar);
 
 // Check to see if any content should be displayed (prevents guessing of URLs).
 if ((!$pcast->userscancategorize) and ($mode == PCAST_CATEGORY_VIEW)) {

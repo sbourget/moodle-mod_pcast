@@ -70,7 +70,7 @@ Feature: A teacher can create a podcast activity and users can assign categories
     And I should see "Student 2 Episode"
     And I should see "Student 3 Episode"
     And I should see "Student 4 Episode"
-    And I follow "Browse by category"
+    And I select "Browse by category" from the "Browse the podcast using this index" singleselect
 
     And I set the field "hook" to "K-12"
     And I click on "K-12" "option" in the "#catmenu select" "css_element"
