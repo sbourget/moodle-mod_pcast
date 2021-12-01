@@ -13,7 +13,7 @@
 }}
 {{!
     @template mod_pcast/standard_action_menu
-    Actions panel at the bottom of the assignment grading UI.
+    Actions panel is displayed at the top of the episode listing.
     Classes required for JS:
         * none
     Data attributes required for JS:
@@ -31,7 +31,8 @@
             "attributes": [
                 {
                   "name": "data-attribute",
-                  "value": "yeah"
+                  "value": "yeah";
+                  "id": "someid"
                 }
             ]
         },
@@ -46,6 +47,7 @@
                     {
                       "name": "data-attribute",
                       "value": "yeah"
+                      "id": "anotherid"
                     }
                 ]
             },
@@ -96,23 +98,6 @@
                 ]}],
             "disabled": false,
             "title": "Some cool title"
-        },
-        "searchbox": {
-            "action": "http://localhost/stable/mod/pcast/view.php",
-            "hiddenfields": [
-                {
-                    "name": "id",
-                    "value": 23
-                },
-                {
-                    "name": "mode",
-                    "value": "search"
-                }
-            ],
-            "otherfields": "<input type='checkbox'>Rendered checkbox",
-            "inputname": "hook",
-            "query": "hook",
-            "searchstring": "Search"
         }
     }
 }}

@@ -56,7 +56,6 @@ class standard_action_bar implements renderable, templatable {
      * @param string $hook
      * @param string $sortkey
      * @param string $sortorder
-     * @param string $tab
      * @throws \coding_exception
      */
     public function __construct(object $cm, object $module, int $mode, string $hook, string $sortkey, string $sortorder) {
@@ -65,7 +64,7 @@ class standard_action_bar implements renderable, templatable {
         $this->mode = $mode;
         $this->hook = $hook;
         $this->sortkey = $sortkey;
-        $this->sortorder = $sortorder;    
+        $this->sortorder = $sortorder;
         $this->context = context_module::instance($this->cm->id);
 
     }
@@ -86,11 +85,9 @@ class standard_action_bar implements renderable, templatable {
                 'tabjumps' => $this->generate_tab_jumps($output)
             ];
         } else {
-            // No access to the Add new episode button
+            // No access to the Add new episode button.
             return ['tabjumps' => $this->generate_tab_jumps($output)];
         }
-        
-
     }
 
     /**
@@ -119,14 +116,13 @@ class standard_action_bar implements renderable, templatable {
         $stdbaseurl = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_STANDARD_VIEW));
         $options[get_string('standardview', 'pcast')] = $stdbaseurl->out(false);
 
-        
         if ($this->module->userscancategorize) {
             $catbaseurl = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_CATEGORY_VIEW));
             $options[get_string('categoryview', 'pcast')] = $catbaseurl->out(false);
         }
         $datebaseurl = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_DATE_VIEW));
         $options[get_string('dateview', 'pcast')] = $datebaseurl->out(false);
-        
+
         $authorbaseurl = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_AUTHOR_VIEW));
         $options[get_string('authorview', 'pcast')] = $authorbaseurl->out(false);
 
@@ -148,7 +144,7 @@ class standard_action_bar implements renderable, templatable {
         } else if ($mode == PCAST_APPROVAL_VIEW) {
             $active = $approvebaseurl->out(false);
         } else {
-           $active = $stdbaseurl->out(false);
+            $active = $stdbaseurl->out(false);
         }
 
         if (count($options) > 1) {

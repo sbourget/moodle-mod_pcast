@@ -90,7 +90,7 @@ if ($groupmode) {
     groups_get_activity_group($cm, true);
     groups_print_activity_menu($cm, new moodle_url('/mod/pcast/view.php', array('id' => $id)));
 }
-if(!$hassecondary) {
+if (!$hassecondary) {
     echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
 }
 
