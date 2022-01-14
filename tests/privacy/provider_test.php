@@ -21,11 +21,12 @@
  * @copyright   2018 Stephen Bourget
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace mod_pcast;
+namespace mod_pcast\privacy;
 
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\deletion_criteria;
 use mod_pcast\privacy\provider;
+//use context_module;
 
 global $CFG;
 require_once($CFG->dirroot . '/comment/lib.php');
@@ -37,7 +38,7 @@ require_once($CFG->dirroot . '/comment/lib.php');
  * @copyright 2018 Simey Lameze <simey@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_testcase {
+class provider_test extends \core_privacy\tests\provider_testcase {
     /** @var stdClass The student object. */
     protected $student;
 
@@ -71,7 +72,7 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $this->pcast = $pcast;
 
         $cm = get_coursemodule_from_instance('pcast', $pcast->id);
-        $context = context_module::instance($cm->id);
+        $context = \context_module::instance($cm->id);
 
         // Create a student which will add an episode to a pcast.
         $student = $generator->create_user();
@@ -91,7 +92,7 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $comment->add('Hello, it\'s me!');
 
         // Attach tags.
-        core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $pe1->id, $context, ['Beer', 'Golf']);
+        \core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $pe1->id, $context, ['Beer', 'Golf']);
     }
 
     /**
@@ -126,7 +127,7 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $contextlist = provider::get_contexts_for_userid($this->student->id);
         $this->assertCount(1, $contextlist);
         $contextforuser = $contextlist->current();
-        $cmcontext = context_module::instance($cm->id);
+        $cmcontext = \context_module::instance($cm->id);
         $this->assertEquals($cmcontext->id, $contextforuser->id);
     }
 
@@ -135,7 +136,7 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
      */
     public function test_export_for_context() {
         $cm = get_coursemodule_from_instance('pcast', $this->pcast->id);
-        $cmcontext = context_module::instance($cm->id);
+        $cmcontext = \context_module::instance($cm->id);
 
         // Export all of the data for the context.
         $writer = \core_privacy\local\request\writer::with_context($cmcontext);
@@ -157,7 +158,7 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
 
         $generator = $this->getDataGenerator();
         $cm = get_coursemodule_from_instance('pcast', $this->pcast->id);
-        $context = context_module::instance($cm->id);
+        $context = \context_module::instance($cm->id);
         // Create another student who will add an episode the pcast activity.
         $student2 = $generator->create_user();
         $generator->enrol_user($student2->id, $this->course->id, 'student');
@@ -167,7 +168,7 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $comment = $this->get_comment_object($context, $pe3->id);
         $comment->add('User 2 comment');
 
-        core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $pe3->id, $context, ['Pizza', 'Noodles']);
+        \core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $pe3->id, $context, ['Pizza', 'Noodles']);
 
         // As a teacher, rate student 2 episode.
         $this->setUser($this->teacher);
@@ -215,9 +216,9 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $ge1 = $this->plugingenerator->create_content($this->pcast, ['concept' => 'first user pcast episode', 'approved' => 1]);
         $this->plugingenerator->create_content($pcast2, ['concept' => 'first user second pcast episode', 'approved' => 1]);
 
-        $context1 = context_module::instance($cm1->id);
-        $context2 = context_module::instance($cm2->id);
-        core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $ge1->id, $context1, ['Parmi', 'Sushi']);
+        $context1 = \context_module::instance($cm1->id);
+        $context2 = \context_module::instance($cm2->id);
+        \core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $ge1->id, $context1, ['Parmi', 'Sushi']);
 
         $this->setUser($student2);
         $pe3 = $this->plugingenerator->create_content($this->pcast, ['concept' => 'second user pcast episode',
@@ -226,7 +227,7 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
         $comment = $this->get_comment_object($context1, $pe3->id);
         $comment->add('User 2 comment');
 
-        core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $pe3->id, $context1, ['Pizza', 'Noodles']);
+        \core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $pe3->id, $context1, ['Pizza', 'Noodles']);
 
         // As a teacher, rate student 2 episode.
         $this->setUser($this->teacher);
@@ -284,15 +285,15 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
      * @param int $itemid The item ID.
      * @return comment
      */
-    protected function get_comment_object(context $context, $itemid) {
-        $args = new stdClass();
+    protected function get_comment_object(\context $context, $itemid) {
+        $args = new \stdClass();
 
         $args->context = $context;
         $args->course = get_course(SITEID);
         $args->area = 'pcast_episode';
         $args->itemid = $itemid;
         $args->component = 'mod_pcast';
-        $comment = new comment($args);
+        $comment = new \comment($args);
         $comment->set_post_permission(true);
 
         return $comment;
@@ -305,16 +306,16 @@ class mod_pcast_privacy_provider_testcase extends \core_privacy\tests\provider_t
      * @param int $itemid The item ID.
      * @return rating object
      */
-    protected function get_rating_object(context $context, $itemid) {
+    protected function get_rating_object(\context $context, $itemid) {
         global $USER;
 
-        $ratingoptions = new stdClass;
+        $ratingoptions = new \stdClass;
         $ratingoptions->context = $context;
         $ratingoptions->ratingarea = 'episode';
         $ratingoptions->component = 'mod_pcast';
         $ratingoptions->itemid  = $itemid;
         $ratingoptions->scaleid = 2;
         $ratingoptions->userid  = $USER->id;
-        return new rating($ratingoptions);
+        return new \rating($ratingoptions);
     }
 }
