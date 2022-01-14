@@ -22,11 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 declare(strict_types=1);
 
 namespace mod_pcast;
+defined('MOODLE_INTERNAL') || die();
 
 use advanced_testcase;
 use cm_info;

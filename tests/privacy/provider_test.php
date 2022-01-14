@@ -22,11 +22,11 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_pcast\privacy;
+defined('MOODLE_INTERNAL') || die();
 
 use core_privacy\local\metadata\collection;
 use core_privacy\local\request\deletion_criteria;
 use mod_pcast\privacy\provider;
-//use context_module;
 
 global $CFG;
 require_once($CFG->dirroot . '/comment/lib.php');
