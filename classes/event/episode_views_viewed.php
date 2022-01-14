@@ -23,7 +23,6 @@
  */
 
 namespace mod_pcast\event;
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * The mod_pcast episode viewed event class.

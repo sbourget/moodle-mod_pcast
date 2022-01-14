@@ -22,17 +22,6 @@
  * @copyright 2011 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
- * Define the complete choice structure for backup, with file and id annotations
- *
- * @package mod_pcast
- * @subpackage backup-moodle2
- * @copyright 2011 Stephen Bourget
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class backup_pcast_activity_structure_step extends backup_activity_structure_step {
 
     /**
