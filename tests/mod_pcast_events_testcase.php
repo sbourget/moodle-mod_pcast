@@ -35,6 +35,9 @@ namespace mod_pcast;
  */
 class mod_pcast_events_testcase extends \advanced_testcase {
 
+    /**
+     * Setup test.
+     */
     public function setUp(): void {
         $this->resetAfterTest();
     }
@@ -124,6 +127,9 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
+    /**
+     * Test module viewed.
+     */
     public function test_course_module_viewed() {
         global $DB;
         // There is no proper API to call to trigger this event, so what we are
@@ -165,6 +171,9 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
+    /**
+     * Test module instance list viewed.
+     */
     public function test_course_module_instance_list_viewed() {
         // There is no proper API to call to trigger this event, so what we are
         // doing here is simply making sure that the events returns the right information.
@@ -191,6 +200,9 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
+    /**
+     * Test episode created.
+     */
     public function test_episode_created() {
         // There is no proper API to call to trigger this event, so what we are
         // doing here is simply making sure that the events returns the right information.
@@ -227,6 +239,9 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
+    /**
+     * Test episode updated.
+     */
     public function test_episode_updated() {
         // There is no proper API to call to trigger this event, so what we are
         // doing here is simply making sure that the events returns the right information.
@@ -263,6 +278,9 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
+    /**
+     * Test episode deleted.
+     */
     public function test_episode_deleted() {
         global $DB;
         // There is no proper API to call to trigger this event, so what we are
@@ -308,7 +326,9 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
-
+    /**
+     * Test episode approved.
+     */
     public function test_episode_approved() {
         global $DB;
         // There is no proper API to call to trigger this event, so what we are
@@ -390,6 +410,9 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
+    /**
+     * Test episode viewed.
+     */
     public function test_episode_viewed() {
         // There is no proper API to call to trigger this event, so what we are
         // doing here is simply making sure that the events returns the right information.
