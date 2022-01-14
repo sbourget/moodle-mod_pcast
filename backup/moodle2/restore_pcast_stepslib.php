@@ -16,16 +16,6 @@
 
 /**
  * Structure step to restore one pcast activity.
- * @package mod_pcast
- * @subpackage backup-moodle2
- * @copyright 2011 Stephen Bourget
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
- * Structure step to restore one pcast activity.
  *
  * @package mod_pcast
  * @subpackage backup-moodle2
