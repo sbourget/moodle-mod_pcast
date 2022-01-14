@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_pcast;
 
 /**
  * Genarator tests class for mod_pcast.
@@ -32,7 +33,7 @@
  * @copyright  2015 Stephen Bourget
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_pcast_generator_testcase extends advanced_testcase {
+class mod_pcast_generator_testcase extends \advanced_testcase {
 
     public function test_create_instance() {
         global $DB;
@@ -71,7 +72,7 @@ class mod_pcast_generator_testcase extends advanced_testcase {
         $this->assertEquals($episode2->id, $records[$episode2->id]->id);
         $this->assertEquals('Custom episode', $records[$episode2->id]->name);
         $this->assertEquals(array('Cats', 'mice'),
-            array_values(core_tag_tag::get_item_tags_array('mod_pcast', 'pcast_episodes', $episode2->id)));
+            array_values(\core_tag_tag::get_item_tags_array('mod_pcast', 'pcast_episodes', $episode2->id)));
 
     }
 }

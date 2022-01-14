@@ -22,6 +22,8 @@
  * @copyright  2018 Stephen Bourget
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
+namespace mod_pcast;
 
 global $CFG;
 require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
@@ -35,7 +37,7 @@ require_once($CFG->dirroot . '/rating/lib.php');
  * @copyright  2018 Stephen Bourget
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_pcast_restore_date_testcase extends restore_date_testcase {
+class mod_pcast_restore_date_testcase extends \restore_date_testcase {
 
     /**
      * Test restore dates.
@@ -55,14 +57,14 @@ class mod_pcast_restore_date_testcase extends restore_date_testcase {
         $timestamp = 10000;
         $DB->set_field('pcast_episodes', 'timecreated', $timestamp);
         $DB->set_field('pcast_episodes', 'timemodified', $timestamp);
-        $ratingoptions = new stdClass;
-        $ratingoptions->context = context_module::instance($pcast->cmid);
+        $ratingoptions = new \stdClass;
+        $ratingoptions->context = \context_module::instance($pcast->cmid);
         $ratingoptions->ratingarea = 'episode';
         $ratingoptions->component = 'mod_pcast';
         $ratingoptions->itemid  = $episode1->id;
         $ratingoptions->scaleid = 2;
         $ratingoptions->userid  = $USER->id;
-        $rating = new rating($ratingoptions);
+        $rating = new \rating($ratingoptions);
         $rating->update_rating(2);
         $rating = $DB->get_record('rating', ['itemid' => $episode1->id]);
 
@@ -84,8 +86,7 @@ class mod_pcast_restore_date_testcase extends restore_date_testcase {
         }
 
         // Rating test.
-        $newrating = $DB->get_record('rating', ['contextid' => context_module::instance($newcm->id)->id]);
-        debugging();
+        $newrating = $DB->get_record('rating', ['contextid' => \context_module::instance($newcm->id)->id]);
         $this->assertEquals($rating->timecreated, $newrating->timecreated);
         $this->assertEquals($rating->timemodified, $newrating->timemodified);
     }

@@ -17,11 +17,14 @@
 /**
  * Pcast search unit tests.
  *
- * @package    mod_pcast 
+ * @package    mod_pcast
  * @category   test
  * @copyright  2016 Stephen Bourget
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
+namespace mod_pcast;
 
 global $CFG;
 require_once($CFG->dirroot . '/search/tests/fixtures/testable_core_search.php');
@@ -35,7 +38,7 @@ require_once($CFG->dirroot . '/mod/pcast/tests/generator/lib.php');
  * @copyright  2016 Stephen Bourget
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_pcast_search_testcase extends advanced_testcase {
+class mod_pcast_search_testcase extends \advanced_testcase {
 
     /**
      * @var string Area id
@@ -47,7 +50,7 @@ class mod_pcast_search_testcase extends advanced_testcase {
         set_config('enableglobalsearch', true);
 
         // Set \core_search::instance to the mock_search_engine as we don't require the search engine to be working to test this.
-        $search = testable_core_search::instance();
+        $search = \testable_core_search::instance();
 
         $this->episodeareaid = \core_search\manager::generate_areaid('mod_pcast', 'episode');
     }
@@ -92,7 +95,7 @@ class mod_pcast_search_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id, 'student');
         $this->getDataGenerator()->enrol_user($user2->id, $course1->id, 'student');
 
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
 
         $this->setUser($user1);
@@ -144,7 +147,7 @@ class mod_pcast_search_testcase extends advanced_testcase {
         $course1 = self::getDataGenerator()->create_course();
         $this->getDataGenerator()->enrol_user($user->id, $course1->id, 'teacher');
 
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
 
         $this->setUser($user);
@@ -179,7 +182,7 @@ class mod_pcast_search_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course1->id, 'teacher');
         $this->getDataGenerator()->enrol_user($user2->id, $course1->id, 'student');
 
-        $record = new stdClass();
+        $record = new \stdClass();
         $record->course = $course1->id;
 
         // Approved entries by default pcast, created by teacher.

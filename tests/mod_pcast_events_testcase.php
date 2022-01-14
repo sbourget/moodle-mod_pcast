@@ -23,6 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_pcast;
 
 /**
  * Unit tests for pcast events.
@@ -32,7 +33,7 @@
  * @copyright  2015 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_pcast_events_testcase extends advanced_testcase {
+class mod_pcast_events_testcase extends \advanced_testcase {
 
     public function setUp(): void {
         $this->resetAfterTest();
@@ -53,9 +54,9 @@ class mod_pcast_events_testcase extends advanced_testcase {
 
         $episode1 = $pcastgenerator->create_content($pcast);
 
-        $context = context_module::instance($pcast->cmid);
+        $context = \context_module::instance($pcast->cmid);
         $cm = get_coursemodule_from_instance('pcast', $pcast->id, $course->id);
-        $commentinfo = new stdClass();
+        $commentinfo = new \stdClass();
         $commentinfo->component = 'mod_pcast';
         $commentinfo->context = $context;
         $commentinfo->course = $course;
@@ -63,7 +64,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         $commentinfo->area = 'pcast_episode';
         $commentinfo->itemid = $episode1->id;
         $commentinfo->showcount = true;
-        $comment = new comment($commentinfo);
+        $comment = new \comment($commentinfo);
 
         // Triggering and capturing the event.
         $sink = $this->redirectEvents();
@@ -75,7 +76,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_pcast\event\comment_created', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new moodle_url('/mod/pcast/view.php', array('id' => $pcast->cmid));
+        $url = new \moodle_url('/mod/pcast/view.php', array('id' => $pcast->cmid));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
     }
@@ -95,9 +96,9 @@ class mod_pcast_events_testcase extends advanced_testcase {
 
         $episode = $pcastgenerator->create_content($pcast);
 
-        $context = context_module::instance($pcast->cmid);
+        $context = \context_module::instance($pcast->cmid);
         $cm = get_coursemodule_from_instance('pcast', $pcast->id, $course->id);
-        $cmt = new stdClass();
+        $cmt = new \stdClass();
         $cmt->component = 'mod_pcast';
         $cmt->context = $context;
         $cmt->course = $course;
@@ -105,7 +106,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         $cmt->area = 'pcast_episode';
         $cmt->itemid = $episode->id;
         $cmt->showcount = true;
-        $comment = new comment($cmt);
+        $comment = new \comment($cmt);
         $newcomment = $comment->add('New comment 1');
 
         // Triggering and capturing the event.
@@ -118,7 +119,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         // Checking that the event contains the expected values.
         $this->assertInstanceOf('\mod_pcast\event\comment_deleted', $event);
         $this->assertEquals($context, $event->get_context());
-        $url = new moodle_url('/mod/pcast/view.php', array('id' => $pcast->cmid));
+        $url = new \moodle_url('/mod/pcast/view.php', array('id' => $pcast->cmid));
         $this->assertEquals($url, $event->get_url());
         $this->assertEventContextNotUsed($event);
     }
@@ -133,7 +134,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
 
         $dbcourse = $DB->get_record('course', array('id' => $course->id));
         $dbpcast = $DB->get_record('pcast', array('id' => $pcast->id));
-        $context = context_module::instance($pcast->cmid);
+        $context = \context_module::instance($pcast->cmid);
         $mode = 'letter';
 
         $event = \mod_pcast\event\course_module_viewed::create(array(
@@ -160,7 +161,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         $expected = array($course->id, 'pcast', 'view', 'view.php?id=' . $pcast->cmid,
             $pcast->id, $pcast->cmid);
         $this->assertEventLegacyLogData($expected, $event);
-        $this->assertEquals(new moodle_url('/mod/pcast/view.php', array('id' => $pcast->cmid, 'mode' => $mode)), $event->get_url());
+        $this->assertEquals(new \moodle_url('/mod/pcast/view.php', array('id' => $pcast->cmid, 'mode' => $mode)), $event->get_url());
         $this->assertEventContextNotUsed($event);
     }
 
@@ -171,7 +172,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
 
         $event = \mod_pcast\event\course_module_instance_list_viewed::create(array(
-            'context' => context_course::instance($course->id)
+            'context' => \context_course::instance($course->id)
         ));
 
         // Triggering and capturing the event.
@@ -197,7 +198,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
         $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course));
-        $context = context_module::instance($pcast->cmid);
+        $context = \context_module::instance($pcast->cmid);
 
         $pcastgenerator = $this->getDataGenerator()->get_plugin_generator('mod_pcast');
         $episode = $pcastgenerator->create_content($pcast);
@@ -233,7 +234,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
         $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course));
-        $context = context_module::instance($pcast->cmid);
+        $context = \context_module::instance($pcast->cmid);
 
         $pcastgenerator = $this->getDataGenerator()->get_plugin_generator('mod_pcast');
         $episode = $pcastgenerator->create_content($pcast);
@@ -270,7 +271,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
         $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course));
-        $context = context_module::instance($pcast->cmid);
+        $context = \context_module::instance($pcast->cmid);
         $prevmode = 'view';
         $hook = 'ALL';
 
@@ -325,7 +326,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         $this->setUser($teacher);
         $pcast = $this->getDataGenerator()->create_module('pcast',
                 array('course' => $course, 'requireapproval' => 1));
-        $context = context_module::instance($pcast->cmid);
+        $context = \context_module::instance($pcast->cmid);
 
         $this->setUser($student);
         $pcastgenerator = $this->getDataGenerator()->get_plugin_generator('mod_pcast');
@@ -334,7 +335,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
 
         // Approve episode, trigger and validate event.
         $this->setUser($teacher);
-        $newepisode = new stdClass();
+        $newepisode = new \stdClass();
         $newepisode->id           = $episode->id;
         $newepisode->approved     = true;
         $newepisode->timemodified = time();
@@ -362,7 +363,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
 
         // Disapprove episode, trigger and validate event.
         $this->setUser($teacher);
-        $newepisode = new stdClass();
+        $newepisode = new \stdClass();
         $newepisode->id           = $episode->id;
         $newepisode->approved     = false;
         $newepisode->timemodified = time();
@@ -396,7 +397,7 @@ class mod_pcast_events_testcase extends advanced_testcase {
         $this->setAdminUser();
         $course = $this->getDataGenerator()->create_course();
         $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course));
-        $context = context_module::instance($pcast->cmid);
+        $context = \context_module::instance($pcast->cmid);
 
         $pcastgenerator = $this->getDataGenerator()->get_plugin_generator('mod_pcast');
         $episode = $pcastgenerator->create_content($pcast);

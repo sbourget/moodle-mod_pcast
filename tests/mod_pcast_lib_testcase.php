@@ -21,6 +21,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+namespace mod_pcast;
+
 global $CFG;
 require_once($CFG->dirroot . '/mod/pcast/lib.php');
 require_once($CFG->dirroot . '/mod/pcast/locallib.php');
@@ -32,7 +35,7 @@ require_once($CFG->dirroot . '/mod/pcast/locallib.php');
  * @copyright  2018 Stephen Bourget
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mod_pcast_lib_testcase extends advanced_testcase {
+class mod_pcast_lib_testcase extends \advanced_testcase {
 
     /**
      * Test calendar event creation.
@@ -156,7 +159,7 @@ class mod_pcast_lib_testcase extends advanced_testcase {
         $event = $this->create_action_event($course->id, $pcast->id,
             \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
         // Mark the activity as completed.
-        $completion = new completion_info($course);
+        $completion = new \completion_info($course);
         $completion->set_module_viewed($cm);
         // Create an action factory.
         $factory = new \core_calendar\action_factory();
@@ -187,7 +190,7 @@ class mod_pcast_lib_testcase extends advanced_testcase {
         $event = $this->create_action_event($course->id, $pcast->id,
                 \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
         // Mark the activity as completed for the user.
-        $completion = new completion_info($course);
+        $completion = new \completion_info($course);
         $completion->set_module_viewed($cm, $student->id);
         // Create an action factory.
         $factory = new \core_calendar\action_factory();
@@ -206,7 +209,7 @@ class mod_pcast_lib_testcase extends advanced_testcase {
      * @return bool|calendar_event
      */
     private function create_action_event($courseid, $instanceid, $eventtype) {
-        $event = new stdClass();
+        $event = new \stdClass();
         $event->name = 'Calendar event';
         $event->modulename  = 'pcast';
         $event->courseid = $courseid;
@@ -214,6 +217,6 @@ class mod_pcast_lib_testcase extends advanced_testcase {
         $event->type = CALENDAR_EVENT_TYPE_ACTION;
         $event->eventtype = $eventtype;
         $event->timestart = time();
-        return calendar_event::create($event);
+        return \calendar_event::create($event);
     }
 }
