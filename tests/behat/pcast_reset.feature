@@ -42,8 +42,7 @@ Feature: Pcast reset
     And I log out
 
     And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    When I navigate to "Reset" in current page administration
+    When I am on the "Course 1" "reset" page
     And I set the following fields to these values:
         | id_reset_pcast_comments | 1 |
     And I press "Reset course"
