@@ -167,7 +167,8 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $expected = array($course->id, 'pcast', 'view', 'view.php?id=' . $pcast->cmid,
             $pcast->id, $pcast->cmid);
         $this->assertEventLegacyLogData($expected, $event);
-        $this->assertEquals(new \moodle_url('/mod/pcast/view.php', array('id' => $pcast->cmid, 'mode' => $mode)), $event->get_url());
+        $this->assertEquals(new \moodle_url('/mod/pcast/view.php',
+                array('id' => $pcast->cmid, 'mode' => $mode)), $event->get_url());
         $this->assertEventContextNotUsed($event);
     }
 

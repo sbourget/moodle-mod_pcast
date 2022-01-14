@@ -45,6 +45,9 @@ class mod_pcast_search_testcase extends \advanced_testcase {
      */
     protected $episodeareaid = null;
 
+    /**
+     * Set up the test.
+     */
     public function setUp(): void {
         $this->resetAfterTest(true);
         set_config('enableglobalsearch', true);
