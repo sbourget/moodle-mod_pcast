@@ -32,8 +32,6 @@ use coding_exception;
 use mod_pcast\completion\custom_completion;
 use moodle_exception;
 
-defined('MOODLE_INTERNAL') || die();
-
 global $CFG;
 require_once($CFG->libdir . '/completionlib.php');
 

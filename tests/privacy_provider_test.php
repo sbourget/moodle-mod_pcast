@@ -27,8 +27,6 @@ use core_privacy\local\metadata\collection;
 use core_privacy\local\request\deletion_criteria;
 use mod_pcast\privacy\provider;
 
-defined('MOODLE_INTERNAL') || die();
-
 global $CFG;
 require_once($CFG->dirroot . '/comment/lib.php');
 
