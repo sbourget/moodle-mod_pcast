@@ -65,7 +65,6 @@ $event->add_record_snapshot('course_modules', $cm);
 $event->add_record_snapshot('pcast', $pcast);
 $event->trigger();
 
-
 // Mark as viewed.
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
@@ -86,20 +85,14 @@ $hassecondary = $PAGE->has_secondary_navigation();
 // Set Up Groups.
 $groupmode = groups_get_activity_groupmode($cm);
 
+// Output navigatiion bar.
+echo $renderer->main_action_bar($actionbar);
+
+// Output the Group selector.
 if ($groupmode) {
     groups_get_activity_group($cm, true);
     groups_print_activity_menu($cm, new moodle_url('/mod/pcast/view.php', array('id' => $id)));
 }
-if (!$hassecondary) {
-    echo $OUTPUT->heading_with_help(get_string("viewpcast", "pcast", $pcast->name), 'pcast', 'pcast', 'icon');
-}
-
-// Render the activity information.
-$completiondetails = \core_completion\cm_completion_details::get_instance($cm, $USER->id);
-$activitydates = \core\activity_dates::get_dates_for_module($cm, $USER->id);
-echo $OUTPUT->activity_information($cm, $completiondetails, $activitydates);
-
-echo $renderer->main_action_bar($actionbar);
 
 // Check to see if any content should be displayed (prevents guessing of URLs).
 if ((!$pcast->userscancategorize) and ($mode == PCAST_CATEGORY_VIEW)) {

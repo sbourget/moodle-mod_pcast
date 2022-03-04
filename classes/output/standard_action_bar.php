@@ -82,10 +82,12 @@ class standard_action_bar implements renderable, templatable {
             or (has_capability('mod/pcast:write', $this->context) and has_capability('mod/pcast:approve', $this->context))) {
             return [
                 'addnewbutton' => $this->create_add_button($output),
+                'tools' => $this->get_additional_tools($output),
                 'tabjumps' => $this->generate_tab_jumps($output)
             ];
         } else {
             // No access to the Add new episode button.
+            
             return ['tabjumps' => $this->generate_tab_jumps($output)];
         }
     }
@@ -100,6 +102,58 @@ class standard_action_bar implements renderable, templatable {
         $btn = new single_button(new moodle_url('/mod/pcast/edit.php', ['cmid' => $this->cm->id]),
             get_string('addnewepisode', 'pcast'), 'post', true);
         return $btn->export_for_template($output);
+    }
+
+    /**
+     * Render the additional tools required by the pcast
+     *
+     * @param renderer_base $output
+     * @return array
+     */
+    private function get_additional_tools(renderer_base $output): array {
+        global $USER, $CFG, $PAGE;
+        $items = [];
+        $buttons = [];
+        $pcastconfig = get_config('mod_pcast');
+        if (!empty($CFG->enablerssfeeds) && !empty($pcastconfig->enablerssfeeds) && $this->module->enablerssfeed) {
+            require_once("$CFG->libdir/rsslib.php");
+            $string = get_string('rsslink', 'pcast');
+
+            // Calculate group for path.
+            $groupmode = groups_get_activity_groupmode($PAGE->cm);
+            if ($groupmode > 0) {
+                $currentgroup = groups_get_activity_group($PAGE->cm);
+            } else {
+                $currentgroup = 0;
+            }
+
+        }
+        $args = $this->module->id . '/'.$currentgroup;
+
+        $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'mod_pcast', $args));
+        $buttons[$string] = $url->out(false);
+        
+        if (!empty($pcastconfig->enablerssitunes) && $this->module->enablerssitunes) {
+            $string = get_string('pcastlink', 'pcast');
+            require_once("$CFG->dirroot/mod/pcast/rsslib.php");
+            $url = pcast_rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args);
+            $buttons[$string] = $url->out(false);
+        }
+
+        foreach ($items as $key => $value) {
+            $items[$key] = $value->export_for_template($output);
+        }
+
+        if ($buttons) {
+            foreach ($buttons as $index => $value) {
+                $items['select']['options'][] = [
+                    'url' => $value,
+                    'string' => $index
+                ];
+            }
+        }
+
+        return $items;
     }
 
     /**

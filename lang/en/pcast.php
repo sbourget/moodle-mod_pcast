@@ -114,6 +114,7 @@ $string['explainalphabet'] = 'Browse the podcast using this index';
 $string['explainspecial'] = 'Shows entries that do not begin with a letter';
 $string['explicit_help'] = 'This specifies if the podcast contains explicit content.';
 $string['explicit'] = 'Explicit content';
+$string['subscribepisodes'] = 'Subscribe to episodes';
 $string['image'] = 'Podcast image';
 $string['imagefile'] = 'Image';
 $string['imageheight_help'] = 'Height of RSS channel logo';

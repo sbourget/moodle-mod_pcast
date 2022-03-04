@@ -696,24 +696,24 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     if (has_capability('mod/pcast:write', $PAGE->cm->context) and (has_capability('mod/pcast:manage', $PAGE->cm->context)
                                                                or has_capability('mod/pcast:approve', $PAGE->cm->context))) {
         // This is a teacher.
-        $pcastnode->add(get_string('addnewepisode', 'pcast'),
+        $node = $pcastnode->add(get_string('addnewepisode', 'pcast'),
                         new moodle_url('/mod/pcast/edit.php',
                         array('cmid' => $PAGE->cm->id)));
+        $node->set_show_in_secondary_navigation(false);
 
     } else if (has_capability('mod/pcast:write', $PAGE->cm->context)) {
         // See if the activity allows student posting.
         if ($pcast->userscanpost == true) {
             // Add a link to ad an episode.
-            $pcastnode->add(get_string('addnewepisode', 'pcast'),
+            $node = $pcastnode->add(get_string('addnewepisode', 'pcast'),
                         new moodle_url('/mod/pcast/edit.php',
                         array('cmid' => $PAGE->cm->id)));
+            $node->set_show_in_secondary_navigation(false);
         }
     }
 
-    if (!empty($CFG->enablerssfeeds) && !empty($pcastconfig->enablerssfeeds)
-    && $pcast->enablerssfeed) {
+    if (!empty($CFG->enablerssfeeds) && !empty($pcastconfig->enablerssfeeds) && $pcast->enablerssfeed) {
         require_once("$CFG->libdir/rsslib.php");
-
         $string = get_string('rsslink', 'pcast');
 
         // Sort out groups.
@@ -732,13 +732,15 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
         $args = $pcast->id . '/'.$currentgroup;
 
         $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args));
-        $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
+        $node = $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
+        $node->set_show_in_secondary_navigation(false);
 
         if (!empty($pcastconfig->enablerssitunes) && $pcast->enablerssitunes) {
             $string = get_string('pcastlink', 'pcast');
             require_once("$CFG->dirroot/mod/pcast/rsslib.php");
             $url = pcast_rss_get_url($PAGE->cm->context->id, $USER->id, 'pcast', $args);
-            $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
+            $node = $pcastnode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
+            $node->set_show_in_secondary_navigation(false);
 
         }
 
