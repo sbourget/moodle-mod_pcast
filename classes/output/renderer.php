@@ -37,4 +37,16 @@ class renderer extends plugin_renderer_base {
         $context = $actionmenu->export_for_template($this);
         return $this->render_from_template('mod_pcast/standard_action_menu', $context);
     }
+
+    /**
+     * Render the pcast tertiary nav for episodes
+     *
+     * @param episode_action_bar $actionmenu
+     * @return bool|string
+     * @throws \moodle_exception
+     */
+    public function episode_action_bar(episode_action_bar $actionmenu) {
+        $context = $actionmenu->export_for_template($this);
+        return $this->render_from_template('mod_pcast/episode_action_menu', $context);
+    }
 }

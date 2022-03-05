@@ -78,23 +78,16 @@ if (!$hassecondary) {
     echo $OUTPUT->heading(get_string("viewthisepisode", "pcast", $pcast->name));
 }
 
-// Print the tabs.
-$tabrows = array();
-$browserow = array();
-
-$url = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $episode->id, 'mode' => PCAST_EPISODE_VIEW));
-$browserow[] = new tabobject(PCAST_EPISODE_VIEW, $url, get_string('episodeview', 'pcast'));
-
 $comment = false;
 $rate = false;
-$tabname = '';
+$views = false;
 
 if (($episode->userscancomment) or ($episode->assessed)) {
     // Can they use comments?
-    if (($CFG->usecomments) and ($episode->userscancomment) and ((has_capability('moodle/comment:post', $context))
-                                                             or (has_capability('moodle/comment:view', $context)))) {
+    if (($CFG->usecomments) and 
+        ($episode->userscancomment) and 
+        ((has_capability('moodle/comment:post', $context)) or (has_capability('moodle/comment:view', $context)))) {
 
-        $tabname = get_string('episodecommentview', 'pcast');
         $comment = true;
     }
     // Can they use ratings?
@@ -104,26 +97,14 @@ if (($episode->userscancomment) or ($episode->assessed)) {
          (has_capability('mod/pcast:viewallratings', $context)) or
          (has_capability('mod/pcast:viewanyrating', $context)))) {
 
-        $tabname = get_string('episoderateview', 'pcast');
         $rate = true;
-    }
-    // Can they use both?
-    if (($comment) and ($rate)) {
-        $tabname = get_string('episodecommentandrateview', 'pcast');
-    }
-
-    if (($comment) or ($rate)) {
-        $url = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $episode->id, 'mode' => PCAST_EPISODE_COMMENT_AND_RATE));
-        $browserow[] = new tabobject(PCAST_EPISODE_COMMENT_AND_RATE, $url, $tabname);
     }
 }
 
 if (($episode->displayviews) or (has_capability('mod/pcast:manage', $context))) {
-    $url = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $episode->id, 'mode' => PCAST_EPISODE_VIEWS));
-    $browserow[] = new tabobject(PCAST_EPISODE_VIEWS, $url, get_string('episodeviews', 'pcast'));
+    // Can they see views?
+    $views = true;
 }
-
-$tabrows[] = $browserow;     // Needs to be an Array of Arrays (2D Array).
 
 // Check to see if any content should be displayed (prevents guessing of URLs).
 if (((!$pcast->userscancomment) and (!$pcast->assessed)) and ($mode == PCAST_EPISODE_COMMENT_AND_RATE)) {
@@ -132,9 +113,13 @@ if (((!$pcast->userscancomment) and (!$pcast->assessed)) and ($mode == PCAST_EPI
     throw new moodle_exception('errorinvalidmode', 'pcast');
 }
 
-echo html_writer::start_tag('div', array('class' => 'pcast-display')). "\n";
-print_tabs($tabrows, $mode);
+// Generate the navigation.
+$renderer = $PAGE->get_renderer('mod_pcast');
+$actionbar = new \mod_pcast\output\episode_action_bar($cm, $pcast, $eid, $mode, $rate, $comment, $views);
+echo $renderer->episode_action_bar($actionbar);
 
+// Now display the content.
+echo html_writer::start_tag('div', array('class' => 'pcast-display')). "\n";
 switch ($mode) {
     case PCAST_EPISODE_VIEW:
 
@@ -142,7 +127,6 @@ switch ($mode) {
 
         break;
     case PCAST_EPISODE_COMMENT_AND_RATE:
-
 
         // Load comment API.
         if ($comment) {

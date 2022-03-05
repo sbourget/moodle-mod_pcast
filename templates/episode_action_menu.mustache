@@ -12,14 +12,14 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template mod_pcast/standard_action_menu
+    @template mod_pcast/episode_action_menu
     Actions panel is displayed at the top of the episode listing.
     Classes required for JS:
         * none
     Data attributes required for JS:
         * none
     Context variables required for this template:
-        * see mod/pcast/classes/output/standard_action_bar.php
+        * see mod/pcast/classes/output/episode_action_bar.php
     Example context (json):
     {
         "addnewbutton": {
@@ -35,34 +35,6 @@
                   "value": "yeah"
                 }
             ]
-        },
-        "tools": {
-            "button": {
-                "method" : "get",
-                "url" : "#",
-                "primary" : true,
-                "tooltip" : "This is a tooltip",
-                "label" : "This is a the button text",
-                "id": "anotherid",
-                "attributes": [
-                    {
-                      "name": "data-attribute",
-                      "value": "yeah"
-                    }
-                ]
-            },
-            "select": {
-                "options": [
-                    {
-                        "url": "www.google.com",
-                        "string": "Google"
-                    },
-                    {
-                        "url": "www.yahoo.com",
-                        "string": "Yahoo"
-                    }
-                ]
-            }
         },
         "tabjumps":
         {
@@ -116,30 +88,6 @@
                 {{> core/url_select }}
             </div>
             {{/tabjumps}}
-        </div>
-        <div class="d-flex ml-auto">
-            {{#tools}}
-                {{#button}}
-                    <div class="pr-1">
-                        {{> core/single_button}}
-                    </div>
-                {{/button}}
-                {{#select}}
-                <div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            ...
-                            <span class="sr-only">{{#str}} subscribepisodes, mod_pcast {{/str}}</span>
-                        </button>
-                        <div class="dropdown-menu">
-                            {{#options}}
-                                <a class="dropdown-item" href="{{url}}">{{string}}</a>
-                            {{/options}}
-                        </div>
-                    </div>
-                </div>
-                {{/select}}
-            {{/tools}}
         </div>
     </div>
 </div>

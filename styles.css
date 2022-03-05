@@ -1,0 +1,47 @@
+/*
+    Document   : style.css
+    Created on : Jul 1, 2010, 7:47:18 PM
+    Author     : sbourget
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+
+.pcast-bold {
+    font-weight: bold;
+}
+
+.pcast-header {
+    font-weight: bold;
+    width: 25%;
+}
+
+.pcast-data {
+    width: 75%;
+}
+.pcast-comments {
+    margin:0 auto;
+    text-align: center;
+}
+
+.pcast-center {
+    text-align: center;
+}
+
+.pcast-links {
+    text-align:center;
+}
+
+.pcast-episode-notice {
+    margin:0 auto;
+    text-align: center;
+}
+
+.pcast-paging {
+    text-align:center;
+}
+
+.pcast-media .mediaplugin div{
+    margin-left:0;
+    margin-right:auto;
+}
