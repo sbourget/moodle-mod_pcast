@@ -84,8 +84,8 @@ $views = false;
 
 if (($episode->userscancomment) or ($episode->assessed)) {
     // Can they use comments?
-    if (($CFG->usecomments) and 
-        ($episode->userscancomment) and 
+    if (($CFG->usecomments) and
+        ($episode->userscancomment) and
         ((has_capability('moodle/comment:post', $context)) or (has_capability('moodle/comment:view', $context)))) {
 
         $comment = true;

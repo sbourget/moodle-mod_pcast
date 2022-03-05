@@ -44,8 +44,8 @@ class episode_action_bar implements renderable, templatable {
     private $rate;
     /** @var bool views are allowed. */
     private $views;
-    /** @var bool comment are comments enabled. */    
-    private $comment;  
+    /** @var bool comment are comments enabled. */
+    private $comment;
     /** @var int $context The context of the pcst. */
     private $context;
 
@@ -114,7 +114,8 @@ class episode_action_bar implements renderable, templatable {
         $options[get_string('episodeview', 'pcast')] = $stdbaseurl->out(false);
 
         if ($this->comment or $this->rate) {
-            $rateurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $this->eid, 'mode' => PCAST_EPISODE_COMMENT_AND_RATE));
+            $rateurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $this->eid,
+                'mode' => PCAST_EPISODE_COMMENT_AND_RATE));
 
             if ($this->comment and $this->rate) {
                 // Both comments and ratings.
@@ -127,7 +128,7 @@ class episode_action_bar implements renderable, templatable {
                 $options[get_string('episoderateview', 'pcast')] = $rateurl->out(false);
             }
         }
-        
+
         if ($this->views) {
             $viewsbaseurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $this->eid, 'mode' => PCAST_EPISODE_VIEWS));
             $options[get_string('episodeviews', 'pcast')] = $viewsbaseurl->out(false);
