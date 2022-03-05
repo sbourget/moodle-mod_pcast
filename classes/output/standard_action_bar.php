@@ -87,7 +87,6 @@ class standard_action_bar implements renderable, templatable {
             ];
         } else {
             // No access to the Add new episode button.
-            
             return ['tabjumps' => $this->generate_tab_jumps($output)];
         }
     }
@@ -127,12 +126,11 @@ class standard_action_bar implements renderable, templatable {
                 $currentgroup = 0;
             }
 
+            $args = $this->module->id . '/'.$currentgroup;
+            $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'mod_pcast', $args));
+            $buttons[$string] = $url->out(false);
         }
-        $args = $this->module->id . '/'.$currentgroup;
 
-        $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'mod_pcast', $args));
-        $buttons[$string] = $url->out(false);
-        
         if (!empty($pcastconfig->enablerssitunes) && $this->module->enablerssitunes) {
             $string = get_string('pcastlink', 'pcast');
             require_once("$CFG->dirroot/mod/pcast/rsslib.php");
