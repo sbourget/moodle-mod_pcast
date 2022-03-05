@@ -45,10 +45,10 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
 
     Then I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I follow "View"
-    And I follow "Views"
+    And I select "Episode Views" from the "Browse the podcast using this index" singleselect
     And I should see "1" in the "Student 2" "table_row"
     And I should see "1" in the "Student 1" "table_row"
-    And I follow "Episode"
+    And I select "View Episode" from the "Browse the podcast using this index" singleselect
     And I follow "audio/mp3"
     And I wait until the page is ready
     And I press the "back" button in the browser
@@ -57,7 +57,7 @@ Feature: A teacher can create a podcast activity and see who has viewed the epis
     And I am on the "Test podcast name" Activity page logged in as "student1"
     And I follow "View"
     And I should see "4" in the "Total views" "table_row"
-    And I follow "Views"
+    And I select "Episode Views" from the "Browse the podcast using this index" singleselect
     And I should see "1" in the "Student 2" "table_row"
     And I should see "1" in the "Student 1" "table_row"
     And I should see "2" in the "Teacher 1" "table_row"

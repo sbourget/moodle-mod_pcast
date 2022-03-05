@@ -41,7 +41,7 @@ Feature: Pcast ratings
 
     When I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I follow "View"
-    And I follow "Rate"
+    And I select "Ratings" from the "Browse the podcast using this index" singleselect
     And I set the field "rating" to "Mostly connected knowing"
     And I log out
     And I am on the "Test podcast name" Activity page logged in as "student1"

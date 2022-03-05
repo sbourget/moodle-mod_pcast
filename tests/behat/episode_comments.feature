@@ -33,7 +33,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
-    And I follow "Comment"
+    And I select "Commenting" from the "Browse the podcast using this index" singleselect
     And I click on ".comment-link" "css_element"
     And I set the field "content" to "First student comment"
     And I follow "Save comment"
@@ -44,7 +44,7 @@ Feature: A teacher can create a podcast activity and allow student comments
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
-    And I follow "Comment"
+    And I select "Commenting" from the "Browse the podcast using this index" singleselect
     And I click on ".comment-link" "css_element"
     And I set the field "content" to "Second student BROKEN comment"
     And I follow "Save comment"

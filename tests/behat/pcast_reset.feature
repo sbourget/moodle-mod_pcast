@@ -34,7 +34,7 @@ Feature: Pcast reset
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
-    And I follow "Comment"
+    And I select "Commenting" from the "Browse the podcast using this index" singleselect
     And I click on ".comment-link" "css_element"
     And I set the field "content" to "First student comment"
     And I follow "Save comment"
@@ -53,7 +53,7 @@ Feature: Pcast reset
     And I should see "Test episode name"
     And I should see "Test episode summary"
     And I follow "View"
-    And I follow "Comment"
+    And I select "Commenting" from the "Browse the podcast using this index" singleselect
     And I should not see "First student comment"
 
   Scenario: Use course reset to delete all episodes
@@ -158,9 +158,9 @@ Feature: Pcast reset
 
     And I am on the "Test podcast name" Activity page logged in as "teacher1"
     And I follow "View"
-    And I follow "Rate"
+    And I select "Rating" from the "Browse the podcast using this index" singleselect
     And I set the field "rating" to "Mostly connected knowing"
-    And I follow "Episode"
+    And I select "View Episode" from the "Browse the podcast using this index" singleselect
     And I should see "1" in the "Total ratings" "table_row"
     When I am on the "Course 1" "reset" page
     And I expand all fieldsets
