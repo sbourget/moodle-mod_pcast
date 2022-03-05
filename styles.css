@@ -20,7 +20,7 @@
     width: 75%;
 }
 .pcast-comments {
-    margin:0 auto;
+    margin: 0 auto;
     text-align: center;
 }
 
@@ -29,19 +29,19 @@
 }
 
 .pcast-links {
-    text-align:center;
+    text-align: center;
 }
 
 .pcast-episode-notice {
-    margin:0 auto;
+    margin: 0 auto;
     text-align: center;
 }
 
 .pcast-paging {
-    text-align:center;
+    text-align: center;
 }
 
-.pcast-media .mediaplugin div{
-    margin-left:0;
-    margin-right:auto;
+.pcast-media .mediaplugin div {
+    margin-left: 0;
+    margin-right: auto;
 }
