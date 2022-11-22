@@ -37,7 +37,7 @@ require_once($CFG->dirroot . '/rating/lib.php');
  * @category   test
  * @copyright  2018 Stephen Bourget
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \mod_pcast\backup
+ *
  */
 class mod_pcast_restore_date_testcase extends \restore_date_testcase {
 

@@ -32,7 +32,7 @@ namespace mod_pcast;
  * @category   test
  * @copyright  2015 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \mod_pcast\event
+ * 
  */
 class mod_pcast_events_testcase extends \advanced_testcase {
 
