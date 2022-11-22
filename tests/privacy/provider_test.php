@@ -37,6 +37,7 @@ require_once($CFG->dirroot . '/comment/lib.php');
  * @package    mod_pcast
  * @copyright 2018 Simey Lameze <simey@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers     \mod_pcast\privacy\provider
  */
 class provider_test extends \core_privacy\tests\provider_testcase {
     /** @var stdClass The student object. */
