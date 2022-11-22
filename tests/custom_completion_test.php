@@ -42,6 +42,7 @@ require_once($CFG->libdir . '/completionlib.php');
  * @package   mod_pcast
  * @copyright 2021 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers    \mod_pcast\completion\custom_completion
  */
 class custom_completion_test extends advanced_testcase {
 
