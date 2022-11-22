@@ -888,7 +888,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         $fullpath = "/$filecontext->id/mod_pcast/$filearea/$episodeid/$relativepath";
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) || $file->is_directory()) {
+        if ((!$file = $fs->get_file_by_hash(sha1($fullpath))) || $file->is_directory()) {
 
             return false;
         }
@@ -910,7 +910,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         $fullpath = "/$filecontext->id/mod_pcast/$filearea/$relativepath";
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) || $file->is_directory()) {
+        if ((!$file = $fs->get_file_by_hash(sha1($fullpath))) || $file->is_directory()) {
 
             return false;
         }
