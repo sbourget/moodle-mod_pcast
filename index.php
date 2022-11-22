@@ -93,7 +93,7 @@ foreach ($pcasts as $pcast) {
         $link = html_writer::tag('a', format_string($pcast->name) , array('href' => $url));
     }
 
-    if ($course->format == 'weeks' or $course->format == 'topics') {
+    if ($course->format == 'weeks' || $course->format == 'topics') {
         $table->data[] = array ($pcast->section, $link);
     } else {
         $table->data[] = array ($link);

@@ -95,11 +95,11 @@ if ($groupmode) {
 }
 
 // Check to see if any content should be displayed (prevents guessing of URLs).
-if ((!$pcast->userscancategorize) and ($mode == PCAST_CATEGORY_VIEW)) {
+if ((!$pcast->userscancategorize) && ($mode == PCAST_CATEGORY_VIEW)) {
     throw new moodle_exception('errorinvalidmode', 'pcast');
-} else if ((!$pcast->displayauthor and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_AUTHOR_VIEW)) {
+} else if ((!$pcast->displayauthor && !has_capability('mod/pcast:manage', $context)) && ($mode == PCAST_AUTHOR_VIEW)) {
     throw new moodle_exception('errorinvalidmode', 'pcast');
-} else if ((!has_capability('mod/pcast:approve', $context)) and ($mode == PCAST_APPROVAL_VIEW)) {
+} else if ((!has_capability('mod/pcast:approve', $context)) && ($mode == PCAST_APPROVAL_VIEW)) {
     throw new moodle_exception('errorinvalidmode', 'pcast');
 }
 

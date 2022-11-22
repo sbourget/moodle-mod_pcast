@@ -945,7 +945,7 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     foreach ($episodes as $episode) {
         if (isset($members[$episode->userid]->id) && ($members[$episode->userid]->id == $episode->userid)) {
             // Display this episode (User is in the group).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;

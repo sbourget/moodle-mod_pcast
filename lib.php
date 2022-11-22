@@ -127,13 +127,13 @@ function pcast_add_instance($pcast) {
         $pcast->assessed = 0;
     }
 
-    if (empty($pcast->ratingtime) or empty($pcast->assessed)) {
+    if (empty($pcast->ratingtime) || empty($pcast->assessed)) {
         $pcast->assesstimestart  = 0;
         $pcast->assesstimefinish = 0;
     }
 
     // If no owner then set it to the instance creator.
-    if (isset($pcast->enablerssitunes) and ($pcast->enablerssitunes == 1)) {
+    if (isset($pcast->enablerssitunes) && ($pcast->enablerssitunes == 1)) {
         if (!isset($pcast->userid)) {
             $pcast->userid = $USER->id;
         }
@@ -185,7 +185,7 @@ function pcast_update_instance($pcast) {
         $pcast->assessed = 0;
     }
 
-    if (empty($pcast->ratingtime) or empty($pcast->assessed)) {
+    if (empty($pcast->ratingtime) || empty($pcast->assessed)) {
         $pcast->assesstimestart  = 0;
         $pcast->assesstimefinish = 0;
     }
@@ -193,7 +193,7 @@ function pcast_update_instance($pcast) {
     $pcast->id = $pcast->instance;
 
     // If no owner then set it to the instance creator.
-    if (isset($pcast->enablerssitunes) and ($pcast->enablerssitunes == 1)) {
+    if (isset($pcast->enablerssitunes) && ($pcast->enablerssitunes == 1)) {
         if (!isset($pcast->userid)) {
             $pcast->userid = $USER->id;
         }
@@ -566,7 +566,7 @@ function pcast_scale_used($pcastid, $scaleid) {
 function pcast_scale_used_anywhere($scaleid) {
     global $DB;
 
-    if ($scaleid and $DB->record_exists('pcast', array('scale' => -$scaleid))) {
+    if ($scaleid && $DB->record_exists('pcast', array('scale' => -$scaleid))) {
         return true;
     } else {
         return false;
@@ -693,8 +693,8 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
     }
 
     // Display add new episode link. (Must have write + manage / approve as teacher or write + allow user episodes).
-    if (has_capability('mod/pcast:write', $PAGE->cm->context) and (has_capability('mod/pcast:manage', $PAGE->cm->context)
-                                                               or has_capability('mod/pcast:approve', $PAGE->cm->context))) {
+    if (has_capability('mod/pcast:write', $PAGE->cm->context) && (has_capability('mod/pcast:manage', $PAGE->cm->context)
+                                                              || has_capability('mod/pcast:approve', $PAGE->cm->context))) {
         // This is a teacher.
         $node = $pcastnode->add(get_string('addnewepisode', 'pcast'),
                         new moodle_url('/mod/pcast/edit.php',
@@ -808,7 +808,7 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
         return null;
     }
 
-    if ($filearea === 'summary' or $filearea === 'episode' or $filearea === 'logo') {
+    if ($filearea === 'summary' || $filearea === 'episode' || $filearea === 'logo') {
         if (!$episode = $DB->get_record('pcast_episodes', array('id' => $itemid))) {
             return null;
         }
@@ -824,9 +824,9 @@ function mod_pcast_get_file_info($browser, $areas, $course, $cm, $context, $file
         }
 
         // Is it an episode, and has it been approved?
-        if ($filearea === 'episode' and
-                $pcast->requireapproval and
-                !$episode->approved and
+        if ($filearea === 'episode' &&
+                $pcast->requireapproval &&
+                !$episode->approved &&
                 !has_capability('mod/pcast:approve', $context)) {
             return null;
         }
@@ -866,7 +866,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         return false;
     }
 
-    if ($filearea === 'episode' or $filearea === 'summary') {
+    if ($filearea === 'episode' || $filearea === 'summary') {
         $episodeid = (int)array_shift($args);
 
         if (!$episode = $DB->get_record('pcast_episodes', array('id' => $episodeid))) {
@@ -879,7 +879,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
             return false;
         }
 
-        if ($pcast->requireapproval and !$episode->approved and !has_capability('mod/pcast:approve', $context)) {
+        if ($pcast->requireapproval && !$episode->approved && !has_capability('mod/pcast:approve', $context)) {
 
             return false;
         }
@@ -888,7 +888,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         $fullpath = "/$filecontext->id/mod_pcast/$filearea/$episodeid/$relativepath";
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) || $file->is_directory()) {
 
             return false;
         }
@@ -910,7 +910,7 @@ function pcast_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         $fullpath = "/$filecontext->id/mod_pcast/$filearea/$relativepath";
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) || $file->is_directory()) {
 
             return false;
         }
@@ -1320,7 +1320,7 @@ function pcast_comment_validate($commentparam) {
     }
     $context = context_module::instance($cm->id);
 
-    if ($pcast->requireapproval and !$record->approved and !has_capability('mod/pcast:approve', $context)) {
+    if ($pcast->requireapproval && !$record->approved && !has_capability('mod/pcast:approve', $context)) {
         throw new comment_exception('notapproved', 'pcast');
     }
     // Validate context id.
@@ -1601,7 +1601,7 @@ function pcast_update_grades($pcast=null, $userid=0, $nullifnone=true) {
     } else if ($grades = pcast_get_user_grades($pcast, $userid)) {
         pcast_grade_item_update($pcast, $grades);
 
-    } else if ($userid and $nullifnone) {
+    } else if ($userid && $nullifnone) {
         $grade = new stdClass();
         $grade->userid   = $userid;
         $grade->rawgrade = null;
@@ -1625,7 +1625,7 @@ function pcast_grade_item_update($pcast, $grades=null) {
 
     $params = array('itemname' => $pcast->name, 'idnumber' => $pcast->cmidnumber);
 
-    if (!$pcast->assessed or $pcast->scale == 0) {
+    if (!$pcast->assessed || $pcast->scale == 0) {
         $params['gradetype'] = GRADE_TYPE_NONE;
 
     } else if ($pcast->scale > 0) {

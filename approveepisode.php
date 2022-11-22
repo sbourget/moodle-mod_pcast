@@ -52,7 +52,7 @@ $url = new moodle_url('/mod/pcast/approveepisode.php',
 $PAGE->set_url($url);
 $PAGE->set_context($context);
 
-if ($newstate != $episode->approved and confirm_sesskey()) {
+if ($newstate != $episode->approved && confirm_sesskey()) {
     $newepisode = new stdClass();
     $newepisode->id           = $episode->id;
     $newepisode->approved     = $newstate;
