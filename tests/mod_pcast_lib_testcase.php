@@ -39,6 +39,8 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
 
     /**
      * Test calendar event creation.
+     *
+     * @covers ::pcast_core_calendar_provide_event_action
      */
     public function test_pcast_core_calendar_provide_event_action() {
         $this->resetAfterTest();
@@ -63,6 +65,8 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
 
     /**
      * Test calendar event read as a non-user.
+     *
+     * @covers ::pcast_core_calendar_provide_event_action_as_non_user
      */
     public function test_pcast_core_calendar_provide_event_action_as_non_user() {
         global $CFG;
@@ -87,6 +91,8 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
 
     /**
      * Test calendar event read as a user.
+     *
+     * @covers ::pcast_core_calendar_provide_event_action_for_user
      */
     public function test_pcast_core_calendar_provide_event_action_for_user() {
         global $CFG;
@@ -118,6 +124,8 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
 
     /**
      * Test calendar event read for an activity in a hidden section.
+     *
+     * @covers ::pcast_core_calendar_provide_event_action_in_hidden_section
      */
     public function test_pcast_core_calendar_provide_event_action_in_hidden_section() {
         $this->resetAfterTest();
@@ -143,6 +151,8 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
 
     /**
      * Test calendar event read for an activity already completed.
+     *
+     * @covers ::pcast_core_calendar_provide_event_action_already_completed
      */
     public function test_pcast_core_calendar_provide_event_action_already_completed() {
         global $CFG;
@@ -171,6 +181,8 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
 
     /**
      * Test calendar event read for an activity already completed by the user.
+     *
+     * @covers ::pcast_core_calendar_provide_event_action_already_completed_for_user
      */
     public function test_pcast_core_calendar_provide_event_action_already_completed_for_user() {
         global $CFG;

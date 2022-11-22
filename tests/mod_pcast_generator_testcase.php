@@ -37,6 +37,8 @@ class mod_pcast_generator_testcase extends \advanced_testcase {
 
     /**
      * Test generator for creating instance of module.
+     *
+     * @covers ::create_instance
      */
     public function test_create_instance() {
         global $DB;
@@ -60,6 +62,8 @@ class mod_pcast_generator_testcase extends \advanced_testcase {
 
     /**
      * Test generator for creating podcast episodes.
+     *
+     * @covers ::create_content
      */
     public function test_create_content() {
         global $DB;
