@@ -68,17 +68,17 @@ $PAGE->set_context($context);
 
 $manageentries = has_capability('mod/pcast:manage', $context);
 
-if (($episode->userid != $USER->id) and !$manageentries) { // Guest id is never matched, no need for special check here.
+if (($episode->userid != $USER->id) && !$manageentries) { // Guest id is never matched, no need for special check here.
     throw new moodle_exception('nopermissiontodelepisode', 'pcast');
 }
 $ineditperiod = ((time() - $episode->timecreated < $CFG->maxeditingtime));
-if (!$ineditperiod and !$manageentries) {
+if (!$ineditperiod && !$manageentries) {
     throw new moodle_exception('errdeltimeexpired', 'pcast');
 }
 
 // If data is submitted, then process and store.
 
-if ($confirm and confirm_sesskey()) { // The operation was confirmed.
+if ($confirm && confirm_sesskey()) { // The operation was confirmed.
 
     $origionalepisode = fullclone($episode);
     $fs = get_file_storage();

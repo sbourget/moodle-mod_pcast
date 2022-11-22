@@ -123,7 +123,7 @@ if ($groupmode == SEPARATEGROUPS) {
     $members = get_enrolled_users($context, 'mod/pcast:write', $groupid, 'u.id', 'u.id ASC');
 
     // Is a member of the current group.
-    if (!isset($members[$userid]->id) or ($members[$userid]->id != $userid)) {
+    if (!isset($members[$userid]->id) || ($members[$userid]->id != $userid)) {
 
         // Not a member of the group, can you see all groups (from CAPS).
         if (!has_capability('moodle/site:accessallgroups', $context, $userid)) {
@@ -133,7 +133,7 @@ if ($groupmode == SEPARATEGROUPS) {
     } else {
         // Are a member of the current group.
         // Is the group #0 (Group 0 is all users).
-        if ($groupid == 0 and !has_capability('moodle/site:accessallgroups', $context, $userid)) {
+        if ($groupid == 0 && !has_capability('moodle/site:accessallgroups', $context, $userid)) {
             $uservalidated = false;
         }
     }

@@ -82,34 +82,34 @@ $comment = false;
 $rate = false;
 $views = false;
 
-if (($episode->userscancomment) or ($episode->assessed)) {
+if (($episode->userscancomment) || ($episode->assessed)) {
     // Can they use comments?
-    if (($CFG->usecomments) and
-        ($episode->userscancomment) and
-        ((has_capability('moodle/comment:post', $context)) or (has_capability('moodle/comment:view', $context)))) {
+    if (($CFG->usecomments) &&
+        ($episode->userscancomment) &&
+        ((has_capability('moodle/comment:post', $context)) || (has_capability('moodle/comment:view', $context)))) {
 
         $comment = true;
     }
     // Can they use ratings?
-    if (($episode->assessed) and
-        ((has_capability('mod/pcast:rate', $context)) or
-        ((has_capability('mod/pcast:viewrating', $context)) and ($episode->userid == $USER->id)) or
-         (has_capability('mod/pcast:viewallratings', $context)) or
+    if (($episode->assessed) &&
+        ((has_capability('mod/pcast:rate', $context)) ||
+        ((has_capability('mod/pcast:viewrating', $context)) && ($episode->userid == $USER->id)) ||
+         (has_capability('mod/pcast:viewallratings', $context)) ||
          (has_capability('mod/pcast:viewanyrating', $context)))) {
 
         $rate = true;
     }
 }
 
-if (($episode->displayviews) or (has_capability('mod/pcast:manage', $context))) {
+if (($episode->displayviews) || (has_capability('mod/pcast:manage', $context))) {
     // Can they see views?
     $views = true;
 }
 
 // Check to see if any content should be displayed (prevents guessing of URLs).
-if (((!$pcast->userscancomment) and (!$pcast->assessed)) and ($mode == PCAST_EPISODE_COMMENT_AND_RATE)) {
+if (((!$pcast->userscancomment) && (!$pcast->assessed)) && ($mode == PCAST_EPISODE_COMMENT_AND_RATE)) {
     throw new moodle_exception('errorinvalidmode', 'pcast');
-} else if ((!$pcast->displayviews and !has_capability('mod/pcast:manage', $context)) and ($mode == PCAST_EPISODE_VIEWS)) {
+} else if ((!$pcast->displayviews && !has_capability('mod/pcast:manage', $context)) && ($mode == PCAST_EPISODE_VIEWS)) {
     throw new moodle_exception('errorinvalidmode', 'pcast');
 }
 

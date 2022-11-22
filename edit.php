@@ -146,7 +146,7 @@ if ($mform->is_cancelled()) {
     $episode = pcast_get_itunes_categories($episode, $pcast);
 
     // Episode approval.
-    if (!$pcast->requireapproval or has_capability('mod/pcast:approve', $context)) {
+    if (!$pcast->requireapproval || has_capability('mod/pcast:approve', $context)) {
         $episode->approved = 1;
     }
 

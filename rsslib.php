@@ -71,7 +71,7 @@ function pcast_rss_get_feed($context, $args) {
         $members = get_enrolled_users($context, 'mod/pcast:write', $groupid, 'u.id', 'u.id ASC');
 
         // Is a member of the current group?
-        if (!isset($members[$userid]->id) or ($members[$userid]->id != $userid)) {
+        if (!isset($members[$userid]->id) || ($members[$userid]->id != $userid)) {
 
             // Not a member of the group, can you see all groups (from CAPS).
             if (!has_capability('moodle/site:accessallgroups', $context, $userid)) {
@@ -81,7 +81,7 @@ function pcast_rss_get_feed($context, $args) {
         } else {
             // Are a member of the current group.
             // Is the group #0 (Group 0 is all users).
-            if ($groupid == 0 and !has_capability('moodle/site:accessallgroups', $context, $userid)) {
+            if ($groupid == 0 && !has_capability('moodle/site:accessallgroups', $context, $userid)) {
                 $uservalidated = false;
             }
         }
@@ -510,8 +510,8 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
     if (!empty($items)) {
         foreach ($items as $item) {
             // Only display group members entries in regular courses, Display everything when used on the front page.
-            if (((isset($members[$item->userid]->id) and ($members[$item->userid]->id == $item->userid))
-                                                     or ($item->course === SITEID))) {
+            if (((isset($members[$item->userid]->id) && ($members[$item->userid]->id == $item->userid))
+                                                     || ($item->course === SITEID))) {
                 $result .= rss_start_tag('item', 2, true);
                 // Include the category if exists (some rss readers will use it to group items).
                 if (isset($item->topcategory)) {

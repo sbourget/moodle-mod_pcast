@@ -77,9 +77,9 @@ class standard_action_bar implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         // Show the add entry button if allowed (usercan post + write or write + manage  or write + approve caps).
-        if (((has_capability('mod/pcast:write', $this->context)) and ($this->module->userscanpost))
-            or (has_capability('mod/pcast:write', $this->context) and has_capability('mod/pcast:manage', $this->context))
-            or (has_capability('mod/pcast:write', $this->context) and has_capability('mod/pcast:approve', $this->context))) {
+        if (((has_capability('mod/pcast:write', $this->context)) && ($this->module->userscanpost))
+            || (has_capability('mod/pcast:write', $this->context) && has_capability('mod/pcast:manage', $this->context))
+            || (has_capability('mod/pcast:write', $this->context) && has_capability('mod/pcast:approve', $this->context))) {
             return [
                 'addnewbutton' => $this->create_add_button($output),
                 'tools' => $this->get_additional_tools($output),

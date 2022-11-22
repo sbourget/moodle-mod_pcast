@@ -265,7 +265,7 @@ function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortor
     $alphabet = explode(",", get_string('alphabet', 'langconfig'));
     $lettersbyline = 26;
     for ($i = 0; $i < count($alphabet); $i++) {
-        if ( $hook == $alphabet[$i] and $hook) {
+        if ( $hook == $alphabet[$i] && $hook) {
             echo html_writer::tag('span', $alphabet[$i], array('class' => 'pcast-bold'));
         } else {
             $url = new moodle_url('/mod/pcast/view.php',
@@ -278,7 +278,7 @@ function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortor
 
             echo html_writer::tag('a', $alphabet[$i], array('href' => $url));
         }
-        if ((int) ($i % $lettersbyline) != 0 or $i == 0) {
+        if ((int) ($i % $lettersbyline) != 0 || $i == 0) {
             echo ' | ';
         } else {
             echo html_writer::empty_tag('br');
@@ -501,7 +501,7 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     $sql = pcast_get_episode_sql();
     $sql .= " WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
 
-    if (empty($hook) or ($hook == 'ALL')) {
+    if (empty($hook) || ($hook == 'ALL')) {
 
         $sql .= " ORDER BY ". $sort;
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '1', $USER->id));
@@ -536,15 +536,15 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     // Get Group members.
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if (isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)) {
+        if (isset($members[$episode->userid]->id) && ($members[$episode->userid]->id == $episode->userid)) {
             // Display this episode (User is in the group).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;
         } else if ($currentgroup == 0) {
             // Display this episode (NO GROUPS USED or user is the author).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;
@@ -602,7 +602,7 @@ function pcast_episode_allowed_viewing($episode, $cm, $groupmode) {
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
 
     // See if episode is created by a member of the group.
-    if (isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)) {
+    if (isset($members[$episode->userid]->id) && ($members[$episode->userid]->id == $episode->userid)) {
         // Member of the group.
         return true;
 
@@ -679,15 +679,15 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook = PC
     // Get Group members.
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if (isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)) {
+        if (isset($members[$episode->userid]->id) && ($members[$episode->userid]->id == $episode->userid)) {
             // Display this episode (User is in the group).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;
         } else if ($currentgroup == 0) {
             // Display this episode (NO GROUPS USED or user is the author).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;
@@ -758,15 +758,15 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='',
     // Get Group members.
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if (isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)) {
+        if (isset($members[$episode->userid]->id) && ($members[$episode->userid]->id == $episode->userid)) {
             // Display this episode (User is in the group).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;
         } else if ($currentgroup == 0) {
             // Display this episode (NO GROUPS USED or user is the author).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;
@@ -820,7 +820,7 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
             $order = " ORDER BY u.lastname " .$sort .", u.firstname " . $sort. ", p.name ASC";
 
             // Handle cases where you lookup by first letter of name (last / first).
-            if (empty($hook) or ($hook == 'ALL')) {
+            if (empty($hook) || ($hook == 'ALL')) {
                 $sql .= $order;
                 $episodes = $DB->get_records_sql($sql, array($pcast->id, '1', $USER->id));
 
@@ -837,7 +837,7 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
             $order = " ORDER BY u.firstname " .$sort .", u.lastname " . $sort. ", p.name ASC";
 
             // Handle cases where you lookup by first letter of name (last / first).
-            if (empty($hook) or ($hook == 'ALL')) {
+            if (empty($hook) || ($hook == 'ALL')) {
                 $sql .= $order;
                 $episodes = $DB->get_records_sql($sql, array($pcast->id, '1', $USER->id));
 
@@ -859,15 +859,15 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
     // Get Group members.
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if (isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)) {
+        if (isset($members[$episode->userid]->id) && ($members[$episode->userid]->id == $episode->userid)) {
             // Display this episode (User is in the group).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;
         } else if ($currentgroup == 0) {
             // Display this episode (NO GROUPS USED or user is the author).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;
@@ -909,7 +909,7 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
         $sort = 'p.name ASC';
     }
 
-    if (empty($hook) or ($hook == 'ALL')) {
+    if (empty($hook) || ($hook == 'ALL')) {
 
         $sql .= " ORDER BY ". $sort;
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '0'));
@@ -943,7 +943,7 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
 
     $members = get_enrolled_users($context, 'mod/pcast:write', $currentgroup, 'u.id', 'u.id ASC');
     foreach ($episodes as $episode) {
-        if (isset($members[$episode->userid]->id) and ($members[$episode->userid]->id == $episode->userid)) {
+        if (isset($members[$episode->userid]->id) && ($members[$episode->userid]->id == $episode->userid)) {
             // Display this episode (User is in the group).
             if (($count >= $start) and ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
@@ -951,7 +951,7 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
             $count++;
         } else if ($currentgroup == 0) {
             // Display this episode (NO GROUPS USED or user is the author).
-            if (($count >= $start) and ($count < $end)) {
+            if (($count >= $start) && ($count < $end)) {
                 pcast_display_episode_brief($episode, $cm);
             }
             $count++;
@@ -1052,11 +1052,11 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
     $table->data[] = array (get_string("summary", "pcast"),  $summarytext);
 
     // Category -Display only if enabled.
-    if ((isset($episode->userscancategorize))and ($episode->userscancategorize != '0')) {
-        if ((isset($episode->topcategory))and ($episode->topcategory != '0')) {
+    if ((isset($episode->userscancategorize)) && ($episode->userscancategorize != '0')) {
+        if ((isset($episode->topcategory)) && ($episode->topcategory != '0')) {
             $episode->category = $episode->topcategory;
 
-            if ((isset($episode->nestedcategory))and ($episode->nestedcategory != '0')) {
+            if ((isset($episode->nestedcategory)) && ($episode->nestedcategory != '0')) {
                 $episode->category .= $strsep. ' '.$episode->nestedcategory;
 
             }
@@ -1072,7 +1072,7 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
     }
     // Author.
     // Only print author if allowed or has manage rights.
-    if (((isset($episode->displayauthor))and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
+    if (((isset($episode->displayauthor)) && ($episode->displayauthor != '0')) || (has_capability('mod/pcast:manage', $context))) {
         $user = $DB->get_record("user", array("id" => $episode->userid));
         $table->data[] = array (get_string("author", "pcast"), fullname($user));
     }
@@ -1094,7 +1094,7 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
     $link = '';
 
     // Management Links.
-    if ((has_capability('mod/pcast:manage', $context)) or ($ineditingperiod)) {
+    if ((has_capability('mod/pcast:manage', $context)) || ($ineditingperiod)) {
 
         // Edit Link.
         $url = new moodle_url('/mod/pcast/edit.php',
@@ -1118,7 +1118,7 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
                  array('href' => $url, 'title' => get_string('viewepisode', 'pcast')));
 
     // Approve / Disapprove Link.
-    if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval)) {
+    if ((has_capability('mod/pcast:approve', $context)) && ($episode->requireapproval)) {
         if (!$episode->approved) {
             // Approve link.
             $link .= ' | '."\n";
@@ -1181,11 +1181,11 @@ function pcast_display_episode_full($episode, $cm, $course) {
     $table->data[] = array (get_string("summary", "pcast"),  $summarytext);
 
     // Category -Display only if enabled.
-    if ((isset($episode->userscancategorize))and ($episode->userscancategorize != '0')) {
-        if ((isset($episode->topcategory))and ($episode->topcategory != '0')) {
+    if ((isset($episode->userscancategorize)) && ($episode->userscancategorize != '0')) {
+        if ((isset($episode->topcategory)) && ($episode->topcategory != '0')) {
             $episode->category = $episode->topcategory;
 
-            if ((isset($episode->nestedcategory))and ($episode->nestedcategory != '0')) {
+            if ((isset($episode->nestedcategory)) && ($episode->nestedcategory != '0')) {
                 $episode->category .= $strsep. ' '.$episode->nestedcategory;
 
             }
@@ -1226,7 +1226,7 @@ function pcast_display_episode_full($episode, $cm, $course) {
 
     // Author.
     // Only print author if allowed or has manage rights.
-    if (((isset($episode->displayauthor)) and ($episode->displayauthor != '0')) or (has_capability('mod/pcast:manage', $context))) {
+    if (((isset($episode->displayauthor)) && ($episode->displayauthor != '0')) || (has_capability('mod/pcast:manage', $context))) {
         $user = $DB->get_record("user", array("id" => $episode->userid));
         $table->data[] = array (get_string("author", "pcast"), fullname($user));
     }
@@ -1241,14 +1241,14 @@ function pcast_display_episode_full($episode, $cm, $course) {
     $table->data[] = array (get_string("totalviews", "pcast"), pcast_get_episode_view_count($episode));
 
     // Total comments.
-    if (($CFG->usecomments) and ($episode->userscancomment) and (has_capability('moodle/comment:view', $context))) {
+    if (($CFG->usecomments) && ($episode->userscancomment) && (has_capability('moodle/comment:view', $context))) {
         $table->data[] = array (get_string("totalcomments", "pcast"), pcast_get_episode_comment_count($episode, $cm));
     }
 
     // Total Ratings.
-    if (($episode->assessed) and ((has_capability('moodle/rating:view', $context))
-                             and ($episode->userid == $USER->id))
-                             or (has_capability('moodle/rating:viewany', $context))) {
+    if (($episode->assessed) && ((has_capability('moodle/rating:view', $context))
+                             && ($episode->userid == $USER->id))
+                             || (has_capability('moodle/rating:viewany', $context))) {
 
         $table->data[] = array (get_string("totalratings", "pcast"), pcast_get_episode_rating_count($episode, $cm));
     }
@@ -1265,7 +1265,7 @@ function pcast_display_episode_full($episode, $cm, $course) {
     $approve = '';
 
         // Management Links.
-    if ((has_capability('mod/pcast:manage', $context)) or ($ineditingperiod)) {
+    if ((has_capability('mod/pcast:manage', $context)) || ($ineditingperiod)) {
 
         // Edit Link.
         $url = new moodle_url('/mod/pcast/edit.php',
@@ -1283,7 +1283,7 @@ function pcast_display_episode_full($episode, $cm, $course) {
     }
 
     // Approve / Disapprove Link.
-    if ((has_capability('mod/pcast:approve', $context)) and ($episode->requireapproval)) {
+    if ((has_capability('mod/pcast:approve', $context)) && ($episode->requireapproval)) {
         if (!$episode->approved) {
             // Approve link.
             $url = new moodle_url('/mod/pcast/approveepisode.php',
@@ -1300,7 +1300,7 @@ function pcast_display_episode_full($episode, $cm, $course) {
     }
 
     // Construct links.
-    if ((!empty($manage)) and (!empty($approve))) {
+    if ((!empty($manage)) && (!empty($approve))) {
         $link = $manage . ' | '."\n" . $approve;
     } else {
         $link = $manage . $approve;

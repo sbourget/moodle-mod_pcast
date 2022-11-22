@@ -113,17 +113,17 @@ class episode_action_bar implements renderable, templatable {
         $stdbaseurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $this->eid, 'mode' => PCAST_EPISODE_VIEW));
         $options[get_string('episodeview', 'pcast')] = $stdbaseurl->out(false);
 
-        if ($this->comment or $this->rate) {
+        if ($this->comment || $this->rate) {
             $rateurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $this->eid,
                 'mode' => PCAST_EPISODE_COMMENT_AND_RATE));
 
-            if ($this->comment and $this->rate) {
+            if ($this->comment && $this->rate) {
                 // Both comments and ratings.
                 $options[get_string('episodecommentandrateview', 'pcast')] = $rateurl->out(false);
-            } else if ($this->comment and !$this->rate) {
+            } else if ($this->comment && !$this->rate) {
                 // Comments only.
                 $options[get_string('episodecommentview', 'pcast')] = $rateurl->out(false);
-            } else if (!$this->comment and $this->rate) {
+            } else if (!$this->comment && $this->rate) {
                 // Ratings only.
                 $options[get_string('episoderateview', 'pcast')] = $rateurl->out(false);
             }
