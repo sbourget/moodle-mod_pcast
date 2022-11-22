@@ -76,6 +76,7 @@ class custom_completion_test extends advanced_testcase {
      * @param int $episodes The number of episodes.
      * @param int|null $status Expected status.
      * @param string|null $exception Expected exception.
+     * @covers ::get_state
      */
     public function test_get_state(string $rule, int $available, int $episodes, ?int $status, ?string $exception) {
         global $DB;
@@ -117,6 +118,7 @@ class custom_completion_test extends advanced_testcase {
 
     /**
      * Test for get_defined_custom_rules().
+     * @covers get_defined_custom_rules
      */
     public function test_get_defined_custom_rules() {
         $rules = custom_completion::get_defined_custom_rules();
@@ -126,6 +128,7 @@ class custom_completion_test extends advanced_testcase {
 
     /**
      * Test for get_defined_custom_rule_descriptions().
+     * @covers get_custom_rule_descriptions
      */
     public function test_get_custom_rule_descriptions() {
         // Get defined custom rules.
@@ -152,6 +155,7 @@ class custom_completion_test extends advanced_testcase {
 
     /**
      * Test for is_defined().
+     * @covers ::is_defined
      */
     public function test_is_defined() {
         // Build a mock cm_info instance.
@@ -190,6 +194,7 @@ class custom_completion_test extends advanced_testcase {
      * @dataProvider get_available_custom_rules_provider
      * @param int $status
      * @param array $expected
+     * @covers get_available_custom_rules
      */
     public function test_get_available_custom_rules(int $status, array $expected) {
         $customdataval = [

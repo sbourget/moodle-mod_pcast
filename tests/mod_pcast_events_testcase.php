@@ -32,6 +32,7 @@ namespace mod_pcast;
  * @category   test
  * @copyright  2015 Stephen Bourget
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \mod_pcast\event
  */
 class mod_pcast_events_testcase extends \advanced_testcase {
 
@@ -45,7 +46,6 @@ class mod_pcast_events_testcase extends \advanced_testcase {
     /**
      * Test comment_created event.
      *
-     * @covers ::comment_created
      */
     public function test_comment_created() {
         global $CFG;
@@ -89,7 +89,6 @@ class mod_pcast_events_testcase extends \advanced_testcase {
     /**
      * Test comment_deleted event.
      *
-     * @covers ::comment_deleted
      */
     public function test_comment_deleted() {
         global $CFG;
@@ -134,7 +133,6 @@ class mod_pcast_events_testcase extends \advanced_testcase {
     /**
      * Test module viewed.
      *
-     * @covers ::course_module_viewed
      */
     public function test_course_module_viewed() {
         global $DB;
@@ -181,7 +179,6 @@ class mod_pcast_events_testcase extends \advanced_testcase {
     /**
      * Test module instance list viewed.
      *
-     * @covers ::course_module_instance_list_viewed
      */
     public function test_course_module_instance_list_viewed() {
         // There is no proper API to call to trigger this event, so what we are
@@ -212,7 +209,6 @@ class mod_pcast_events_testcase extends \advanced_testcase {
     /**
      * Test episode created.
      *
-     * @covers ::course_episode_created
      */
     public function test_episode_created() {
         // There is no proper API to call to trigger this event, so what we are
@@ -253,7 +249,6 @@ class mod_pcast_events_testcase extends \advanced_testcase {
     /**
      * Test episode updated.
      *
-     * @covers ::course_episode_updated
      */
     public function test_episode_updated() {
         // There is no proper API to call to trigger this event, so what we are
@@ -294,7 +289,6 @@ class mod_pcast_events_testcase extends \advanced_testcase {
     /**
      * Test episode deleted.
      *
-     * @covers ::course_episode_deleted
      */
     public function test_episode_deleted() {
         global $DB;
@@ -344,7 +338,6 @@ class mod_pcast_events_testcase extends \advanced_testcase {
     /**
      * Test episode approved.
      *
-     * @covers ::course_episode_approved
      */
     public function test_episode_approved() {
         global $DB;
@@ -430,7 +423,6 @@ class mod_pcast_events_testcase extends \advanced_testcase {
     /**
      * Test episode viewed.
      *
-     * @covers ::course_episode_viewed
      */
     public function test_episode_viewed() {
         // There is no proper API to call to trigger this event, so what we are
