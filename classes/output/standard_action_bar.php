@@ -99,7 +99,7 @@ class standard_action_bar implements renderable, templatable {
      */
     private function create_add_button(renderer_base $output): \stdClass {
         $btn = new single_button(new moodle_url('/mod/pcast/edit.php', ['cmid' => $this->cm->id]),
-            get_string('addnewepisode', 'pcast'), 'post', true);
+            get_string('addnewepisode', 'pcast'), 'post', single_button::BUTTON_PRIMARY);
         return $btn->export_for_template($output);
     }
 

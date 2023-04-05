@@ -95,7 +95,7 @@ class episode_action_bar implements renderable, templatable {
      */
     private function create_back_button(renderer_base $output): \stdClass {
         $btn = new single_button(new moodle_url('/mod/pcast/view.php', array('id' => $this->cm->id, 'mode' => PCAST_STANDARD_VIEW)),
-            get_string('backtoepisodes', 'pcast'), 'post', false);
+            get_string('backtoepisodes', 'pcast'), 'post', single_button::BUTTON_SECONDARY);
         return $btn->export_for_template($output);
     }
 
