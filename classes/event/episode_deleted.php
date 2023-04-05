@@ -87,24 +87,6 @@ class episode_deleted extends \core\event\base {
     }
 
     /**
-     * Return the legacy event log data.
-     *
-     * @return array|null
-     */
-    public function get_legacy_logdata() {
-        $hook = $mode = '';
-        if (isset($this->other['hook'])) {
-            $hook = $this->other['hook'];
-        }
-        if (isset($this->other['mode'])) {
-            $mode = $this->other['mode'];
-        }
-        return array($this->courseid, 'pcast', 'delete episode',
-            "view.php?id={$this->contextinstanceid}&amp;mode={$mode}&amp;hook={$hook}",
-            $this->objectid, $this->contextinstanceid);
-    }
-
-    /**
      * Custom validation.
      *
      * @throws \coding_exception
