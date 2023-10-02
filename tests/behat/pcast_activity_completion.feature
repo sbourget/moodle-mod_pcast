@@ -27,8 +27,8 @@ Feature: Teachers can use activity completion to track student progress
       | Description | Test podcast description |
       | Allow users to post episodes | Yes |
       | Require approval for episodes | No |
-      | Completion tracking | Show activity as complete when conditions are met |
-      | id_completionview | 1 |
+      | Add requirements  | 1 |
+      | View the activity | 1 |
     And I am on the "Test podcast name" Activity page
     And I press "Add a new episode"
     And I set the following fields to these values:
@@ -52,9 +52,9 @@ Feature: Teachers can use activity completion to track student progress
       | Description | Test podcast description |
       | Allow users to post episodes | Yes |
       | Require approval for episodes | Yes |
-      | Completion tracking | Show activity as complete when conditions are met |
-      | id_completionepisodesenabled | 1 |
-      | id_completionepisodes | 1 |
+      | Add requirements  | 1 |
+      | completionepisodesenabled | 1 |
+      | completionepisodes | 1 |
     And I log out
 
     And I log in as "student1"
