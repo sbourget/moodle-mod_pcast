@@ -299,7 +299,7 @@ class mod_pcast_mod_form extends moodleform_mod {
      * Add completion rules to form.
      * @return array
      */
-    public function add_completion_rules() {
+    public function mod_pcast_add_completion_rules() {
         $mform =& $this->_form;
         $group = array();
         $group[] =& $mform->createElement('checkbox', 'completionepisodesenabled', '',
