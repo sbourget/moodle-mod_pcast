@@ -28,10 +28,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version  = 2023110200;    // If version == 0 then module will not be installed.
+$plugin->version  = 2023110300;    // If version == 0 then module will not be installed.
 $plugin->requires = 2023100900;    // Requires Moodle version 4.0 or later.
 $plugin->cron     = 0;             // Period for cron to check this module (secs).
 $plugin->component = 'mod_pcast';  // Full name of the plugin (used for diagnostics).
 
 $plugin->maturity = MATURITY_STABLE;
-$plugin->release = "4.3 (2023110200)";  // User-friendly version number.
+$plugin->release = "4.3 (2023110300)";  // User-friendly version number.
