@@ -212,7 +212,7 @@ class provider implements
             'commentuserid' => $user->id,
             'ratingcomponent' => 'mod_pcast',
             'ratingarea' => 'episode',
-            'ratinguserid' => $user->id
+            'ratinguserid' => $user->id,
         ] + $contextparams;
         $pcastepisodes = $DB->get_recordset_sql($sql, $params);
 
@@ -268,7 +268,7 @@ class provider implements
                 'name'       => $record->name,
                 'summary'    => $summary,
                 'timecreated'   => \core_privacy\local\request\transform::datetime($record->timecreated),
-                'timemodified'  => \core_privacy\local\request\transform::datetime($record->timemodified)
+                'timemodified'  => \core_privacy\local\request\transform::datetime($record->timemodified),
             ];
         }
         $pcastepisodes->close();

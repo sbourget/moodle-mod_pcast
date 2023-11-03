@@ -83,7 +83,7 @@ class standard_action_bar implements renderable, templatable {
             return [
                 'addnewbutton' => $this->create_add_button($output),
                 'tools' => $this->get_additional_tools($output),
-                'tabjumps' => $this->generate_tab_jumps($output)
+                'tabjumps' => $this->generate_tab_jumps($output),
             ];
         } else {
             // No access to the Add new episode button.
@@ -146,7 +146,7 @@ class standard_action_bar implements renderable, templatable {
             foreach ($buttons as $index => $value) {
                 $items['select']['options'][] = [
                     'url' => $value,
-                    'string' => $index
+                    'string' => $index,
                 ];
             }
         }

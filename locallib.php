@@ -273,7 +273,7 @@ function pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortor
                          'mode' => $mode,
                          'hook' => urlencode($alphabet[$i]),
                          'sortkey' => $sortkey,
-                         'sortorder' => $sortorder)
+                         'sortorder' => $sortorder),
                    );
 
             echo html_writer::tag('a', $alphabet[$i], array('href' => $url));
@@ -521,7 +521,7 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
                 ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '1', $USER->id,
                                          '1%', '2%', '3%', '4%', '5%',
-                                         '6%', '7%', '8%', '9%', '0%'));
+                                         '6%', '7%', '8%', '9%', '0%',));
     } else {
         $sql .= " and ". $DB->sql_like('p.name', '?', false)." ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '1', $USER->id, $hook.'%'));
@@ -1347,7 +1347,7 @@ function pcast_display_episode_views($episode, $cm) {
     // Trigger view list has been viewed event.
     $params = array(
             'context' => context_module::instance($cm->id),
-            'objectid' => $episode->id
+            'objectid' => $episode->id,
             );
 
     $event = \mod_pcast\event\episode_views_viewed::create($params);
@@ -1389,7 +1389,7 @@ function pcast_display_episode_comments($episode, $cm, $course) {
             // Trigger comment viewed event.
             $params = array(
                     'context' => $context,
-                    'objectid' => $episode->id
+                    'objectid' => $episode->id,
                     );
 
             $event = \mod_pcast\event\comments_viewed::create($params);
@@ -1449,7 +1449,7 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
         // Trigger ratings viewed event.
         $params = array(
                 'context' => $context,
-                'objectid' => $episode->id
+                'objectid' => $episode->id,
                 );
 
         $event = \mod_pcast\event\ratings_viewed::create($params);
@@ -1494,7 +1494,8 @@ function pcast_get_episode_comment_count($episode, $cm) {
     $context = context_module::instance($cm->id);
     if ($count = $DB->count_records('comments', array('itemid' => $episode->id,
                                                       'commentarea' => 'pcast_episode',
-                                                      'contextid' => $context->id))) {
+                                                      'contextid' => $context->id),
+                                                      )) {
         return $count;
     } else {
         return 0;
@@ -1513,7 +1514,8 @@ function pcast_get_episode_rating_count($episode, $cm) {
     $context = context_module::instance($cm->id);
     if ($count = $DB->count_records('rating', array('itemid' => $episode->id,
                                                     'scaleid' => $episode->scale,
-                                                    'contextid' => $context->id))) {
+                                                    'contextid' => $context->id),
+                                                    )) {
         return $count;
     } else {
         return 0;
@@ -1631,8 +1633,8 @@ function pcast_display_paging_bar($pcast, $cm, $count, $page, $mode, $hook, $sor
                       'mode' => $mode,
                       'hook' => $hook,
                       'sortkey' => $sortkey,
-                      'sortorder' => $sortorder)
-                );
+                      'sortorder' => $sortorder,
+                ));
 
         echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
@@ -1677,7 +1679,7 @@ function mod_pcast_get_tagged_episodes($tag, $exclusivemode = false, $fromctx = 
                  AND pe.id %ITEMFILTER% AND c.id %COURSEFILTER%";
 
     $params = array('itemtype' => 'pcast_episodes', 'tagid' => $tag->id, 'component' => 'mod_pcast',
-                    'coursemodulecontextlevel' => CONTEXT_MODULE);
+                    'coursemodulecontextlevel' => CONTEXT_MODULE,);
 
     if ($ctx) {
         $context = $ctx ? context::instance_by_id($ctx) : context_system::instance();

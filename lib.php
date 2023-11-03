@@ -960,7 +960,7 @@ function pcast_add_view_instance($pcast, $episode, $userid, $context) {
 
     $event = \mod_pcast\event\episode_viewed::create(array(
         'objectid' => $view->episodeid,
-        'context' => $context
+        'context' => $context,
     ));
 
     $event->add_record_snapshot('pcast_episodes', $episode);
@@ -983,7 +983,8 @@ function pcast_get_extra_capabilities() {
                  'moodle/rating:viewany',
                  'moodle/rating:viewall',
                  'moodle/rating:rate',
-                 'moodle/site:accessallgroups');
+                 'moodle/site:accessallgroups',
+                 );
 }
 
 // Course reset code.
@@ -1024,7 +1025,8 @@ function pcast_reset_course_form_defaults($course) {
                  'reset_pcast_comments' => 1,
                  'reset_pcast_notenrolled' => 0,
                  'reset_pcast_tags' => 1,
-                 'reset_pcast_views' => 1);
+                 'reset_pcast_views' => 1,
+                 );
 }
 
 /**
@@ -1230,7 +1232,8 @@ function pcast_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $modulepagetype = array(
         'mod-pcast-*' => get_string('page-mod-pcast-x', 'pcast'),
         'mod-pcast-view' => get_string('page-mod-pcast-view', 'pcast'),
-        'mod-pcast-edit' => get_string('page-mod-pcast-edit', 'pcast'));
+        'mod-pcast-edit' => get_string('page-mod-pcast-edit', 'pcast'),
+        );
     return $modulepagetype;
 
 }
@@ -1371,7 +1374,8 @@ function pcast_rating_permissions($contextid, $component, $ratingarea) {
         return array('view' => has_capability('mod/pcast:viewrating', $context),
                      'viewany' => has_capability('mod/pcast:viewanyrating', $context),
                      'viewall' => has_capability('mod/pcast:viewallratings', $context),
-                     'rate' => has_capability('mod/pcast:rate', $context));
+                     'rate' => has_capability('mod/pcast:rate', $context),
+                     );
     }
 }
 

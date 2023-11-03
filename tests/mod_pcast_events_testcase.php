@@ -150,7 +150,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $event = \mod_pcast\event\course_module_viewed::create(array(
             'objectid' => $dbpcast->id,
             'context' => $context,
-            'other' => array('mode' => $mode)
+            'other' => array('mode' => $mode,)
         ));
 
         $event->add_record_snapshot('course', $dbcourse);
@@ -169,7 +169,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEquals($pcast->cmid, $event->contextinstanceid);
         $this->assertEquals($pcast->id, $event->objectid);
         $expected = array($course->id, 'pcast', 'view', 'view.php?id=' . $pcast->cmid,
-            $pcast->id, $pcast->cmid);
+            $pcast->id, $pcast->cmid,);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEquals(new \moodle_url('/mod/pcast/view.php',
                 array('id' => $pcast->cmid, 'mode' => $mode)), $event->get_url());
@@ -187,7 +187,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
 
         $event = \mod_pcast\event\course_module_instance_list_viewed::create(array(
-            'context' => \context_course::instance($course->id)
+            'context' => \context_course::instance($course->id),
         ));
 
         // Triggering and capturing the event.
@@ -225,7 +225,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $eventparams = array(
             'context' => $context,
             'objectid' => $episode->id,
-            'other' => array('name' => $episode->name)
+            'other' => array('name' => $episode->name),
         );
         $event = \mod_pcast\event\episode_created::create($eventparams);
         $event->add_record_snapshot('pcast_episodes', $episode);
@@ -241,7 +241,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEquals(CONTEXT_MODULE, $event->contextlevel);
         $this->assertEquals($pcast->cmid, $event->contextinstanceid);
         $expected = array($course->id, "pcast", "add episode",
-            "showepisode.php?eid={$episode->id}", $episode->id);
+            "showepisode.php?eid={$episode->id}", $episode->id,);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -265,7 +265,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $eventparams = array(
             'context' => $context,
             'objectid' => $episode->id,
-            'other' => array('name' => $episode->name)
+            'other' => array('name' => $episode->name),
         );
         $event = \mod_pcast\event\episode_updated::create($eventparams);
         $event->add_record_snapshot('pcast_episodes', $episode);
@@ -281,7 +281,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEquals(CONTEXT_MODULE, $event->contextlevel);
         $this->assertEquals($pcast->cmid, $event->contextinstanceid);
         $expected = array($course->id, "pcast", "update episode",
-            "showepisode.php?eid={$episode->id}", $episode->id);
+            "showepisode.php?eid={$episode->id}", $episode->id,);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -313,8 +313,8 @@ class mod_pcast_events_testcase extends \advanced_testcase {
             'other' => array(
                 'mode' => $prevmode,
                 'hook' => $hook,
-                'name' => $episode->name
-            )
+                'name' => $episode->name,
+            ),
         );
         $event = \mod_pcast\event\episode_deleted::create($eventparams);
         $event->add_record_snapshot('pcast_episodes', $episode);
@@ -330,7 +330,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEquals(CONTEXT_MODULE, $event->contextlevel);
         $this->assertEquals($pcast->cmid, $event->contextinstanceid);
         $expected = array($course->id, "pcast", "delete episode",
-            "view.php?id={$pcast->cmid}&amp;mode={$prevmode}&amp;hook={$hook}", $episode->id, $pcast->cmid);
+            "view.php?id={$pcast->cmid}&amp;mode={$prevmode}&amp;hook={$hook}", $episode->id, $pcast->cmid,);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -372,7 +372,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $DB->update_record("pcast_episodes", $newepisode);
         $params = array(
             'context' => $context,
-            'objectid' => $episode->id
+            'objectid' => $episode->id,
         );
         $event = \mod_pcast\event\episode_approved::create($params);
 
@@ -387,7 +387,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEquals(CONTEXT_MODULE, $event->contextlevel);
         $this->assertEquals($pcast->cmid, $event->contextinstanceid);
         $expected = array($course->id, "pcast", "approve episode",
-            "showepisode.php?eid={$episode->id}", $episode->id);
+            "showepisode.php?eid={$episode->id}", $episode->id,);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
 
@@ -400,7 +400,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $DB->update_record("pcast_episodes", $newepisode);
         $params = array(
             'context' => $context,
-            'objectid' => $episode->id
+            'objectid' => $episode->id,
         );
         $event = \mod_pcast\event\episode_disapproved::create($params);
 
@@ -415,7 +415,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEquals(CONTEXT_MODULE, $event->contextlevel);
         $this->assertEquals($pcast->cmid, $event->contextinstanceid);
         $expected = array($course->id, "pcast", "disapprove episode",
-            "showepisode.php?eid={$episode->id}", $episode->id);
+            "showepisode.php?eid={$episode->id}", $episode->id,);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }
@@ -438,7 +438,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
 
         $event = \mod_pcast\event\episode_viewed::create(array(
             'objectid' => $episode->id,
-            'context' => $context
+            'context' => $context,
         ));
 
         $sink = $this->redirectEvents();
@@ -452,7 +452,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $this->assertEquals(CONTEXT_MODULE, $event->contextlevel);
         $this->assertEquals($pcast->cmid, $event->contextinstanceid);
         $expected = array($course->id, "pcast", "view episode",
-            "showepisode.php?eid={$episode->id}", $episode->id, $pcast->cmid);
+            "showepisode.php?eid={$episode->id}", $episode->id, $pcast->cmid,);
         $this->assertEventLegacyLogData($expected, $event);
         $this->assertEventContextNotUsed($event);
     }

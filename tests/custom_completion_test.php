@@ -54,16 +54,16 @@ class custom_completion_test extends advanced_testcase {
     public function get_state_provider(): array {
         return [
             'Undefined rule' => [
-                'somenonexistentrule', COMPLETION_DISABLED, 0, null, coding_exception::class
+                'somenonexistentrule', COMPLETION_DISABLED, 0, null, coding_exception::class,
             ],
             'Rule not available' => [
-                'completionepisodes', COMPLETION_DISABLED, 0, null, moodle_exception::class
+                'completionepisodes', COMPLETION_DISABLED, 0, null, moodle_exception::class,
             ],
             'Rule available, user has not submitted' => [
-                'completionepisodes', COMPLETION_ENABLED, 0, COMPLETION_INCOMPLETE, null
+                'completionepisodes', COMPLETION_ENABLED, 0, COMPLETION_INCOMPLETE, null,
             ],
             'Rule available, user has submitted' => [
-                'completionepisodes', COMPLETION_ENABLED, 2, COMPLETION_COMPLETE, null
+                'completionepisodes', COMPLETION_ENABLED, 2, COMPLETION_COMPLETE, null,
             ],
         ];
     }
@@ -89,8 +89,8 @@ class custom_completion_test extends advanced_testcase {
         // Custom completion rule data for cm_info::customdata.
         $customdataval = [
             'customcompletionrules' => [
-                $rule => $available
-            ]
+                $rule => $available,
+            ],
         ];
 
         // Build a mock cm_info instance.
@@ -181,10 +181,10 @@ class custom_completion_test extends advanced_testcase {
     public function get_available_custom_rules_provider(): array {
         return [
             'Completion submit available' => [
-                COMPLETION_ENABLED, ['completionepisodes']
+                COMPLETION_ENABLED, ['completionepisodes'],
             ],
             'Completion submit not available' => [
-                COMPLETION_DISABLED, []
+                COMPLETION_DISABLED, [],
             ],
         ];
     }
@@ -200,8 +200,8 @@ class custom_completion_test extends advanced_testcase {
     public function test_get_available_custom_rules(int $status, array $expected) {
         $customdataval = [
             'customcompletionrules' => [
-                'completionepisodes' => $status
-            ]
+                'completionepisodes' => $status,
+            ],
         ];
 
         // Build a mock cm_info instance.

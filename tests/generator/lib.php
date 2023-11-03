@@ -101,7 +101,7 @@ class mod_pcast_generator extends testing_module_generator {
             'userid' => $USER->id,
             'name' => 'Episode '.$this->episodecount,
             'summary' => 'Description of pcast entry '.$this->episodecount,
-            'summaryformat' => FORMAT_MOODLE
+            'summaryformat' => FORMAT_MOODLE,
         );
 
         // Media File.

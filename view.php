@@ -57,7 +57,7 @@ require_capability('mod/pcast:view', $context);
 $event = \mod_pcast\event\course_module_viewed::create(array(
     'objectid' => $pcast->id,
     'context' => $context,
-    'other' => array('mode' => $mode)
+    'other' => array('mode' => $mode),
 ));
 
 $event->add_record_snapshot('course', $course);

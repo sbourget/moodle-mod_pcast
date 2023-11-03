@@ -111,8 +111,8 @@ if ($confirm && confirm_sesskey()) { // The operation was confirmed.
         'other' => array(
             'mode' => $prevmode,
             'hook' => $hook,
-            'name' => $origionalepisode->name
-        )
+            'name' => $origionalepisode->name,
+        ),
     ));
 
     $event->add_record_snapshot('pcast_episodes', $origionalepisode);
@@ -145,7 +145,8 @@ if ($confirm && confirm_sesskey()) { // The operation was confirmed.
                         'confirm' => 1,
                         'sesskey' => sesskey(),
                         'prevmode' => $prevmode,
-                        'hook' => $hook);
+                        'hook' => $hook,
+                        );
     $optionsno  = array('id' => $cm->id, 'mode' => $prevmode, 'hook' => $hook);
 
     echo $OUTPUT->confirm($areyousure, new moodle_url($linkyes, $optionsyes), new moodle_url($linkno, $optionsno));

@@ -82,7 +82,7 @@ class episode_action_bar implements renderable, templatable {
     public function export_for_template(renderer_base $output) {
         return [
             'addnewbutton' => $this->create_back_button($output),
-            'tabjumps' => $this->generate_tab_jumps($output)
+            'tabjumps' => $this->generate_tab_jumps($output),
         ];
 
     }
@@ -115,7 +115,8 @@ class episode_action_bar implements renderable, templatable {
 
         if ($this->comment || $this->rate) {
             $rateurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $this->eid,
-                'mode' => PCAST_EPISODE_COMMENT_AND_RATE));
+                'mode' => PCAST_EPISODE_COMMENT_AND_RATE),
+                );
 
             if ($this->comment && $this->rate) {
                 // Both comments and ratings.

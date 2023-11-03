@@ -46,7 +46,7 @@ $url = new moodle_url('/mod/pcast/approveepisode.php',
         array('eid' => $eid,
               'mode' => $mode,
               'hook' => $hook,
-              'newstate' => $newstate)
+              'newstate' => $newstate),
         );
 
 $PAGE->set_url($url);
@@ -68,7 +68,7 @@ if ($newstate != $episode->approved && confirm_sesskey()) {
     // Trigger event about entry approval/disapproval.
     $params = array(
         'context' => $context,
-        'objectid' => $episode->id
+        'objectid' => $episode->id,
     );
     if ($newstate) {
         $event = \mod_pcast\event\episode_approved::create($params);
