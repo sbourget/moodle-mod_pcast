@@ -14,7 +14,7 @@ GNU General Public License for more details:
 
 http:www.gnu.org/copyleft/gpl.html
 
-Pcast module for Moodle - version 4.2 or Later
+Pcast module for Moodle - version 4.3 or Later
 ===============================================================================
 
 Created by:
@@ -26,7 +26,7 @@ Many ideas and code were taken from other Moodle modules and Moodle itself
 
 Installation:
     * see http://docs.moodle.org/en/Installing_contributed_modules_or_plugins
-    * This version works only with Moodle 4.2 or Later.
+    * This version works only with Moodle 4.3 or Later.
 
 List of features:
 
