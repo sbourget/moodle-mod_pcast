@@ -305,7 +305,7 @@ class mod_pcast_mod_form extends moodleform_mod {
         $completionepisodes = 'completionepisodes' . $suffix;
         $completionepisodesenabled = 'completionepisodesenabled' . $suffix;
         $completionepisodesgroup = 'completionepisodesgroup' . $suffix;
-        
+
         $group = array();
         $group[] =& $mform->createElement('checkbox', $completionepisodesenabled, '',
                 get_string('completionepisodes', 'pcast'));
