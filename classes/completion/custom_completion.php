@@ -47,7 +47,7 @@ class custom_completion extends activity_custom_completion {
         $userid = $this->userid;
 
         $userentries = $DB->count_records('pcast_episodes', ['pcastid' => $pcastid, 'userid' => $userid,
-                'approved' => 1],);
+                'approved' => 1], );
         $completionepisodes = $this->cm->customdata['customcompletionrules']['completionepisodes'];
 
         return ($completionepisodes <= $userentries) ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;

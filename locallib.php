@@ -521,7 +521,8 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
                 ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '1', $USER->id,
                                          '1%', '2%', '3%', '4%', '5%',
-                                         '6%', '7%', '8%', '9%', '0%',));
+                                         '6%', '7%', '8%', '9%', '0%',
+                                         ));
     } else {
         $sql .= " and ". $DB->sql_like('p.name', '?', false)." ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '1', $USER->id, $hook.'%'));
@@ -1679,7 +1680,7 @@ function mod_pcast_get_tagged_episodes($tag, $exclusivemode = false, $fromctx = 
                  AND pe.id %ITEMFILTER% AND c.id %COURSEFILTER%";
 
     $params = array('itemtype' => 'pcast_episodes', 'tagid' => $tag->id, 'component' => 'mod_pcast',
-                    'coursemodulecontextlevel' => CONTEXT_MODULE,);
+                    'coursemodulecontextlevel' => CONTEXT_MODULE, );
 
     if ($ctx) {
         $context = $ctx ? context::instance_by_id($ctx) : context_system::instance();

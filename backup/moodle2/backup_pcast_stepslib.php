@@ -42,27 +42,27 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
             'rsssortorder', 'enablerssfeed', 'enableitunes', 'visible', 'explicit',
             'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'assessed',
             'assesstimestart', 'assesstimefinish', 'scale', 'timecreated', 'timemodified',
-            'completionepisodes', 'allowedfiletypes',));
+            'completionepisodes', 'allowedfiletypes', ));
 
         $episodes = new backup_nested_element('episodes');
 
         $episode = new backup_nested_element('episode', array('id'), array(
             'userid', 'name', 'summary', 'summaryformat', 'summarytrust', 'mediafile', 'duration', 'explicit',
             'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'timecreated', 'timemodified',
-            'approved', 'sequencenumber',));
+            'approved', 'sequencenumber', ));
 
         $views = new backup_nested_element('views');
 
         $view = new backup_nested_element('view', array('id'), array(
-            'episodeid', 'userid', 'views', 'lastview',));
+            'episodeid', 'userid', 'views', 'lastview', ));
 
         $ratings = new backup_nested_element('ratings');
 
         $rating = new backup_nested_element('rating', array('id'), array(
-            'component', 'ratingarea', 'scaleid', 'value', 'userid', 'timecreated', 'timemodified',));
+            'component', 'ratingarea', 'scaleid', 'value', 'userid', 'timecreated', 'timemodified', ));
 
         $tags = new backup_nested_element('tags');
-        $tag = new backup_nested_element('tag', array('id'), array('itemid', 'rawname',));
+        $tag = new backup_nested_element('tag', array('id'), array('itemid', 'rawname', ));
 
         // Build the tree.
 

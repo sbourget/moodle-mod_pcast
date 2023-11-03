@@ -188,15 +188,15 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->assertEquals(0, $count);
 
         $tagcount = $DB->count_records('tag_instance', ['component' => 'mod_pcast', 'itemtype' => 'pcast_episodes',
-            'itemid' => $pe3->id,]);
+            'itemid' => $pe3->id, ]);
         $this->assertEquals(0, $tagcount);
 
         $commentcount = $DB->count_records('comments', ['component' => 'mod_pcast', 'commentarea' => 'pcast_episode',
-            'itemid' => $pe3->id, 'userid' => $student2->id,]);
+            'itemid' => $pe3->id, 'userid' => $student2->id, ]);
         $this->assertEquals(0, $commentcount);
 
         $ratingcount = $DB->count_records('rating', ['component' => 'mod_pcast', 'ratingarea' => 'episode',
-            'itemid' => $pe3->id,]);
+            'itemid' => $pe3->id, ]);
         $this->assertEquals(0, $ratingcount);
     }
 
@@ -223,7 +223,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
 
         $this->setUser($student2);
         $pe3 = $this->plugingenerator->create_content($this->pcast, ['concept' => 'second user pcast episode',
-                'approved' => 1,]);
+                'approved' => 1, ]);
 
         $comment = $this->get_comment_object($context1, $pe3->id);
         $comment->add('User 2 comment');
@@ -239,10 +239,10 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $count = $DB->count_records('pcast_episodes', ['pcastid' => $this->pcast->id]);
         $this->assertEquals(3, $count);
         $tagcount = $DB->count_records('tag_instance', ['component' => 'mod_pcast', 'itemtype' => 'pcast_episodes',
-            'itemid' => $pe3->id,]);
+            'itemid' => $pe3->id, ]);
         $this->assertEquals(2, $tagcount);
         $ratingcount = $DB->count_records('rating', ['component' => 'mod_pcast', 'ratingarea' => 'episode',
-            'itemid' => $pe3->id,]);
+            'itemid' => $pe3->id, ]);
         $this->assertEquals(1, $ratingcount);
         // Create another student who will add an episode to the first pcast.
         $contextlist = new \core_privacy\local\request\approved_contextlist($student2, 'pcast',
@@ -254,28 +254,28 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->assertEquals(0, $count);
 
         $tagcount = $DB->count_records('tag_instance', ['component' => 'mod_pcast', 'itemtype' => 'pcast_episodes',
-                'itemid' => $pe3->id,]);
+                'itemid' => $pe3->id, ]);
         $this->assertEquals(0, $tagcount);
 
         $commentcount = $DB->count_records('comments', ['component' => 'mod_pcast', 'commentarea' => 'pcast_episode',
-                'itemid' => $pe3->id, 'userid' => $student2->id,]);
+                'itemid' => $pe3->id, 'userid' => $student2->id, ]);
         $this->assertEquals(0, $commentcount);
 
         $ratingcount = $DB->count_records('rating', ['component' => 'mod_pcast', 'ratingarea' => 'episode',
-                'itemid' => $pe3->id,]);
+                'itemid' => $pe3->id, ]);
         $this->assertEquals(0, $ratingcount);
 
         // Student's 1 episodes, comments and tags should not be removed.
         $count = $DB->count_records('pcast_episodes', ['pcastid' => $this->pcast->id,
-                'userid' => $this->student->id,]);
+                'userid' => $this->student->id, ]);
         $this->assertEquals(2, $count);
 
         $tagcount = $DB->count_records('tag_instance', ['component' => 'mod_pcast', 'itemtype' => 'pcast_episodes',
-            'itemid' => $ge1->id,]);
+            'itemid' => $ge1->id, ]);
         $this->assertEquals(2, $tagcount);
 
         $commentcount = $DB->count_records('comments', ['component' => 'mod_pcast', 'commentarea' => 'pcast_episode',
-             'userid' => $this->student->id,]);
+             'userid' => $this->student->id, ]);
         $this->assertEquals(1, $commentcount);
     }
 
