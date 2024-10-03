@@ -35,7 +35,7 @@ Feature: A teacher can create a podcast activity and use it with groups of stude
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I turn editing mode on
-    And I add a "Podcast" to section "1" and I fill the form with:
+    And I add a pcast activity to course "Course 1" section "1" and I fill the form with:
       | Podcast name | Test podcast name |
       | ID number | Test podcast name |
       | Description | Test podcast description |

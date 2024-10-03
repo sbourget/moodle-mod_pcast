@@ -48,7 +48,7 @@ Feature: Pcast reset
         | id_reset_pcast_comments | 1 |
     And I press "Reset course"
     And I click on "Reset course" "button" in the "Reset course?" "dialogue"
-    And I should see "Delete all comments"
+    And I should see "All comments"
     Then I should see "Done"
     And I press "Continue"
     And I am on the "Test podcast name" Activity page
