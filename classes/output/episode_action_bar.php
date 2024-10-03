@@ -37,8 +37,10 @@ class episode_action_bar implements renderable, templatable {
     /** @var object $pcast instance of the pcast module */
     private $module;
     /** @var string $mode The type of view. */
+    private $eid;
+    /** @var int episode ID number */
     private $mode;
-    /** @var string $epmode the type of view for episode. */
+    /** @var string the type of view for episode. */
     private $epmode;
     /** @var bool is rating enabled. */
     private $rate;
