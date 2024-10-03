@@ -21,7 +21,7 @@ Feature: Teachers can use activity completion to track student progress
 
   @javascript
   Scenario: Automatic completion view
-    Given I add a "Podcast" to section "1" and I fill the form with:
+    Given I add a pcast activity to course "Course 1" section "1" and I fill the form with:
       | Podcast name | Test podcast name |
       | ID number | Test podcast name |
       | Description | Test podcast description |
@@ -46,7 +46,7 @@ Feature: Teachers can use activity completion to track student progress
 
   @javascript
   Scenario: Automatic completion upload 1 episodes
-    Given I add a "Podcast" to section "1" and I fill the form with:
+    Given I add a pcast activity to course "Course 1" section "1" and I fill the form with:
       | Podcast name | Test podcast name |
       | ID number | Test podcast name |
       | Description | Test podcast description |

@@ -43,11 +43,13 @@ Feature: Pcast reset
 
     And I log in as "teacher1"
     When I am on the "Course 1" "reset" page
+    And I press "Deselect all"
     And I set the following fields to these values:
         | id_reset_pcast_comments | 1 |
     And I press "Reset course"
+    And I click on "Reset course" "button" in the "Reset course?" "dialogue"
     And I should see "Delete all comments"
-    Then I should see "OK"
+    Then I should see "Done"
     And I press "Continue"
     And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
@@ -65,11 +67,13 @@ Feature: Pcast reset
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     When I am on the "Course 1" "reset" page
+    And I press "Deselect all"
     And I set the following fields to these values:
-        | Delete episodes from all podcasts | 1 |
+        | All episodes from all podcasts | 1 |
     And I press "Reset course"
-    And I should see "Delete episodes from all podcasts"
-    Then I should see "OK"
+    And I click on "Reset course" "button" in the "Reset course?" "dialogue"
+    And I should see "All episodes from all podcasts"
+    Then I should see "Done"
     And I press "Continue"
     And I am on the "Test podcast name" Activity page
     And I should not see "Test episode name"
@@ -92,11 +96,13 @@ Feature: Pcast reset
     And I upload "mod/pcast/tests/fixtures/sample.mp3" file to "Media file" filemanager
     And I press "Save changes"
     When I am on the "Course 1" "reset" page
+    And I press "Deselect all"
     And I set the following fields to these values:
-        | Delete episodes by users not enrolled | 1 |
+        | Episodes by users not enrolled | 1 |
     And I press "Reset course"
-    And I should see "Delete episodes by users not enrolled"
-    Then I should see "OK"
+    And I click on "Reset course" "button" in the "Reset course?" "dialogue"
+    And I should see "Episodes by users not enrolled"
+    Then I should see "Done"
     And I press "Continue"
     And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
@@ -121,12 +127,14 @@ Feature: Pcast reset
     And I follow "View"
     And I should see "2" in the "Total views" "table_row"
     When I am on the "Course 1" "reset" page
+    And I press "Deselect all"
     And I expand all fieldsets
     And I set the following fields to these values:
-        | Delete episode view history | 1 |
+        | Episode view history | 1 |
     And I press "Reset course"
-    And I should see "Delete episode view history"
-    Then I should see "OK"
+    And I click on "Reset course" "button" in the "Reset course?" "dialogue"
+    And I should see "Episode view history"
+    Then I should see "Done"
     And I press "Continue"
     And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
@@ -163,12 +171,14 @@ Feature: Pcast reset
     And I select "View Episode" from the "Browse the podcast using this index" singleselect
     And I should see "1" in the "Total ratings" "table_row"
     When I am on the "Course 1" "reset" page
+    And I press "Deselect all"
     And I expand all fieldsets
     And I set the following fields to these values:
         | id_reset_pcast_ratings | 1 |
     And I press "Reset course"
-    And I should see "Delete all ratings"
-    Then I should see "OK"
+    And I click on "Reset course" "button" in the "Reset course?" "dialogue"
+    And I should see "All ratings"
+    Then I should see "Done"
     And I press "Continue"
     And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
@@ -188,12 +198,14 @@ Feature: Pcast reset
     Then I should see "Test episode name"
     And I should see "Example" in the ".pcast-tags" "css_element"
     When I am on the "Course 1" "reset" page
+    And I press "Deselect all"
     And I expand all fieldsets
     And I set the following fields to these values:
         | id_reset_pcast_tags | 1 |
     And I press "Reset course"
-    And I should see "Delete episode tags"
-    Then I should see "OK"
+    And I click on "Reset course" "button" in the "Reset course?" "dialogue"
+    And I should see "Episode tags"
+    Then I should see "Done"
     And I press "Continue"
     And I am on the "Test podcast name" Activity page
     And I should see "Test episode name"
