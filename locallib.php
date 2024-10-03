@@ -1035,7 +1035,6 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
     $html .= html_writer::start_tag('div', array('class' => 'pcast-episode')). "\n";
 
     $table = new html_table();
-    $table->style = 'views';
     $table->cellpadding = '5';
     $table->colclasses = array('pcast-header', 'pcast-data');
     $table->width = '100%';
@@ -1164,7 +1163,6 @@ function pcast_display_episode_full($episode, $cm, $course) {
     $html = html_writer::start_tag('div', array('class' => 'pcast-episode')). "\n";
 
     $table = new html_table();
-    $table->style = 'views';
     $table->cellpadding = '5';
     $table->colclasses = array('pcast-header', 'pcast-data');
     $table->width = '100%';
