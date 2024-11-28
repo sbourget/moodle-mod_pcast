@@ -72,6 +72,27 @@ class provider implements
             'privacy:metadata:pcast_episodes'
         );
 
+        $items->add_database_table(
+            'pcast',
+            [
+                'userid'        => 'privacy:metadata:pcast:userid',
+                'name'       => 'privacy:metadata:pcast:name',
+                'subtitle'    => 'privacy:metadata:pcast:subtitle',
+                'keywords'    => 'privacy:metadata:pcast:keywords',
+                'timemodified'  => 'privacy:metadata:pcast:timemodified',
+            ],
+            'privacy:metadata:pcast'
+        );
+
+        $items->add_database_table(
+            'pcast_views',
+            [
+                'userid'        => 'privacy:metadata:pcast_views:userid',
+                'episodeid'  => 'privacy:metadata:pcast_views:episodeid',
+            ],
+            'privacy:metadata:pcast_views'
+        );
+
         $items->add_subsystem_link('core_files', [], 'privacy:metadata:core_files');
         $items->add_subsystem_link('core_comment', [], 'privacy:metadata:core_comments');
         $items->add_subsystem_link('core_tag', [], 'privacy:metadata:core_tag');
@@ -125,11 +146,11 @@ class provider implements
         }
 
         // Find users with pcast pisodes.
-        $sql = "SELECT ge.userid
+        $sql = "SELECT pe.userid
                   FROM {context} c
                   JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
                   JOIN {modules} m ON m.id = cm.module AND m.name = :modname
-                  JOIN {pcast} p ON g.id = cm.instance
+                  JOIN {pcast} p ON p.id = cm.instance
                   JOIN {pcast_episodes} pe ON pe.pcastid = p.id
                  WHERE c.id = :contextid";
 
@@ -146,7 +167,7 @@ class provider implements
                 $context->id);
 
         // Find users with pcast ratings.
-        $sql = "SELECT ge.id
+        $sql = "SELECT pe.id
                   FROM {context} c
                   JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
                   JOIN {modules} m ON m.id = cm.module AND m.name = :modname
