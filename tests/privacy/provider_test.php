@@ -103,7 +103,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $collection = new collection('mod_pcast');
         $newcollection = provider::get_metadata($collection);
         $itemcollection = $newcollection->get_collection();
-        $this->assertCount(5, $itemcollection);
+        $this->assertCount(7, $itemcollection);
 
         $table = reset($itemcollection);
         $this->assertEquals('pcast_episodes', $table->get_name());
