@@ -72,7 +72,6 @@ class episode_action_bar implements renderable, templatable {
         $this->comment = $comment;
         $this->views = $views;
         $this->context = context_module::instance($this->cm->id);
-
     }
 
     /**
@@ -86,7 +85,6 @@ class episode_action_bar implements renderable, templatable {
             'addnewbutton' => $this->create_back_button($output),
             'tabjumps' => $this->generate_tab_jumps($output),
         ];
-
     }
 
     /**
@@ -96,8 +94,12 @@ class episode_action_bar implements renderable, templatable {
      * @return \stdClass
      */
     private function create_back_button(renderer_base $output): \stdClass {
-        $btn = new single_button(new moodle_url('/mod/pcast/view.php', array('id' => $this->cm->id, 'mode' => PCAST_STANDARD_VIEW)),
-            get_string('backtoepisodes', 'pcast'), 'post', single_button::BUTTON_SECONDARY);
+        $btn = new single_button(new moodle_url('/mod/pcast/view.php', 
+                ['id' => $this->cm->id, 'mode' => PCAST_STANDARD_VIEW]),
+                get_string('backtoepisodes', 'pcast'),
+                'post',
+                single_button::BUTTON_SECONDARY
+                );
         return $btn->export_for_template($output);
     }
 
@@ -112,12 +114,13 @@ class episode_action_bar implements renderable, templatable {
         $mode = $this->mode;
         $options = [];
 
-        $stdbaseurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $this->eid, 'mode' => PCAST_EPISODE_VIEW));
+        $stdbaseurl = new moodle_url('/mod/pcast/showepisode.php', ['eid' => $this->eid, 'mode' => PCAST_EPISODE_VIEW]);
         $options[get_string('episodeview', 'pcast')] = $stdbaseurl->out(false);
 
         if ($this->comment || $this->rate) {
-            $rateurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $this->eid,
-                'mode' => PCAST_EPISODE_COMMENT_AND_RATE),
+            $rateurl = new moodle_url('/mod/pcast/showepisode.php',
+                ['eid' => $this->eid,
+                'mode' => PCAST_EPISODE_COMMENT_AND_RATE],
                 );
 
             if ($this->comment && $this->rate) {
@@ -133,7 +136,7 @@ class episode_action_bar implements renderable, templatable {
         }
 
         if ($this->views) {
-            $viewsbaseurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $this->eid, 'mode' => PCAST_EPISODE_VIEWS));
+            $viewsbaseurl = new moodle_url('/mod/pcast/showepisode.php', ['eid' => $this->eid, 'mode' => PCAST_EPISODE_VIEWS]);
             $options[get_string('episodeviews', 'pcast')] = $viewsbaseurl->out(false);
         }
 

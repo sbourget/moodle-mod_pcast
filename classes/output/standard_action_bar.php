@@ -126,7 +126,7 @@ class standard_action_bar implements renderable, templatable {
                 $currentgroup = 0;
             }
 
-            $args = $this->module->id . '/'.$currentgroup;
+            $args = $this->module->id . '/' . $currentgroup;
             $url = new moodle_url(rss_get_url($PAGE->cm->context->id, $USER->id, 'mod_pcast', $args));
             $buttons[$string] = $url->out(false);
         }
@@ -165,22 +165,22 @@ class standard_action_bar implements renderable, templatable {
         $mode = $this->mode;
         $options = [];
 
-        $stdbaseurl = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_STANDARD_VIEW));
+        $stdbaseurl = new moodle_url('/mod/pcast/view.php', ['id' => $cm->id, 'mode' => PCAST_STANDARD_VIEW]);
         $options[get_string('standardview', 'pcast')] = $stdbaseurl->out(false);
 
         if ($this->module->userscancategorize) {
-            $catbaseurl = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_CATEGORY_VIEW));
+            $catbaseurl = new moodle_url('/mod/pcast/view.php', ['id' => $cm->id, 'mode' => PCAST_CATEGORY_VIEW]);
             $options[get_string('categoryview', 'pcast')] = $catbaseurl->out(false);
         }
-        $datebaseurl = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_DATE_VIEW));
+        $datebaseurl = new moodle_url('/mod/pcast/view.php', ['id' => $cm->id, 'mode' => PCAST_DATE_VIEW]);
         $options[get_string('dateview', 'pcast')] = $datebaseurl->out(false);
 
-        $authorbaseurl = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_AUTHOR_VIEW));
+        $authorbaseurl = new moodle_url('/mod/pcast/view.php', ['id' => $cm->id, 'mode' => PCAST_AUTHOR_VIEW]);
         $options[get_string('authorview', 'pcast')] = $authorbaseurl->out(false);
 
         if ($this->module->requireapproval) {
             if (has_capability('mod/pcast:approve', $cm->context)) {
-                $approvebaseurl = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id, 'mode' => PCAST_APPROVAL_VIEW));
+                $approvebaseurl = new moodle_url('/mod/pcast/view.php', ['id' => $cm->id, 'mode' => PCAST_APPROVAL_VIEW]);
                 $options[get_string('waitingapproval', 'pcast')] = $approvebaseurl->out(false);
             }
         }
