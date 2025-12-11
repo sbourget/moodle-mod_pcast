@@ -31,7 +31,6 @@ use core_completion\activity_custom_completion;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class custom_completion extends activity_custom_completion {
-
     /**
      * Fetches the completion state for a given completion rule.
      *
@@ -46,8 +45,7 @@ class custom_completion extends activity_custom_completion {
         $pcastid = $this->cm->instance;
         $userid = $this->userid;
 
-        $userentries = $DB->count_records('pcast_episodes', ['pcastid' => $pcastid, 'userid' => $userid,
-                'approved' => 1], );
+        $userentries = $DB->count_records('pcast_episodes', ['pcastid' => $pcastid, 'userid' => $userid, 'approved' => 1]);
         $completionepisodes = $this->cm->customdata['customcompletionrules']['completionepisodes'];
 
         return ($completionepisodes <= $userentries) ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
