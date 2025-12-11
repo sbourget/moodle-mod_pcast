@@ -101,45 +101,45 @@
         }
     }
 }}
-<div class="container-fluid tertiary-navigation px-0">
-    <div class="row mx-0">
-        <div class="d-flex navitem">
-            <div class="col-xs">
-                {{#addnewbutton}}
-                    {{> core/single_button }}
-                {{/addnewbutton}}
+<div class="container-fluid tertiary-navigation">
+    <div class="d-flex">
+        {{#addnewbutton}}
+            <div class="navitem">
+                {{> core/single_button }}
             </div>
-        </div>
-        <div class="d-flex navitem">
-            {{#tabjumps}}
-            <div class="col-xs pr-1">
-                {{> core/url_select }}
-            </div>
-            {{/tabjumps}}
-        </div>
-        <div class="d-flex">
+        {{/addnewbutton}}
+
+        <div class="d-flex ms-sm-auto">
             {{#tools}}
                 {{#button}}
-                    <div class="pr-1">
+                    <div class="navitem">
                         {{> core/single_button}}
                     </div>
                 {{/button}}
                 {{#select}}
-                <div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            ...
-                            <span class="sr-only">{{#str}} subscribepisodes, mod_pcast {{/str}}</span>
-                        </button>
-                        <div class="dropdown-menu">
-                            {{#options}}
-                                <a class="dropdown-item" href="{{url}}">{{string}}</a>
-                            {{/options}}
+                    <div class="navitem">
+                        <div class="dropdown">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                ...
+                                <span class="visually-hidden">{{#str}} subscribepisodes, mod_pcast {{/str}}</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                {{#options}}
+                                    <a class="dropdown-item" href="{{url}}"
+                                    {{#openinnewwindow}}target="_blank"{{/openinnewwindow}}>{{string}}</a>
+                                {{/options}}
+                            </div>
                         </div>
                     </div>
-                </div>
                 {{/select}}
             {{/tools}}
         </div>
+    </div>
+    <div class="d-flex">
+        {{#tabjumps}}
+            <div class="navitem">
+                {{> core/url_select }}
+            </div>
+        {{/tabjumps}}
     </div>
 </div>
