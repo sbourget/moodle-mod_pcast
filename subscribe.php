@@ -80,7 +80,7 @@ $user = get_complete_user_data('id', $userid);
 \core\session\manager::set_user($user); // For login and capability checks.
 
 // Check the context actually exists.
-list($context, $course, $cm) = get_context_info_array($contextid);
+[$context, $course, $cm] = get_context_info_array($contextid);
 
 if (!$context) {
     pcast_rss_error();

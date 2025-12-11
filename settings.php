@@ -27,17 +27,18 @@ defined('MOODLE_INTERNAL') || die();
 
 if (empty($CFG->enablerssfeeds)) {
     $options = [0 => get_string('rssglobaldisabled', 'admin')];
-    $str = get_string('configenablerssfeeds', 'pcast').'<br />'.get_string('configenablerssfeedsdisabled2', 'admin');
-
+    $str = get_string('configenablerssfeeds', 'pcast') . '<br />' . get_string('configenablerssfeedsdisabled2', 'admin');
 } else {
     $options = [0 => get_string('no'), 1 => get_string('yes')];
     $str = get_string('configenablerssfeeds', 'pcast');
 }
-$settings->add(new admin_setting_configselect('mod_pcast/enablerssfeeds',
-                get_string('configenablerssfeeds2', 'pcast'),
-                $str,
-                0,
-                $options));
+$settings->add(new admin_setting_configselect(
+    'mod_pcast/enablerssfeeds',
+    get_string('configenablerssfeeds2', 'pcast'),
+    $str,
+    0,
+    $options
+    ));
 
 unset($options);
 if (empty($CFG->enablerssfeeds)) {
@@ -45,16 +46,20 @@ if (empty($CFG->enablerssfeeds)) {
 } else {
     $options = [0 => get_string('no'), 1 => get_string('yes')];
 }
-$settings->add(new admin_setting_configselect('mod_pcast/enablerssitunes',
-                get_string('configenablerssitunes2', 'pcast'),
-                get_string('configenablerssitunes', 'pcast'),
-                0,
-                $options));
+$settings->add(new admin_setting_configselect(
+    'mod_pcast/enablerssitunes',
+    get_string('configenablerssitunes2', 'pcast'),
+    get_string('configenablerssitunes', 'pcast'),
+    0,
+    $options
+    ));
 
 unset($options);
 $options = [0 => get_string('no'), 1 => get_string('yes')];
-$settings->add(new admin_setting_configselect('mod_pcast/allowhtmlinsummary',
-                get_string('configallowhtmlinsummary2', 'pcast'),
-                get_string('configallowhtmlinsummary', 'pcast'),
-                0,
-                $options));
+$settings->add(new admin_setting_configselect(
+    'mod_pcast/allowhtmlinsummary',
+    get_string('configallowhtmlinsummary2', 'pcast'),
+    get_string('configallowhtmlinsummary', 'pcast'),
+    0,
+    $options
+    ));

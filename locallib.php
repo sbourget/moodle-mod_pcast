@@ -1423,7 +1423,6 @@ function pcast_display_episode_ratings($episode, $cm, $course) {
         $event = \mod_pcast\event\ratings_viewed::create($params);
         $event->add_record_snapshot('pcast_episodes', $episode);
         $event->trigger();
-
     } else {
         echo html_writer::tag('div', get_string("noratinguntilapproved", "pcast"), ['class' => 'pcast-episode-notice']);
     }
@@ -1459,10 +1458,11 @@ function pcast_get_episode_view_count($episode) {
 function pcast_get_episode_comment_count($episode, $cm) {
     global $DB;
     $context = context_module::instance($cm->id);
-    if ($count = $DB->count_records('comments', ['itemid' => $episode->id,
-                                                'commentarea' => 'pcast_episode',
-                                                'contextid' => $context->id],
-                                                )) {
+    if ($count = $DB->count_records('comments',
+            ['itemid' => $episode->id,
+            'commentarea' => 'pcast_episode',
+            'contextid' => $context->id],
+            )) {
         return $count;
     } else {
         return 0;
@@ -1479,10 +1479,11 @@ function pcast_get_episode_rating_count($episode, $cm) {
 
     global $DB;
     $context = context_module::instance($cm->id);
-    if ($count = $DB->count_records('rating', ['itemid' => $episode->id,
-                                                'scaleid' => $episode->scale,
-                                                'contextid' => $context->id],
-                                                )) {
+    if ($count = $DB->count_records('rating', 
+            ['itemid' => $episode->id,
+            'scaleid' => $episode->scale,
+            'contextid' => $context->id],
+            )) {
         return $count;
     } else {
         return 0;
@@ -1525,11 +1526,10 @@ function pcast_display_mediafile_link($episode, $cm) {
     $templink = get_string('nopcastmediafile', 'pcast');
     // Make sure there is actually an attachment before trying to render the file link and player.
     if (!empty($filename)) {
-
-            $out = html_writer::start_tag('div', ['class' => 'pcast-media']);
-            $out .= html_writer::tag('a', $iconimage, ['href' => $path]); // Icon.
-            $out .= html_writer::tag('a', s($filename), ['href' => $path]); // File.
-            $out .= html_writer::end_tag('div');
+        $out = html_writer::start_tag('div', ['class' => 'pcast-media']);
+        $out .= html_writer::tag('a', $iconimage, ['href' => $path]); // Icon.
+        $out .= html_writer::tag('a', s($filename), ['href' => $path]); // File.
+        $out .= html_writer::end_tag('div');
 
         $templink = format_text($out, FORMAT_HTML, ['context' => $context]);
     }
@@ -1551,7 +1551,6 @@ function pcast_get_supported_file_types($pcast) {
     }
     // Use the teachers list.
     return $filetypesutil->normalize_file_types($pcast->allowedfiletypes);
-
 }
 
 /**
@@ -1561,16 +1560,15 @@ function pcast_get_supported_file_types($pcast) {
  */
 function pcast_get_categories() {
     global $DB;
-    $selectelements = array();
-    $topcat = array();
+    $selectelements = [];
+    $topcat = [];
     // Get categories.
     if ($topcategories = $DB->get_records("pcast_itunes_categories")) {
-
         // Construct an array of top categories.
         foreach ($topcategories as $topcategory) {
             $value = (int)$topcategory->id * 1000;
             $topcat[(int)$value] = $topcategory->name;
-            $selectelements[$topcategory->name] = array();
+            $selectelements[$topcategory->name] = [];
         }
     }
     if ($nestedcategories = $DB->get_records("pcast_itunes_nested_cat")) {
@@ -1596,19 +1594,19 @@ function pcast_get_categories() {
  * @param string $sortkey
  * @param string $sortorder
  */
-function pcast_display_paging_bar($pcast, $cm, $count, $page, $mode, $hook, $sortkey='', $sortorder='') {
+function pcast_display_paging_bar($pcast, $cm, $count, $page, $mode, $hook, $sortkey = '', $sortorder = '') {
     global $OUTPUT;
     if ($count > $pcast->episodesperpage) {
         // Print a paging bar here.
         $url = new moodle_url('/mod/pcast/view.php',
-                array('id' => $cm->id,
-                      'mode' => $mode,
-                      'hook' => $hook,
-                      'sortkey' => $sortkey,
-                      'sortorder' => $sortorder,
-                ));
+            ['id' => $cm->id,
+            'mode' => $mode,
+            'hook' => $hook,
+            'sortkey' => $sortkey,
+            'sortorder' => $sortorder,
+            ]);
 
-        echo html_writer::start_tag('div', array('class' => 'pcast-paging'));
+        echo html_writer::start_tag('div', ['class' => 'pcast-paging']);
         echo $OUTPUT->paging_bar($count, $page, $pcast->episodesperpage, $url);
         echo html_writer::end_tag('div');
     }
@@ -1650,14 +1648,14 @@ function mod_pcast_get_tagged_episodes($tag, $exclusivemode = false, $fromctx = 
                  AND cm.deletioninprogress = 0
                  AND pe.id %ITEMFILTER% AND c.id %COURSEFILTER%";
 
-    $params = array('itemtype' => 'pcast_episodes', 'tagid' => $tag->id, 'component' => 'mod_pcast',
-                    'coursemodulecontextlevel' => CONTEXT_MODULE, );
+    $params = ['itemtype' => 'pcast_episodes', 'tagid' => $tag->id, 'component' => 'mod_pcast',
+                    'coursemodulecontextlevel' => CONTEXT_MODULE, ];
 
     if ($ctx) {
         $context = $ctx ? context::instance_by_id($ctx) : context_system::instance();
         $query .= $rec ? ' AND (ctx.id = :contextid OR ctx.path LIKE :path)' : ' AND ctx.id = :contextid';
         $params['contextid'] = $context->id;
-        $params['path'] = $context->path.'/%';
+        $params['path'] = $context->path . '/%';
     }
 
     $query .= " ORDER BY ";
@@ -1666,7 +1664,7 @@ function mod_pcast_get_tagged_episodes($tag, $exclusivemode = false, $fromctx = 
         $fromcontext = context::instance_by_id($fromctx);
         $query .= ' (CASE WHEN ctx.id = :fromcontextid OR ctx.path LIKE :frompath THEN 0 ELSE 1 END),';
         $params['fromcontextid'] = $fromcontext->id;
-        $params['frompath'] = $fromcontext->path.'/%';
+        $params['frompath'] = $fromcontext->path . '/%';
     }
     $query .= ' c.sortorder, cm.id, pe.id';
 
@@ -1711,22 +1709,29 @@ function mod_pcast_get_tagged_episodes($tag, $exclusivemode = false, $fromctx = 
             context_helper::preload_from_record($item);
             $modinfo = get_fast_modinfo($item->courseid);
             $cm = $modinfo->get_cm($item->cmid);
-            $pageurl = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $item->id));
-            $pagename = format_string($item->name, true, array('context' => context_module::instance($item->cmid)));
+            $pageurl = new moodle_url('/mod/pcast/showepisode.php', ['eid' => $item->id]);
+            $pagename = format_string($item->name, true, ['context' => context_module::instance($item->cmid)]);
             $pagename = html_writer::link($pageurl, $pagename);
             $courseurl = course_get_url($item->courseid, $cm->sectionnum);
             $cmname = html_writer::link($cm->url, $cm->get_formatted_name());
-            $coursename = format_string($item->fullname, true, array('context' => context_course::instance($item->courseid)));
+            $coursename = format_string($item->fullname, true, ['context' => context_course::instance($item->courseid)]);
             $coursename = html_writer::link($courseurl, $coursename);
-            $icon = html_writer::link($pageurl, html_writer::empty_tag('img', array('src' => $cm->get_icon_url())));
-            $tagfeed->add($icon, $pagename, $cmname.'<br>'.$coursename);
+            $icon = html_writer::link($pageurl, html_writer::empty_tag('img', ['src' => $cm->get_icon_url()]));
+            $tagfeed->add($icon, $pagename, $cmname . '<br>' . $coursename);
         }
 
-        $content = $OUTPUT->render_from_template('core_tag/tagfeed',
-            $tagfeed->export_for_template($OUTPUT));
+        $content = $OUTPUT->render_from_template('core_tag/tagfeed', $tagfeed->export_for_template($OUTPUT));
 
-        return new core_tag\output\tagindex($tag, 'mod_pcast', 'pcast_episodes', $content,
-            $exclusivemode, $fromctx, $ctx, $rec, $page, $totalpages);
+        return new core_tag\output\tagindex($tag,
+                'mod_pcast',
+                'pcast_episodes',
+                $content,
+                $exclusivemode,
+                $fromctx,
+                $ctx,
+                $rec,
+                $page,
+                $totalpages);
     }
 }
 
@@ -1832,10 +1837,10 @@ class pcast_file_info_container extends file_info {
                   JOIN {pcast_episodes} pe ON (pe.pcastid = p.id AND pe.id = f.itemid)
                  WHERE f.contextid = ? AND f.component = ? AND f.filearea = ?
               ORDER BY pe.name, f.itemid";
-        $params = array($this->context->instanceid, $this->context->id, $this->component, $this->filearea);
+        $params = [$this->context->instanceid, $this->context->id, $this->component, $this->filearea];
 
         $rs = $DB->get_recordset_sql($sql, $params);
-        $children = array();
+        $children = [];
         foreach ($rs as $file) {
             if ($child = $this->browser->get_file_info($this->context, 'mod_pcast', $this->filearea, $file->itemid)) {
                 $children[] = $child;
