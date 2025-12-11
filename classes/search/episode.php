@@ -38,11 +38,10 @@ require_once($CFG->dirroot . '/mod/pcast/lib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class episode extends \core_search\base_mod {
-
     /**
      * @var array Internal quick static cache.
      */
-    protected $episodedata = array();
+    protected $episodedata = [];
 
     /**
      * Returns recordset containing required data for indexing pcast episodes.
@@ -56,7 +55,7 @@ class episode extends \core_search\base_mod {
         $sql = "SELECT pe.*, p.course FROM {pcast_episodes} pe
                   JOIN {pcast} p ON p.id = pe.pcastid
                  WHERE pe.timemodified >= ?";
-        return $DB->get_recordset_sql($sql, array($modifiedfrom));
+        return $DB->get_recordset_sql($sql, [$modifiedfrom]);
     }
 
     /**
@@ -66,7 +65,7 @@ class episode extends \core_search\base_mod {
      * @param array    $options
      * @return \core_search\document
      */
-    public function get_document($episode, $options = array()) {
+    public function get_document($episode, $options = []) {
 
         try {
             $cm = $this->get_cm('pcast', $episode->pcastid, $episode->course);
@@ -139,7 +138,7 @@ class episode extends \core_search\base_mod {
      */
     public function get_doc_url(\core_search\document $doc) {
 
-        return new \moodle_url('/mod/pcast/showepisode.php', array('eid' => $doc->get('itemid')));
+        return new \moodle_url('/mod/pcast/showepisode.php', ['eid' => $doc->get('itemid')]);
     }
 
     /**
@@ -150,7 +149,7 @@ class episode extends \core_search\base_mod {
      */
     public function get_context_url(\core_search\document $doc) {
         $contextmodule = \context::instance_by_id($doc->get('contextid'));
-        return new \moodle_url('/mod/pcast/view.php', array('id' => $contextmodule->instanceid));
+        return new \moodle_url('/mod/pcast/view.php', ['id' => $contextmodule->instanceid]);
     }
 
     /**
@@ -169,7 +168,7 @@ class episode extends \core_search\base_mod {
             $this->episodedata[$episodeid] = $DB->get_record_sql("SELECT pe.*, p.course, p.requireapproval
                                                                       FROM {pcast_episodes} pe
                                                                       JOIN {pcast} p ON p.id = pe.pcastid
-                                                                     WHERE pe.id = ?", array('id' => $episodeid), MUST_EXIST);
+                                                                     WHERE pe.id = ?", ['id' => $episodeid], MUST_EXIST);
         }
         return $this->episodedata[$episodeid];
     }
@@ -193,7 +192,7 @@ class episode extends \core_search\base_mod {
             $episode = $this->get_episode($episodeid);
         } catch (\dml_missing_record_exception $e) {
             unset($this->postsdata[$episodeid]);
-            debugging('Could not get record to attach files to '.$document->get('id'), DEBUG_DEVELOPER);
+            debugging('Could not get record to attach files to ' . $document->get('id'), DEBUG_DEVELOPER);
             return;
         }
 
