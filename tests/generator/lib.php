@@ -33,7 +33,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_pcast_generator extends testing_module_generator {
-
     /**
      * @var int keep track of how many episodes have been created.
      */
@@ -54,11 +53,11 @@ class mod_pcast_generator extends testing_module_generator {
      * @param object $record
      * @param array $options
      */
-    public function create_instance($record = null, array $options = null) {
+    public function create_instance($record = null, ?array $options = null) {
         global $CFG;
 
         // Add default values for pcast.
-        $record = (array)$record + array(
+        $record = (array)$record + [
             'userscancomment' => 0,
             'userscancategorize' => 0,
             'userscanpost' => 1,
@@ -79,7 +78,7 @@ class mod_pcast_generator extends testing_module_generator {
             'nestedcategory' => 0,
             'scale' => 100,
             'assessed' => 0,
-        );
+        ];
 
         return parent::create_instance($record, (array)$options);
     }
@@ -90,19 +89,19 @@ class mod_pcast_generator extends testing_module_generator {
      * @param array $record podcast settings
      * @return object
      */
-    public function create_content($pcast, $record = array()) {
+    public function create_content($pcast, $record = []) {
         global $DB, $USER;
         $this->episodecount++;
         $now = time();
-        $record = (array)$record + array(
+        $record = (array)$record + [
             'pcastid' => $pcast->id,
             'timecreated' => $now,
             'timemodified' => $now,
             'userid' => $USER->id,
-            'name' => 'Episode '.$this->episodecount,
-            'summary' => 'Description of pcast entry '.$this->episodecount,
+            'name' => 'Episode ' . $this->episodecount,
+            'summary' => 'Description of pcast entry ' . $this->episodecount,
             'summaryformat' => FORMAT_MOODLE,
-        );
+        ];
 
         // Media File.
 
@@ -117,12 +116,10 @@ class mod_pcast_generator extends testing_module_generator {
                     // Episode needs approval.
                     $record['approved'] = 0;
                 }
-
             } else {
                 // No approval required.
                 $record['approved'] = 1;
             }
-
         }
 
         $id = $DB->insert_record('pcast_episodes', $record);
@@ -131,10 +128,9 @@ class mod_pcast_generator extends testing_module_generator {
         if (array_key_exists('tags', $record)) {
             $tags = is_array($record['tags']) ? $record['tags'] : preg_split('/,/', $record['tags']);
 
-            core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $id,
-                context_module::instance($pcast->cmid), $tags);
+            core_tag_tag::set_item_tags('mod_pcast', 'pcast_episodes', $id, context_module::instance($pcast->cmid), $tags);
         }
 
-        return $DB->get_record('pcast_episodes', array('id' => $id), '*', MUST_EXIST);
+        return $DB->get_record('pcast_episodes', ['id' => $id], '*', MUST_EXIST);
     }
 }

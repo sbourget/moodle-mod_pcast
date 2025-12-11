@@ -40,7 +40,6 @@ require_once($CFG->dirroot . '/rating/lib.php');
  *
  */
 class mod_pcast_restore_date_testcase extends \restore_date_testcase {
-
     /**
      * Test restore dates.
      */
@@ -49,17 +48,17 @@ class mod_pcast_restore_date_testcase extends \restore_date_testcase {
 
         $gg = $this->getDataGenerator()->get_plugin_generator('mod_pcast');
         $record = ['assesstimefinish' => 100, 'assesstimestart' => 100, 'ratingtime' => 1, 'assessed' => 2, 'scale' => 1];
-        list($course, $pcast) = $this->create_course_and_module('pcast', $record);
+        [$course, $pcast] = $this->create_course_and_module('pcast', $record);
 
         // Pcast episodes.
         $episode1 = $gg->create_content($pcast, array('approved' => 1));
-        $gg->create_content($pcast, array('approved' => 0, 'userid' => $USER->id));
-        $gg->create_content($pcast, array('approved' => 0, 'userid' => -1));
-        $gg->create_content($pcast, array('approved' => 1));
+        $gg->create_content($pcast, ['approved' => 0, 'userid' => $USER->id]);
+        $gg->create_content($pcast, ['approved' => 0, 'userid' => -1]);
+        $gg->create_content($pcast, ['approved' => 1]);
         $timestamp = 10000;
         $DB->set_field('pcast_episodes', 'timecreated', $timestamp);
         $DB->set_field('pcast_episodes', 'timemodified', $timestamp);
-        $ratingoptions = new \stdClass;
+        $ratingoptions = new \stdClass();
         $ratingoptions->context = \context_module::instance($pcast->cmid);
         $ratingoptions->ratingarea = 'episode';
         $ratingoptions->component = 'mod_pcast';
