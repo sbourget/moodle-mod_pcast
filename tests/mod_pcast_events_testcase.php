@@ -68,7 +68,7 @@ class mod_pcast_events_testcase extends \advanced_testcase {
         $commentinfo->area = 'pcast_episode';
         $commentinfo->itemid = $episode1->id;
         $commentinfo->showcount = true;
-        $comment = new \core_comment\manager($commentinfo);
+        $comment = new \comment($commentinfo);
 
         // Triggering and capturing the event.
         $sink = $this->redirectEvents();

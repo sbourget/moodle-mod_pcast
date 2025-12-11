@@ -285,15 +285,15 @@ class provider_test extends \core_privacy\tests\provider_testcase {
      * @param int $itemid The item ID.
      * @return comment
      */
-    protected function get_comment_object(\context $context, $itemid): \core_comment\manager {
+    protected function get_comment_object(\context $context, $itemid): \comment {
         $args = new \stdClass();
-
+        
         $args->context = $context;
         $args->course = get_course(SITEID);
         $args->area = 'pcast_episode';
         $args->itemid = $itemid;
         $args->component = 'mod_pcast';
-        $comment = new \core_comment\manager($args);
+        $comment = new \comment($args);
         $comment->set_post_permission(true);
 
         return $comment;
