@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * The pcast episode configuration form
  *
@@ -28,8 +27,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/lib/formslib.php');
-require_once(dirname(__FILE__).'/locallib.php');
+require_once($CFG->dirroot . '/lib/formslib.php');
+require_once(dirname(__FILE__) . '/locallib.php');
 
 /**
  * The pcast episode configuration form
@@ -42,7 +41,6 @@ require_once(dirname(__FILE__).'/locallib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_pcast_entry_form extends moodleform {
-
     /**
      * Mform definition.
      */
@@ -68,7 +66,7 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         $mform->addElement('editor', 'summary', get_string('summary', 'pcast'), null,
-                           array('maxfiles' => EDITOR_UNLIMITED_FILES, 'context' => $context));
+            ['maxfiles' => EDITOR_UNLIMITED_FILES, 'context' => $context]);
         $mform->setType('summary', PARAM_RAW);
         $mform->addRule('summary', get_string('required'), 'required', null, 'client');
 
@@ -77,13 +75,12 @@ class mod_pcast_entry_form extends moodleform {
 
         // Media File.
         $mform->addElement('filemanager', 'mediafile', get_string('pcastmediafile', 'pcast'), null,
-            array('subdirs' => 0,
-                'maxfiles' => 1,
-                'maxbytes' => $pcast->maxbytes,
-                'accepted_types' => pcast_get_supported_file_types($pcast),
-                'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
-                'returnvalue' => 'ref_id'),
-            );
+            ['subdirs' => 0,
+            'maxfiles' => 1,
+            'maxbytes' => $pcast->maxbytes,
+            'accepted_types' => pcast_get_supported_file_types($pcast),
+            'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
+            'returnvalue' => 'ref_id']);
 
         $mform->addRule('mediafile', get_string('required'), 'required', null, 'client');
 
@@ -113,7 +110,7 @@ class mod_pcast_entry_form extends moodleform {
         }
 
         // Content.
-        $explicit = array();
+        $explicit = [];
         $explicit[0]  = get_string('yes');
         $explicit[1]  = get_string('no');
         $explicit[2]  = get_string('clean', 'pcast');

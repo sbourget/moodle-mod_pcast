@@ -23,19 +23,18 @@
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/locallib.php');
+require_once(dirname(__FILE__) . '/lib.php');
+require_once(dirname(__FILE__) . '/locallib.php');
 
 $eid = required_param('eid', PARAM_INT);    // Episode ID.
 $newstate = optional_param('newstate', PCAST_EPISODE_APPROVE, PARAM_BOOL);
 $mode = optional_param('mode', PCAST_APPROVAL_VIEW, PARAM_ALPHANUM);
 $hook = optional_param('hook', 'ALL', PARAM_CLEAN);
 
-
-$episode = $DB->get_record('pcast_episodes', array('id' => $eid), '*', MUST_EXIST);
-$pcast = $DB->get_record('pcast', array('id' => $episode->pcastid), '*', MUST_EXIST);
+$episode = $DB->get_record('pcast_episodes', ['id' => $eid], '*', MUST_EXIST);
+$pcast = $DB->get_record('pcast', ['id' => $episode->pcastid], '*', MUST_EXIST);
 $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
 
 require_login($course, false, $cm);
 
@@ -43,10 +42,10 @@ $context = context_module::instance($cm->id);
 require_capability('mod/pcast:approve', $context);
 
 $url = new moodle_url('/mod/pcast/approveepisode.php',
-        array('eid' => $eid,
-              'mode' => $mode,
-              'hook' => $hook,
-              'newstate' => $newstate),
+        ['eid' => $eid,
+        'mode' => $mode,
+        'hook' => $hook,
+        'newstate' => $newstate],
         );
 
 $PAGE->set_url($url);
@@ -61,17 +60,15 @@ if ($newstate != $episode->approved && confirm_sesskey()) {
 
     // Delete cached RSS feeds.
     if (!empty($CFG->enablerssfeeds)) {
-        require_once($CFG->dirroot.'/mod/pcast/rsslib.php');
+        require_once($CFG->dirroot . '/mod/pcast/rsslib.php');
         pcast_rss_delete_file($pcast);
     }
 
     // Trigger event about entry approval/disapproval.
-    $params = array(
-        'context' => $context,
-        'objectid' => $episode->id,
-    );
+    $params = ['context' => $context, 'objectid' => $episode->id];
     if ($newstate) {
         $event = \mod_pcast\event\episode_approved::create($params);
+
     } else {
         $event = \mod_pcast\event\episode_disapproved::create($params);
     }

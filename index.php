@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * This is a one-line short description of the file
  *
@@ -27,11 +26,11 @@
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__) . '/lib.php');
 
 $id = required_param('id', PARAM_INT);   // Course.
 
-if (! $course = $DB->get_record('course', array('id' => $id))) {
+if (! $course = $DB->get_record('course', ['id' => $id])) {
     throw new moodle_exception('invalidcourse', 'pcast');
 }
 
@@ -39,22 +38,18 @@ require_course_login($course);
 $PAGE->set_pagelayout('incourse');
 $context = context_course::instance($course->id);
 
-$event = \mod_pcast\event\course_module_instance_list_viewed::create(array(
-    'context' => $context,
-));
+$event = \mod_pcast\event\course_module_instance_list_viewed::create(['context' => $context]);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
 // Print the header.
-
-$PAGE->set_url('/mod/pcast/view.php', array('id' => $id));
+$PAGE->set_url('/mod/pcast/view.php', ['id' => $id]);
 $PAGE->set_title($course->fullname);
 $PAGE->set_heading($course->shortname);
 
 echo $OUTPUT->header();
 
 // Get all the appropriate data.
-
 if (!$pcasts = get_all_instances_in_course('pcast', $course)) {
     echo $OUTPUT->heading(get_string('nopcasts', 'pcast'), 2);
     echo $OUTPUT->continue_button("view.php?id=$course->id");
@@ -72,37 +67,36 @@ $strtopic = get_string('topic');
 $table = new html_table();
 
 if ($course->format == 'weeks') {
-    $table->head  = array ($strweek, $strname);
-    $table->align = array ('center', 'left');
+    $table->head  = [$strweek, $strname];
+    $table->align = ['center', 'left'];
 } else if ($course->format == 'topics') {
-    $table->head  = array ($strtopic, $strname);
-    $table->align = array ('center', 'left', 'left', 'left');
+    $table->head  = [$strtopic, $strname];
+    $table->align = ['center', 'left', 'left', 'left'];
 } else {
-    $table->head  = array ($strname);
-    $table->align = array ('left', 'left', 'left');
+    $table->head  = [$strname];
+    $table->align = ['left', 'left', 'left'];
 }
 
 foreach ($pcasts as $pcast) {
     if (!$pcast->visible) {
         // Show dimmed if the mod is hidden.
-        $url = new moodle_url('/mod/pcast/view.php', array('id' => $pcast->coursemodule));
-        $link = html_writer::tag('a', format_string($pcast->name) , array('href' => $url, 'class' => 'dimmed'));
+        $url = new moodle_url('/mod/pcast/view.php', ['id' => $pcast->coursemodule]);
+        $link = html_writer::tag('a', format_string($pcast->name), ['href' => $url, 'class' => 'dimmed']);
     } else {
         // Show normal if the mod is visible.
-        $url = new moodle_url('/mod/pcast/view.php', array('id' => $pcast->coursemodule));
-        $link = html_writer::tag('a', format_string($pcast->name) , array('href' => $url));
+        $url = new moodle_url('/mod/pcast/view.php', ['id' => $pcast->coursemodule]);
+        $link = html_writer::tag('a', format_string($pcast->name), ['href' => $url]);
     }
 
     if ($course->format == 'weeks' || $course->format == 'topics') {
-        $table->data[] = array ($pcast->section, $link);
+        $table->data[] = [$pcast->section, $link];
     } else {
-        $table->data[] = array ($link);
+        $table->data[] = [$link];
     }
 }
 
 echo $OUTPUT->heading(get_string('modulenameplural', 'pcast'), 2);
 echo html_writer::table($table);
-
 
 // Finish the page.
 

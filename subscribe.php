@@ -33,9 +33,9 @@ define('NO_DEBUG_DISPLAY', true);
 define('NO_MOODLE_COOKIES', true);
 
 require_once('../../config.php');
-require_once($CFG->libdir.'/filelib.php');
-require_once($CFG->libdir.'/rsslib.php');
-require_once($CFG->dirroot.'/mod/pcast/rsslib.php');
+require_once($CFG->libdir . '/filelib.php');
+require_once($CFG->libdir . '/rsslib.php');
+require_once($CFG->dirroot . '/mod/pcast/rsslib.php');
 $pcastconfig = get_config('mod_pcast');
 
 // RSS feeds must be enabled site-wide.
@@ -70,7 +70,6 @@ $pcastid  = clean_param($args[3], PARAM_INT);
 $groupid  = clean_param($args[4], PARAM_INT);
 $uservalidated = false;
 
-
 // Authenticate the user from the token.
 $userid = rss_get_userid_from_token($token);
 if (!$userid) {
@@ -79,7 +78,6 @@ if (!$userid) {
 
 $user = get_complete_user_data('id', $userid);
 \core\session\manager::set_user($user); // For login and capability checks.
-
 
 // Check the context actually exists.
 list($context, $course, $cm) = get_context_info_array($contextid);
@@ -102,7 +100,6 @@ try {
 }
 
 // Now that we know that the user is vaid, lets generate see if they can see the feed.
-
 // Check capabilities.
 $cm = get_coursemodule_from_instance('pcast', $pcastid, 0, false, MUST_EXIST);
 if ($cm) {
@@ -159,11 +156,11 @@ $sql = pcast_rss_get_sql($pcast);
 $filename = rss_get_file_name($pcast, $sql);
 
 // Append the GroupID to the end of the filename.
-$filename .= '_'.$groupid;
+$filename .= '_' . $groupid;
 $cachedfilepath = pcast_rss_get_file_full_name('mod_pcast', $filename);
 
 // Figure out the URL for the podcast based on the user info.
-$args = $pcast->id . '/' .$groupid;
+$args = $pcast->id . '/' . $groupid;
 $url = new moodle_url(rss_get_url($context->id, $userid, 'pcast', $args));
 
 // Build the .pcast file.
