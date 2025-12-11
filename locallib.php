@@ -1511,8 +1511,14 @@ function pcast_display_mediafile_link($episode, $cm) {
             $filename = $file->get_filename();
             $mimetype = $file->get_mimetype();
             $iconimage = $OUTPUT->image_icon(file_mimetype_icon($mimetype), $mimetype);
-            $path = file_encode_url($CFG->wwwroot.'/pluginfile.php',
-                                    '/'.$context->id.'/mod_pcast/episode/'.$episode->id.'/'.$filename);
+            $path = url::make_pluginfile_url(
+                contextid: $context->id,
+                component: 'mod_pcast',
+                area: 'episode',
+                itemid: $episode->id,
+                pathname: '/',
+                filename: $filename
+            )->out();
         }
     }
 
@@ -1536,7 +1542,7 @@ function pcast_display_mediafile_link($episode, $cm) {
  * @return array
  */
 function pcast_get_supported_file_types($pcast) {
-    $defaultallowed = array('html_audio', 'web_audio', 'html_video', 'web_video');
+    $defaultallowed = ['html_audio', 'web_audio', 'html_video', 'web_video'];
     $filetypesutil = new \core_form\filetypes_util();
 
     if (empty($pcast->allowedfiletypes)) {
