@@ -39,7 +39,7 @@ class comment_deleted extends \core\event\comment_deleted {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url('/mod/pcast/view.php', array('id' => $this->contextinstanceid));
+        return new \moodle_url('/mod/pcast/view.php', ['id' => $this->contextinstanceid]);
     }
 
     /**

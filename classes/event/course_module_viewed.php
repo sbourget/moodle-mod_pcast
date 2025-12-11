@@ -49,7 +49,7 @@ class course_module_viewed extends \core\event\course_module_viewed {
      * @return \moodle_url
      */
     public function get_url() {
-        $params = array('id' => $this->contextinstanceid);
+        $params = ['id' => $this->contextinstanceid];
         if (!empty($this->other['mode'])) {
             $params['mode'] = $this->other['mode'];
         }
@@ -61,6 +61,6 @@ class course_module_viewed extends \core\event\course_module_viewed {
      * @return array
      */
     public static function get_objectid_mapping() {
-        return array('db' => 'pcast', 'restore' => 'pcast');
+        return ['db' => 'pcast', 'restore' => 'pcast'];
     }
 }

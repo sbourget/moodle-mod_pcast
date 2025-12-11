@@ -60,7 +60,6 @@ class comments_viewed extends \core\event\comments_viewed {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url("/mod/pcast/showepisode.php",
-                array('eid' => $this->objectid));
+        return new \moodle_url("/mod/pcast/showepisode.php", ['eid' => $this->objectid]);
     }
 }

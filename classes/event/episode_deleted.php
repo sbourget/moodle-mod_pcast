@@ -76,7 +76,7 @@ class episode_deleted extends \core\event\base {
      */
     public function get_url() {
         // Entry does not exist any more, returning link to the module view page in the mode it was before deleting entry.
-        $params = array('id' => $this->contextinstanceid);
+        $params = ['id' => $this->contextinstanceid];
         if (isset($this->other['hook'])) {
             $params['hook'] = $this->other['hook'];
         }
@@ -105,7 +105,7 @@ class episode_deleted extends \core\event\base {
      * @return array
      */
     public static function get_objectid_mapping() {
-        return array('db' => 'pcast_episodes', 'restore' => 'pcast_episode');
+        return ['db' => 'pcast_episodes', 'restore' => 'pcast_episode'];
     }
 }
 

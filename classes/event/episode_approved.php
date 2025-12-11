@@ -67,8 +67,7 @@ class episode_approved extends \core\event\base {
      * @return \moodle_url
      */
     public function get_url() {
-        return new \moodle_url("/mod/pcast/showepisode.php",
-                array('eid' => $this->objectid));
+        return new \moodle_url("/mod/pcast/showepisode.php", ['eid' => $this->objectid]);
     }
 
     /**
@@ -90,7 +89,7 @@ class episode_approved extends \core\event\base {
      * @return array
      */
     public static function get_objectid_mapping() {
-        return array('db' => 'pcast_episodes', 'restore' => 'pcast_episode');
+        return ['db' => 'pcast_episodes', 'restore' => 'pcast_episode'];
     }
 }
 
