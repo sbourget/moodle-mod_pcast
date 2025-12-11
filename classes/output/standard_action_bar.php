@@ -201,7 +201,7 @@ class standard_action_bar implements renderable, templatable {
 
         if (count($options) > 1) {
             $select = new url_select(array_flip($options), $active, null);
-            $select->set_label(get_string('explainalphabet', 'pcast'), ['class' => 'sr-only']);
+            $select->set_label(get_string('explainalphabet', 'pcast'), ['class' => 'visually-hidden']);
             return $select->export_for_template($output);
         }
 
