@@ -121,12 +121,10 @@ if ($groupmode == SEPARATEGROUPS) {
 
     // Is a member of the current group.
     if (!isset($members[$userid]->id) || ($members[$userid]->id != $userid)) {
-
         // Not a member of the group, can you see all groups (from CAPS).
         if (!has_capability('moodle/site:accessallgroups', $context, $userid)) {
             $uservalidated = false;
         }
-
     } else {
         // Are a member of the current group.
         // Is the group #0 (Group 0 is all users).
@@ -134,7 +132,6 @@ if ($groupmode == SEPARATEGROUPS) {
             $uservalidated = false;
         }
     }
-
 }
 
 if (!$uservalidated) {
@@ -143,11 +140,11 @@ if (!$uservalidated) {
 
 // OK, the use should be able to see the feed, generate the .pcast file.
 
-$pcast = $DB->get_record('pcast', array('id' => $pcastid), '*', MUST_EXIST);
+$pcast = $DB->get_record('pcast', ['id' => $pcastid], '*', MUST_EXIST);
 
 // Check to se if RSS is enabled.
 // NOTE: cannot use the rss_enabled_for_mod() function due to the functions internals and naming conflicts.
-if (($pcast->rssepisodes == 0)||(empty($pcast->rssepisodes))) {
+if (($pcast->rssepisodes == 0) || (empty($pcast->rssepisodes))) {
     pcast_rss_error();
 }
 
