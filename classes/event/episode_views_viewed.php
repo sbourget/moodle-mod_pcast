@@ -35,7 +35,6 @@ namespace mod_pcast\event;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class episode_views_viewed extends \core\event\base {
-
     /**
      * Init method
      */
@@ -60,7 +59,7 @@ class episode_views_viewed extends \core\event\base {
      * @return string
      */
     public function get_description() {
-        return "The user with id '$this->userid' has viewed the list of viewers for the podcast episode with id ".
+        return "The user with id '$this->userid' has viewed the list of viewers for the podcast episode with id " .
                 "'$this->objectid' in the podcast activity with course module id '$this->contextinstanceid'.";
     }
 
@@ -95,4 +94,3 @@ class episode_views_viewed extends \core\event\base {
         return ['db' => 'pcast_episodes', 'restore' => 'pcast_episode'];
     }
 }
-

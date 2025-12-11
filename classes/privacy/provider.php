@@ -49,7 +49,6 @@ class provider implements
     \core_privacy\local\request\core_userlist_provider,
     // This plugin is a core_user_data_provider.
     \core_privacy\local\request\plugin\provider {
-
     /**
      * Return the fields which contain personal data.
      *
@@ -163,8 +162,7 @@ class provider implements
         $userlist->add_from_sql('userid', $sql, $params);
 
         // Find users with pcast comments.
-        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_pcast', 'pcast_episode',
-                $context->id);
+        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_pcast', 'pcast_episode', $context->id);
 
         // Find users with pcast ratings.
         $sql = "SELECT pe.id

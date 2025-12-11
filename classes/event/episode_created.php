@@ -98,4 +98,3 @@ class episode_created extends \core\event\base {
         return ['db' => 'pcast_episodes', 'restore' => 'pcast_episode'];
     }
 }
-

@@ -86,4 +86,3 @@ class ratings_viewed extends \core\event\base {
         }
     }
 }
-
