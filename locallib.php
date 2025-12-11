@@ -36,15 +36,14 @@ require_once($CFG->libdir . '/filelib.php');
  */
 function pcast_get_media_information($filename) {
     global $CFG;
-    include_once($CFG->dirroot.'/mod/pcast/lib/getid3/getid3/getid3.php');
+    include_once($CFG->dirroot . '/mod/pcast/lib/getid3/getid3/getid3.php');
 
     // Initialize getID3 engine.
-    $getid3 = new getID3;
+    $getid3 = new getID3();
 
     // Analyze file and store returned data in $ThisFileInfo.
     $mp3info = $getid3->analyze($filename);
     return $mp3info;  // Playtime in minutes:seconds, formatted string.
-
 }
 
 /**
@@ -58,15 +57,15 @@ function pcast_get_media_information($filename) {
  */
 function pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sortorder = '') {
 
-    echo html_writer::start_tag('div', array('class' => 'pcast-links')). "\n";
-    echo html_writer::tag('div', get_string("explainalphabet", "pcast"), array('class' => 'pcastexplain'));
+    echo html_writer::start_tag('div', ['class' => 'pcast-links']) . "\n";
+    echo html_writer::tag('div', get_string("explainalphabet", "pcast"), ['class' => 'pcastexplain']);
     echo html_writer::empty_tag('br');
 
     pcast_print_special_links($cm, $pcast, $mode, $hook);
     pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
     pcast_print_all_links($cm, $pcast, $mode, $hook);
     pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder, $hook);
-    echo html_writer::end_tag('div'). "\n";
+    echo html_writer::end_tag('div') . "\n";
 }
 
 /**
@@ -80,15 +79,14 @@ function pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey = '', $so
  */
 function pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sortorder = '') {
 
-    echo html_writer::start_tag('div', array('class' => 'pcast-links')). "\n";
-    echo html_writer::tag('div', get_string("explainalphabet", "pcast"), array('class' => 'pcastexplain'));
+    echo html_writer::start_tag('div', ['class' => 'pcast-links']) . "\n";
+    echo html_writer::tag('div', get_string("explainalphabet", "pcast"), ['class' => 'pcastexplain']);
     echo html_writer::empty_tag('br');
 
     pcast_print_special_links($cm, $pcast, $mode, $hook);
     pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
     pcast_print_all_links($cm, $pcast, $mode, $hook);
-    echo html_writer::end_tag('div'). "\n";
-
+    echo html_writer::end_tag('div') . "\n";
 }
 
 /**
@@ -115,8 +113,8 @@ function pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sortor
  */
 function pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sortorder = '') {
 
-    echo html_writer::start_tag('div', array('class' => 'pcast-links')). "\n";
-    echo html_writer::tag('div', get_string("explainalphabet", "pcast"), array('class' => 'pcastexplain'));
+    echo html_writer::start_tag('div', ['class' => 'pcast-links']) . "\n";
+    echo html_writer::tag('div', get_string("explainalphabet", "pcast"), ['class' => 'pcastexplain']);
     echo html_writer::empty_tag('br');
 
     if (empty($sortkey)) {
@@ -128,7 +126,7 @@ function pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey = '', $sort
     pcast_print_alphabet_links($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
     pcast_print_all_links($cm, $pcast, $mode, $hook);
     pcast_print_sorting_links($cm, $mode, $sortkey, $sortorder, $hook);
-    echo html_writer::end_tag('div'). "\n";
+    echo html_writer::end_tag('div') . "\n";
 }
 
 /**
