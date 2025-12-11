@@ -99,7 +99,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::get_metadata().
      */
-    public function test_get_metadata() {
+    public function test_get_metadata(): void {
         $collection = new collection('mod_pcast');
         $newcollection = provider::get_metadata($collection);
         $itemcollection = $newcollection->get_collection();
@@ -122,7 +122,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::get_contexts_for_userid().
      */
-    public function test_get_contexts_for_userid() {
+    public function test_get_contexts_for_userid(): void {
         $cm = get_coursemodule_from_instance('pcast', $this->pcast->id);
 
         $contextlist = provider::get_contexts_for_userid($this->student->id);
@@ -135,7 +135,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::export_user_data().
      */
-    public function test_export_for_context() {
+    public function test_export_for_context(): void {
         $cm = get_coursemodule_from_instance('pcast', $this->pcast->id);
         $cmcontext = \context_module::instance($cm->id);
 
@@ -154,7 +154,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::delete_data_for_all_users_in_context().
      */
-    public function test_delete_data_for_all_users_in_context() {
+    public function test_delete_data_for_all_users_in_context(): void {
         global $DB;
 
         $generator = $this->getDataGenerator();
@@ -203,7 +203,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * Test for provider::delete_data_for_user().
      */
-    public function test_delete_data_for_user() {
+    public function test_delete_data_for_user(): void {
         global $DB;
         $generator = $this->getDataGenerator();
 
@@ -245,8 +245,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
             'itemid' => $pe3->id, ]);
         $this->assertEquals(1, $ratingcount);
         // Create another student who will add an episode to the first pcast.
-        $contextlist = new \core_privacy\local\request\approved_contextlist($student2, 'pcast',
-            [$context1->id, $context2->id]);
+        $contextlist = new \core_privacy\local\request\approved_contextlist($student2, 'pcast', [$context1->id, $context2->id]);
         provider::delete_data_for_user($contextlist);
 
         // After deletion, the pcast episode and tags for the second student should have been deleted.
@@ -286,7 +285,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
      * @param int $itemid The item ID.
      * @return comment
      */
-    protected function get_comment_object(\context $context, $itemid) {
+    protected function get_comment_object(\context $context, $itemid): \core_comment\manager {
         $args = new \stdClass();
 
         $args->context = $context;
@@ -294,7 +293,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $args->area = 'pcast_episode';
         $args->itemid = $itemid;
         $args->component = 'mod_pcast';
-        $comment = new \comment($args);
+        $comment = new \core_comment\manager($args);
         $comment->set_post_permission(true);
 
         return $comment;
@@ -310,7 +309,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     protected function get_rating_object(\context $context, $itemid) {
         global $USER;
 
-        $ratingoptions = new \stdClass;
+        $ratingoptions = new \stdClass();
         $ratingoptions->context = $context;
         $ratingoptions->ratingarea = 'episode';
         $ratingoptions->component = 'mod_pcast';
