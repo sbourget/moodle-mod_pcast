@@ -191,13 +191,15 @@ class mod_pcast_search_testcase extends \advanced_testcase {
         $this->setUser($user1);
         $pcast1 = self::getDataGenerator()->create_module('pcast', $record);
         $teacherapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content($pcast1);
-        $teachernotapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content($pcast1, ['approved' => false]);
+        $teachernotapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content($pcast1,
+            ['approved' => false]);
 
         // Entries need to be approved and created by student.
         $pcast2 = self::getDataGenerator()->create_module('pcast', $record);
         $this->setUser($user2);
         $studentapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content($pcast2);
-        $studentnotapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content($pcast2, ['approved' => false]);
+        $studentnotapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content($pcast2,
+            ['approved' => false]);
 
         $this->setUser($user2);
         $this->assertEquals(\core_search\manager::ACCESS_GRANTED, $searcharea->check_access($teacherapproved->id));

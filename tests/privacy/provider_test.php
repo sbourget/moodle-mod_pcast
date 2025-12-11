@@ -39,7 +39,7 @@ require_once($CFG->dirroot . '/comment/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \mod_pcast\privacy\provider
  */
-class provider_test extends \core_privacy\tests\provider_testcase {
+final class provider_test extends \core_privacy\tests\provider_testcase {
     /** @var stdClass The student object. */
     protected $student;
 
@@ -59,6 +59,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
      * {@inheritdoc}
      */
     protected function setUp(): void {
+        parent::setUp();
         $this->resetAfterTest();
 
         global $DB;
@@ -77,11 +78,11 @@ class provider_test extends \core_privacy\tests\provider_testcase {
 
         // Create a student which will add an episode to a pcast.
         $student = $generator->create_user();
-        $generator->enrol_user($student->id,  $course->id, 'student');
+        $generator->enrol_user($student->id, $course->id, 'student');
         $this->student = $student;
 
         $teacher = $generator->create_user();
-        $generator->enrol_user($teacher->id,  $course->id, 'editingteacher');
+        $generator->enrol_user($teacher->id, $course->id, 'editingteacher');
         $this->teacher = $teacher;
 
         $this->setUser($student->id);
@@ -141,7 +142,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
 
         // Export all of the data for the context.
         $writer = \core_privacy\local\request\writer::with_context($cmcontext);
-        $contextlist = new \core_privacy\local\request\approved_contextlist($this->student, 'mod_pcast' , [$cmcontext->id]);
+        $contextlist = new \core_privacy\local\request\approved_contextlist($this->student, 'mod_pcast', [$cmcontext->id]);
 
         \mod_pcast\privacy\provider::export_user_data($contextlist);
         $this->assertTrue($writer->has_any_data());
@@ -195,8 +196,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
             'itemid' => $pe3->id, 'userid' => $student2->id, ]);
         $this->assertEquals(0, $commentcount);
 
-        $ratingcount = $DB->count_records('rating', ['component' => 'mod_pcast', 'ratingarea' => 'episode',
-            'itemid' => $pe3->id, ]);
+        $ratingcount = $DB->count_records('rating', ['component' => 'mod_pcast', 'ratingarea' => 'episode', 'itemid' => $pe3->id]);
         $this->assertEquals(0, $ratingcount);
     }
 

@@ -35,7 +35,6 @@ namespace mod_pcast;
  *
  */
 class mod_pcast_generator_testcase extends \advanced_testcase {
-
     /**
      * Test generator for creating instance of module.
      *
@@ -53,7 +52,7 @@ class mod_pcast_generator_testcase extends \advanced_testcase {
         $this->assertCount(1, $records);
         $this->assertTrue(array_key_exists($pcast->id, $records));
 
-        $params = array('course' => $course->id, 'name' => 'Another pcast');
+        $params = ['course' => $course->id, 'name' => 'Another pcast'];
         $pcast = $this->getDataGenerator()->create_module('pcast', $params);
         $records = $DB->get_records('pcast', ['course' => $course->id], 'id');
         $this->assertCount(2, $records);
@@ -80,7 +79,7 @@ class mod_pcast_generator_testcase extends \advanced_testcase {
         $this->assertEquals($episode1->id, $records[$episode1->id]->id);
         $this->assertEquals($episode2->id, $records[$episode2->id]->id);
         $this->assertEquals('Custom episode', $records[$episode2->id]->name);
-        $this->assertEquals(['Cats', 'mice'], array_values(\core_tag_tag::get_item_tags_array('mod_pcast', 'pcast_episodes', $episode2->id)));
-
+        $this->assertEquals(['Cats', 'mice'], 
+            array_values(\core_tag_tag::get_item_tags_array('mod_pcast', 'pcast_episodes', $episode2->id)));
     }
 }

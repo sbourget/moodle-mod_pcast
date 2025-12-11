@@ -48,13 +48,12 @@ class mod_pcast_generator extends testing_module_generator {
         parent::reset();
     }
 
-/**
- * Create an instance of mod_pcast with some default settings
- * @global stdClass $CFG
- * @param object $record
- * @param array|null $options
- * @return object
- */
+    /**
+     * Create an instance of mod_pcast with some default settings
+     * @param object $record
+     * @param array|null $options
+     * @return object
+     */
     public function create_instance($record = null, ?array $options = null) {
         global $CFG;
 

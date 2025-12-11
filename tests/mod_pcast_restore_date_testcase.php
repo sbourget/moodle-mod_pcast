@@ -51,7 +51,7 @@ class mod_pcast_restore_date_testcase extends \restore_date_testcase {
         [$course, $pcast] = $this->create_course_and_module('pcast', $record);
 
         // Pcast episodes.
-        $episode1 = $gg->create_content($pcast, array('approved' => 1));
+        $episode1 = $gg->create_content($pcast, ['approved' => 1]);
         $gg->create_content($pcast, ['approved' => 0, 'userid' => $USER->id]);
         $gg->create_content($pcast, ['approved' => 0, 'userid' => -1]);
         $gg->create_content($pcast, ['approved' => 1]);
