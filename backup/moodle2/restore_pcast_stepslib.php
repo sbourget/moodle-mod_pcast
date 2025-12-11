@@ -23,13 +23,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_pcast_activity_structure_step extends restore_activity_structure_step {
-
     /**
      * DB structure for a podcast.
      */
     protected function define_structure() {
 
-        $paths = array();
+        $paths = [];
         $userinfo = $this->get_setting_value('userinfo');
 
         $paths[] = new restore_path_element('pcast', '/activity/pcast');
@@ -38,7 +37,6 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
             $paths[] = new restore_path_element('pcast_tag', '/activity/pcast/episodes/episode/tags/tag');
             $paths[] = new restore_path_element('pcast_view', '/activity/pcast/episodes/episode/views/view');
             $paths[] = new restore_path_element('pcast_rating', '/activity/pcast/episodes/episode/ratings/rating');
-
         }
 
         // Return the paths wrapped into standard activity structure.
@@ -100,7 +98,6 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
 
         $newitemid = $DB->insert_record('pcast_views', $data);
         $this->set_mapping('pcast_views', $oldid, $newitemid, false); // No files attached.
-
     }
 
     /**
@@ -134,7 +131,6 @@ class restore_pcast_activity_structure_step extends restore_activity_structure_s
         }
 
         $newitemid = $DB->insert_record('rating', $data);
-
     }
 
     /**

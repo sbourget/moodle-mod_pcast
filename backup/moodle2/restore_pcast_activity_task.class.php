@@ -35,7 +35,6 @@ require_once($CFG->dirroot . '/mod/pcast/backup/moodle2/restore_pcast_stepslib.p
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_pcast_activity_task extends restore_activity_task {
-
     /**
      * Define (add) particular settings this activity can have
      */
@@ -56,7 +55,7 @@ class restore_pcast_activity_task extends restore_activity_task {
      * processed by the link decoder
      */
     public static function define_decode_contents() {
-        $contents = array();
+        $contents = [];
 
         $contents[] = new restore_decode_content('pcast', array('intro'), 'pcast');
 
@@ -68,7 +67,7 @@ class restore_pcast_activity_task extends restore_activity_task {
      * to the activity to be executed by the link decoder
      */
     public static function define_decode_rules() {
-        $rules = array();
+        $rules = [];
 
         $rules[] = new restore_decode_rule('PCASTVIEWBYID', '/mod/pcast/view.php?id=$1', 'course_module');
         $rules[] = new restore_decode_rule('PCASTINDEX', '/mod/pcast/index.php?id=$1', 'course');
@@ -84,7 +83,7 @@ class restore_pcast_activity_task extends restore_activity_task {
      * of {link restore_log_rule} objects
      */
     public static function define_restore_log_rules() {
-        $rules = array();
+        $rules = [];
 
         $rules[] = new restore_log_rule('pcast', 'add', 'view.php?id={course_module}', '{pcast}');
         $rules[] = new restore_log_rule('pcast', 'update', 'view.php?id={course_module}', '{pcast}');
@@ -116,7 +115,7 @@ class restore_pcast_activity_task extends restore_activity_task {
      * activity level. All them are rules not linked to any module instance (cmid = 0)
      */
     public static function define_restore_log_rules_for_course() {
-        $rules = array();
+        $rules = [];
 
         // Fix old wrong uses (missing extension).
         $rules[] = new restore_log_rule('pcast', 'view all', 'index?id={course}', null,

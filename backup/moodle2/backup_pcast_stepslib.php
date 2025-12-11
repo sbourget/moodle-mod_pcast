@@ -23,13 +23,11 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_pcast_activity_structure_step extends backup_activity_structure_step {
-
     /**
      * Defines structure for data backup.
      * @return object
      */
     protected function define_structure() {
-
         // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 
@@ -137,6 +135,5 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
 
         // Return the root element (pcast), wrapped into standard activity structure.
         return $this->prepare_activity_structure($pcast);
-
     }
 }
