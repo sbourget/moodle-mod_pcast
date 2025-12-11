@@ -62,7 +62,7 @@ class mod_pcast_search_testcase extends \advanced_testcase {
      *
      * @return void
      */
-    public function test_search_enabled() {
+    public function test_search_enabled(): void {
 
         $searcharea = \core_search\manager::get_search_area($this->episodeareaid);
         [$componentname, $varname] = $searcharea->get_config_var_name();
@@ -82,7 +82,7 @@ class mod_pcast_search_testcase extends \advanced_testcase {
      *
      * @return void
      */
-    public function test_entries_indexing() {
+    public function test_entries_indexing(): void {
         global $DB;
 
         $searcharea = \core_search\manager::get_search_area($this->episodeareaid);
@@ -141,7 +141,7 @@ class mod_pcast_search_testcase extends \advanced_testcase {
      *
      * @return void
      */
-    public function test_entries_document() {
+    public function test_entries_document(): void {
 
         $searcharea = \core_search\manager::get_search_area($this->episodeareaid);
 
@@ -171,7 +171,7 @@ class mod_pcast_search_testcase extends \advanced_testcase {
      *
      * @return void
      */
-    public function test_entries_access() {
+    public function test_entries_access(): void {
 
         // Returns the instance as long as the component is supported.
         $searcharea = \core_search\manager::get_search_area($this->episodeareaid);

@@ -41,7 +41,7 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
      * Test calendar event creation.
      *
      */
-    public function test_pcast_core_calendar_provide_event_action() {
+    public function test_pcast_core_calendar_provide_event_action(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
         // Create the activity.
@@ -66,7 +66,7 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
      * Test calendar event read as a non-user.
      *
      */
-    public function test_pcast_core_calendar_provide_event_action_as_non_user() {
+    public function test_pcast_core_calendar_provide_event_action_as_non_user(): void {
         global $CFG;
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -91,7 +91,7 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
      * Test calendar event read as a user.
      *
      */
-    public function test_pcast_core_calendar_provide_event_action_for_user() {
+    public function test_pcast_core_calendar_provide_event_action_for_user(): void {
         global $CFG;
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -123,7 +123,7 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
      * Test calendar event read for an activity in a hidden section.
      *
      */
-    public function test_pcast_core_calendar_provide_event_action_in_hidden_section() {
+    public function test_pcast_core_calendar_provide_event_action_in_hidden_section(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
         // Create a course.
@@ -149,7 +149,7 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
      * Test calendar event read for an activity already completed.
      *
      */
-    public function test_pcast_core_calendar_provide_event_action_already_completed() {
+    public function test_pcast_core_calendar_provide_event_action_already_completed(): void {
         global $CFG;
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -179,7 +179,7 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
      *
      *
      */
-    public function test_pcast_core_calendar_provide_event_action_already_completed_for_user() {
+    public function test_pcast_core_calendar_provide_event_action_already_completed_for_user(): void {
         global $CFG;
         $this->resetAfterTest();
         $this->setAdminUser();

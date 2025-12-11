@@ -40,7 +40,7 @@ class mod_pcast_generator_testcase extends \advanced_testcase {
      * Test generator for creating instance of module.
      *
      */
-    public function test_create_instance() {
+    public function test_create_instance(): void {
         global $DB;
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -64,7 +64,7 @@ class mod_pcast_generator_testcase extends \advanced_testcase {
      * Test generator for creating podcast episodes.
      *
      */
-    public function test_create_content() {
+    public function test_create_content(): void {
         global $DB;
         $this->resetAfterTest();
         $this->setAdminUser();
