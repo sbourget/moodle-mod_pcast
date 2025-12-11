@@ -26,6 +26,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+use core\url;
 require_once($CFG->libdir . '/filelib.php');
 
 /**
