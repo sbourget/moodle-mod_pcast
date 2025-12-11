@@ -352,7 +352,6 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
 
     switch ($sortkey) {
         case PCAST_DATE_UPDATED:
-
             // URLs.
             $url1 = new moodle_url('/mod/pcast/view.php',
                     ['id' => $cm->id, 'mode' => $mode, 'hook' => $hook, 'sortkey' => PCAST_DATE_UPDATED]);
@@ -378,7 +377,6 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
             break;
 
         case PCAST_DATE_CREATED:
-
             // URLs.
             $url1 = new moodle_url('/mod/pcast/view.php',
                 ['id' => $cm->id, 'mode' => $mode, 'hook' => $hook, 'sortkey' => PCAST_DATE_UPDATED]);
@@ -390,20 +388,18 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
             }
 
             // Hyperlinks.
-            $link1 = html_writer::tag('a', $strsortlastupdate, ['href' => $url1, 'title' => $strsortlastupdate.' '.$asc]);
-            $link2 = html_writer::tag('a', $strsortcreation.$icon, ['href' => $url2, 'title' => $strsortcreation.' '.$strchangeto]);
+            $link1 = html_writer::tag('a', $strsortlastupdate, ['href' => $url1, 'title' => $strsortlastupdate . ' ' . $asc]);
+            $link2 = html_writer::tag('a', $strsortcreation.$icon, ['href' => $url2, 'title' => $strsortcreation . ' ' . $strchangeto]);
 
             // Output.
-            $html = html_writer::tag('span', get_string('current', 'pcast', $strsortcreation .' ' . $currentorder),
-                ['class' => 'accesshide']);
-            $html .= $strsortby.$strsep;
+            $html = html_writer::tag('span', get_string('current', 'pcast', $strsortcreation . ' ' . $currentorder), ['class' => 'accesshide']);
+            $html .= $strsortby . $strsep;
             $html .= $link1 . ' | ';
             $html .= html_writer::tag('span', $link2, ['class' => 'pcast-bold']);
 
             break;
 
         case PCAST_AUTHOR_FNAME:
-
             // URLs.
             $url1 = new moodle_url('/mod/pcast/view.php',
                     ['id' => $cm->id, 'mode' => $mode, 'hook' => $hook, 'sortkey' => PCAST_AUTHOR_LNAME]);
@@ -415,20 +411,19 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
             }
 
             // Hyperlinks.
-            $link1 = html_writer::tag('a', $strsortlname, ['href' => $url1, 'title' => $strsortlname.' '.$asc]);
-            $link2 = html_writer::tag('a', $strsortfname.$icon, ['href' => $url2, 'title' => $strsortfname.' '.$strchangeto]);
+            $link1 = html_writer::tag('a', $strsortlname, ['href' => $url1, 'title' => $strsortlname . ' ' . $asc]);
+            $link2 = html_writer::tag('a', $strsortfname.$icon, ['href' => $url2, 'title' => $strsortfname . ' ' . $strchangeto]);
 
             // Output.
             $html = html_writer::tag('span', get_string('current', 'pcast', $strsortlname . ' ' .
                     $currentorder), ['class' => 'accesshide']);
-            $html .= $strsortby.$strsep;
+            $html .= $strsortby . $strsep;
             $html .= $link1 . ' | ';
             $html .= html_writer::tag('span', $link2, ['class' => 'pcast-bold']);
 
             break;
 
         case PCAST_AUTHOR_LNAME:
-
             // URLs.
             $url1 = new moodle_url('/mod/pcast/view.php',
                     ['id' => $cm->id, 'mode' => $mode, 'hook' => $hook, 'sortkey' => PCAST_AUTHOR_LNAME]);
@@ -446,19 +441,21 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
                      ['href' => $url2, 'title' => $strsortfname . ' ' . $asc]);
 
             // Output.
-            $html = html_writer::tag('span', get_string('current',
+            $html = html_writer::tag(
+                    'span', 
+                    get_string('current',
                     'pcast',
                     $strsortfname . ' ' . $currentorder),
-                    ['class' => 'accesshide']);
-            
-            $html .= $strsortby.$strsep;
+                    ['class' => 'accesshide']
+                    );
+
+            $html .= $strsortby . $strsep;
             $html .= $link1 . ' | ';
             $html .= html_writer::tag('span', $link2, ['class' => 'pcast-bold']);
 
             break;
 
         default:
-
             $html = '';
     }
 
@@ -499,21 +496,20 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
     $sql .= " WHERE p.pcastid = ? AND (p.approved =? OR p.userid =? )";
 
     if (empty($hook) || ($hook == 'ALL')) {
-
-        $sql .= " ORDER BY ". $sort;
+        $sql .= " ORDER BY " . $sort;
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '1', $USER->id));
     } else if ($hook == 'SPECIAL') {
         // Match Other Characters.
-        $sql .= " AND (". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
+        $sql .= " AND (". $DB->sql_like('p.name', '?', false) . "
+                 OR " . $DB->sql_like('p.name', '?', false) . "
+                 OR " . $DB->sql_like('p.name', '?', false) . "
+                 OR " . $DB->sql_like('p.name', '?', false) . "
+                 OR " . $DB->sql_like('p.name', '?', false) . "
+                 OR " . $DB->sql_like('p.name', '?', false) . "
+                 OR " . $DB->sql_like('p.name', '?', false) . "
+                 OR " . $DB->sql_like('p.name', '?', false) . "
+                 OR " . $DB->sql_like('p.name', '?', false) . "
+                 OR " . $DB->sql_like('p.name', '?', false) . "
                  )
                 ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql, [$pcast->id, '1', $USER->id,
@@ -521,7 +517,7 @@ function pcast_display_standard_episodes($pcast, $cm, $groupmode = 0, $hook='', 
                                          '6%', '7%', '8%', '9%', '0%',
                                          ]);
     } else {
-        $sql .= " and ". $DB->sql_like('p.name', '?', false)." ORDER BY $sort";
+        $sql .= " and " . $DB->sql_like('p.name', '?', false) . " ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '1', $USER->id, $hook.'%'));
     }
 
@@ -603,7 +599,6 @@ function pcast_episode_allowed_viewing($episode, $cm, $groupmode) {
     if (isset($members[$episode->userid]->id) && ($members[$episode->userid]->id == $episode->userid)) {
         // Member of the group.
         return true;
-
     } else {
         // Not a member.
         return false;
@@ -640,13 +635,11 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook = PC
     if ($hook == PCAST_SHOW_ALL_CATEGORIES) {
         $sql .= " ORDER BY cat.name, ncat.name, p.name ASC";
         $episodes = $DB->get_records_sql($sql, [$pcast->id, '1', $USER->id]);
-
     } else if ($hook == PCAST_SHOW_NOT_CATEGORISED) {
         $sql .= " AND
                 p.topcategory = ?
                 ORDER BY p.name ASC";
         $episodes = $DB->get_records_sql($sql, [$pcast->id, '1', $USER->id, '0']);
-
     } else {
         $category = new stdClass();
         $category->category = $hook;
@@ -656,7 +649,6 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook = PC
                     p.topcategory = ?
                     ORDER BY cat.name, ncat.name, p.name ASC";
             $episodes = $DB->get_records_sql($sql, [$pcast->id, '1', $USER->id, $category->topcategory]);
-
         } else {
             $sql .= " AND
                     p.nestedcategory = ?
@@ -704,8 +696,7 @@ function pcast_display_category_episodes($pcast, $cm, $groupmode = 0, $hook = PC
  * @param string $sortorder
  * @param int $page
  */
-function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='',
-                                     $sortkey = PCAST_DATE_CREATED, $sortorder='desc', $page=0) {
+function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook = '', $sortkey = PCAST_DATE_CREATED, $sortorder = 'desc', $page = 0) {
     global $DB, $USER;
 
     $context = context_module::instance($cm->id);
@@ -782,7 +773,7 @@ function pcast_display_date_episodes($pcast, $cm, $groupmode = 0, $hook='',
  * @param string $sortorder
  * @param int $page
  */
-function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc', $page = 0) {
+function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook = '', $sortkey = '', $sortorder = 'asc', $page = 0) {
     global $DB, $USER;
 
     $context = context_module::instance($cm->id);
@@ -883,7 +874,7 @@ function pcast_display_author_episodes($pcast, $cm, $groupmode = 0, $hook='', $s
  * @param string $sortorder
  * @param int $page
  */
-function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', $sortkey='', $sortorder='asc', $page = 0) {
+function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook = '', $sortkey = '', $sortorder = 'asc', $page = 0) {
     global $DB;
 
     $context = context_module::instance($cm->id);
@@ -911,21 +902,21 @@ function pcast_display_approval_episodes($pcast, $cm, $groupmode = 0, $hook='', 
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '0'));
     } else if ($hook == 'SPECIAL') {
         // Match Other Characters.
-        $sql .= " AND (". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
-                 OR ". $DB->sql_like('p.name', '?', false)."
+        $sql .= " AND (" . $DB->sql_like('p.name', '?', false)."
+                 OR " . $DB->sql_like('p.name', '?', false). "
+                 OR " . $DB->sql_like('p.name', '?', false). "
+                 OR " . $DB->sql_like('p.name', '?', false). "
+                 OR " . $DB->sql_like('p.name', '?', false). "
+                 OR " . $DB->sql_like('p.name', '?', false). "
+                 OR " . $DB->sql_like('p.name', '?', false). "
+                 OR " . $DB->sql_like('p.name', '?', false). "
+                 OR " . $DB->sql_like('p.name', '?', false). "
+                 OR " . $DB->sql_like('p.name', '?', false). "
                  )
                 ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '0', '1%', '2%', '3%', '4%', '5%', '6%', '7%', '8%', '9%', '0%'));
     } else {
-        $sql .= " and ". $DB->sql_like('p.name', '?', false)." ORDER BY $sort";
+        $sql .= " and " . $DB->sql_like('p.name', '?', false) . " ORDER BY $sort";
         $episodes = $DB->get_records_sql($sql, array($pcast->id, '0', $hook.'%'));
     }
 
@@ -1026,8 +1017,8 @@ function pcast_display_episode_brief($episode, $cm, $showmedia= true, $showlinks
     $context = context_module::instance($cm->id);
 
     $strsep = get_string('labelsep', 'langconfig');
-    $html = html_writer::start_tag('div', ['class' => 'no-overflow']). "\n";
-    $html .= html_writer::start_tag('div', ['class' => 'pcast-episode']). "\n";
+    $html = html_writer::start_tag('div', ['class' => 'no-overflow']) . "\n";
+    $html .= html_writer::start_tag('div', ['class' => 'pcast-episode']) . "\n";
 
     $table = new html_table();
     $table->cellpadding = '5';
