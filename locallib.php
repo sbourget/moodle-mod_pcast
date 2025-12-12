@@ -470,7 +470,7 @@ function pcast_print_sorting_links($cm, $mode, $sortkey = '', $sortorder = '', $
 
             // Output.
             $html = html_writer::tag(
-                'span', 
+                'span',
                 get_string('current', 'pcast', $strsortfname . ' ' . $currentorder),
                 ['class' => 'accesshide']
             );
@@ -1126,12 +1126,12 @@ function pcast_display_episode_brief($episode, $cm, $showmedia = true, $showlink
             // Approve link.
             $link .= ' | ' . "\n";
             $url = new moodle_url(
-                '/mod/pcast/approveepisode.php', 
+                '/mod/pcast/approveepisode.php',
                 ['eid' => $episode->id, 'mode' => PCAST_APPROVAL_VIEW, 'sesskey' => sesskey()]
             );
             $link .= html_writer::tag(
                 'a',
-                get_string('approve'), 
+                get_string('approve'),
                 ['href' => $url, 'title' => get_string('approvethisepisode', 'pcast')]
             );
         } else {
@@ -1534,7 +1534,7 @@ function pcast_get_episode_rating_count($episode, $cm) {
     $context = context_module::instance($cm->id);
     if (
         $count = $DB->count_records(
-            'rating', 
+            'rating',
             [
                 'itemid' => $episode->id,
                 'scaleid' => $episode->scale,

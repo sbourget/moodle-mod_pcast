@@ -81,17 +81,17 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
 
         // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
-            $episode->set_source_sql('
-                SELECT *
-                  FROM {pcast_episodes}
-                 WHERE pcastid = ?',
+            $episode->set_source_sql(
+                'SELECT *
+                   FROM {pcast_episodes}
+                  WHERE pcastid = ?',
                 [backup::VAR_PARENTID]
             );
 
-            $view->set_source_sql('
-                SELECT *
-                  FROM {pcast_views}
-                 WHERE episodeid = ?',
+            $view->set_source_sql(
+                'SELECT *
+                   FROM {pcast_views}
+                  WHERE episodeid = ?',
                 [backup::VAR_PARENTID]
             );
 
@@ -108,10 +108,12 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
                                         JOIN {tag_instance} ti ON ti.tagid = t.id
                                        WHERE ti.itemtype = ?
                                          AND ti.component = ?
-                                         AND ti.contextid = ?', [
-                    backup_helper::is_sqlparam('pcast_episodes'),
-                    backup_helper::is_sqlparam('mod_pcast'),
-                    backup::VAR_CONTEXTID],
+                                         AND ti.contextid = ?', 
+                    [
+                        backup_helper::is_sqlparam('pcast_episodes'),
+                        backup_helper::is_sqlparam('mod_pcast'),
+                        backup::VAR_CONTEXTID
+                    ],
                 );
             }
         }

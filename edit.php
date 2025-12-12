@@ -71,7 +71,6 @@ if ($id) { // If the entry is specified.
                 "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id"
             );
         }
-
     } else {
         // Not A Teacher.
         if (!has_capability('mod/pcast:write', $context)) {
