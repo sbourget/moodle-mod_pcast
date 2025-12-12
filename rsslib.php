@@ -153,7 +153,11 @@ function pcast_rss_get_feed($context, $args) {
                 $rec->episodeid
             );
 
-            $item->description = format_text($item->description, 'HTML', null, $pcast->course);
+            $item->description = format_text(
+                $item->description,
+                'HTML',
+                ['context' => $modcontext, 'trusted' => true]
+            );
 
             if ($pcast->userscancategorize) {
                 // TODO: This is very inefficient (this generates 2 DB queries per entry).
