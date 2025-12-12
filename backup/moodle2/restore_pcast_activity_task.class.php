@@ -73,7 +73,6 @@ class restore_pcast_activity_task extends restore_activity_task {
         $rules[] = new restore_decode_rule('PCASTINDEX', '/mod/pcast/index.php?id=$1', 'course');
 
         return $rules;
-
     }
 
     /**

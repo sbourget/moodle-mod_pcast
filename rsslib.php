@@ -505,7 +505,8 @@ function pcast_rss_add_items($context, $items, $itunes = false, $currentgroup = 
     if (!empty($items)) {
         foreach ($items as $item) {
             // Only display group members entries in regular courses, Display everything when used on the front page.
-            if ((isset($members[$item->userid]->id) && ($members[$item->userid]->id == $item->userid))
+            if (
+                (isset($members[$item->userid]->id) && ($members[$item->userid]->id == $item->userid))
                 || ($item->course === SITEID)
             ) {
                 $result .= rss_start_tag('item', 2, true);

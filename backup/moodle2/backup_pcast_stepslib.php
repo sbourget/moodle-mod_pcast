@@ -56,10 +56,10 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $ratings = new backup_nested_element('ratings');
 
         $rating = new backup_nested_element('rating', ['id'], [
-            'component', 'ratingarea', 'scaleid', 'value', 'userid', 'timecreated', 'timemodified',]);
+            'component', 'ratingarea', 'scaleid', 'value', 'userid', 'timecreated', 'timemodified']);
 
         $tags = new backup_nested_element('tags');
-        $tag = new backup_nested_element('tag', ['id'], ['itemid', 'rawname',]);
+        $tag = new backup_nested_element('tag', ['id'], ['itemid', 'rawname']);
 
         // Build the tree.
 
@@ -82,16 +82,18 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
             $episode->set_source_sql('
-            SELECT *
-              FROM {pcast_episodes}
-             WHERE pcastid = ?',
-            [backup::VAR_PARENTID]);
+                SELECT *
+                  FROM {pcast_episodes}
+                 WHERE pcastid = ?',
+                [backup::VAR_PARENTID]
+            );
 
             $view->set_source_sql('
-            SELECT *
-              FROM {pcast_views}
-             WHERE episodeid = ?',
-            [backup::VAR_PARENTID]);
+                SELECT *
+                  FROM {pcast_views}
+                 WHERE episodeid = ?',
+                [backup::VAR_PARENTID]
+            );
 
             $rating->set_source_table('rating', ['contextid'  => backup::VAR_CONTEXTID,
                                                  'itemid'     => backup::VAR_PARENTID,
@@ -110,9 +112,8 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
                     backup_helper::is_sqlparam('pcast_episodes'),
                     backup_helper::is_sqlparam('mod_pcast'),
                     backup::VAR_CONTEXTID],
-                    );
+                );
             }
-
         }
 
         // Define id annotations.

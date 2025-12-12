@@ -76,9 +76,11 @@ class standard_action_bar implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         // Show the add entry button if allowed (usercan post + write or write + manage  or write + approve caps).
-        if (((has_capability('mod/pcast:write', $this->context)) && ($this->module->userscanpost))
+        if (
+            ((has_capability('mod/pcast:write', $this->context)) && ($this->module->userscanpost))
             || (has_capability('mod/pcast:write', $this->context) && has_capability('mod/pcast:manage', $this->context))
-            || (has_capability('mod/pcast:write', $this->context) && has_capability('mod/pcast:approve', $this->context))) {
+            || (has_capability('mod/pcast:write', $this->context) && has_capability('mod/pcast:approve', $this->context))
+        ) {
             return [
                 'addnewbutton' => $this->create_add_button($output),
                 'tools' => $this->get_additional_tools($output),
@@ -97,7 +99,8 @@ class standard_action_bar implements renderable, templatable {
      * @return \stdClass
      */
     private function create_add_button(renderer_base $output): \stdClass {
-        $btn = new single_button(new moodle_url('/mod/pcast/edit.php', ['cmid' => $this->cm->id]),
+        $btn = new single_button(
+            new moodle_url('/mod/pcast/edit.php', ['cmid' => $this->cm->id]),
             get_string('addnewepisode', 'pcast'),
             'post',
             single_button::BUTTON_PRIMARY

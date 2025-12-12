@@ -35,7 +35,6 @@ if ($cmid) {
     $cm         = get_coursemodule_from_id('pcast', $cmid, 0, false, MUST_EXIST);
     $course     = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
     $pcast      = $DB->get_record('pcast', ['id' => $cm->instance], '*', MUST_EXIST);
-
 } else {
     throw new moodle_exception('invalidcmorid', 'pcast');
 }
@@ -52,7 +51,6 @@ $PAGE->set_context($context);
 
 if ($id) { // If the entry is specified.
     if (!has_capability('mod/pcast:write', $context)) {
-
         throw new moodle_exception('noeditprivlidges', 'pcast', new moodle_url('/mod/pcast/view.php', ['id' => $cmid]));
     }
 
@@ -67,24 +65,36 @@ if ($id) { // If the entry is specified.
         // Teacher.
         if (!has_capability('mod/pcast:write', $context)) {
             // No permissions.
-            throw new moodle_exception('errcannotedit', 'pcast',
-                    "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id");
+            throw new moodle_exception(
+                'errcannotedit',
+                'pcast',
+                "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id"
+            );
         }
 
     } else {
         // Not A Teacher.
         if (!has_capability('mod/pcast:write', $context)) {
             // No permissions.
-            throw new moodle_exception('errcannotedit', 'pcast',
-                    "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id");
+            throw new moodle_exception(
+                'errcannotedit',
+                'pcast',
+                "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id"
+            );
         } else if ($episode->userid != $USER->id) {
             // Not the origional author.
-            throw new moodle_exception('errcannoteditothers', 'pcast',
-                    "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id");
+            throw new moodle_exception(
+                'errcannoteditothers',
+                'pcast',
+                "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id"
+            );
         } else if (!$ineditperiod) {
             // After the editing period.
-            throw new moodle_exception('erredittimeexpired', 'pcast',
-                    "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id");
+            throw new moodle_exception(
+                'erredittimeexpired',
+                'pcast',
+                "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id"
+            );
         }
     }
 } else { // A new entry.
@@ -115,9 +125,16 @@ $episode->mediafile = $draftitemid;
 $episode->cmid = $cm->id;
 
 $draftideditor = file_get_submitted_draft_itemid('summary');
-$currenttext = file_prepare_draft_area($draftideditor, $context->id, 'mod_pcast', 'summary',
-                                       $episode->id, ['subdirs' => true], $episode->summary);
-$episode->summary = array('text' => $currenttext, 'format' => $episode->summaryformat, 'itemid' => $draftideditor);
+$currenttext = file_prepare_draft_area(
+    $draftideditor,
+    $context->id,
+    'mod_pcast',
+    'summary',
+    $episode->id,
+    ['subdirs' => true],
+    $episode->summary
+);
+$episode->summary = ['text' => $currenttext, 'format' => $episode->summaryformat, 'itemid' => $draftideditor];
 
 // Create the form and set the initial data.
 $mform = new mod_pcast_entry_form(null, ['current' => $episode, 'cm' => $cm, 'pcast' => $pcast, 'context' => $context]);
@@ -180,7 +197,6 @@ if ($mform->is_cancelled()) {
     $fs = get_file_storage();
     if ($files = $fs->get_area_files($context->id, 'mod_pcast', 'episode', $episode->id, "timemodified", false)) {
         foreach ($files as $file) {
-
             $target = $file->copy_content_to_temp();
             $mediainfo = pcast_get_media_information($target);
             if (!empty($mediainfo['playtime_string'])) {
@@ -190,8 +206,15 @@ if ($mform->is_cancelled()) {
     }
 
     // Save files in summary field and re-write hyperlinks.
-    $episode->summary = file_save_draft_area_files($draftideditor, $context->id, 'mod_pcast', 'summary',
-                                          $episode->id, ['subdirs' => true], $episode->summary);
+    $episode->summary = file_save_draft_area_files(
+        $draftideditor,
+        $context->id,
+        'mod_pcast',
+        'summary',
+        $episode->id,
+        ['subdirs' => true],
+        $episode->summary
+    );
 
     // Store the updated value values.
     $DB->update_record('pcast_episodes', $episode);

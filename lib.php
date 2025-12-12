@@ -97,12 +97,11 @@ function pcast_supports($feature) {
         case FEATURE_RATE:
             return true;
         case FEATURE_MOD_PURPOSE:
-             return MOD_PURPOSE_COLLABORATION;
+            return MOD_PURPOSE_COLLABORATION;
         default:
             return null;
     }
 }
-
 
 /**
  * Given an object containing all the necessary data,
@@ -470,12 +469,15 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
     $userfieldsapi = \core_user\fields::for_name();
     $allnamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
 
-    if (!$episodes = $DB->get_records_sql("SELECT e.id, e.name, e.approved, e.timemodified, e.pcastid,
-                                                  e.userid, $allnamefields
-                                             FROM {pcast_episodes} e
-                                             JOIN {user} u ON u.id = e.userid
-                                            WHERE e.pcastid IN ($plist) AND e.timemodified > ?
-                                         ORDER BY e.timemodified ASC", [$timestart])
+    if (!$episodes = $DB->get_records_sql(
+        "SELECT e.id, e.name, e.approved, e.timemodified, e.pcastid,
+                e.userid, $allnamefields
+           FROM {pcast_episodes} e
+           JOIN {user} u ON u.id = e.userid
+          WHERE e.pcastid IN ($plist) AND e.timemodified > ?
+          ORDER BY e.timemodified ASC",
+        [$timestart]
+        )
     ) {
         return false;
     }
@@ -674,11 +676,11 @@ function pcast_extend_navigation($navigation, $course, $module, $cm) {
     $navigation->add(
         get_string('standardview', 'pcast'),
         new moodle_url('/mod/pcast/view.php', ['id' => $cm->id, 'mode' => PCAST_STANDARD_VIEW])
-        );
+    );
     if ($module->userscancategorize) {
         $navigation->add(
-        get_string('categoryview', 'pcast'),
-        new moodle_url('/mod/pcast/view.php', ['id' => $cm->id, 'mode' => PCAST_CATEGORY_VIEW])
+            get_string('categoryview', 'pcast'),
+            new moodle_url('/mod/pcast/view.php', ['id' => $cm->id, 'mode' => PCAST_CATEGORY_VIEW])
         );
     }
     $navigation->add(
@@ -720,7 +722,8 @@ function pcast_extend_settings_navigation(settings_navigation $settings, navigat
         (has_capability('mod/pcast:manage', $PAGE->cm->context) || has_capability('mod/pcast:approve', $PAGE->cm->context))
     ) {
         // This is a teacher.
-        $node = $pcastnode->add(get_string('addnewepisode', 'pcast'),
+        $node = $pcastnode->add(
+            get_string('addnewepisode', 'pcast'),
             new moodle_url('/mod/pcast/edit.php', ['cmid' => $PAGE->cm->id])
         );
         $node->set_show_in_secondary_navigation(false);
@@ -1567,7 +1570,7 @@ function pcast_get_coursemodule_info($coursemodule) {
 function mod_pcast_get_completion_active_rule_descriptions($cm) {
     // Values will be present in cm_info, and we assume these are up to date.
     if (
-        !$cm instanceof cm_info || 
+        !$cm instanceof cm_info ||
         !isset($cm->customdata['customcompletionrules']) ||
         $cm->completion != COMPLETION_TRACKING_AUTOMATIC
     ) {

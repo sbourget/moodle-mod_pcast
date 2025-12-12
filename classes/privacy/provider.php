@@ -28,8 +28,8 @@ use core_privacy\local\request\approved_contextlist;
 use core_privacy\local\request\approved_userlist;
 use core_privacy\local\request\contextlist;
 use core_privacy\local\request\deletion_criteria;
-use core_privacy\local\request\userlist;
 use core_privacy\local\request\helper;
+use core_privacy\local\request\userlist;
 use core_privacy\local\request\writer;
 
 defined('MOODLE_INTERNAL') || die();
@@ -259,12 +259,14 @@ class provider implements
             $context = \context_module::instance($lastcmid);
 
             // Export files added on the pcast episode definition field.
-            $summary = format_text(writer::with_context($context)->rewrite_pluginfile_urls(
-                $path,
-                'mod_pcast',
-                'episode',
-                $record->episodeid,
-                $record->summary),
+            $summary = format_text(
+                writer::with_context($context)->rewrite_pluginfile_urls(
+                    $path,
+                    'mod_pcast',
+                    'episode',
+                    $record->episodeid,
+                    $record->summary
+                ),
                 $record->summaryformat
             );
 
@@ -368,7 +370,6 @@ class provider implements
 
             $episodes = $DB->get_records('pcast_episodes', ['pcastid' => $instanceid]);
             foreach ($episodes as $episode) {
-
                 // Delete related episode views.
                 $DB->delete_records('pcast_views', ['episodeid' => $episode->id]);
             }
@@ -406,7 +407,6 @@ class provider implements
         $userid = $contextlist->get_user()->id;
         foreach ($contextlist->get_contexts() as $context) {
             if ($context->contextlevel == CONTEXT_MODULE) {
-
                 $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
                 $DB->record_exists('pcast', ['id' => $context->instanceid]);
 

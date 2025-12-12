@@ -81,19 +81,20 @@ $views = false;
 
 if (($episode->userscancomment) || ($episode->assessed)) {
     // Can they use comments?
-    if (($CFG->usecomments) &&
-        ($episode->userscancomment) && ((has_capability('moodle/comment:post', $context)) || (has_capability('moodle/comment:view', $context)))
+    if (
+        ($CFG->usecomments) && ($episode->userscancomment) &&
+        ((has_capability('moodle/comment:post', $context)) || (has_capability('moodle/comment:view', $context)))
     ) {
         $comment = true;
     }
     // Can they use ratings?
-    if (($episode->assessed) &&
+    if (
+        ($episode->assessed) &&
         ((has_capability('mod/pcast:rate', $context)) ||
         ((has_capability('mod/pcast:viewrating', $context)) && ($episode->userid == $USER->id)) ||
          (has_capability('mod/pcast:viewallratings', $context)) ||
          (has_capability('mod/pcast:viewanyrating', $context)))
     ) {
-
         $rate = true;
     }
 }

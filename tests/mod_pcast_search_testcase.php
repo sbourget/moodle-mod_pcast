@@ -192,7 +192,8 @@ class mod_pcast_search_testcase extends \advanced_testcase {
         $pcast1 = self::getDataGenerator()->create_module('pcast', $record);
         $teacherapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content($pcast1);
         $teachernotapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content(
-            $pcast1,['approved' => false]
+            $pcast1,
+            ['approved' => false]
         );
 
         // Entries need to be approved and created by student.
@@ -200,7 +201,8 @@ class mod_pcast_search_testcase extends \advanced_testcase {
         $this->setUser($user2);
         $studentapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content($pcast2);
         $studentnotapproved = self::getDataGenerator()->get_plugin_generator('mod_pcast')->create_content(
-            $pcast2,['approved' => false]
+            $pcast2,
+            ['approved' => false]
         );
 
         $this->setUser($user2);
