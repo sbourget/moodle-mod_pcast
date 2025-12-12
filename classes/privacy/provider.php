@@ -55,7 +55,7 @@ class provider implements
      * @param collection $items a reference to the collection to use to store the metadata.
      * @return collection the updated collection of metadata items.
      */
-    public static function get_metadata(collection $items) : collection {
+    public static function get_metadata(collection $items): collection {
         $items->add_database_table(
             'pcast_episodes',
             [
@@ -105,7 +105,7 @@ class provider implements
      * @param int $userid the userid.
      * @return contextlist the list of contexts containing user info for the user.
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         $ratingquery = \core_rating\privacy\provider::get_sql_join('r', 'mod_pcast', 'episode', 'pe.id', $userid);
 
         $sql = "SELECT c.id
@@ -198,7 +198,7 @@ class provider implements
 
         $user = $contextlist->get_user();
 
-        list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
+        [$contextsql, $contextparams] = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
         $sql = "SELECT pe.id as episodeid,
                        cm.id AS cmid,
                        pe.userid,
@@ -259,8 +259,14 @@ class provider implements
             $context = \context_module::instance($lastcmid);
 
             // Export files added on the pcast episode definition field.
-            $summary = format_text(writer::with_context($context)->rewrite_pluginfile_urls($path, 'mod_pcast',
-                'episode',  $record->episodeid, $record->summary), $record->summaryformat);
+            $summary = format_text(writer::with_context($context)->rewrite_pluginfile_urls(
+                $path,
+                'mod_pcast',
+                'episode',
+                $record->episodeid,
+                $record->summary),
+                $record->summaryformat
+            );
 
             // Export just the files attached to this user episode.
             if ($record->userid == $user->id) {
@@ -272,16 +278,36 @@ class provider implements
             }
 
             // Export associated comments.
-            \core_comment\privacy\provider::export_comments($context, 'mod_pcast', 'pcast_episode',
-                    $record->episodeid, $path, $record->userid != $user->id);
+            \core_comment\privacy\provider::export_comments(
+                $context,
+                'mod_pcast',
+                'pcast_episode',
+                $record->episodeid,
+                $path,
+                $record->userid != $user->id
+            );
 
             // Export associated tags.
-            \core_tag\privacy\provider::export_item_tags($user->id, $context, $path, 'mod_pcast', 'pcast_episodes',
-                    $record->episodeid, $record->userid != $user->id);
+            \core_tag\privacy\provider::export_item_tags(
+                $user->id,
+                $context,
+                $path,
+                'mod_pcast',
+                'pcast_episodes',
+                $record->episodeid,
+                $record->userid != $user->id
+            );
 
             // Export associated ratings.
-            \core_rating\privacy\provider::export_area_ratings($user->id, $context, $path, 'mod_pcast', 'episode',
-                    $record->episodeid, $record->userid != $user->id);
+            \core_rating\privacy\provider::export_area_ratings(
+                $user->id,
+                $context,
+                $path,
+                'mod_pcast',
+                'episode',
+                $record->episodeid,
+                $record->userid != $user->id
+            );
 
             $pcastdata['episodes'][] = [
                 'name'       => $record->name,
@@ -307,8 +333,7 @@ class provider implements
      * @param array $subcontext The location within the current context that this data belongs.
      * @param \stdClass $user the user record
      */
-    protected static function export_pcast_data_for_user(array $pcastdata, \context_module $context,
-                                                            array $subcontext, \stdClass $user) {
+    protected static function export_pcast_data_for_user(array $pcastdata, \context_module $context, array $subcontext, \stdClass $user) {
         // Fetch the generic module data for the pcast.
         $contextdata = helper::get_context_data($context, $user);
         // Merge with pcast data and write it.
@@ -387,7 +412,6 @@ class provider implements
 
                 $episodes = $DB->get_records('pcast_episodes', ['pcastid' => $instanceid, 'userid' => $userid]);
                 foreach ($episodes as $episode) {
-
                     // Delete related episode views.
                     $DB->delete_records('pcast_views', ['episodeid' => $episode->id]);
 
@@ -400,7 +424,6 @@ class provider implements
 
                     // Delete related ratings.
                     \core_rating\privacy\provider::delete_ratings($context, 'mod_pcast', 'episode', $episode->id);
-
                 }
                 // Delete comments.
                 \core_comment\privacy\provider::delete_comments_for_user($contextlist, 'mod_pcast', 'pcast_episode');
@@ -422,7 +445,7 @@ class provider implements
         $context = $userlist->get_context();
         $userids = $userlist->get_userids();
         $instanceid = $DB->get_field('course_modules', 'instance', ['id' => $context->instanceid], MUST_EXIST);
-        list($userinsql, $userinparams) = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
+        [$userinsql, $userinparams] = $DB->get_in_or_equal($userids, SQL_PARAMS_NAMED);
 
         $pcastepisodeswhere = "pcastid = :instanceid AND userid {$userinsql}";
         $userinstanceparams = $userinparams + ['instanceid' => $instanceid];
@@ -440,7 +463,7 @@ class provider implements
             return;
         }
 
-        list($insql, $inparams) = $DB->get_in_or_equal($episodes, SQL_PARAMS_NAMED);
+        [$insql, $inparams] = $DB->get_in_or_equal($episodes, SQL_PARAMS_NAMED);
 
         // Delete related episode views.
         $DB->delete_records_list('pcast_views', 'episodeid', $episodes);
@@ -465,5 +488,4 @@ class provider implements
         $deletewhere = "pcastid = :instanceid AND userid {$userinsql}";
         $DB->delete_records_select('pcast_episodes', $deletewhere, $userinstanceparams);
     }
-
 }

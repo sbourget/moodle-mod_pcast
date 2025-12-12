@@ -38,7 +38,8 @@ $settings->add(new admin_setting_configselect(
     $str,
     0,
     $options
-    ));
+    )
+);
 
 unset($options);
 if (empty($CFG->enablerssfeeds)) {
@@ -52,7 +53,8 @@ $settings->add(new admin_setting_configselect(
     get_string('configenablerssitunes', 'pcast'),
     0,
     $options
-    ));
+    )
+);
 
 unset($options);
 $options = [0 => get_string('no'), 1 => get_string('yes')];
@@ -62,4 +64,5 @@ $settings->add(new admin_setting_configselect(
     get_string('configallowhtmlinsummary', 'pcast'),
     0,
     $options
-    ));
+    )
+);

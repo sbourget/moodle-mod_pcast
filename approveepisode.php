@@ -47,7 +47,7 @@ $url = new moodle_url(
     'mode' => $mode,
     'hook' => $hook,
     'newstate' => $newstate],
-    );
+);
 
 $PAGE->set_url($url);
 $PAGE->set_context($context);

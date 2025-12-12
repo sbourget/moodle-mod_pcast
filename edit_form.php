@@ -70,8 +70,8 @@ class mod_pcast_entry_form extends moodleform {
             'summary',
             get_string('summary', 'pcast'),
             null,
-            ['maxfiles' => EDITOR_UNLIMITED_FILES, 'context' => $context]
-            );
+            ['maxfiles' => EDITOR_UNLIMITED_FILES, 'context' => $context],
+        );
 
         $mform->setType('summary', PARAM_RAW);
         $mform->addRule('summary', get_string('required'), 'required', null, 'client');
@@ -91,7 +91,8 @@ class mod_pcast_entry_form extends moodleform {
             'accepted_types' => pcast_get_supported_file_types($pcast),
             'return_types' => FILE_INTERNAL | FILE_EXTERNAL,
             'returnvalue' => 'ref_id'
-            ]);
+            ],
+        );
 
         $mform->addRule('mediafile', get_string('required'), 'required', null, 'client');
 
@@ -100,13 +101,13 @@ class mod_pcast_entry_form extends moodleform {
         $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));
 
         // Subtitle.
-        $mform->addElement('text', 'subtitle', get_string('subtitle', 'pcast'), array('size' => '64'));
+        $mform->addElement('text', 'subtitle', get_string('subtitle', 'pcast'), ['size' => '64']);
         $mform->addRule('subtitle', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->setType('subtitle', PARAM_NOTAGS);
         $mform->addHelpButton('subtitle', 'subtitle', 'pcast');
 
         // Keywords.
-        $mform->addElement('text', 'keywords', get_string('keywords', 'pcast'), array('size' => '64'));
+        $mform->addElement('text', 'keywords', get_string('keywords', 'pcast'), ['size' => '64']);
         $mform->addRule('keywords', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->setType('keywords', PARAM_NOTAGS);
         $mform->addHelpButton('keywords', 'keywords', 'pcast');
