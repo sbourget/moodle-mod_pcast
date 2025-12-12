@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Page for editing pcast episodes
  *
@@ -24,30 +23,27 @@
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/locallib.php');
-require_once(dirname(__FILE__).'/edit_form.php');
-
+require_once(dirname(__FILE__) . '/lib.php');
+require_once(dirname(__FILE__) . '/locallib.php');
+require_once(dirname(__FILE__) . '/edit_form.php');
 
 $cmid = required_param('cmid', PARAM_INT);            // Course Module ID.
 $id   = optional_param('id', 0, PARAM_INT);           // EntryID.
 
-
 // Check for required stuff.
 if ($cmid) {
     $cm         = get_coursemodule_from_id('pcast', $cmid, 0, false, MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $pcast      = $DB->get_record('pcast', array('id' => $cm->instance), '*', MUST_EXIST);
+    $course     = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+    $pcast      = $DB->get_record('pcast', ['id' => $cm->instance], '*', MUST_EXIST);
 
 } else {
     throw new moodle_exception('invalidcmorid', 'pcast');
 }
 
 require_login($course, false, $cm);
-
 $context = context_module::instance($cm->id);
 
-$url = new moodle_url('/mod/pcast/edit.php', array('cmid' => $cm->id));
+$url = new moodle_url('/mod/pcast/edit.php', ['cmid' => $cm->id]);
 if (!empty($id)) {
     $url->param('id', $id);
 }
@@ -57,10 +53,10 @@ $PAGE->set_context($context);
 if ($id) { // If the entry is specified.
     if (!has_capability('mod/pcast:write', $context)) {
 
-        throw new moodle_exception('noeditprivlidges', 'pcast', new moodle_url('/mod/pcast/view.php', array('id' => $cmid)));
+        throw new moodle_exception('noeditprivlidges', 'pcast', new moodle_url('/mod/pcast/view.php', ['id' => $cmid]));
     }
 
-    if (!$episode = $DB->get_record('pcast_episodes', array('id' => $id, 'pcastid' => $pcast->id))) {
+    if (!$episode = $DB->get_record('pcast_episodes', ['id' => $id, 'pcastid' => $pcast->id])) {
         throw new moodle_exception('invalidentry', 'pcast');
     }
 
@@ -72,7 +68,7 @@ if ($id) { // If the entry is specified.
         if (!has_capability('mod/pcast:write', $context)) {
             // No permissions.
             throw new moodle_exception('errcannotedit', 'pcast',
-                    "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+                    "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id");
         }
 
     } else {
@@ -80,19 +76,17 @@ if ($id) { // If the entry is specified.
         if (!has_capability('mod/pcast:write', $context)) {
             // No permissions.
             throw new moodle_exception('errcannotedit', 'pcast',
-                    "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+                    "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id");
         } else if ($episode->userid != $USER->id) {
             // Not the origional author.
             throw new moodle_exception('errcannoteditothers', 'pcast',
-                    "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+                    "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id");
         } else if (!$ineditperiod) {
             // After the editing period.
             throw new moodle_exception('erredittimeexpired', 'pcast',
-                    "view.php?id=$cm->id&amp;mode=".PCAST_STANDARD_VIEW."&amp;hook=$id");
+                    "view.php?id=$cm->id&amp;mode=" . PCAST_STANDARD_VIEW . "&amp;hook=$id");
         }
-
     }
-
 } else { // A new entry.
     require_capability('mod/pcast:write', $context);
     $episode = new stdClass();
@@ -103,30 +97,37 @@ if ($id) { // If the entry is specified.
 }
 
 $draftitemid = file_get_submitted_draft_itemid('mediafile');
-file_prepare_draft_area($draftitemid, $context->id, 'mod_pcast', 'episode', $episode->id,
-                        array('subdirs' => 0, 'maxbytes' => $pcast->maxbytes, 'maxfiles' => 1,
-                              'accepted_types' => pcast_get_supported_file_types($pcast),
-                              )
-                        );
+file_prepare_draft_area(
+    $draftitemid,
+    $context->id,
+    'mod_pcast',
+    'episode',
+    $episode->id,
+    [
+        'subdirs' => 0,
+        'maxbytes' => $pcast->maxbytes,
+        'maxfiles' => 1,
+        'accepted_types' => pcast_get_supported_file_types($pcast),
+    ]
+);
 
 $episode->mediafile = $draftitemid;
 $episode->cmid = $cm->id;
 
 $draftideditor = file_get_submitted_draft_itemid('summary');
 $currenttext = file_prepare_draft_area($draftideditor, $context->id, 'mod_pcast', 'summary',
-                                       $episode->id, array('subdirs' => true), $episode->summary);
+                                       $episode->id, ['subdirs' => true], $episode->summary);
 $episode->summary = array('text' => $currenttext, 'format' => $episode->summaryformat, 'itemid' => $draftideditor);
 
 // Create the form and set the initial data.
-$mform = new mod_pcast_entry_form(null, array('current' => $episode, 'cm' => $cm, 'pcast' => $pcast, 'context' => $context));
+$mform = new mod_pcast_entry_form(null, ['current' => $episode, 'cm' => $cm, 'pcast' => $pcast, 'context' => $context]);
 
 if ($mform->is_cancelled()) {
     if ($id) {
-        redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$id");
+        redirect("view.php?id=$cm->id&amp;mode=" . PCAST_ADDENTRY_VIEW . "&amp;hook=$id");
     } else {
         redirect("view.php?id=$cm->id");
     }
-
 } else if ($episode = $mform->get_data()) {
     $timenow = time();
 
@@ -161,11 +162,19 @@ if ($mform->is_cancelled()) {
         $isnewentry = false;
     }
 
-    file_save_draft_area_files($episode->mediafile, $context->id, 'mod_pcast', 'episode', $episode->id,
-                            array('subdirs' => 0, 'maxbytes' => $pcast->maxbytes,
-                                  'maxfiles' => 1, 'accepted_types' => pcast_get_supported_file_types($pcast),
-                                  )
-                            );
+    file_save_draft_area_files(
+        $episode->mediafile,
+        $context->id,
+        'mod_pcast',
+        'episode',
+        $episode->id,
+        [
+            'subdirs' => 0,
+            'maxbytes' => $pcast->maxbytes,
+            'maxfiles' => 1,
+            'accepted_types' => pcast_get_supported_file_types($pcast),
+        ]
+    );
 
     // Get the duration if possible.
     $fs = get_file_storage();
@@ -182,7 +191,7 @@ if ($mform->is_cancelled()) {
 
     // Save files in summary field and re-write hyperlinks.
     $episode->summary = file_save_draft_area_files($draftideditor, $context->id, 'mod_pcast', 'summary',
-                                          $episode->id, array('subdirs' => true), $episode->summary);
+                                          $episode->id, ['subdirs' => true], $episode->summary);
 
     // Store the updated value values.
     $DB->update_record('pcast_episodes', $episode);
@@ -193,14 +202,14 @@ if ($mform->is_cancelled()) {
     }
 
     // Refetch the complete entry.
-    $episode = $DB->get_record('pcast_episodes', array('id' => $episode->id));
+    $episode = $DB->get_record('pcast_episodes', ['id' => $episode->id]);
 
     // Trigger event and update completion (if entry was created).
-    $eventparams = array(
+    $eventparams = [
         'context' => $context,
         'objectid' => $episode->id,
-        'other' => array('name' => $episode->name),
-    );
+        'other' => ['name' => $episode->name],
+    ];
 
     if ($isnewentry) {
         $event = \mod_pcast\event\episode_created::create($eventparams);
@@ -219,7 +228,7 @@ if ($mform->is_cancelled()) {
 
     // Calculate hook.
     $hook = core_text::substr($episode->name, 0, 1);
-    redirect("view.php?id=$cm->id&amp;mode=".PCAST_ADDENTRY_VIEW."&amp;hook=$hook");
+    redirect("view.php?id=$cm->id&amp;mode=" . PCAST_ADDENTRY_VIEW . "&amp;hook=$hook");
 }
 
 if (!empty($id)) {

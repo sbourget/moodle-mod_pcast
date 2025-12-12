@@ -104,8 +104,8 @@ if ((!$pcast->userscancategorize) && ($mode == PCAST_CATEGORY_VIEW)) {
 
 switch ($mode) {
     case PCAST_CATEGORY_VIEW:
-         pcast_print_categories_menu($cm, $pcast, $hook);
-    break;
+        pcast_print_categories_menu($cm, $pcast, $hook);
+        break;
     case PCAST_APPROVAL_VIEW:
         if (!$sortkey) {
             $sortkey = PCAST_DATE_CREATED;
@@ -113,8 +113,8 @@ switch ($mode) {
         if (!$sortorder) {
             $sortorder = 'asc';
         }
-         pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
-    break;
+        pcast_print_approval_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+        break;
     case PCAST_AUTHOR_VIEW:
         if (!$sortkey) {
             $sortkey = PCAST_AUTHOR_LNAME;
@@ -122,8 +122,8 @@ switch ($mode) {
         if (!$sortorder) {
             $sortorder = 'asc';
         }
-         pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
-    break;
+        pcast_print_author_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+        break;
     case PCAST_DATE_VIEW:
         if (!$sortkey) {
             $sortkey = PCAST_DATE_UPDATED;
@@ -131,21 +131,21 @@ switch ($mode) {
         if (!$sortorder) {
             $sortorder = 'desc';
         }
-         pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
-    break;
+        pcast_print_date_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+        break;
     case PCAST_STANDARD_VIEW:
     default:
-         pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
-    break;
+        pcast_print_alphabet_menu($cm, $pcast, $mode, $hook, $sortkey, $sortorder);
+        break;
 }
 echo html_writer::empty_tag('hr') . "\n";
 
 // Print the main part of the page (The content).
-echo html_writer::start_tag('div', ['id' => 'pcast-view', 'class' => 'generalbox']). "\n";
-echo html_writer::start_tag('div', ['class' => 'generalboxcontent']). "\n";
+echo html_writer::start_tag('div', ['id' => 'pcast-view', 'class' => 'generalbox']) . "\n";
+echo html_writer::start_tag('div', ['class' => 'generalboxcontent']) . "\n";
 // Next print the list of episodes.
 
-switch($mode) {
+switch ($mode) {
     case PCAST_STANDARD_VIEW:
         pcast_display_standard_episodes($pcast, $cm, $groupmode, $hook, $sortkey, $sortorder, $page);
         break;

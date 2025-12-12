@@ -61,11 +61,11 @@ class backup_pcast_activity_task extends backup_activity_task {
         $base = preg_quote($CFG->wwwroot, "/");
 
         // Link to the list of pcasts.
-        $search = "/(".$base."\/mod\/pcast\/index.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/pcast\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@PCASTINDEX*$2@$', $content);
 
         // Link to pcast view by moduleid.
-        $search = "/(".$base."\/mod\/pcast\/view.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/pcast\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@PCASTVIEWBYID*$2@$', $content);
 
         return $content;

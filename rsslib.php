@@ -115,7 +115,7 @@ function pcast_rss_get_feed($context, $args) {
     }
     // If the cache is more than 60 seconds old and there's new stuff.
     $dontrecheckcutoff = time() - 60;
-    if ( $dontrecheckcutoff > $cachedfilelastmodified && pcast_rss_newstuff($pcast, $cachedfilelastmodified)) {
+    if ($dontrecheckcutoff > $cachedfilelastmodified && pcast_rss_newstuff($pcast, $cachedfilelastmodified)) {
         if (!$recs = $DB->get_records_sql($sql, [], 0, $pcast->rssepisodes)) {
             return null;
         }
@@ -144,7 +144,9 @@ function pcast_rss_get_feed($context, $args) {
             $item->pubdate = $rec->episodetimecreated;
             $item->link = new moodle_url('/mod/pcast/showepisode.php', ['eid' => $rec->episodeid]);
 
-            $item->description = file_rewrite_pluginfile_urls($rec->episodesummary, 'pluginfile.php',
+            $item->description = file_rewrite_pluginfile_urls(
+                $rec->episodesummary,
+                'pluginfile.php',
                 $context->id,
                 'mod_pcast',
                 'summary',
@@ -164,7 +166,6 @@ function pcast_rss_get_feed($context, $args) {
                 }
             }
             $items[] = $item;
-
         }
         // First all rss feeds common headers.
         $url = new moodle_url('/mod/pcast/view.php', ['id' => $cm->id]);
@@ -187,7 +188,7 @@ function pcast_rss_get_feed($context, $args) {
         }
         // Now, if everything is ok, concatenate it.
         if (!empty($header) && !empty($episodes) && !empty($footer)) {
-            $rss = $header.$episodes.$footer;
+            $rss = $header . $episodes . $footer;
 
             // Save the XML contents to file.
             $status = rss_save_file('mod_pcast', $filename, $rss);
@@ -207,7 +208,7 @@ function pcast_rss_get_feed($context, $args) {
  * @param bool $time
  * @return string
  */
-function pcast_rss_get_sql($pcast, $time=0) {
+function pcast_rss_get_sql($pcast, $time = 0) {
     // Do we only want new items?
     if ($time) {
         $time = "AND e.timecreated > $time";
@@ -249,7 +250,6 @@ function pcast_rss_get_sql($pcast, $time=0) {
                   u.id = e.userid AND
                   p.id = pcastid AND
                   e.approved = 1 $time $sort";
-
     } else {
         // Without author name.
         $sql = "SELECT e.id AS episodeid,
@@ -362,7 +362,6 @@ function pcast_rss_header($title = null, $link = null, $description = null, $pca
     }
 
     if ($status) {
-
         // Calculate title, link and description.
         if (empty($title)) {
             $title = format_string($site->fullname);
@@ -394,9 +393,9 @@ function pcast_rss_header($title = null, $link = null, $description = null, $pca
             $result .= rss_full_tag('language', 2, false, substr($USER->lang, 0, 2));
         }
         $today = getdate();
-        $result .= rss_full_tag('copyright', 2, false, '&#169; '. $today['year'] .' '. format_string($site->fullname));
-        $result .= rss_full_tag('lastBuildDate', 2, false, gmdate('D, d M Y H:i:s', $today[0]).' GMT');
-        $result .= rss_full_tag('pubDate', 2, false, gmdate('D, d M Y H:i:s', $today[0]).' GMT');
+        $result .= rss_full_tag('copyright', 2, false, '&#169; ' . $today['year'] . ' ' . format_string($site->fullname));
+        $result .= rss_full_tag('lastBuildDate', 2, false, gmdate('D, d M Y H:i:s', $today[0]) . ' GMT');
+        $result .= rss_full_tag('pubDate', 2, false, gmdate('D, d M Y H:i:s', $today[0]) . ' GMT');
 
         // Custom image handling.
         $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
@@ -412,7 +411,8 @@ function pcast_rss_header($title = null, $link = null, $description = null, $pca
                 $image->filename = $file->get_filename();
                 $image->type = $file->get_mimetype();
                 $image->size = $file->get_filesize();
-                $image->url = file_encode_url($CFG->wwwroot . '/pluginfile.php',
+                $image->url = file_encode_url(
+                    $CFG->wwwroot . '/pluginfile.php',
                     '/' . $context->id . '/mod_pcast/logo/0/' . $image->filename
                 );
             }
@@ -505,8 +505,9 @@ function pcast_rss_add_items($context, $items, $itunes = false, $currentgroup = 
     if (!empty($items)) {
         foreach ($items as $item) {
             // Only display group members entries in regular courses, Display everything when used on the front page.
-            if (((isset($members[$item->userid]->id) && ($members[$item->userid]->id == $item->userid))
-                                                     || ($item->course === SITEID))) {
+            if ((isset($members[$item->userid]->id) && ($members[$item->userid]->id == $item->userid))
+                || ($item->course === SITEID)
+            ) {
                 $result .= rss_start_tag('item', 2, true);
                 // Include the category if exists (some rss readers will use it to group items).
                 if (isset($item->topcategory)) {
@@ -523,7 +524,8 @@ function pcast_rss_add_items($context, $items, $itunes = false, $currentgroup = 
                 // Rewrite the URLs for the description fields.
                 if ($pcastconfig->allowhtmlinsummary) {
                     // Re-write the url paths to be valid.
-                    $description = file_rewrite_pluginfile_urls($item->description,
+                    $description = file_rewrite_pluginfile_urls(
+                        $item->description,
                         'pluginfile.php',
                         $context->id,
                         'mod_pcast',
@@ -596,7 +598,8 @@ function pcast_rss_add_enclosure($item) {
             $enclosure->filename = $file->get_filename();
             $enclosure->type = $file->get_mimetype();
             $enclosure->size = $file->get_filesize();
-            $enclosure->url = file_encode_url($CFG->wwwroot . '/pluginfile.php',
+            $enclosure->url = file_encode_url(
+                $CFG->wwwroot . '/pluginfile.php',
                 '/' . $context->id . '/mod_pcast/episode/' . $item->id . '/' . $enclosure->filename
             );
         }
@@ -690,11 +693,11 @@ function pcast_build_pcast_file($pcast, $url) {
  * @param string $contents the data to be written to the file
  * @param bool $expandfilename used to get the full file name.
  */
-function pcast_rss_save_file($componentname, $filename, $contents, $expandfilename=true) {
+function pcast_rss_save_file($componentname, $filename, $contents, $expandfilename = true) {
 
     $status = true;
 
-    if (! $basedir = make_cache_directory ('rss/' . $componentname)) {
+    if (!$basedir = make_cache_directory('rss/' . $componentname)) {
         // File Cannot be created, so error out.
         $status = false;
     }

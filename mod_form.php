@@ -27,8 +27,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/course/moodleform_mod.php');
-require_once(dirname(__FILE__).'/locallib.php');
+require_once($CFG->dirroot . '/course/moodleform_mod.php');
+require_once(dirname(__FILE__) . '/locallib.php');
 
 /**
  * The main pcast configuration form
@@ -71,8 +71,13 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addHelpButton('maxbytes', 'maxattachmentsize', 'pcast');
         $mform->setDefault('maxbytes', $COURSE->maxbytes);
 
-        $mform->addElement('filetypes', 'allowedfiletypes', get_string('allowedfiletypes', 'pcast'),
-             ['onlytypes' => ['html_audio', 'web_audio', 'html_video', 'web_video'], 'allowunknown' => true]);
+        $mform->addElement(
+            'filetypes',
+            'allowedfiletypes',
+            get_string('allowedfiletypes', 'pcast'),
+            ['onlytypes' => ['html_audio', 'web_audio', 'html_video', 'web_video'], 'allowunknown' => true]
+        );
+
         $mform->addHelpButton('allowedfiletypes', 'allowedfiletypes', 'pcast');
         $mform->setDefault('allowedfiletypes', 'web_audio,web_video,html_video,html_audio');
 
@@ -133,7 +138,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->addRule('subtitle', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
             // Owner.
-            $ownerlist = array();
+            $ownerlist = [];
             $context = context_course::instance($COURSE->id);
             if ($owners = get_users_by_capability($context, 'mod/pcast:manage', 'u.*', 'u.lastaccess')) {
                 foreach ($owners as $owner) {
@@ -214,12 +219,13 @@ class mod_pcast_mod_form extends moodleform_mod {
         // Images.
         $mform->addElement('header', 'images', get_string('image', 'pcast'));
 
-        $mform->addElement('filemanager', 'image', get_string('imagefile', 'pcast'), null,
-            array('subdirs' => 0,
-                'maxfiles' => 1,
-                'filetypes' => ['jpeg', 'png'],
-                'returnvalue' => 'ref_id'),
-            );
+        $mform->addElement(
+            'filemanager',
+            'image',
+            get_string('imagefile', 'pcast'),
+            null,
+            ['subdirs' => 0, 'maxfiles' => 1, 'filetypes' => ['jpeg', 'png'], 'returnvalue' => 'ref_id'],
+        );
 
         // Image Size (Height).
         $size = [];
@@ -255,7 +261,6 @@ class mod_pcast_mod_form extends moodleform_mod {
         // Add standard elements, common to all modules.
         $this->standard_coursemodule_elements();
         $this->add_action_buttons();
-
     }
 
     /**
@@ -273,7 +278,6 @@ class mod_pcast_mod_form extends moodleform_mod {
 
             // Convert topcategory and nested to a single category.
             $defaultvalues['category'] = (int)$defaultvalues['topcategory'] * 1000 + (int)$defaultvalues['nestedcategory'];
-
         }
 
         // Set up the completion checkboxes which aren't part of standard data.
@@ -300,13 +304,22 @@ class mod_pcast_mod_form extends moodleform_mod {
         $completionepisodesenabled = 'completionepisodesenabled' . $suffix;
         $completionepisodesgroup = 'completionepisodesgroup' . $suffix;
 
-        $group = array();
-        $group[] =& $mform->createElement('checkbox', $completionepisodesenabled, '',
-                get_string('completionepisodes', 'pcast'));
+        $group = [];
+        $group[] =& $mform->createElement(
+            'checkbox',
+            $completionepisodesenabled,
+            '',
+            get_string('completionepisodes', 'pcast')
+        );
         $group[] =& $mform->createElement('text', $completionepisodes, '', ['size' => 3]);
         $mform->setType($completionepisodes, PARAM_INT);
-        $mform->addGroup($group, $completionepisodesgroup,
-                get_string('completionepisodesgroup', 'pcast'), [' '], false);
+        $mform->addGroup(
+            $group,
+            $completionepisodesgroup,
+            get_string('completionepisodesgroup', 'pcast'),
+            [' '],
+            false
+        );
         $mform->disabledIf($completionepisodes, $completionepisodesenabled, 'notchecked');
         return [$completionepisodesgroup];
     }

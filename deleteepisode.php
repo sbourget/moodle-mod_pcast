@@ -103,7 +103,8 @@ if ($confirm && confirm_sesskey()) {
     // Remove tags.
     core_tag_tag::remove_all_item_tags('mod_pcast', 'pcast_episodes', $origionalepisode->id);
 
-    $event = \mod_pcast\event\episode_deleted::create([
+    $event = \mod_pcast\event\episode_deleted::create(
+        [
         'context' => $context,
         'objectid' => $origionalepisode->id,
         'other' => [

@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * File used to display podcast episode.
  *
@@ -24,12 +23,11 @@
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/locallib.php');
+require_once(dirname(__FILE__) . '/lib.php');
+require_once(dirname(__FILE__) . '/locallib.php');
 
-$eid      = optional_param('eid', 0, PARAM_INT); // Pcast episode id.
-$mode      = optional_param('mode', PCAST_EPISODE_VIEW, PARAM_INT); // Pcast episode display mode.
-
+$eid = optional_param('eid', 0, PARAM_INT); // Pcast episode id.
+$mode = optional_param('mode', PCAST_EPISODE_VIEW, PARAM_INT); // Pcast episode display mode.
 $popup = optional_param('popup', 0, PARAM_INT);
 
 $url = new moodle_url('/mod/pcast/showepisode.php');
@@ -40,17 +38,16 @@ $PAGE->set_url($url);
 if ($eid) {
     $sql = pcast_get_episode_sql();
     $sql .= " WHERE p.id = ?";
-    $episode = $DB->get_record_sql($sql, array($eid), MUST_EXIST);
-    $pcast = $DB->get_record('pcast', array('id' => $episode->pcastid), '*', MUST_EXIST);
+    $episode = $DB->get_record_sql($sql, [$eid], MUST_EXIST);
+    $pcast = $DB->get_record('pcast', ['id' => $episode->pcastid], '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
-    $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
+    $course = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
     require_course_login($course, true, $cm);
     $context = context_module::instance($cm->id);
     $episode->pcastname = $pcast->name;
     $episode->cmid = $cm->id;
     $episode->courseid = $cm->course;
-    $episodes = array($episode);
-
+    $episodes = [$episode];
 } else {
     throw new moodle_exception('invalidelementid');
 }
@@ -85,9 +82,8 @@ $views = false;
 if (($episode->userscancomment) || ($episode->assessed)) {
     // Can they use comments?
     if (($CFG->usecomments) &&
-        ($episode->userscancomment) &&
-        ((has_capability('moodle/comment:post', $context)) || (has_capability('moodle/comment:view', $context)))) {
-
+        ($episode->userscancomment) && ((has_capability('moodle/comment:post', $context)) || (has_capability('moodle/comment:view', $context)))
+    ) {
         $comment = true;
     }
     // Can they use ratings?
@@ -95,7 +91,8 @@ if (($episode->userscancomment) || ($episode->assessed)) {
         ((has_capability('mod/pcast:rate', $context)) ||
         ((has_capability('mod/pcast:viewrating', $context)) && ($episode->userid == $USER->id)) ||
          (has_capability('mod/pcast:viewallratings', $context)) ||
-         (has_capability('mod/pcast:viewanyrating', $context)))) {
+         (has_capability('mod/pcast:viewanyrating', $context)))
+    ) {
 
         $rate = true;
     }
@@ -119,15 +116,13 @@ $actionbar = new \mod_pcast\output\episode_action_bar($cm, $pcast, $eid, $mode, 
 echo $renderer->episode_action_bar($actionbar);
 
 // Now display the content.
-echo html_writer::start_tag('div', array('class' => 'pcast-display')). "\n";
+echo html_writer::start_tag('div', ['class' => 'pcast-display']) . "\n";
 switch ($mode) {
     case PCAST_EPISODE_VIEW:
-
         pcast_display_episode_full($episode, $cm, $course);
-
         break;
-    case PCAST_EPISODE_COMMENT_AND_RATE:
 
+    case PCAST_EPISODE_COMMENT_AND_RATE:
         // Load comment API.
         if ($comment) {
             require_once($CFG->dirroot . '/comment/lib.php');
@@ -139,16 +134,14 @@ switch ($mode) {
         if ($rate) {
             pcast_display_episode_ratings($episode, $cm, $course);
         }
-
         break;
+
     case PCAST_EPISODE_VIEWS:
-
         pcast_display_episode_views($episode, $cm);
-
         break;
-    default:
 
-    break;
+    default:
+        break;
 }
 
 if ($popup) {

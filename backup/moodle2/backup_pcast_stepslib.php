@@ -32,35 +32,34 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
         $userinfo = $this->get_setting_value('userinfo');
 
         // Define each element separated.
-
-        $pcast = new backup_nested_element('pcast', array('id'), array(
+        $pcast = new backup_nested_element('pcast', ['id'], [
             'userid', 'name', 'intro', 'introformat', 'userscancomment',
             'userscancategorize', 'userscanpost', 'maxbytes', 'requireapproval', 'displayauthor',
             'displayviews', 'image', 'imageheight', 'imagewidth', 'rssepisodes',
             'rsssortorder', 'enablerssfeed', 'enableitunes', 'visible', 'explicit',
             'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'assessed',
             'assesstimestart', 'assesstimefinish', 'scale', 'timecreated', 'timemodified',
-            'completionepisodes', 'allowedfiletypes', ));
+            'completionepisodes', 'allowedfiletypes', ]);
 
         $episodes = new backup_nested_element('episodes');
 
-        $episode = new backup_nested_element('episode', array('id'), array(
+        $episode = new backup_nested_element('episode', ['id'], [
             'userid', 'name', 'summary', 'summaryformat', 'summarytrust', 'mediafile', 'duration', 'explicit',
             'subtitle', 'keywords', 'topcategory', 'nestedcategory', 'timecreated', 'timemodified',
-            'approved', 'sequencenumber', ));
+            'approved', 'sequencenumber', ]);
 
         $views = new backup_nested_element('views');
 
-        $view = new backup_nested_element('view', array('id'), array(
-            'episodeid', 'userid', 'views', 'lastview', ));
+        $view = new backup_nested_element('view', ['id'], [
+            'episodeid', 'userid', 'views', 'lastview', ]);
 
         $ratings = new backup_nested_element('ratings');
 
-        $rating = new backup_nested_element('rating', array('id'), array(
-            'component', 'ratingarea', 'scaleid', 'value', 'userid', 'timecreated', 'timemodified', ));
+        $rating = new backup_nested_element('rating', ['id'], [
+            'component', 'ratingarea', 'scaleid', 'value', 'userid', 'timecreated', 'timemodified',]);
 
         $tags = new backup_nested_element('tags');
-        $tag = new backup_nested_element('tag', array('id'), array('itemid', 'rawname', ));
+        $tag = new backup_nested_element('tag', ['id'], ['itemid', 'rawname',]);
 
         // Build the tree.
 
@@ -78,28 +77,27 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
 
         // Define sources.
 
-        $pcast->set_source_table('pcast', array('id' => backup::VAR_ACTIVITYID));
+        $pcast->set_source_table('pcast', ['id' => backup::VAR_ACTIVITYID]);
 
         // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
-
             $episode->set_source_sql('
             SELECT *
               FROM {pcast_episodes}
              WHERE pcastid = ?',
-            array(backup::VAR_PARENTID));
+            [backup::VAR_PARENTID]);
 
             $view->set_source_sql('
             SELECT *
               FROM {pcast_views}
              WHERE episodeid = ?',
-            array(backup::VAR_PARENTID));
+            [backup::VAR_PARENTID]);
 
-            $rating->set_source_table('rating', array('contextid'  => backup::VAR_CONTEXTID,
-                                                      'itemid'     => backup::VAR_PARENTID,
-                                                      'component'  => backup_helper::is_sqlparam('mod_pcast'),
-                                                      'ratingarea' => backup_helper::is_sqlparam('episode'),
-                                                      ));
+            $rating->set_source_table('rating', ['contextid'  => backup::VAR_CONTEXTID,
+                                                 'itemid'     => backup::VAR_PARENTID,
+                                                 'component'  => backup_helper::is_sqlparam('mod_pcast'),
+                                                 'ratingarea' => backup_helper::is_sqlparam('episode'),
+                                                ]);
             $rating->set_source_alias('rating', 'value');
 
             if (core_tag_tag::is_enabled('mod_pcast', 'pcast_episodes')) {
@@ -108,10 +106,10 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
                                         JOIN {tag_instance} ti ON ti.tagid = t.id
                                        WHERE ti.itemtype = ?
                                          AND ti.component = ?
-                                         AND ti.contextid = ?', array(
+                                         AND ti.contextid = ?', [
                     backup_helper::is_sqlparam('pcast_episodes'),
                     backup_helper::is_sqlparam('mod_pcast'),
-                    backup::VAR_CONTEXTID),
+                    backup::VAR_CONTEXTID],
                     );
             }
 

@@ -57,7 +57,7 @@ class restore_pcast_activity_task extends restore_activity_task {
     public static function define_decode_contents() {
         $contents = [];
 
-        $contents[] = new restore_decode_content('pcast', array('intro'), 'pcast');
+        $contents[] = new restore_decode_content('pcast', ['intro'], 'pcast');
 
         return $contents;
     }
@@ -89,15 +89,24 @@ class restore_pcast_activity_task extends restore_activity_task {
         $rules[] = new restore_log_rule('pcast', 'update', 'view.php?id={course_module}', '{pcast}');
         $rules[] = new restore_log_rule('pcast', 'view', 'view.php?id={course_module}', '{pcast}');
         $rules[] = new restore_log_rule('pcast', 'view all', 'index.php?id={course_id}', '{pcast}');
-        $rules[] = new restore_log_rule('pcast', 'add episode',
-                                        'view.php?id={course_module}&mode='.PCAST_ADDENTRY_VIEW.'&hook={pcast_episode}',
-                                        '{pcast_episode}');
-        $rules[] = new restore_log_rule('pcast', 'update episode',
-                                        'view.php?id={course_module}&mode='.PCAST_ADDENTRY_VIEW.'&hook={pcast_episode}',
-                                        '{pcast_episode}');
-        $rules[] = new restore_log_rule('pcast', 'delete episode',
-                                        'view.php?id={course_module}&mode=episode&hook={pcast_episode}',
-                                        '{pcast_episode}');
+        $rules[] = new restore_log_rule(
+            'pcast',
+            'add episode',
+            'view.php?id={course_module}&mode=' . PCAST_ADDENTRY_VIEW . '&hook={pcast_episode}',
+            '{pcast_episode}'
+        );
+        $rules[] = new restore_log_rule(
+            'pcast',
+            'update episode',
+            'view.php?id={course_module}&mode=' . PCAST_ADDENTRY_VIEW . '&hook={pcast_episode}',
+            '{pcast_episode}'
+        );
+        $rules[] = new restore_log_rule(
+            'pcast',
+            'delete episode',
+            'view.php?id={course_module}&mode=episode&hook={pcast_episode}',
+            '{pcast_episode}'
+        );
         $rules[] = new restore_log_rule('pcast', 'approve episode', 'showepisode.php?eid={pcast_episode}', '{pcast_episode}');
         $rules[] = new restore_log_rule('pcast', 'view episode', 'showepisode.php?eid={pcast_episode}', '{pcast_episode}');
         $rules[] = new restore_log_rule('pcast', 'disapprove episode', 'showepisode.php?eid={pcast_episode}', '{pcast_episode}');
@@ -118,11 +127,17 @@ class restore_pcast_activity_task extends restore_activity_task {
         $rules = [];
 
         // Fix old wrong uses (missing extension).
-        $rules[] = new restore_log_rule('pcast', 'view all', 'index?id={course}', null,
-                                        null, null, 'index.php?id={course}');
+        $rules[] = new restore_log_rule(
+            'pcast',
+            'view all',
+            'index?id={course}',
+            null,
+            null,
+            null,
+            'index.php?id={course}'
+        );
         $rules[] = new restore_log_rule('pcast', 'view all', 'index.php?id={course}', null);
 
         return $rules;
     }
-
 }

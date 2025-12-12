@@ -79,7 +79,8 @@ class mod_pcast_generator_testcase extends \advanced_testcase {
         $this->assertEquals($episode1->id, $records[$episode1->id]->id);
         $this->assertEquals($episode2->id, $records[$episode2->id]->id);
         $this->assertEquals('Custom episode', $records[$episode2->id]->name);
-        $this->assertEquals(['Cats', 'mice'], 
+        $this->assertEquals(
+            ['Cats', 'mice'], 
             array_values(\core_tag_tag::get_item_tags_array('mod_pcast', 'pcast_episodes', $episode2->id))
         );
     }
