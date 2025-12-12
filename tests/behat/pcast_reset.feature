@@ -125,7 +125,7 @@ Feature: Pcast reset
     And I follow "Course 1"
     And I am on the "Test podcast name" Activity page
     And I follow "View"
-    And I should see "2" in the "Total views" "table_row"
+    And I should see "5" in the "Total views" "table_row"
     When I am on the "Course 1" "reset" page
     And I press "Deselect all"
     And I expand all fieldsets
