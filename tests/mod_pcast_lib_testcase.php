@@ -46,10 +46,11 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
         $this->setAdminUser();
         // Create the activity.
         $course = $this->getDataGenerator()->create_course();
-        $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course->id));
+        $pcast = $this->getDataGenerator()->create_module('pcast', ['course' => $course->id]);
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $pcast->id,
-            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
         // Create an action factory.
         $factory = new \core_calendar\action_factory();
         // Decorate action event.
@@ -72,10 +73,11 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
         $this->setAdminUser();
         // Create the activity.
         $course = $this->getDataGenerator()->create_course();
-        $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course->id));
+        $pcast = $this->getDataGenerator()->create_module('pcast', ['course' => $course->id]);
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $pcast->id,
-                \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
         // Now log out.
         $CFG->forcelogin = true; // We don't want to be logged in as guest, as guest users might still have some capabilities.
         $this->setUser();
@@ -100,10 +102,11 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
         // Create a student.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create the activity.
-        $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course->id));
+        $pcast = $this->getDataGenerator()->create_module('pcast', ['course' => $course->id]);
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $pcast->id,
-                \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
         // Now log out.
         $CFG->forcelogin = true; // We don't want to be logged in as guest, as guest users might still have some capabilities.
         $this->setUser();
@@ -131,10 +134,11 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
         // Create a student.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create the activity.
-        $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course->id));
+        $pcast = $this->getDataGenerator()->create_module('pcast', ['course' => $course->id]);
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $pcast->id,
-                \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
         // Set sections 0 as hidden.
         set_section_visible($course->id, 0, 0);
         // Create an action factory.
@@ -155,14 +159,15 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
         $this->setAdminUser();
         $CFG->enablecompletion = 1;
         // Create the activity.
-        $course = $this->getDataGenerator()->create_course(array('enablecompletion' => 1));
-        $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course->id),
+        $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
+        $pcast = $this->getDataGenerator()->create_module('pcast', ['course' => $course->id],
             array('completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS));
         // Get some additional data.
         $cm = get_coursemodule_from_instance('pcast', $pcast->id);
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $pcast->id,
-            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
         // Mark the activity as completed.
         $completion = new \completion_info($course);
         $completion->set_module_viewed($cm);
@@ -189,13 +194,15 @@ class mod_pcast_lib_testcase extends \advanced_testcase {
         // Create a student.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create the activity.
-        $pcast = $this->getDataGenerator()->create_module('pcast', array('course' => $course->id),
-                array('completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS));
+        $pcast = $this->getDataGenerator()->create_module('pcast', ['course' => $course->id],
+            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]
+        );
         // Get some additional data.
         $cm = get_coursemodule_from_instance('pcast', $pcast->id);
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $pcast->id,
-                \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
         // Mark the activity as completed for the user.
         $completion = new \completion_info($course);
         $completion->set_module_viewed($cm, $student->id);

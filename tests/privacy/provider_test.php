@@ -287,7 +287,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
      */
     protected function get_comment_object(\context $context, $itemid): \comment {
         $args = new \stdClass();
-        
+
         $args->context = $context;
         $args->course = get_course(SITEID);
         $args->area = 'pcast_episode';
