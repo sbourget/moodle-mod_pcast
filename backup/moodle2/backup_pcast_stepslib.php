@@ -103,16 +103,17 @@ class backup_pcast_activity_structure_step extends backup_activity_structure_ste
             $rating->set_source_alias('rating', 'value');
 
             if (core_tag_tag::is_enabled('mod_pcast', 'pcast_episodes')) {
-                $tag->set_source_sql('SELECT t.id, ti.itemid, t.rawname
-                                        FROM {tag} t
-                                        JOIN {tag_instance} ti ON ti.tagid = t.id
-                                       WHERE ti.itemtype = ?
-                                         AND ti.component = ?
-                                         AND ti.contextid = ?', 
+                $tag->set_source_sql(
+                    'SELECT t.id, ti.itemid, t.rawname
+                       FROM {tag} t
+                       JOIN {tag_instance} ti ON ti.tagid = t.id
+                      WHERE ti.itemtype = ?
+                        AND ti.component = ?
+                        AND ti.contextid = ?',
                     [
                         backup_helper::is_sqlparam('pcast_episodes'),
                         backup_helper::is_sqlparam('mod_pcast'),
-                        backup::VAR_CONTEXTID
+                        backup::VAR_CONTEXTID,
                     ],
                 );
             }

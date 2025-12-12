@@ -468,18 +468,14 @@ function pcast_print_recent_activity($course, $viewfullnames, $timestart) {
 
     $userfieldsapi = \core_user\fields::for_name();
     $allnamefields = $userfieldsapi->get_sql('u', false, '', '', false)->selects;
+    $sql = "SELECT e.id, e.name, e.approved, e.timemodified, e.pcastid,
+                   e.userid, $allnamefields
+              FROM {pcast_episodes} e
+              JOIN {user} u ON u.id = e.userid
+             WHERE e.pcastid IN ($plist) AND e.timemodified > ?
+             ORDER BY e.timemodified ASC";
 
-    if (
-        !$episodes = $DB->get_records_sql(
-            "SELECT e.id, e.name, e.approved, e.timemodified, e.pcastid,
-                    e.userid, $allnamefields
-               FROM {pcast_episodes} e
-               JOIN {user} u ON u.id = e.userid
-              WHERE e.pcastid IN ($plist) AND e.timemodified > ?
-              ORDER BY e.timemodified ASC",
-            [$timestart]
-            )
-        ) {
+    if (!$episodes = $DB->get_records_sql($sql, [$timestart])) {
         return false;
     }
 
