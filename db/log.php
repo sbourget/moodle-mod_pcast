@@ -22,19 +22,16 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-
 defined('MOODLE_INTERNAL') || die();
 
-$logs = array(
-    array('module' => 'pcast', 'action' => 'add', 'mtable' => 'pcast', 'field' => 'name'),
-    array('module' => 'pcast', 'action' => 'update', 'mtable' => 'pcast', 'field' => 'name'),
-    array('module' => 'pcast', 'action' => 'view', 'mtable' => 'pcast', 'field' => 'name'),
-    array('module' => 'pcast', 'action' => 'view all', 'mtable' => 'pcast', 'field' => 'name'),
-    array('module' => 'pcast', 'action' => 'add episode', 'mtable' => 'pcast', 'field' => 'name'),
-    array('module' => 'pcast', 'action' => 'update episode', 'mtable' => 'pcast', 'field' => 'name'),
-    array('module' => 'pcast', 'action' => 'approve episode', 'mtable' => 'pcast', 'field' => 'name'),
-    array('module' => 'pcast', 'action' => 'disapprove episode', 'mtable' => 'pcast', 'field' => 'name'),
-    array('module' => 'pcast', 'action' => 'view episode', 'mtable' => 'pcast_episodes', 'field' => 'name'),
-);
-
-
+$logs = [
+    ['module' => 'pcast', 'action' => 'add', 'mtable' => 'pcast', 'field' => 'name'],
+    ['module' => 'pcast', 'action' => 'update', 'mtable' => 'pcast', 'field' => 'name'],
+    ['module' => 'pcast', 'action' => 'view', 'mtable' => 'pcast', 'field' => 'name'],
+    ['module' => 'pcast', 'action' => 'view all', 'mtable' => 'pcast', 'field' => 'name'],
+    ['module' => 'pcast', 'action' => 'add episode', 'mtable' => 'pcast', 'field' => 'name'],
+    ['module' => 'pcast', 'action' => 'update episode', 'mtable' => 'pcast', 'field' => 'name'],
+    ['module' => 'pcast', 'action' => 'approve episode', 'mtable' => 'pcast', 'field' => 'name'],
+    ['module' => 'pcast', 'action' => 'disapprove episode', 'mtable' => 'pcast', 'field' => 'name'],
+    ['module' => 'pcast', 'action' => 'view episode', 'mtable' => 'pcast_episodes', 'field' => 'name'],
+];

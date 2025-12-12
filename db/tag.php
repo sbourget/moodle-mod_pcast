@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Tag areas in component mod_glossary
+ * Tag areas in component mod_pcast
  *
  * @package   mod_pcast
  * @copyright 2018 Stephen Bourget
@@ -24,13 +24,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-
-$tagareas = array(
-    array(
+$tagareas = [
+    [
         'itemtype' => 'pcast_episodes',
         'component' => 'mod_pcast',
         'callback' => 'mod_pcast_get_tagged_episodes',
         'callbackfile' => '/mod/pcast/locallib.php',
-    ),
-);
-
+    ],
+];

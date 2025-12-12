@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * This file keeps track of upgrades to the pcast module
  *
@@ -37,14 +36,13 @@
  * @param int $oldversion
  * @return bool
  */
-function xmldb_pcast_upgrade($oldversion=0) {
+function xmldb_pcast_upgrade($oldversion = 0) {
 
     global $DB, $CFG;
     $dbman = $DB->get_manager();
 
     // RatingArea Upgrade.
     if ($oldversion < 2011080700) {
-
         // Rating.component and rating.ratingarea have now been added as mandatory fields.
         // Presently you can only rate data entries so component = 'mod_pcast' and ratingarea = 'episode'.
         // for all ratings with a pcast context.
@@ -65,7 +63,6 @@ function xmldb_pcast_upgrade($oldversion=0) {
         $DB->execute($sql);
 
         upgrade_mod_savepoint(true, 2011080700, 'pcast');
-
     }
 
     if ($oldversion < 2012022900) {
@@ -85,7 +82,6 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2012061400) {
-
         // Define field summaryformat to be added to pcast_episodes.
         $table = new xmldb_table('pcast_episodes');
         $field = new xmldb_field('summaryformat', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'summary');
@@ -100,7 +96,6 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2012061401) {
-
         // Define field summarytrust to be added to pcast_episodes.
         $table = new xmldb_table('pcast_episodes');
         $field = new xmldb_field('summarytrust', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'summaryformat');
@@ -115,7 +110,6 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2013062400) {
-
         // Changing type of field intro on table pcast to text.
         $table = new xmldb_table('pcast');
         $field = new xmldb_field('intro', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'name');
@@ -128,7 +122,6 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2014061600) {
-
         // Define field episodesperpage to be added to pcast.
         $table = new xmldb_table('pcast');
         $field = new xmldb_field('episodesperpage', XMLDB_TYPE_INTEGER, '4', null, null, null, '10', 'maxbytes');
@@ -143,7 +136,6 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2016053100) {
-
         // Define field completionepisodes to be added to pcast.
         $table = new xmldb_table('pcast');
         $field = new xmldb_field('completionepisodes', XMLDB_TYPE_INTEGER, '9', null, null, null, '0', 'timemodified');
@@ -158,7 +150,6 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2016060300) {
-
         // Changing type of field summary on table pcast_episodes to text.
         $table = new xmldb_table('pcast_episodes');
         $field = new xmldb_field('summary', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'name');
@@ -171,7 +162,6 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2016111000) {
-
         if (isset($CFG->pcast_usemediafilter)) {
             unset_config('pcast_usemediafilter');
         }
@@ -181,7 +171,6 @@ function xmldb_pcast_upgrade($oldversion=0) {
     }
 
     if ($oldversion < 2018030500) {
-
         // Define field allowedfiletypes to be added to pcast.
         $table = new xmldb_table('pcast');
         $field = new xmldb_field('allowedfiletypes', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null, 'completionepisodes');

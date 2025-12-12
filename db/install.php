@@ -331,5 +331,4 @@ function xmldb_pcast_install() {
     $DB->insert_record('pcast_itunes_nested_cat', $dataobject, false, false);
 
     unset($dataobject);
-
 }
