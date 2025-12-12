@@ -95,11 +95,11 @@ class episode_action_bar implements renderable, templatable {
      */
     private function create_back_button(renderer_base $output): \stdClass {
         $btn = new single_button(new moodle_url('/mod/pcast/view.php', 
-                ['id' => $this->cm->id, 'mode' => PCAST_STANDARD_VIEW]),
-                get_string('backtoepisodes', 'pcast'),
-                'post',
-                single_button::BUTTON_SECONDARY
-                );
+            ['id' => $this->cm->id, 'mode' => PCAST_STANDARD_VIEW]),
+            get_string('backtoepisodes', 'pcast'),
+            'post',
+            single_button::BUTTON_SECONDARY
+        );
         return $btn->export_for_template($output);
     }
 
@@ -121,7 +121,7 @@ class episode_action_bar implements renderable, templatable {
             $rateurl = new moodle_url('/mod/pcast/showepisode.php',
                 ['eid' => $this->eid,
                 'mode' => PCAST_EPISODE_COMMENT_AND_RATE],
-                );
+            );
 
             if ($this->comment && $this->rate) {
                 // Both comments and ratings.

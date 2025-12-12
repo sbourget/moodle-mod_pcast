@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Page for deleting pcast episodes
  *
@@ -24,7 +23,7 @@
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__) . '/lib.php');
 
 $id       = required_param('id', PARAM_INT);          // Course module ID.
 $confirm  = optional_param('confirm', 0, PARAM_INT);  // Commit the operation?
@@ -32,7 +31,7 @@ $episode    = optional_param('episode', 0, PARAM_INT);    // Episode id.
 $prevmode = required_param('prevmode', PARAM_ALPHANUM);   // Display mode.
 $hook     = optional_param('hook', '', PARAM_ALPHANUM);   // Alphabet bar filter.
 
-$url = new moodle_url('/mod/pcast/deleteepisode.php', array('id' => $id, 'prevmode' => $prevmode));
+$url = new moodle_url('/mod/pcast/deleteepisode.php', ['id' => $id, 'prevmode' => $prevmode]);
 if ($confirm !== 0) {
     $url->param('confirm', $confirm);
 }
@@ -52,10 +51,9 @@ $episodedeleted  = get_string("episodedeleted", "pcast");
 
 if ($id) {
     $cm         = get_coursemodule_from_id('pcast', $id, 0, false, MUST_EXIST);
-    $course     = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
-    $episode    = $DB->get_record('pcast_episodes', array('id' => $episode), '*', MUST_EXIST);
-    $pcast      = $DB->get_record('pcast', array('id' => $cm->instance), '*', MUST_EXIST);
-
+    $course     = $DB->get_record('course', ['id' => $cm->course], '*', MUST_EXIST);
+    $episode    = $DB->get_record('pcast_episodes', ['id' => $episode], '*', MUST_EXIST);
+    $pcast      = $DB->get_record('pcast', ['id' => $cm->instance], '*', MUST_EXIST);
 } else {
     throw new moodle_exception('invalidcmorid', 'pcast');
 }
@@ -78,16 +76,16 @@ if (!$ineditperiod && !$manageentries) {
 
 // If data is submitted, then process and store.
 
-if ($confirm && confirm_sesskey()) { // The operation was confirmed.
-
+if ($confirm && confirm_sesskey()) {
+    // The operation was confirmed.
     $origionalepisode = fullclone($episode);
     $fs = get_file_storage();
     $fs->delete_area_files($context->id, 'pcast_episode', $episode->id);
-    $DB->delete_records("comments", array('itemid' => $episode->id, 'commentarea' => 'pcast_episode', 'contextid' => $context->id));
-    $DB->delete_records("pcast_episodes", array("id" => $episode->id));
+    $DB->delete_records("comments", ['itemid' => $episode->id, 'commentarea' => 'pcast_episode', 'contextid' => $context->id]);
+    $DB->delete_records("pcast_episodes", ["id" => $episode->id]);
 
     // Delete pcast episode ratings.
-    require_once($CFG->dirroot.'/rating/lib.php');
+    require_once($CFG->dirroot . '/rating/lib.php');
     $delopt = new stdClass();
     $delopt->contextid = $context->id;
     $delopt->itemid = $episode->id;
@@ -98,22 +96,23 @@ if ($confirm && confirm_sesskey()) { // The operation was confirmed.
 
     // Delete cached RSS feeds.
     if (!empty($CFG->enablerssfeeds)) {
-        require_once($CFG->dirroot.'/mod/pcast/rsslib.php');
+        require_once($CFG->dirroot . '/mod/pcast/rsslib.php');
         pcast_rss_delete_file($pcast);
     }
 
     // Remove tags.
     core_tag_tag::remove_all_item_tags('mod_pcast', 'pcast_episodes', $origionalepisode->id);
 
-    $event = \mod_pcast\event\episode_deleted::create(array(
+    $event = \mod_pcast\event\episode_deleted::create([
         'context' => $context,
         'objectid' => $origionalepisode->id,
-        'other' => array(
+        'other' => [
             'mode' => $prevmode,
             'hook' => $hook,
             'name' => $origionalepisode->name,
-        ),
-    ));
+            ],
+        ]
+    );
 
     $event->add_record_snapshot('pcast_episodes', $origionalepisode);
     $event->trigger();
@@ -125,14 +124,14 @@ if ($confirm && confirm_sesskey()) { // The operation was confirmed.
     }
 
     redirect("view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook");
-
-} else {        // The operation has not been confirmed yet so ask the user to do so.
+} else {
+    // The operation has not been confirmed yet so ask the user to do so.
     $PAGE->navbar->add(get_string('delete'));
     $PAGE->set_title($pcast->name);
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
 
-    $areyousure = html_writer::start_tag('div', array('class' => 'pcast-bold'));
+    $areyousure = html_writer::start_tag('div', ['class' => 'pcast-bold']);
     $areyousure .= format_string($episode->name);
     $areyousure .= html_writer::end_tag('div');
     $areyousure .= html_writer::start_tag('div');
@@ -140,14 +139,14 @@ if ($confirm && confirm_sesskey()) { // The operation was confirmed.
     $areyousure .= html_writer::end_tag('div');
     $linkyes    = 'deleteepisode.php';
     $linkno     = 'view.php';
-    $optionsyes = array('id' => $cm->id,
-                        'episode' => $episode->id,
-                        'confirm' => 1,
-                        'sesskey' => sesskey(),
-                        'prevmode' => $prevmode,
-                        'hook' => $hook,
-                        );
-    $optionsno  = array('id' => $cm->id, 'mode' => $prevmode, 'hook' => $hook);
+    $optionsyes = ['id' => $cm->id,
+        'episode' => $episode->id,
+        'confirm' => 1,
+        'sesskey' => sesskey(),
+        'prevmode' => $prevmode,
+        'hook' => $hook,
+    ];
+    $optionsno  = ['id' => $cm->id, 'mode' => $prevmode, 'hook' => $hook];
 
     echo $OUTPUT->confirm($areyousure, new moodle_url($linkyes, $optionsyes), new moodle_url($linkno, $optionsno));
 
