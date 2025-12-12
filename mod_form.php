@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * The main pcast configuration form
  *
@@ -42,12 +41,10 @@ require_once(dirname(__FILE__).'/locallib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_pcast_mod_form extends moodleform_mod {
-
     /**
      * The form definition.
      */
     public function definition() {
-
         global $COURSE, $CFG, $DB;
         $mform =& $this->_form;
         $pcastconfig = get_config('mod_pcast');
@@ -56,7 +53,7 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         // Adding the standard "name" field.
-        $mform->addElement('text', 'name', get_string('pcastname', 'pcast'), array('size' => '64'));
+        $mform->addElement('text', 'name', get_string('pcastname', 'pcast'), ['size' => '64']);
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -82,7 +79,6 @@ class mod_pcast_mod_form extends moodleform_mod {
         // RSS Settings.
 
         if ($CFG->enablerssfeeds && isset($pcastconfig->enablerssfeeds) && $pcastconfig->enablerssfeeds) {
-
             $mform->addElement('header', 'rss', get_string('rss'));
 
             // RSS enabled.
@@ -90,7 +86,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->addHelpButton('enablerssfeed', 'enablerssfeed', 'pcast');
 
             // RSS Entries per feed.
-            $choices = array();
+            $choices = [];
             $choices[1] = '1';
             $choices[2] = '2';
             $choices[3] = '3';
@@ -109,19 +105,17 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->setDefault('rssepisodes', 10);
 
             // RSS Sort Order.
-            $sortorder = array();
+            $sortorder = [];
             $sortorder[0] = get_string('createasc', 'pcast');
             $sortorder[1] = get_string('createdesc', 'pcast');
             $mform->addElement('select', 'rsssortorder', get_string('rsssortorder', 'pcast'), $sortorder);
             $mform->addHelpButton('rsssortorder', 'rsssortorder', 'pcast');
             $mform->setDefault('rsssortorder', 2);
             $mform->disabledIf('rsssortorder', 'enablerssfeed', 'eq', 0);
-
         }
 
         // Itunes.
         if ($CFG->enablerssfeeds && isset($pcastconfig->enablerssitunes) && $pcastconfig->enablerssitunes) {
-
             // Itunes Tags.
             $mform->addElement('header', 'itunes', get_string('itunes', 'pcast'));
 
@@ -132,7 +126,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->disabledIf('enablerssitunes', 'enablerssfeed', 'eq', 0);
 
             // Subtitle.
-            $mform->addElement('text', 'subtitle', get_string('subtitle', 'pcast'), array('size' => '64'));
+            $mform->addElement('text', 'subtitle', get_string('subtitle', 'pcast'), ['size' => '64']);
             $mform->setType('subtitle', PARAM_NOTAGS);
             $mform->addHelpButton('subtitle', 'subtitle', 'pcast');
             $mform->disabledIf('subtitle', 'enablerssitunes', 'eq', 0);
@@ -151,7 +145,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->disabledIf('userid', 'enablerssitunes', 'eq', 0);
 
             // Keywords.
-            $mform->addElement('text', 'keywords', get_string('keywords', 'pcast'), array('size' => '64'));
+            $mform->addElement('text', 'keywords', get_string('keywords', 'pcast'), ['size' => '64']);
             $mform->setType('keywords', PARAM_NOTAGS);
             $mform->addHelpButton('keywords', 'keywords', 'pcast');
             $mform->disabledIf('keywords', 'enablerssitunes', 'eq', 0);
@@ -163,7 +157,7 @@ class mod_pcast_mod_form extends moodleform_mod {
             $mform->disabledIf('category', 'enablerssitunes', 'eq', 0);
 
             // Content.
-            $explicit = array();
+            $explicit = [];
             $explicit[0]  = get_string('yes');
             $explicit[1]  = get_string('no');
             $explicit[2]  = get_string('clean', 'pcast');
@@ -223,12 +217,12 @@ class mod_pcast_mod_form extends moodleform_mod {
         $mform->addElement('filemanager', 'image', get_string('imagefile', 'pcast'), null,
             array('subdirs' => 0,
                 'maxfiles' => 1,
-                'filetypes' => array('jpeg', 'png'),
+                'filetypes' => ['jpeg', 'png'],
                 'returnvalue' => 'ref_id'),
             );
 
         // Image Size (Height).
-        $size = array();
+        $size = [];
         $size[0] = get_string('noresize', 'pcast');
         $size[16] = "16";
         $size[32] = "32";
@@ -245,7 +239,7 @@ class mod_pcast_mod_form extends moodleform_mod {
 
         // Image Size (Width).
         unset($size);
-        $size = array();
+        $size = [];
         $size[0] = get_string('noresize', 'pcast');
         $size[16] = "16";
         $size[32] = "32";
@@ -274,7 +268,7 @@ class mod_pcast_mod_form extends moodleform_mod {
         if ($this->current->instance) {
             // Editing existing instance - copy existing files into draft area.
             $draftitemid = file_get_submitted_draft_itemid('id');
-            file_prepare_draft_area($draftitemid, $this->context->id, 'mod_pcast', 'logo', 0, array('subdirs' => false));
+            file_prepare_draft_area($draftitemid, $this->context->id, 'mod_pcast', 'logo', 0, ['subdirs' => false]);
             $defaultvalues['image'] = $draftitemid;
 
             // Convert topcategory and nested to a single category.
@@ -309,12 +303,12 @@ class mod_pcast_mod_form extends moodleform_mod {
         $group = array();
         $group[] =& $mform->createElement('checkbox', $completionepisodesenabled, '',
                 get_string('completionepisodes', 'pcast'));
-        $group[] =& $mform->createElement('text', $completionepisodes, '', array('size' => 3));
+        $group[] =& $mform->createElement('text', $completionepisodes, '', ['size' => 3]);
         $mform->setType($completionepisodes, PARAM_INT);
         $mform->addGroup($group, $completionepisodesgroup,
-                get_string('completionepisodesgroup', 'pcast'), array(' '), false);
+                get_string('completionepisodesgroup', 'pcast'), [' '], false);
         $mform->disabledIf($completionepisodes, $completionepisodesenabled, 'notchecked');
-        return array($completionepisodesgroup);
+        return [$completionepisodesgroup];
     }
 
     /**
@@ -324,7 +318,7 @@ class mod_pcast_mod_form extends moodleform_mod {
      */
     public function completion_rule_enabled($data) {
         $suffix = $this->get_suffix();
-        return (!empty($data['completionepisodesenabled' . $suffix]) && $data['completionepisodes'. $suffix] != 0);
+        return (!empty($data['completionepisodesenabled' . $suffix]) && $data['completionepisodes' . $suffix] != 0);
     }
 
     /**
