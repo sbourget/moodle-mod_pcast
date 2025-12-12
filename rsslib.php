@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * Library of rss generation functions for module pcast
  *
@@ -51,7 +50,7 @@ function pcast_rss_get_feed($context, $args) {
     // Check capabilities.
     $cm = get_coursemodule_from_instance('pcast', $pcastid, 0, false, MUST_EXIST);
     if ($cm) {
-            $modcontext = context_module::instance($cm->id);
+        $modcontext = context_module::instance($cm->id);
 
         // Context id from db should match the submitted one.
         if ($context->id == $modcontext->id && has_capability('mod/pcast:view', $modcontext)) {
@@ -72,12 +71,10 @@ function pcast_rss_get_feed($context, $args) {
 
         // Is a member of the current group?
         if (!isset($members[$userid]->id) || ($members[$userid]->id != $userid)) {
-
             // Not a member of the group, can you see all groups (from CAPS).
             if (!has_capability('moodle/site:accessallgroups', $context, $userid)) {
                 $uservalidated = false;
             }
-
         } else {
             // Are a member of the current group.
             // Is the group #0 (Group 0 is all users).
@@ -85,7 +82,6 @@ function pcast_rss_get_feed($context, $args) {
                 $uservalidated = false;
             }
         }
-
     }
 
     if (!$uservalidated) {
@@ -94,11 +90,11 @@ function pcast_rss_get_feed($context, $args) {
 
     // OK the user can view the RSS feed.
 
-    $pcast = $DB->get_record('pcast', array('id' => $pcastid), '*', MUST_EXIST);
+    $pcast = $DB->get_record('pcast', ['id' => $pcastid], '*', MUST_EXIST);
 
     // Check to se if RSS is enabled.
     // NOTE: cannot use the rss_enabled_for_mod() function due to the functions internals and naming conflicts.
-    if (($pcast->rssepisodes == 0)||(empty($pcast->rssepisodes))) {
+    if (($pcast->rssepisodes == 0) || (empty($pcast->rssepisodes))) {
         return null;
     }
 
@@ -109,7 +105,7 @@ function pcast_rss_get_feed($context, $args) {
     $filename = rss_get_file_name($pcast, $sql);
 
     // Append the GroupID to the end of the filename.
-    $filename .= '_'.$groupid;
+    $filename .= '_' . $groupid;
     $cachedfilepath = rss_get_file_full_name('mod_pcast', $filename);
 
     // Is the cache out of date?
@@ -120,10 +116,10 @@ function pcast_rss_get_feed($context, $args) {
     // If the cache is more than 60 seconds old and there's new stuff.
     $dontrecheckcutoff = time() - 60;
     if ( $dontrecheckcutoff > $cachedfilelastmodified && pcast_rss_newstuff($pcast, $cachedfilelastmodified)) {
-        if (!$recs = $DB->get_records_sql($sql, array(), 0, $pcast->rssepisodes)) {
+        if (!$recs = $DB->get_records_sql($sql, [], 0, $pcast->rssepisodes)) {
             return null;
         }
-        $items = array();
+        $items = [];
 
         $formatoptions = new stdClass();
         $formatoptions->trusttext = true;
@@ -146,11 +142,14 @@ function pcast_rss_get_feed($context, $args) {
             $item->subtitle = $rec->subtitle;
             $item->duration = $rec->duration;
             $item->pubdate = $rec->episodetimecreated;
-            $item->link = new moodle_url('/mod/pcast/showepisode.php', array('eid' => $rec->episodeid));
+            $item->link = new moodle_url('/mod/pcast/showepisode.php', ['eid' => $rec->episodeid]);
 
             $item->description = file_rewrite_pluginfile_urls($rec->episodesummary, 'pluginfile.php',
-                                                $context->id, 'mod_pcast',
-                                                'summary', $rec->episodeid);
+                $context->id,
+                'mod_pcast',
+                'summary',
+                $rec->episodeid
+            );
 
             $item->description = format_text($item->description, 'HTML', null, $pcast->course);
 
@@ -168,7 +167,7 @@ function pcast_rss_get_feed($context, $args) {
 
         }
         // First all rss feeds common headers.
-        $url = new moodle_url('/mod/pcast/view.php', array('id' => $cm->id));
+        $url = new moodle_url('/mod/pcast/view.php', ['id' => $cm->id]);
         $header = pcast_rss_header(format_string($pcast->name, true), $url, format_string($pcast->intro, true), $pcast);
 
         // Do we need iTunes tags?
@@ -219,7 +218,6 @@ function pcast_rss_get_sql($pcast, $time=0) {
     if ($pcast->rsssortorder == 0) {
         // Newest items first.
         $sort = "ORDER BY e.timecreated desc";
-
     } else {
         // Oldest items first.
         $sort = "ORDER BY e.timecreated asc";
@@ -315,7 +313,7 @@ function pcast_rss_delete_file($pcast) {
  */
 function pcast_rss_author_lookup($userid) {
     global $DB;
-    $author = $DB->get_record('user', array("id" => $userid), '*', true);
+    $author = $DB->get_record('user', ["id" => $userid], '*', true);
     return $author;
 }
 
@@ -328,8 +326,8 @@ function pcast_rss_category_lookup($pcast) {
     global $DB;
     $category = new stdClass();
     // TODO: We should use MUC here to make prevent multiple queries.
-    $category->top = $DB->get_record('pcast_itunes_categories', array("id" => $pcast->topcategory), '*', true);
-    $category->nested = $DB->get_record('pcast_itunes_nested_cat', array("id" => $pcast->nestedcategory), '*', true);
+    $category->top = $DB->get_record('pcast_itunes_categories', ["id" => $pcast->topcategory], '*', true);
+    $category->nested = $DB->get_record('pcast_itunes_nested_cat', ["id" => $pcast->nestedcategory], '*', true);
     return $category;
 }
 
@@ -342,7 +340,6 @@ function pcast_rss_category_lookup($pcast) {
  * @return boolean|string
  */
 function pcast_rss_header($title = null, $link = null, $description = null, $pcast = null) {
-
     global $CFG, $USER, $OUTPUT;
 
     $status = true;
@@ -415,8 +412,9 @@ function pcast_rss_header($title = null, $link = null, $description = null, $pca
                 $image->filename = $file->get_filename();
                 $image->type = $file->get_mimetype();
                 $image->size = $file->get_filesize();
-                $image->url = file_encode_url($CFG->wwwroot.'/pluginfile.php',
-                              '/'.$context->id.'/mod_pcast/logo/0/'.$image->filename);
+                $image->url = file_encode_url($CFG->wwwroot . '/pluginfile.php',
+                    '/' . $context->id . '/mod_pcast/logo/0/' . $image->filename
+                );
             }
         }
         // Write the image info.
@@ -466,16 +464,15 @@ function pcast_rss_header($title = null, $link = null, $description = null, $pca
 
             // Categories.
             if (isset($categories->top->name)) {
-                $result .= rss_start_tag('itunes:category text="'.$categories->top->name .'"', 2, true);
+                $result .= rss_start_tag('itunes:category text="' . $categories->top->name . '"', 2, true);
                 if (isset($categories->nested->name)) {
-                    $result .= rss_start_tag('itunes:category text="'.$categories->nested->name .'"/', 4, true);
+                    $result .= rss_start_tag('itunes:category text="' . $categories->nested->name . '"/', 4, true);
                 }
                 $result .= rss_end_tag('itunes:category', 2, true);
             }
             // Image.
-            $result .= rss_start_tag('itunes:image href="'.$rsspix.'"/', 2, true);
+            $result .= rss_start_tag('itunes:image href="' . $rsspix . '"/', 2, true);
         }
-
     }
 
     if (!$status) {
@@ -498,9 +495,7 @@ function pcast_rss_header($title = null, $link = null, $description = null, $pca
  * @param int $currentgroup
  * @return boolean
  */
-function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) {
-
-    global $CFG;
+function pcast_rss_add_items($context, $items, $itunes = false, $currentgroup = 0) {
     $pcastconfig = get_config('mod_pcast');
 
     $result = '';
@@ -523,24 +518,29 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
 
                 $result .= rss_full_tag('title', 3, false, strip_tags($item->title));
                 $result .= rss_full_tag('link', 3, false, $item->link);
-                $result .= rss_full_tag('pubDate', 3, false, gmdate('D, d M Y H:i:s', $item->pubdate).' GMT');  // MDL-12563.
+                $result .= rss_full_tag('pubDate', 3, false, gmdate('D, d M Y H:i:s', $item->pubdate) . ' GMT');  // MDL-12563.
 
                 // Rewrite the URLs for the description fields.
                 if ($pcastconfig->allowhtmlinsummary) {
                     // Re-write the url paths to be valid.
                     $description = file_rewrite_pluginfile_urls($item->description,
-                                   'pluginfile.php', $context->id, 'mod_pcast', 'summary', $item->id);
+                        'pluginfile.php',
+                        $context->id,
+                        'mod_pcast',
+                        'summary',
+                        $item->id
+                    );
                 } else {
                     // Strip out all HTML.
                     $description = strip_tags($item->description);
                 }
 
                 $result .= rss_full_tag('description', 3, false, $description);
-                $result .= rss_full_tag('guid', 3, false, $item->link, array('isPermaLink' => 'true'));
+                $result .= rss_full_tag('guid', 3, false, $item->link, ['isPermaLink' => 'true']);
 
                 // Include the author's name / email if exists.
                 if (isset($item->email) && (isset($item->author))) {
-                    $result .= rss_full_tag('author', 3, false, $item->email .'('.$item->author .')');
+                    $result .= rss_full_tag('author', 3, false, $item->email . '(' . $item->author . ')');
                 }
                 $result .= rss_start_tag(pcast_rss_add_enclosure($item), 3, true);
 
@@ -561,7 +561,6 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
                 }
 
                 $result .= rss_end_tag('item', 2, true);
-
             }
         }
     } else {
@@ -576,7 +575,6 @@ function pcast_rss_add_items($context, $items, $itunes=false, $currentgroup =0) 
  * @return string
  */
 function pcast_rss_add_enclosure($item) {
-
     global $CFG, $DB;
     $enclosure = new stdClass();
 
@@ -585,7 +583,7 @@ function pcast_rss_add_enclosure($item) {
     $enclosure->size = '';
     $enclosure->url = '';
 
-    $pcast  = $DB->get_record('pcast', array('id' => $item->pcastid), '*', MUST_EXIST);
+    $pcast  = $DB->get_record('pcast', ['id' => $item->pcastid], '*', MUST_EXIST);
     $cm = get_coursemodule_from_instance('pcast', $pcast->id, 0, false, MUST_EXIST);
     if (!$context = context_module::instance($cm->id)) {
         return '';
@@ -598,12 +596,13 @@ function pcast_rss_add_enclosure($item) {
             $enclosure->filename = $file->get_filename();
             $enclosure->type = $file->get_mimetype();
             $enclosure->size = $file->get_filesize();
-            $enclosure->url = file_encode_url($CFG->wwwroot.'/pluginfile.php',
-                              '/'.$context->id.'/mod_pcast/episode/'.$item->id.'/'.$enclosure->filename);
+            $enclosure->url = file_encode_url($CFG->wwwroot . '/pluginfile.php',
+                '/' . $context->id . '/mod_pcast/episode/' . $item->id . '/' . $enclosure->filename
+            );
         }
     }
 
-    return 'enclosure url="'.$enclosure->url.'" length="'.$enclosure->size.'" type ="'.$enclosure->type.'" /';
+    return 'enclosure url="' . $enclosure->url . '" length="' . $enclosure->size . '" type ="' . $enclosure->type . '" /';
 }
 
 /**
@@ -633,12 +632,11 @@ function pcast_rss_footer($title = null, $link = null, $description = null) {
  */
 function pcast_rss_get_url($contextid, $userid, $componentname, $additionalargs) {
     global $CFG;
-    require_once($CFG->libdir.'/rsslib.php');
+    require_once($CFG->libdir . '/rsslib.php');
     $usertoken = rss_get_token($userid);
-    $args = '/'.$contextid.'/'.$usertoken.'/'.$componentname.'/'.$additionalargs.'/rss.pcast';
-    $url = new moodle_url('/mod/pcast/subscribe.php'.$args);
+    $args = '/' . $contextid . '/' . $usertoken . '/' . $componentname . '/' . $additionalargs . '/rss.pcast';
+    $url = new moodle_url('/mod/pcast/subscribe.php' . $args);
     return $url;
-
 }
 
 /**
@@ -665,7 +663,7 @@ function pcast_build_pcast_file($pcast, $url) {
     $result .= "<!DOCTYPE pcast PUBLIC \"-//Apple Computer//DTD PCAST 1.0//EN\" \"http://www.itunes.com/DTDs/pcast-1.0.dtd\">\n";
     $result .= rss_start_tag('pcast version="1.0"', 1, true);
     $result .= rss_start_tag('channel', 1, true);
-    $result .= rss_start_tag('link rel="feed" type="application/rss+xml" href="'.$url.'" /', 2, true);
+    $result .= rss_start_tag('link rel="feed" type="application/rss+xml" href="' . $url . '" /', 2, true);
     $result .= rss_full_tag('title', 2, false, $pcast->name);
 
     $category = pcast_rss_category_lookup($pcast);
@@ -696,7 +694,7 @@ function pcast_rss_save_file($componentname, $filename, $contents, $expandfilena
 
     $status = true;
 
-    if (! $basedir = make_cache_directory ('rss/'. $componentname)) {
+    if (! $basedir = make_cache_directory ('rss/' . $componentname)) {
         // File Cannot be created, so error out.
         $status = false;
     }
@@ -709,7 +707,7 @@ function pcast_rss_save_file($componentname, $filename, $contents, $expandfilena
 
         $rssfile = fopen($fullfilename, "w");
         if ($rssfile) {
-            $status = fwrite ($rssfile, $contents);
+            $status = fwrite($rssfile, $contents);
             fclose($rssfile);
         } else {
             $status = false;
