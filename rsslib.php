@@ -152,11 +152,10 @@ function pcast_rss_get_feed($context, $args) {
                 'summary',
                 $rec->episodeid
             );
-
             $item->description = format_text(
                 $item->description,
                 'HTML',
-                ['context' => $modcontext, 'trusted' => true]
+                ['context' => $context, 'trusted' => true]
             );
 
             if ($pcast->userscancategorize) {
